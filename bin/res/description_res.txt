@@ -1,0 +1,1 @@
+The resources folder, used for storing assets such as images, text files, etc.
