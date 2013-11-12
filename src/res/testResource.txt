@@ -1,0 +1,1 @@
+All text files/images/other items that are supplementary to our agents go in this folder.
