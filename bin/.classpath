@@ -3,5 +3,6 @@
 	<classpathentry excluding="src/simcity/|src/|src/" kind="src" path=""/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Program Files/Java/jre7/lib/rt.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
