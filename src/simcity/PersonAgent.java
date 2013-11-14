@@ -1,19 +1,11 @@
 package simcity;
 
 import agent.Agent;
-import agent.Constants;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.StringTokenizer;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import simcity.test.mock.EventLog;
 
-// Priority of coding classes: Person, Housing, Transportation, Restaurant, Bank, Market 
+// Priority of coding classes: Person, Housing, Transportation, Bank, Restaurant, Market 
 
 public class PersonAgent extends Agent {
 	
@@ -22,18 +14,21 @@ public class PersonAgent extends Agent {
 	// Unit testing
 	public EventLog log = new EventLog();
 	
-	// Inherent data
+	// Inherent data - simple variables
 	private String name;
 	private int nourishmentLevel;
 	private double moneyOnHand;
-	private enum PersonalityType {Normal, Wealthy, Deadbeat, Crook};
-	private PersonalityType myPersonality;
+	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
+	private PersonType myPersonality;
+	
+	// Location
 	private enum Location {Home, Transit, Restaurant, Bank, Market};
+	private Location currentLocation, targetLocation;
 	
 	// Food
 	FoodPreference foodPreference;
 	
-	// Synchro
+	// Synchronization
 	Semaphore readyForNextAction = new Semaphore(0, true);
 	
 	// ************************* SETUP ***********************************
@@ -42,7 +37,9 @@ public class PersonAgent extends Agent {
 	public PersonAgent(String aName) {
 		super();
 		name = aName;
-		myPersonality = PersonalityType.Normal;
+		myPersonality = PersonType.Normal;
+		currentLocation = Location.Home;
+		targetLocation = Location.Home;
 	}
 
 	// get/set methods
@@ -65,7 +62,15 @@ public class PersonAgent extends Agent {
 		
 	}
 	
+	// from Bank
+	public void withdrawalSuccessful(double amount) {
+		
+	}
 	
+	// from Restaurant
+	public void msgDoneEating() {
+		
+	}
 	
 	// ************************* SCEHDULER ***********************************
 	
