@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry excluding="src/simcity/|src/|src/" kind="src" path=""/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jre7/lib/rt.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home/jre/lib/rt.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
