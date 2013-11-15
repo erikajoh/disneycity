@@ -5,6 +5,7 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import simcity.interfaces.Restaurant;
 import simcity.interfaces.Transportation;
 import simcity.test.mock.EventLog;
 
@@ -97,9 +98,20 @@ public class PersonAgent extends Agent {
 		if(nourishmentLevel <= 0) {
 			if(preferEatAtHome) {
 				// TODO
+				return true;
 			}
 			else {
 				MyRestaurant targetRestaurant = chooseRestaurant();
+				Map<String, Double> theMenu = targetRestaurant.menu;
+				// TODO: get the minimum food cost; this is a hack
+				double lowestPrice = -1;
+				if(moneyOnHand < lowestPrice) {
+					goToBank();
+					return true;
+				}
+				
+				
+				return true;
 			}
 		}
 		return false;
@@ -109,6 +121,10 @@ public class PersonAgent extends Agent {
 
 	private void goTo(/* TODO Add parameters */) {
 		
+	}
+	
+	private void goTo(/* TODO Add parameters */) {
+		transportation.msg
 	}
 	
 	/*
@@ -136,7 +152,8 @@ public class PersonAgent extends Agent {
 	// ************************* UTILITIES ***********************************
 	
 	private MyRestaurant chooseRestaurant() {
-		return 
+		// TODO: hack
+		return myRestaurants.get(0);
 	}
 	
 	// ************************* WRAPPER CLASSES ***********************************
@@ -167,7 +184,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	private class MyRestaurant {
-		// Restaurant theRestaurant;
+		Restaurant theRestaurant;
 		String restaurantName, restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
 		

@@ -29,7 +29,7 @@ public class MockTransportation extends Mock implements Transportation { //imple
 		return name;
 	}
 	
-	public void msgPersonAs(String startLocation, String endLocation, PersonAgent person, String method) {
+	public void msgGoTo(String startLocation, String endLocation, PersonAgent person, String method) {
 		
 	}
 	
