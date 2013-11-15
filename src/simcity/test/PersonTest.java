@@ -41,11 +41,11 @@ public class PersonTest extends TestCase
 		
 		// setup and step 1 pre-conditions
 		person.setMoney(20);
-		person.setFoodPreference("Steak", false);
+		person.setFoodPreference("Italian", false);
 		person.setNourishmentLevel(0);
 		
 		// step 1: person tells transportation that he wants to go to restaurant
-		
+		assertTrue("Calling scheduler to query for restaurants must return true", person.pickAndExecuteAnAction());
 		
 		// step 1 post-conditions and step 2 pre-conditions
 		

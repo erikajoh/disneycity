@@ -24,14 +24,30 @@ public class PersonAgent extends Agent {
 	private double moneyOnHand;
 	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
 	private PersonType myPersonality;
+	private enum PreferredCommute {Walk, Bus, Car};
+	private PreferredCommute preferredCommute;
+	
+	// Transportation
 	private Transportation transportation;
 	
 	// Location
-	private enum Location {Home, Transit, Restaurant, Bank, Market};
-	private Location currentLocation, targetLocation;
+	private enum LocationState {Home, Transit, Restaurant, Bank, Market};
+	private LocationState currentLocationState;
+	private String currentLocation;
 	
-	// Places
+	// Variables with intention to update
+	private double moneyWanted;
+	private LocationState targetLocationState;
+	private String targetLocation;
+	
+	// Wrapper class lists
+	private List<MyHousing> myHousings = new ArrayList<MyHousing>();
 	private List<MyRestaurant> myRestaurants = new ArrayList<MyRestaurant>();
+	private List<MyBank> myBanks = new ArrayList<MyBank>();
+	private List<MyBankAccount> myBankAccounts = new ArrayList<MyBankAccount>();
+	
+	private MyHousing myHouse = null;
+	private MyBankAccount myPersonalBankAccount = null;
 	
 	// Food
 	String foodPreference;
@@ -47,8 +63,9 @@ public class PersonAgent extends Agent {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
-		currentLocation = Location.Home;
-		targetLocation = Location.Home;
+		currentLocationState = LocationState.Home;
+		targetLocationState = LocationState.Home;
+		preferredCommute = PreferredCommute.Walk;
 		transportation = t;
 	}
 
@@ -60,9 +77,21 @@ public class PersonAgent extends Agent {
 
 	public void		setNourishmentLevel(int level)	{ nourishmentLevel = level; }
 	public void		setMoney(int money)				{ moneyOnHand = money; }
-	public void		setRestaurants(List<MyRestaurant> list)	{ myRestaurants = list; }
-	public void		setFoodPreference(String type, boolean atHome)
-		{ foodPreference = type; preferEatAtHome = atHome; }
+	
+
+	public void	setFoodPreference(String type, boolean atHome) {
+		foodPreference = type;
+		preferEatAtHome = atHome;
+	}
+	
+	public void	addRestaurant(String name, String restaurantType, String personType, Map<String, Double> menu) {
+		MyRestaurant newMyRestaurant = new MyRestaurant(name, restaurantType, personType, menu);
+		myRestaurants.add(newMyRestaurant);
+	}
+	public void	addBankAccount(String accountName, String accountType, String bankName, int accountNumber) {
+		MyBankAccount newMyBankAccount = new MyBankAccount(accountName, accountType, bankName, accountNumber);
+		myBankAccounts.add(newMyBankAccount);
+	}
 	
 	public String toString() {
 		return "Person " + getName();
@@ -71,60 +100,68 @@ public class PersonAgent extends Agent {
 	// ************************* MESSAGES ***********************************
 
 	// from Transportation
-	public void msgReachedDestination() {
-		
+	public void msgReachedDestination(String destination) {
+		currentLocation = destination;
+		//TODO Map destination to appropriate enum location state
+		stateChanged();
 	}
 	
 	// from Bank
 	public void msgWithdrawalSuccessful(double amount) {
 		
+		stateChanged();
 	}
 	
 	// from Restaurant
 	public void msgDoneEating() {
 		
+		stateChanged();
 	}
 	
 	// ************************* SCHEDULER ***********************************
 	
-	protected boolean pickAndExecuteAnAction() {
-		/*
-		if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry) {
-			state = AgentState.WaitingToBeSeated;
-			GoToRestaurant();
-			return true;
-		}
-		*/
-		if(nourishmentLevel <= 0) {
-			if(preferEatAtHome) {
-				// TODO
-				return true;
-			}
-			else {
-				MyRestaurant targetRestaurant = chooseRestaurant();
-				Map<String, Double> theMenu = targetRestaurant.menu;
-				// TODO: get the minimum food cost; this is a hack
-				double lowestPrice = -1;
-				if(moneyOnHand < lowestPrice) {
-					goToBank();
+	public boolean pickAndExecuteAnAction() {
+		
+		if(currentLocationState == LocationState.Home) {
+			if(nourishmentLevel <= 0) {
+				if(preferEatAtHome) {
+					// TODO if person prefers eating at home
 					return true;
 				}
-				
-				
-				return true;
+				else {
+					MyRestaurant targetRestaurant = chooseRestaurant();
+					Map<String, Double> theMenu = targetRestaurant.menu;
+					// TODO: get the minimum food cost; this is a hack
+					double lowestPrice = 100;
+					if(moneyOnHand < lowestPrice) {
+						moneyWanted = lowestPrice - moneyOnHand;
+						// TODO: bank name hacked
+						targetLocation = "Mock Bank 1";
+						goToX();
+						return true;
+					}
+					targetLocation = targetRestaurant.restaurantName;
+					goToX();
+					return true;
+				}
 			}
 		}
+		
+		if(currentLocationState == LocationState.Bank) {
+			// TODO Person scheduler while in Bank
+		}
+
+		if(currentLocationState == LocationState.Restaurant) {
+			// TODO Person scheduler while in Restaurant
+		}
+		
 		return false;
 	}
 
 	// ************************* ACTIONS ***********************************
-
-	private void goTo(/* TODO Add parameters */) {
-		
-	}
 	
-	private void goTo(/* TODO Add parameters */) {
-		transportation.msg
+	private void goToX() {
+		transportation.msgGoTo(currentLocation, targetLocation, this, preferredCommute.name());
 	}
 	
 	/*
@@ -151,6 +188,19 @@ public class PersonAgent extends Agent {
 	
 	// ************************* UTILITIES ***********************************
 	
+	private void mapLocationToEnum(String location) {
+		MyBankAccount[] myBankAccountsArray = (MyBankAccount[])myBankAccounts.toArray(new MyBankAccount[myBankAccounts.size()]);
+		for(int i = 0; i < myBankAccountsArray.length; i++) {
+			MyBankAccount tempMBA = myBankAccountsArray[i];
+			if(location.equals(tempMBA.bankName)) {
+				
+			}
+		}
+		for(int i = 0; i < myHousings.size(); i++) {
+			
+		}
+	}
+	
 	private MyRestaurant chooseRestaurant() {
 		// TODO: hack
 		return myRestaurants.get(0);
@@ -172,13 +222,14 @@ public class PersonAgent extends Agent {
 	
 	private class MyBankAccount {
 		// Bank theBank;
-		String accountName, accountType;
+		String accountName, accountType, bankName;
 		int accountNumber;
-		double amount, loanNeeded;
+		double amount = 0, loanNeeded = 0;
 		
-		public MyBankAccount(String accountName, String accountType, int accountNumber) {
+		public MyBankAccount(String accountName, String accountType, String bankName, int accountNumber) {
 			this.accountName = accountName; 
-			this.accountType = accountType;  
+			this.accountType = accountType;
+			this.bankName = bankName;
 			this.accountNumber = accountNumber;
 		}
 	}
@@ -190,6 +241,14 @@ public class PersonAgent extends Agent {
 		
 		public MyRestaurant(String restaurantName, String restaurantType, String personType, Map<String, Double> map) {
 			// TODO initialize
+		}
+	}
+	
+	private class MyBank {
+		String bankName;
+		
+		public MyBank(String name) {
+			bankName = name;
 		}
 	}
 }
