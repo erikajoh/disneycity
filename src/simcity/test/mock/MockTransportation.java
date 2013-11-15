@@ -1,6 +1,9 @@
 package simcity.test.mock;
 
-public class MockTransportation extends Mock { //implements Bank {
+import simcity.PersonAgent;
+import simcity.interfaces.Transportation;
+
+public class MockTransportation extends Mock implements Transportation { //implements Bank {
 
 	public EventLog log;
 	
@@ -24,5 +27,13 @@ public class MockTransportation extends Mock { //implements Bank {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	public void msgPersonAs(String startLocation, String endLocation, PersonAgent person, String method) {
+		
+	}
+	
+	public void msgPayFare(PersonAgent p, double money) {
+		
 	}
 }

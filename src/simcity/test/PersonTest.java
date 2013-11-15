@@ -1,6 +1,7 @@
 package simcity.test;
 
 import simcity.PersonAgent;
+import simcity.test.mock.*;
 import junit.framework.*;
 
 /**
@@ -10,6 +11,9 @@ public class PersonTest extends TestCase
 {
 	// instantiated in the setUp() method
 	PersonAgent person;
+	MockBank mockBank;
+	MockRestaurant mockRestaurant;
+	MockTransportation mockTransportation;
 
 	//Make sure all logs are empty, or at correct numbers
 	//LOOP
@@ -23,7 +27,11 @@ public class PersonTest extends TestCase
 	
 	public void setUp() throws Exception{
 		super.setUp();
-		person = new PersonAgent("Narwhal Prime");
+		mockBank = new MockBank("Mock Bank 1");
+		mockRestaurant = new MockRestaurant("Mock Restaurant 1");
+		mockTransportation = new MockTransportation("Mock Transportation");
+
+		person = new PersonAgent("Narwhal Prime", mockTransportation);
 	}	
 	
 	// TEST #1
@@ -31,34 +39,53 @@ public class PersonTest extends TestCase
 	// run restaurant scenario (successfully eat and pay), walk to home
 	public void testNormative_HomeBankRestaurantHome() {
 		
+		// setup and step 1 pre-conditions
+		person.setMoney(20);
+		person.setFoodPreference("Steak", false);
+		person.setNourishmentLevel(0);
 		
-		/*
-		// step 1 pre-conditions
-		cashier.setTotalMoney(10.00);
+		// step 1: person tells transportation that he wants to go to restaurant
 		
-		assertEquals("Cashier should have empty event log before msgCustomerNeedsCheck is called. Cashier's event log: "
-				+ cashier.log.toString(), 0, cashier.log.size());
-		assertEquals("Cashier should have 10 dollars to start", 10.00, cashier.getTotalMoney());
-		
-		// step 1: market gives cashier the bill
-		FoodBill fb = new FoodBill("Salad", marketOne, 10);
-		cashier.msgHereIsBill(fb);
 		
 		// step 1 post-conditions and step 2 pre-conditions
-		//"msgHereIsBill from " + fb.market.getName() + " for order " + fb.order + " and amount " + fb.amountDue));
-		assertTrue("Cashier should have logged \"msgHereIsBill from mockmarketOne for order Salad and amount 10.0\". Log instead reads: " 
-				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("msgHereIsBill from mockmarketOne for order Salad and amount 10.0"));
 		
-		// step 2: cashier pays back the bill in full
-		assertTrue("Cashier's scheduler should have returned true, but didn't", cashier.pickAndExecuteAnAction());
-		assertFalse("Cashier's scheduler should have returned false, but didn't", cashier.pickAndExecuteAnAction());
 		
-		// step 2 post-conditions
-		assertTrue("MockMarket should have logged \"msgHereIsBill from cashier\". Log instead reads: " 
-				+ marketOne.log.getLastLoggedEvent().toString(), marketOne.log.containsString("msgHereIsBill from cashier: valid payment"));
-		assertEquals("Cashier should have no money at end", 0.0, cashier.getTotalMoney());
-		assertEquals("Cashier should have 1 event log at the end."
-				+ cashier.log.toString(), 1, cashier.log.size());
-		*/
+		// step 2: transportation sends person in transit
+		
+		
+		// step 2 post-conditions and step 3 pre-conditions
+		
+		
+		// step 3: transportation delivers person to bank
+		
+		
+		// step 3 post-conditions and step 4 pre-conditions
+		 
+		 
+		// step 4: person requests withdrawal from bank
+		 
+		 
+		// step 4 post-conditions and step 5 pre-conditions
+		
+		
+		// step 5: transportation delivers person to bank
+		
+		
+		// step 5 post-conditions and step 6 pre-conditions
+		 
+		 
+		// step 6: person requests withdrawal from bank 
+		 
+		 
+		// step 6 post-conditions and step 7 pre-conditions
+		
+		
+		// step 7: transportation delivers person to bank
+		
+		
+		// step 7 post-conditions
+
+		
 	}
 }
+
