@@ -5,6 +5,8 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
 import simcity.interfaces.Restaurant;
 import simcity.interfaces.Transportation;
 import simcity.test.mock.EventLog;
@@ -41,10 +43,13 @@ public class PersonAgent extends Agent {
 	private String targetLocation;
 	
 	// Wrapper class lists
+	private List<MyObject> myObjects = new ArrayList<MyObject>();
+	/*
 	private List<MyHousing> myHousings = new ArrayList<MyHousing>();
 	private List<MyRestaurant> myRestaurants = new ArrayList<MyRestaurant>();
 	private List<MyBank> myBanks = new ArrayList<MyBank>();
 	private List<MyBankAccount> myBankAccounts = new ArrayList<MyBankAccount>();
+	*/
 	
 	private MyHousing myHouse = null;
 	private MyBankAccount myPersonalBankAccount = null;
@@ -84,14 +89,14 @@ public class PersonAgent extends Agent {
 		preferEatAtHome = atHome;
 	}
 	
-	public void	addRestaurant(String name, String restaurantType, String personType, Map<String, Double> menu) {
-		MyRestaurant newMyRestaurant = new MyRestaurant(name, restaurantType, personType, menu);
-		myRestaurants.add(newMyRestaurant);
-	}
-	public void	addBankAccount(String accountName, String accountType, String bankName, int accountNumber) {
-		MyBankAccount newMyBankAccount = new MyBankAccount(accountName, accountType, bankName, accountNumber);
-		myBankAccounts.add(newMyBankAccount);
-	}
+//	public void	addRestaurant(String name, String restaurantType, String personType, Map<String, Double> menu) {
+//		MyRestaurant newMyRestaurant = new MyRestaurant(name, restaurantType, personType, menu);
+//		myRestaurants.add(newMyRestaurant);
+//	}
+//	public void	addBankAccount(String accountName, String accountType, String bankName, int accountNumber) {
+//		MyBankAccount newMyBankAccount = new MyBankAccount(accountName, accountType, bankName, accountNumber);
+//		myBankAccounts.add(newMyBankAccount);
+//	}
 	
 	public String toString() {
 		return "Person " + getName();
@@ -103,6 +108,7 @@ public class PersonAgent extends Agent {
 	public void msgReachedDestination(String destination) {
 		currentLocation = destination;
 		//TODO Map destination to appropriate enum location state
+		mapLocationToEnum(currentLocation);
 		stateChanged();
 	}
 	
@@ -140,7 +146,7 @@ public class PersonAgent extends Agent {
 						goToX();
 						return true;
 					}
-					targetLocation = targetRestaurant.restaurantName;
+					targetLocation = targetRestaurant.name;
 					goToX();
 					return true;
 				}
@@ -189,54 +195,72 @@ public class PersonAgent extends Agent {
 	// ************************* UTILITIES ***********************************
 	
 	private void mapLocationToEnum(String location) {
-		MyBankAccount[] myBankAccountsArray = (MyBankAccount[])myBankAccounts.toArray(new MyBankAccount[myBankAccounts.size()]);
-		for(int i = 0; i < myBankAccountsArray.length; i++) {
-			MyBankAccount tempMBA = myBankAccountsArray[i];
-			if(location.equals(tempMBA.bankName)) {
-				
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++) {
+			MyObject tempObject = myObjectsArray[i];
+			if(location.equals(tempObject.name)) {
+				if(tempObject instanceof MyHousing)
+					currentLocationState = LocationState.Home;
+				else if(tempObject instanceof MyBank)
+					currentLocationState = LocationState.Bank;
+				else if(tempObject instanceof MyRestaurant)
+					currentLocationState = LocationState.Restaurant;
+//				TODO: Get market going
+//				if(tempObject instanceof MyMarket)
+//					currentLocationState = LocationState.Home;
+				return;
 			}
-		}
-		for(int i = 0; i < myHousings.size(); i++) {
-			
 		}
 	}
 	
 	private MyRestaurant chooseRestaurant() {
-		// TODO: hack
-		return myRestaurants.get(0);
+		// TODO: hack in choosing restaurants - choose first available
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++)
+			if(myObjectsArray[i] instanceof MyRestaurant)
+				return (MyRestaurant)myObjectsArray[i];
+		return null;
+	}
+	
+	private MyObject[] getObjects() {
+		return (MyObject[])myObjects.toArray(new MyObject[myObjects.size()]);
 	}
 	
 	// ************************* WRAPPER CLASSES ***********************************
 	
-	private class MyHousing {
+	private class MyObject {
+		String name;
+	}
+	
+	private class MyHousing extends MyObject {
 		
-		String housingName, housingType, occupantType;
+		String housingType, occupantType;
 		Map<String, Integer> inventory = new HashMap<String, Integer>();
 		
 		public MyHousing(String housingName, String housingType, String occupantType) {
-			this.housingName = housingName; 
+			this.name = housingName; 
 			this.housingType = housingType;  
 			this.occupantType = occupantType;
 		}
 	}
 	
-	private class MyBankAccount {
+	private class MyBankAccount extends MyObject {
 		// Bank theBank;
-		String accountName, accountType, bankName;
+		String accountType, bankName;
 		int accountNumber;
 		double amount = 0, loanNeeded = 0;
 		
 		public MyBankAccount(String accountName, String accountType, String bankName, int accountNumber) {
-			this.accountName = accountName; 
+			this.name = accountName; 
 			this.accountType = accountType;
 			this.bankName = bankName;
 			this.accountNumber = accountNumber;
 		}
 	}
 	
-	private class MyRestaurant {
+	private class MyRestaurant extends MyObject {
 		Restaurant theRestaurant;
-		String restaurantName, restaurantType, personType;
+		String restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
 		
 		public MyRestaurant(String restaurantName, String restaurantType, String personType, Map<String, Double> map) {
@@ -244,11 +268,9 @@ public class PersonAgent extends Agent {
 		}
 	}
 	
-	private class MyBank {
-		String bankName;
-		
+	private class MyBank extends MyObject {
 		public MyBank(String name) {
-			bankName = name;
+			this.name = name;
 		}
 	}
 }
