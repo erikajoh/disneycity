@@ -1,13 +1,12 @@
 package simcity.test.mock;
 
-import simcity.PersonAgent;
-import simcity.interfaces.Transportation;
+import simcity.interfaces.Bank;
 
-public class MockTransportation extends Mock implements Transportation { //implements Bank {
+public class MockBank_Douglass extends Mock_Douglass implements Bank {
 
 	public EventLog log;
 	
-	public MockTransportation(String name) {
+	public MockBank_Douglass(String name) {
 		super(name);
 		log = new EventLog();
 	}
@@ -27,13 +26,5 @@ public class MockTransportation extends Mock implements Transportation { //imple
 	@Override
 	public String getName() {
 		return name;
-	}
-	
-	public void msgGoTo(String startLocation, String endLocation, PersonAgent person, String method) {
-		
-	}
-	
-	public void msgPayFare(PersonAgent p, double money) {
-		
 	}
 }

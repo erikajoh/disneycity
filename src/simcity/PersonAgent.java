@@ -7,9 +7,11 @@ import java.util.concurrent.Semaphore;
 
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
+import simcity.interfaces.Housing;
 import simcity.interfaces.Restaurant;
 import simcity.interfaces.Transportation;
 import simcity.test.mock.EventLog;
+import simcity.test.mock.LoggedEvent;
 
 // Priority of coding classes: Person, Housing, Transportation, Bank, Restaurant, Market 
 
@@ -38,20 +40,14 @@ public class PersonAgent extends Agent {
 	private String currentLocation;
 	
 	// Variables with intention to update
-	private double moneyWanted;
+	private double moneyWanted = 0.0;
 	private LocationState targetLocationState;
 	private String targetLocation;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
-	/*
-	private List<MyHousing> myHousings = new ArrayList<MyHousing>();
-	private List<MyRestaurant> myRestaurants = new ArrayList<MyRestaurant>();
-	private List<MyBank> myBanks = new ArrayList<MyBank>();
-	private List<MyBankAccount> myBankAccounts = new ArrayList<MyBankAccount>();
-	*/
 	
-	private MyHousing myHouse = null;
+	private MyHousing myHome = null;
 	private MyBankAccount myPersonalBankAccount = null;
 	
 	// Food
@@ -59,18 +55,20 @@ public class PersonAgent extends Agent {
 	boolean preferEatAtHome;
 	
 	// Synchronization
-	Semaphore readyForNextAction = new Semaphore(0, true);
+	Semaphore readyForAction = new Semaphore(0, true);
 	
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
-	public PersonAgent(String aName, Transportation t) {
+	public PersonAgent(String aName, Housing h, String relationWithHousing, Transportation t) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
+		currentLocation = h.getName();
 		currentLocationState = LocationState.Home;
 		targetLocationState = LocationState.Home;
 		preferredCommute = PreferredCommute.Walk;
+		addHousing(h, relationWithHousing);
 		transportation = t;
 	}
 
@@ -89,14 +87,17 @@ public class PersonAgent extends Agent {
 		preferEatAtHome = atHome;
 	}
 	
-//	public void	addRestaurant(String name, String restaurantType, String personType, Map<String, Double> menu) {
-//		MyRestaurant newMyRestaurant = new MyRestaurant(name, restaurantType, personType, menu);
-//		myRestaurants.add(newMyRestaurant);
-//	}
-//	public void	addBankAccount(String accountName, String accountType, String bankName, int accountNumber) {
-//		MyBankAccount newMyBankAccount = new MyBankAccount(accountName, accountType, bankName, accountNumber);
-//		myBankAccounts.add(newMyBankAccount);
-//	}
+	public void	addHousing(Housing h, String personType) {
+		MyHousing tempMyHousing = new MyHousing(h.getName(), h.getType(), personType);
+		if(personType == "Renter" || personType == "OwnerResident")
+			myHome = tempMyHousing; 
+		myObjects.add(tempMyHousing);
+	}
+	
+	public void	addRestaurant(Restaurant r, String personType) {
+		MyRestaurant tempMyRestaurant = new MyRestaurant(r.getName(), r.getType(), personType, r.getMenu());
+		myObjects.add(tempMyRestaurant);
+	}
 	
 	public String toString() {
 		return "Person " + getName();
@@ -106,6 +107,7 @@ public class PersonAgent extends Agent {
 
 	// from Transportation
 	public void msgReachedDestination(String destination) {
+		log.add(new LoggedEvent("Received msgReachedDestination: destination = " + destination));
 		currentLocation = destination;
 		//TODO Map destination to appropriate enum location state
 		mapLocationToEnum(currentLocation);
@@ -114,6 +116,7 @@ public class PersonAgent extends Agent {
 	
 	// from Bank
 	public void msgWithdrawalSuccessful(double amount) {
+		log.add(new LoggedEvent("Received msgWithdrawalSuccessful: amount = " + amount));
 		
 		stateChanged();
 	}
@@ -121,6 +124,11 @@ public class PersonAgent extends Agent {
 	// from Restaurant
 	public void msgDoneEating() {
 		
+		stateChanged();
+	}
+	
+	public void msgReadyForNextAction() {
+		readyForAction.release();
 		stateChanged();
 	}
 	
@@ -132,25 +140,12 @@ public class PersonAgent extends Agent {
 			if(nourishmentLevel <= 0) {
 				if(preferEatAtHome) {
 					// TODO if person prefers eating at home
-					return true;
 				}
 				else {
-					MyRestaurant targetRestaurant = chooseRestaurant();
-					Map<String, Double> theMenu = targetRestaurant.menu;
-					// TODO: get the minimum food cost; this is a hack
-					double lowestPrice = 100;
-					if(moneyOnHand < lowestPrice) {
-						moneyWanted = lowestPrice - moneyOnHand;
-						// TODO: bank name hacked
-						targetLocation = "Mock Bank 1";
-						goToX();
-						return true;
-					}
-					targetLocation = targetRestaurant.name;
-					goToX();
-					return true;
+					homeActionHungryRestaurant();
 				}
 			}
+			return true;
 		}
 		
 		if(currentLocationState == LocationState.Bank) {
@@ -166,31 +161,27 @@ public class PersonAgent extends Agent {
 
 	// ************************* ACTIONS ***********************************
 	
-	private void goToX() {
+	private void homeActionHungryRestaurant() {
+		MyRestaurant targetRestaurant = chooseRestaurant();
+		Map<String, Double> theMenu = targetRestaurant.menu;
+		// TODO: get the minimum food cost; this is a hack
+		double lowestPrice = 100;
+		if(moneyOnHand < lowestPrice) {
+			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
+			moneyWanted = lowestPrice - moneyOnHand;
+			// TODO: bank name hacked; MyBank and finding banks must be implemented
+			targetLocation = "Mock Bank 1";
+			goToTransportation();
+			return;
+		}
+		targetLocation = targetRestaurant.name;
+		goToTransportation();
+	}
+	
+	private void goToTransportation() {
+		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
 		transportation.msgGoTo(currentLocation, targetLocation, this, preferredCommute.name());
 	}
-	
-	/*
-	private void GoToRestaurant() {
-		Do("Going to restaurant");
-		customerGui.DoDisplayOrder("" + money);
-		customerGui.DoGoToWaitingArea();
-		host.msgIWantFood(this);
-	}
-	
-	private void ReadingMenu() {
-		Do("Reading menu and deciding order...");
-		
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("Done deciding");
-				event = AgentEvent.orderDecided;
-				stateChanged();
-			}
-		},
-		orderTime * Constants.SECOND); //how long to wait before running task
-	}
-	*/
 	
 	// ************************* UTILITIES ***********************************
 	

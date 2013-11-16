@@ -1,5 +1,7 @@
 package simcity.test;
 
+import java.util.*;
+
 import simcity.PersonAgent;
 import simcity.test.mock.*;
 import junit.framework.*;
@@ -11,27 +13,26 @@ public class PersonTest extends TestCase
 {
 	// instantiated in the setUp() method
 	PersonAgent person;
-	MockBank mockBank;
-	MockRestaurant mockRestaurant;
-	MockTransportation mockTransportation;
-
-	//Make sure all logs are empty, or at correct numbers
-	//LOOP
-	//Send message to cashier
-	//Message received correctly
-	//Call scheduler
-	//Check correct post conditions
-		//Right Recipients
-		//Right number of messages
-		//Right message contents
+	MockHousing_Douglass mockHousing;
+	MockBank_Douglass mockBank;
+	MockRestaurant_Douglass mockRestaurant;
+	MockTransportation_Douglass mockTransportation;
 	
-	public void setUp() throws Exception{
+	public void setUp() throws Exception {
 		super.setUp();
-		mockBank = new MockBank("Mock Bank 1");
-		mockRestaurant = new MockRestaurant("Mock Restaurant 1");
-		mockTransportation = new MockTransportation("Mock Transportation");
+		
+		Map<String, Double> menu = new HashMap<String, Double>();
+		menu.put("Orange chicken", 10.00);
+		menu.put("Beef with brocolli", 8.00);
+		menu.put("Hot and sour soup", 5.00);
+		
+		mockHousing = new MockHousing_Douglass("Mock House 1");
+		mockBank = new MockBank_Douglass("Mock Bank 1");
+		mockRestaurant = new MockRestaurant_Douglass("Mock Restaurant 1", "Chinese", menu);
+		mockTransportation = new MockTransportation_Douglass("Mock Transportation");
 
-		person = new PersonAgent("Narwhal Prime", mockTransportation);
+		person = new PersonAgent("Narwhal Prime", mockHousing, 
+				"OwnerResident", mockTransportation);
 	}	
 	
 	// TEST #1
@@ -39,16 +40,36 @@ public class PersonTest extends TestCase
 	// run restaurant scenario (successfully eat and pay), walk to home
 	public void testNormative_HomeBankRestaurantHome() {
 		
-		// setup and step 1 pre-conditions
+		// setup
 		person.setMoney(20);
-		person.setFoodPreference("Italian", false);
+		person.setFoodPreference("Chinese", false);
 		person.setNourishmentLevel(0);
 		
+		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
+		person.addRestaurant(mockRestaurant, "Customer");
+		
+		// step 1 pre-conditions
+		assertEquals("Person: 20 dollars at start",
+				20.00, person.getMoney());
+		assertEquals("Person: 0 nourishment at start", 
+				0, person.getNourishmentLevel());
+		
 		// step 1: person tells transportation that he wants to go to restaurant
-		assertTrue("Calling scheduler to query for restaurants must return true", person.pickAndExecuteAnAction());
+		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
+				person.pickAndExecuteAnAction());
 		
 		// step 1 post-conditions and step 2 pre-conditions
+		assertEquals("Person: 3 event logs.",
+				3, person.log.size());
+		assertTrue("Contains log: want to go to restaurant but not enough money",
+				person.log.containsString("Want to eat at restaurant; not enough money"));
+		assertTrue("Contains log: describes going from house to bank",
+				person.log.containsString("Going from Mock House 1 to Mock Bank 1"));
+		assertTrue("Contains log: describes arriving at bank",
+				person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
 		
+		assertEquals("Transportation: 1 event log",
+				1, mockTransportation.log.size());
 		
 		// step 2: transportation sends person in transit
 		

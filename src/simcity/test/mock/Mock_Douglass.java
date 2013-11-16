@@ -6,10 +6,10 @@ package simcity.test.mock;
  * @author Sean Turner
  *
  */
-public class Mock {
+public class Mock_Douglass {
 	protected String name;
 
-	public Mock(String name) {
+	public Mock_Douglass(String name) {
 		this.name = name;
 	}
 
