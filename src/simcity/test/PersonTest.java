@@ -44,7 +44,7 @@ public class PersonTest extends TestCase
 		person.setMoney(20);
 		person.setFoodPreference("Chinese", false);
 		person.setNourishmentLevel(0);
-		
+		person.addBank(mockBank, "BankCustomer");
 		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
 		person.addRestaurant(mockRestaurant, "Customer");
 		
@@ -54,12 +54,15 @@ public class PersonTest extends TestCase
 		assertEquals("Person: 0 nourishment at start", 
 				0, person.getNourishmentLevel());
 		
-		// step 1: person tells transportation that he wants to go to restaurant
+		// step 1: person goes to restaurant
+			// step 1a: person tells transportation that he wants to go to restaurant
+			// step 1b: transportation sends person in transit
+			// step 1c: person arrives at bank
 		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
 				person.pickAndExecuteAnAction());
 		
 		// step 1 post-conditions and step 2 pre-conditions
-		assertEquals("Person: 3 event logs.",
+		assertEquals("Person: 3 event logs",
 				3, person.log.size());
 		assertTrue("Contains log: want to go to restaurant but not enough money",
 				person.log.containsString("Want to eat at restaurant; not enough money"));
@@ -70,10 +73,15 @@ public class PersonTest extends TestCase
 		
 		assertEquals("Transportation: 1 event log",
 				1, mockTransportation.log.size());
+
+		assertEquals("Person: currentLocationState = Bank",
+				"Bank", person.getCurrLocationState());
 		
-		// step 2: transportation sends person in transit
-		
-		
+		// TODO: Even more tests; make sure all relevant person and transportation variables are tested
+		 
+		// step 2: person requests withdrawal from bank
+		 
+		 
 		// step 2 post-conditions and step 3 pre-conditions
 		
 		
@@ -83,7 +91,7 @@ public class PersonTest extends TestCase
 		// step 3 post-conditions and step 4 pre-conditions
 		 
 		 
-		// step 4: person requests withdrawal from bank
+		// step 4: person requests withdrawal from bank 
 		 
 		 
 		// step 4 post-conditions and step 5 pre-conditions
@@ -92,20 +100,7 @@ public class PersonTest extends TestCase
 		// step 5: transportation delivers person to bank
 		
 		
-		// step 5 post-conditions and step 6 pre-conditions
-		 
-		 
-		// step 6: person requests withdrawal from bank 
-		 
-		 
-		// step 6 post-conditions and step 7 pre-conditions
-		
-		
-		// step 7: transportation delivers person to bank
-		
-		
-		// step 7 post-conditions
-
+		// step 5 post-conditions
 		
 	}
 }

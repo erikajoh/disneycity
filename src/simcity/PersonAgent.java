@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
+import simcity.interfaces.Bank;
 import simcity.interfaces.Housing;
 import simcity.interfaces.Restaurant;
 import simcity.interfaces.Transportation;
@@ -77,6 +78,7 @@ public class PersonAgent extends Agent {
 	public String	getName()				{ return name; }
 	public int		getNourishmentLevel()	{ return nourishmentLevel; }
 	public double	getMoney()				{ return moneyOnHand; }
+	public String	getCurrLocationState()	{ return currentLocationState.name(); }
 
 	public void		setNourishmentLevel(int level)	{ nourishmentLevel = level; }
 	public void		setMoney(int money)				{ moneyOnHand = money; }
@@ -92,6 +94,11 @@ public class PersonAgent extends Agent {
 		if(personType == "Renter" || personType == "OwnerResident")
 			myHome = tempMyHousing; 
 		myObjects.add(tempMyHousing);
+	}
+	
+	public void	addBank(Bank b, String personType) {
+		MyBank tempMyBank = new MyBank(b.getName(), personType);
+		myObjects.add(tempMyBank);
 	}
 	
 	public void	addRestaurant(Restaurant r, String personType) {
@@ -260,8 +267,11 @@ public class PersonAgent extends Agent {
 	}
 	
 	private class MyBank extends MyObject {
-		public MyBank(String name) {
+		
+		String personType;
+		public MyBank(String name, String type) {
 			this.name = name;
+			personType = type;
 		}
 	}
 }
