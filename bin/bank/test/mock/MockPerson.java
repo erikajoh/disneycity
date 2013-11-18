@@ -1,12 +1,12 @@
-package restaurant.test.mock;
+package bank.test.mock;
 
-import restaurant.PersonAgent.AgentEvent;
-import restaurant.PersonAgent.AgentState;
-import restaurant.gui.Check;
-import restaurant.gui.Menu;
-import restaurant.interfaces.Teller;
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Waiter;
+import bank.PersonAgent.AgentEvent;
+import bank.PersonAgent.AgentState;
+import bank.gui.Check;
+import bank.gui.Menu;
+import bank.interfaces.Teller;
+import bank.interfaces.Person;
+import bank.interfaces.Waiter;
 
 /**
  * A sample MockCustomer built to unit test a CashierAgent.
@@ -25,7 +25,7 @@ public class MockPerson extends Mock implements Person {
 	double balance;
 	public Check check;
 	public enum AgentState
-	{DoingNothing, WaitingInRestaurant, BeingSeated, MakingChoice, MadeChoice, WaitingForFood, Eating, DoneEating, GoingToCashier, GettingChange, Cleaning, DoneCleaning, Leaving};
+	{DoingNothing, WaitingInbank, BeingSeated, MakingChoice, MadeChoice, WaitingForFood, Eating, DoneEating, GoingToCashier, GettingChange, Cleaning, DoneCleaning, Leaving};
 	private AgentState state = AgentState.DoingNothing;
 
 	public enum AgentEvent 
@@ -45,7 +45,7 @@ public class MockPerson extends Mock implements Person {
 		
 	}
 	
-	public void msgRestaurantFull() {
+	public void msgBankFull() {
 		
 	}
 

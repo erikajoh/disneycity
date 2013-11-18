@@ -1,18 +1,18 @@
-package restaurant.test.mock;
+package bank.test.mock;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import restaurant.TellerAgent.Bill;
-import restaurant.gui.Check;
-import restaurant.gui.Menu;
-import restaurant.gui.MenuItem;
-import restaurant.interfaces.Teller;
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Market;
-import restaurant.interfaces.Waiter;
+import bank.TellerAgent.Bill;
+import bank.gui.Check;
+import bank.gui.Menu;
+import bank.gui.MenuItem;
+import bank.interfaces.Teller;
+import bank.interfaces.Person;
+import bank.interfaces.Market;
+import bank.interfaces.Waiter;
 
 public class MockTeller extends Mock {
 

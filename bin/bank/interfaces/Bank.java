@@ -1,7 +1,7 @@
-package restaurant.interfaces;
+package bank.interfaces;
 
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Teller;
+import bank.interfaces.Person;
+import bank.interfaces.Teller;
 
 public interface Bank {
 	public void msgEnteredBank(Person person);

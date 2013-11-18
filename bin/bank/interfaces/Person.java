@@ -1,11 +1,11 @@
-package restaurant.interfaces;
+package bank.interfaces;
 
 import java.util.List;
 
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Teller;
-import restaurant.gui.Account;
-import restaurant.gui.TellerGui;
+import bank.interfaces.Person;
+import bank.interfaces.Teller;
+import bank.gui.Account;
+import bank.gui.TellerGui;
 
 
 /**

@@ -1,11 +1,11 @@
-package restaurant;
+package bank;
 
-import restaurant.gui.PersonGui;
-import restaurant.gui.RestaurantGui;
-import restaurant.gui.Account;
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Teller;
-import restaurant.interfaces.Bank;
+import bank.gui.PersonGui;
+import bank.gui.BankGui;
+import bank.gui.Account;
+import bank.interfaces.Person;
+import bank.interfaces.Teller;
+import bank.interfaces.Bank;
 import agent.Agent;
 
 import java.util.*;
@@ -13,14 +13,14 @@ import java.util.*;
 
 
 /**
- * Restaurant customer agent.
+ * bank customer agent.
  */
 public class PersonAgent extends Agent implements Person {
 	private String name;
 	private double balance = 25.00;
 	private double change;
 	
-	private RestaurantGui restaurantGui;
+	private BankGui bankGui;
 	private PersonGui personGui;
 	
 	// agent correspondents
@@ -28,7 +28,7 @@ public class PersonAgent extends Agent implements Person {
 	private Teller teller = null;
 
 	public enum State
-	{enteredBank, goToTeller, deciding, openingAccount, depositing, withdrawing, idle};
+	{enteredBank, goToTeller, deciding, openingAccount, depositing, withdrawing, left, idle};
 	
 	State state = State.idle;
 		
@@ -41,9 +41,10 @@ public class PersonAgent extends Agent implements Person {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public PersonAgent(String name){
+	public PersonAgent(String name, BankGui bg){
 		super();
 		this.name = name;
+		bankGui = bg;
 		state = State.enteredBank;
 	}
 
@@ -66,7 +67,7 @@ public class PersonAgent extends Agent implements Person {
 	}
 	public void msgMoneyDeposited(){
 		balance += change;
-		print("MONEY DEPOSITED "+ change);
+		print("MONEY DEPOSITED "+ balance);
 		state = State.deciding;
 		stateChanged();
 	}
@@ -87,6 +88,11 @@ public class PersonAgent extends Agent implements Person {
 		state = State.deciding;
 		stateChanged();
 	}
+	
+	public void msgAnimationFinishedLeavingBank(){
+		state = State.left;
+		stateChanged();
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -105,6 +111,10 @@ public class PersonAgent extends Agent implements Person {
 			decideAction();
 			return true;
 		}
+		else if(state == State.left){
+			leftBank();
+			return true;
+		}
 		return false;
 	}
 
@@ -118,6 +128,7 @@ public class PersonAgent extends Agent implements Person {
 	private void goToTeller(){
 		state = State.idle;
 		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
+	    bankGui.updateInfoPanel(this);
 	}
 	private void decideAction(){
 		if(accounts.size() == 0){
@@ -152,6 +163,11 @@ public class PersonAgent extends Agent implements Person {
 		state = State.idle;
 		personGui.DoLeaveBank();
 	}
+	
+	private void leftBank(){
+		state = State.idle;
+	    bankGui.updateInfoPanel(this);
+	}
 
 	// Accessors, etc.
 
@@ -173,6 +189,10 @@ public class PersonAgent extends Agent implements Person {
 	
 	public void setBank(Bank b) {
 		bank = b;
+	}
+	
+	public Bank getBank() {
+		return bank;
 	}
 	
 	public void setTeller(Teller t) {

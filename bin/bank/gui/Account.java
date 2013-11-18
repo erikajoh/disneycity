@@ -1,4 +1,4 @@
-package restaurant.gui;
+package bank.gui;
 
 public class Account {
 	private int number;

@@ -1,8 +1,8 @@
-package restaurant.interfaces;
+package bank.interfaces;
 
-import restaurant.interfaces.Person;
-import restaurant.gui.Account;
-import restaurant.gui.TellerGui;
+import bank.interfaces.Person;
+import bank.gui.Account;
+import bank.gui.TellerGui;
 
 /**
  * A sample Cashier interface built to unit test a CashierAgent.

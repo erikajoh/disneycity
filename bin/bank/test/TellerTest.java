@@ -1,23 +1,23 @@
-package restaurant.test;
+package bank.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import restaurant.TellerAgent;
-import restaurant.MarketAgent;
-import restaurant.MarketAgent.Order;
-//import restaurant.CashierAgent.cashierBillState;
-//import restaurant.WaiterAgent.Bill;
-import restaurant.gui.Food;
-import restaurant.gui.Menu;
-import restaurant.interfaces.Cook;
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Waiter;
-import restaurant.test.mock.MockTeller;
-import restaurant.test.mock.MockCook;
-import restaurant.test.mock.MockPerson;
-import restaurant.test.mock.MockMarket;
-import restaurant.test.mock.MockWaiter;
+import bank.TellerAgent;
+import bank.MarketAgent;
+import bank.MarketAgent.Order;
+//import bank.CashierAgent.cashierBillState;
+//import bank.WaiterAgent.Bill;
+import bank.gui.Food;
+import bank.gui.Menu;
+import bank.interfaces.Cook;
+import bank.interfaces.Person;
+import bank.interfaces.Waiter;
+import bank.test.mock.MockTeller;
+import bank.test.mock.MockCook;
+import bank.test.mock.MockPerson;
+import bank.test.mock.MockMarket;
+import bank.test.mock.MockWaiter;
 import junit.framework.*;
 
 /**

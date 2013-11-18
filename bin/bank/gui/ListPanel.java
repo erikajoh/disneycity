@@ -1,7 +1,7 @@
-package restaurant.gui;
+package bank.gui;
 
-import restaurant.PersonAgent;
-import restaurant.BankAgent;
+import bank.PersonAgent;
+import bank.BankAgent;
 
 import javax.swing.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Subpanel of restaurantPanel.
+ * Subpanel of bankPanel.
  * This holds the scroll panes for the customers and, later, for waiters
  */
 public class ListPanel extends JPanel implements ActionListener {
@@ -24,17 +24,17 @@ public class ListPanel extends JPanel implements ActionListener {
     private JPanel view = new JPanel();
     private List<JButton> list = new ArrayList<JButton>();
     private JButton addPersonB = new JButton("Add");
-    private RestaurantPanel restPanel;
+    private BankPanel bankPanel;
     private String type;
 
     /**
      * Constructor for ListPanel.  Sets up all the gui
      *
-     * @param rp   reference to the restaurant panel
+     * @param rp   reference to the bank panel
      * @param type indicates if this is for customers or waiters
      */
-    public ListPanel(RestaurantPanel rp, String type) {
-        restPanel = rp;
+    public ListPanel(BankPanel rp, String type) {
+        bankPanel = rp;
         this.type = type;
 
         setLayout(new BoxLayout((Container) this, BoxLayout.Y_AXIS));
@@ -52,7 +52,7 @@ public class ListPanel extends JPanel implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addPersonB) {
-        	String nameFieldText = restPanel.getNameFieldText();
+        	String nameFieldText = bankPanel.getNameFieldText();
         	if(!nameFieldText.isEmpty()){
         		addPerson(nameFieldText);
         	}
@@ -62,14 +62,14 @@ public class ListPanel extends JPanel implements ActionListener {
         else {
         	for (JButton temp:list){
                 if (e.getSource() == temp)
-                    restPanel.showInfo(type, temp.getText());
+                    bankPanel.showInfo(type, temp.getText());
             }
         }
     }
 
     /**
      * If the add button is pressed, this function creates
-     * a spot for it in the scroll pane, and tells the restaurant panel
+     * a spot for it in the scroll pane, and tells the bank panel
      * to add a new person.
      *
      * @param name name of new person
@@ -88,8 +88,8 @@ public class ListPanel extends JPanel implements ActionListener {
             button.addActionListener(this);
             list.add(button);
             view.add(button);
-            restPanel.addPerson(type, name);//puts customer on list
-            restPanel.showInfo(type, name);//puts hungry button on panel
+            bankPanel.addPerson(type, name);//puts customer on list
+            bankPanel.showInfo(type, name);//puts hungry button on panel
             validate();
         }
     }

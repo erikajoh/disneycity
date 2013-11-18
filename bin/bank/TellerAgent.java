@@ -1,16 +1,16 @@
-package restaurant;
+package bank;
 
 import agent.Agent;
-import restaurant.gui.TellerGui;
-import restaurant.gui.Account;
-import restaurant.interfaces.Teller;
-import restaurant.interfaces.Bank;
-import restaurant.interfaces.Person;
+import bank.gui.TellerGui;
+import bank.gui.Account;
+import bank.interfaces.Teller;
+import bank.interfaces.Bank;
+import bank.interfaces.Person;
 
 import java.util.*;
 
 /**
- * Restaurant Host Agent
+ * bank Host Agent
  */
 
 public class TellerAgent extends Agent implements Teller {
@@ -57,9 +57,9 @@ public class TellerAgent extends Agent implements Teller {
 	
 	// Messages
 	public void msgNewCustomer(Person person){
-		print("NEW CUSTOMER");
 		for(Customer cust : customers){
 			if(cust.person == person){
+				print("CUSTOMER IS "+person.toString());
 				customer = cust;
 				customer.state = State.idle;
 			}
@@ -100,7 +100,6 @@ public class TellerAgent extends Agent implements Teller {
 		print("WITHDRAW CASH "+customer.accounts.size());
 		for(Account acc : customer.accounts){
 			if(account == acc){
-				print("FOUND OR NO???");
 				customer.requestAmt = cash;
 				customer.pendingAccount = account;
 				customer.state = State.withdrawingCash; break;
@@ -124,6 +123,7 @@ public class TellerAgent extends Agent implements Teller {
 	public void	msgLeavingBank(){
 		print("LEAVING");
 		customer.state = State.leaving;
+		stateChanged();
 	}
 	
 	/**
@@ -179,7 +179,6 @@ public class TellerAgent extends Agent implements Teller {
 	}
 
 	private void withdrawCash(){
-		print("HERE???");
 		double newBalance = customer.pendingAccount.getBalance()-customer.requestAmt;
 		if(newBalance >= 0){
 		  customer.pendingAccount.setBalance(newBalance);
@@ -210,7 +209,7 @@ public class TellerAgent extends Agent implements Teller {
 
 	private void customerLeaving(){
 		bank.msgTellerFree(this);
-		customer.state = State.idle;
+		customer = null;
 	}
 	
 	

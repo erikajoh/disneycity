@@ -1,18 +1,18 @@
-package restaurant;
+package bank;
 
 import agent.Agent;
-import restaurant.interfaces.Bank;
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Teller;
+import bank.interfaces.Bank;
+import bank.interfaces.Person;
+import bank.interfaces.Teller;
 
 import java.util.*;
 
 /**
- * Restaurant Host Agent
+ * bank Host Agent
  */
 //We only have 2 types of agents in this prototype. A customer and an agent that
 //does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
+//the HostAgent. A Host is the manager of a bank who sees that all
 //is proceeded as he wishes.
 public class BankAgent extends Agent implements Bank {
 	   class WaitingCustomer {

@@ -1,8 +1,8 @@
-package restaurant.gui;
+package bank.gui;
 
-import restaurant.PersonAgent;
-import restaurant.BankAgent;
-import restaurant.TellerAgent;
+import bank.PersonAgent;
+import bank.BankAgent;
+import bank.TellerAgent;
 
 import javax.swing.*;
 
@@ -16,10 +16,10 @@ import java.util.Collections;
 import java.util.Vector;
 
 /**
- * Panel in frame that contains all the restaurant information,
+ * Panel in frame that contains all the bank information,
  * including host, cook, waiters, and customers.
  */
-public class RestaurantPanel extends JPanel implements ActionListener {
+public class BankPanel extends JPanel implements ActionListener {
 
     //Host, cook, waiters and customers
     private BankAgent bank = new BankAgent("Bank");
@@ -35,9 +35,9 @@ public class RestaurantPanel extends JPanel implements ActionListener {
     private JPanel pauseGroup = new JPanel();
     private JPanel group = new JPanel();
 
-    private RestaurantGui gui; //reference to main gui
+    private BankGui gui; //reference to main gui
 
-    public RestaurantPanel(RestaurantGui gui) {
+    public BankPanel(BankGui gui) {
         this.gui = gui;
 
         bank.startThread();
@@ -58,7 +58,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
     }
 
     /**
-     * Sets up the restaurant label that includes the menu,
+     * Sets up the bank label that includes the menu,
      * and host and cook information
      */
     private void initRestLabel() {
@@ -109,7 +109,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
     public void addPerson(String type, String name) {
 
     	if (type.equals("Customers")) {
-    		PersonAgent c = new PersonAgent(name);	
+    		PersonAgent c = new PersonAgent(name, gui);	
     		PersonGui g = new PersonGui(c, gui, gui.getAnimWindowX(), gui.getAnimWindowY());
     		c.setBalance(25.00);
     		c.setBank(bank);

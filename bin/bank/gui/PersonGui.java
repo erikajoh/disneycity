@@ -1,6 +1,6 @@
-package restaurant.gui;
+package bank.gui;
 
-import restaurant.PersonAgent;
+import bank.PersonAgent;
 
 import java.awt.*;
 
@@ -9,7 +9,7 @@ public class PersonGui implements Gui{
 	private PersonAgent agent = null;
 	private boolean isPresent = false;
 
-	RestaurantGui gui;
+	BankGui gui;
 
 	private int windowX, windowY;
 	private int xPos, yPos;
@@ -18,9 +18,10 @@ public class PersonGui implements Gui{
 	private String initial;
 	private enum Command {noCommand, GoToTeller, LeaveBank}; //shortened to noCommand and walking?
 	private Command command=Command.noCommand;
+	private boolean isInBank = false;
 
 
-	public PersonGui(PersonAgent c, RestaurantGui gui, int wx, int wy){ //HostAgent m) {
+	public PersonGui(PersonAgent c, BankGui gui, int wx, int wy){ //HostAgent m) {
 		agent = c;
 		windowX = wx;
 		windowY = wy;
@@ -48,6 +49,10 @@ public class PersonGui implements Gui{
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToTeller) {
 				agent.msgAnimationFinishedGoToTeller();
+			}
+			else if (command==Command.LeaveBank) {
+				agent.msgAnimationFinishedLeavingBank();
+				isInBank = false;
 			}
 			command=Command.noCommand;
 		}
@@ -92,11 +97,20 @@ public class PersonGui implements Gui{
 		return isPresent;
 	}
 	
+	public void setInBank(boolean inBank) {
+		isInBank = inBank;
+	}
+	
+	public boolean isInBank() {
+		return isInBank;
+	}
+	
 	public void setPresent(boolean p) {
 		isPresent = p;
 	}
 
 	public void DoGoToTeller(int xd, int yd) {//later you will map seatnumber to table coordinates.
+		isInBank = true;
 		xDestination = xd;
 		yDestination = yd;
 		command = Command.GoToTeller;
