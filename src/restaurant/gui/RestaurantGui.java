@@ -16,8 +16,9 @@ public class RestaurantGui extends JFrame implements ActionListener {
 	public static final int WINDOWX = 1000;
 	public static final int WINDOWY = 700;
    
+	String name;
 	AnimationPanel animationPanel = new AnimationPanel();
-	private RestaurantPanel restPanel = new RestaurantPanel(this);
+	private RestaurantBase restPanel;
     private JPanel leftPanel = new JPanel(); 
     private JPanel rightPanel = new JPanel();
     private JPanel infoPanel;
@@ -36,10 +37,10 @@ public class RestaurantGui extends JFrame implements ActionListener {
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
-    public RestaurantGui() {
+    public RestaurantGui(String name) {
         
-      
-        
+    	restPanel= new RestaurantBase(this, name);
+        this.name = name;
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.add(animationPanel); 
         
@@ -207,11 +208,18 @@ public class RestaurantGui extends JFrame implements ActionListener {
     /**
      * Main routine to get gui started
      */
-    public static void main(String[] args) {
-        RestaurantGui gui = new RestaurantGui();
+ //  public static void main(String[] args) {
+      public void run() {
+        /*RestaurantGui gui = new RestaurantGui("name");
         gui.setTitle("csci201 Restaurant");
         gui.setVisible(true);
         gui.setResizable(false);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        */
+    	setTitle(name);
+        setVisible(true);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
     }
 }

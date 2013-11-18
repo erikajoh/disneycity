@@ -27,7 +27,7 @@ public class ListPanel extends JPanel implements ActionListener {
     private JCheckBox hungry = new JCheckBox("Hungry?");
     private Object currentPerson;
     
-    private RestaurantPanel restPanel;
+    private RestaurantBase restPanel;
     private String type;
 
     /**
@@ -36,7 +36,7 @@ public class ListPanel extends JPanel implements ActionListener {
      * @param rp   reference to the restaurant panel
      * @param type indicates if this is for customers or waiters
      */
-    public ListPanel(RestaurantPanel rp, String type) {
+    public ListPanel(RestaurantBase rp, String type) {
         restPanel = rp;
         this.type = type;
 

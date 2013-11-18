@@ -20,9 +20,10 @@ import java.util.Random;
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class RestaurantPanel extends JPanel {
+public class RestaurantBase extends JPanel {
 
     //Host, cook, waiters and customers
+	String name;
     private HostAgent host = new HostAgent("Sarah");
     private CookAgent cook = new CookAgent("Jerry");
     private MarketAgent market = new MarketAgent("Whole Foods", 0, 0, 0, 7, 0);
@@ -42,8 +43,11 @@ public class RestaurantPanel extends JPanel {
     private RestaurantGui gui; //reference to main gui
     private CookGui cookgui = new CookGui(cook, gui);
 
-    public RestaurantPanel(RestaurantGui gui) {
-        this.gui = gui;
+    
+    //public RestaurantBase(RestaurantGui gui, String n) {
+    public RestaurantBase(RestaurantGui g, String n) {
+    	name = n;
+        this.gui = g;
         host.startThread();
         market.setCashier(cashier);
         market2.setCashier(cashier);
@@ -69,7 +73,14 @@ public class RestaurantPanel extends JPanel {
         add(restLabel);
         add(group);
     }
+    public RestaurantGui getGui() {
+    	return gui;
+    }
     
+   // public void personAs(String type, String name, PersonAgent p) {
+    public void personAs(String type, String name){
+    	addPerson(type, name, true);
+    }
     public void PauseandUnpauseAgents() {
     	//System.out.println("in pause and unpause");
     	for (WaiterAgent w : waiters) {
