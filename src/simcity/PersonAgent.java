@@ -32,6 +32,8 @@ public class PersonAgent extends Agent {
 	private enum PreferredCommute {Walk, Bus, Car};
 	private PreferredCommute preferredCommute;
 	
+	private final static double MONEY_ON_HAND_LIMIT = 50;
+	
 	// Transportation
 	private Transportation transportation;
 	
@@ -83,7 +85,7 @@ public class PersonAgent extends Agent {
 	public String	getCurrLocationState()	{ return currentLocationState.name(); }
 
 	public void		setNourishmentLevel(int level)	{ nourishmentLevel = level; }
-	public void		setMoney(int money)				{ moneyOnHand = money; }
+	public void		setMoney(double money)			{ moneyOnHand = money; }
 	
 
 	public void	setFoodPreference(String type, boolean atHome) {
@@ -105,7 +107,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	public void	addRestaurant(Restaurant r, String personType) {
-		MyRestaurant tempMyRestaurant = new MyRestaurant(r.getName(), r.getType(), personType, r.getMenu());
+		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getName(), r.getType(), personType, r.getMenu());
 		myObjects.add(tempMyRestaurant);
 	}
 	
@@ -119,7 +121,6 @@ public class PersonAgent extends Agent {
 	public void msgReachedDestination(String destination) {
 		log.add(new LoggedEvent("Received msgReachedDestination: destination = " + destination));
 		currentLocation = destination;
-		//TODO Map destination to appropriate enum location state
 		mapLocationToEnum(currentLocation);
 		updateCurrentMyObject(currentLocation);
 		stateChanged();
@@ -169,25 +170,28 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			// Done at bank, time to transition
-			if(nourishmentLevel <= 0)
+			if(nourishmentLevel <= 0) {
 				hungryToRestaurant();
+				return true;
+			}
 		}
 
 		if(currentLocationState == LocationState.Restaurant) {
-			// TODO Person scheduler while in Restaurant
+			if(nourishmentLevel <= 0) {
+				enterRestaurant();
+				return true;
+			}
 		}
 		
 		return false;
 	}
 
 	// ************************* ACTIONS ***********************************
-	
+
 	private void hungryToRestaurant() {
 		MyRestaurant targetRestaurant = chooseRestaurant();
 		Map<String, Double> theMenu = targetRestaurant.menu;
-		// TODO: get the minimum food cost; this is a hack
-		
-		double lowestPrice = 5;
+		double lowestPrice = getLowestPrice(theMenu);
 		if(moneyOnHand < lowestPrice) {
 			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
 			moneyWanted = lowestPrice - moneyOnHand;
@@ -222,6 +226,11 @@ public class PersonAgent extends Agent {
 		 * msgWithdraw(amount, accountNumber, p);
 		 */
 	}
+
+	private void enterRestaurant() {
+		MyRestaurant myRest = (MyRestaurant)currentMyObject;
+		myRest.restaurant.msgPersonAs(this, myRest.personType, name, moneyOnHand, foodPreference);
+	}
 	
 	// ************************* UTILITIES ***********************************
 	
@@ -253,6 +262,14 @@ public class PersonAgent extends Agent {
 				return;
 			}
 		}
+	}
+
+	private double getLowestPrice(Map<String, Double> theMenu) {
+		Collection<Double> prices = theMenu.values();
+		Double[] temp = new Double[1];
+		Double[] pricesArray = prices.toArray(temp);
+		Arrays.sort(pricesArray);
+		return pricesArray[0].doubleValue();
 	}
 	
 	private MyRestaurant chooseRestaurant() {
@@ -301,12 +318,16 @@ public class PersonAgent extends Agent {
 	}
 	
 	private class MyRestaurant extends MyObject {
-		Restaurant theRestaurant;
+		Restaurant restaurant;
 		String restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
 		
-		public MyRestaurant(String restaurantName, String restaurantType, String personType, Map<String, Double> map) {
-			// TODO initialize
+		public MyRestaurant(Restaurant r, String restaurantName, String restaurantType, String personType, Map<String, Double> menu) {
+			restaurant = r;
+			this.name = restaurantName;
+			this.restaurantType = restaurantType;
+			this.personType = personType;
+			this.menu = menu;
 		}
 	}
 	

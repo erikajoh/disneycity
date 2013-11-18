@@ -2,6 +2,7 @@ package simcity.test.mock;
 
 import java.util.*;
 
+import agent.Constants;
 import simcity.PersonAgent;
 import simcity.interfaces.Bank;
 
@@ -44,6 +45,6 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank {
 			public void run() {
 				finalPerson.msgWithdrawalSuccessful(finalAmount);
 			}
-	    }, 1);
+	    }, Constants.SECOND / 2);
 	}
 }
