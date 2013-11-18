@@ -1,14 +1,19 @@
 package simcity.test.mock;
 
+import java.util.*;
+
+import simcity.PersonAgent;
 import simcity.interfaces.Bank;
 
 public class MockBank_Douglass extends Mock_Douglass implements Bank {
 
 	public EventLog log;
+	public Timer timer;
 	
 	public MockBank_Douglass(String name) {
 		super(name);
 		log = new EventLog();
+		timer = new Timer();
 	}
 
 	/*
@@ -26,5 +31,19 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public void msgRequestWithdrawal(double amount, int accountNumber, PersonAgent person) {
+		final double finalAmount = amount;
+		final PersonAgent finalPerson = person; 
+		log.add(new LoggedEvent("Received msgRequestWithdrawal: "
+				+ "amount = " + amount + "; "
+				+ "accountNumber = " + accountNumber));
+		timer.schedule(new TimerTask() {
+			public void run() {
+				finalPerson.msgWithdrawalSuccessful(finalAmount);
+			}
+	    }, 1);
 	}
 }

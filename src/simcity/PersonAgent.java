@@ -48,6 +48,7 @@ public class PersonAgent extends Agent {
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
 	
+	private MyObject currentMyObject = null; // denotes actual location that person is at
 	private MyHousing myHome = null;
 	private MyBankAccount myPersonalBankAccount = null;
 	
@@ -69,7 +70,7 @@ public class PersonAgent extends Agent {
 		currentLocationState = LocationState.Home;
 		targetLocationState = LocationState.Home;
 		preferredCommute = PreferredCommute.Walk;
-		addHousing(h, relationWithHousing);
+		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
 	}
 
@@ -78,6 +79,7 @@ public class PersonAgent extends Agent {
 	public String	getName()				{ return name; }
 	public int		getNourishmentLevel()	{ return nourishmentLevel; }
 	public double	getMoney()				{ return moneyOnHand; }
+	public String	getCurrLocation()	{ return currentLocation; }
 	public String	getCurrLocationState()	{ return currentLocationState.name(); }
 
 	public void		setNourishmentLevel(int level)	{ nourishmentLevel = level; }
@@ -89,15 +91,16 @@ public class PersonAgent extends Agent {
 		preferEatAtHome = atHome;
 	}
 	
-	public void	addHousing(Housing h, String personType) {
+	public MyHousing addHousing(Housing h, String personType) {
 		MyHousing tempMyHousing = new MyHousing(h.getName(), h.getType(), personType);
 		if(personType == "Renter" || personType == "OwnerResident")
 			myHome = tempMyHousing; 
 		myObjects.add(tempMyHousing);
+		return tempMyHousing;
 	}
 	
 	public void	addBank(Bank b, String personType) {
-		MyBank tempMyBank = new MyBank(b.getName(), personType);
+		MyBank tempMyBank = new MyBank(b, b.getName(), personType);
 		myObjects.add(tempMyBank);
 	}
 	
@@ -118,13 +121,16 @@ public class PersonAgent extends Agent {
 		currentLocation = destination;
 		//TODO Map destination to appropriate enum location state
 		mapLocationToEnum(currentLocation);
+		updateCurrentMyObject(currentLocation);
 		stateChanged();
 	}
-	
+
 	// from Bank
 	public void msgWithdrawalSuccessful(double amount) {
 		log.add(new LoggedEvent("Received msgWithdrawalSuccessful: amount = " + amount));
-		
+		moneyOnHand += amount;
+		moneyWanted -= amount;
+		readyForAction.release();
 		stateChanged();
 	}
 	
@@ -149,7 +155,7 @@ public class PersonAgent extends Agent {
 					// TODO if person prefers eating at home
 				}
 				else {
-					homeActionHungryRestaurant();
+					hungryToRestaurant();
 				}
 			}
 			return true;
@@ -157,6 +163,14 @@ public class PersonAgent extends Agent {
 		
 		if(currentLocationState == LocationState.Bank) {
 			// TODO Person scheduler while in Bank
+			// Stuff to do at bank
+			if(moneyWanted > 0) {
+				requestWithdrawal();
+				return true;
+			}
+			// Done at bank, time to transition
+			if(nourishmentLevel <= 0)
+				hungryToRestaurant();
 		}
 
 		if(currentLocationState == LocationState.Restaurant) {
@@ -168,11 +182,12 @@ public class PersonAgent extends Agent {
 
 	// ************************* ACTIONS ***********************************
 	
-	private void homeActionHungryRestaurant() {
+	private void hungryToRestaurant() {
 		MyRestaurant targetRestaurant = chooseRestaurant();
 		Map<String, Double> theMenu = targetRestaurant.menu;
 		// TODO: get the minimum food cost; this is a hack
-		double lowestPrice = 100;
+		
+		double lowestPrice = 5;
 		if(moneyOnHand < lowestPrice) {
 			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
 			moneyWanted = lowestPrice - moneyOnHand;
@@ -190,6 +205,24 @@ public class PersonAgent extends Agent {
 		transportation.msgGoTo(currentLocation, targetLocation, this, preferredCommute.name());
 	}
 	
+	private void requestWithdrawal() {
+		MyBank myBank = (MyBank)currentMyObject;
+		// TODO: Hacking in account number
+		log.add(new LoggedEvent("Want to withdraw " + moneyWanted + " from " + myBank.name));
+		myBank.theBank.msgRequestWithdrawal(moneyWanted, 1, this);
+		try {
+			readyForAction.acquire();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		/*
+		 * bank.msgRequestAccount(Person p)
+		 * msgDeposit(amount, accountNumber, p);
+		 * msgWithdraw(amount, accountNumber, p);
+		 */
+	}
+	
 	// ************************* UTILITIES ***********************************
 	
 	private void mapLocationToEnum(String location) {
@@ -203,9 +236,20 @@ public class PersonAgent extends Agent {
 					currentLocationState = LocationState.Bank;
 				else if(tempObject instanceof MyRestaurant)
 					currentLocationState = LocationState.Restaurant;
-//				TODO: Get market going
-//				if(tempObject instanceof MyMarket)
-//					currentLocationState = LocationState.Home;
+				// TODO: Get market going
+				if(tempObject instanceof MyMarket)
+					currentLocationState = LocationState.Market;
+				return;
+			}
+		}
+	}
+	
+	private void updateCurrentMyObject(String location) {
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++) {
+			MyObject tempObject = myObjectsArray[i];
+			if(location.equals(tempObject.name)) {
+				currentMyObject = tempObject;
 				return;
 			}
 		}
@@ -243,7 +287,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	private class MyBankAccount extends MyObject {
-		// Bank theBank;
+		MyBank theBank;
 		String accountType, bankName;
 		int accountNumber;
 		double amount = 0, loanNeeded = 0;
@@ -268,8 +312,20 @@ public class PersonAgent extends Agent {
 	
 	private class MyBank extends MyObject {
 		
+		Bank theBank;
 		String personType;
-		public MyBank(String name, String type) {
+		public MyBank(Bank b, String name, String type) {
+			theBank = b;
+			this.name = name;
+			personType = type;
+		}
+	}
+	
+	private class MyMarket extends MyObject {
+		
+		//Market theMarket
+		String personType;
+		public MyMarket(String name, String type) {
 			this.name = name;
 			personType = type;
 		}

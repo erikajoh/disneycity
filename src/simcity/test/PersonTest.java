@@ -22,9 +22,9 @@ public class PersonTest extends TestCase
 		super.setUp();
 		
 		Map<String, Double> menu = new HashMap<String, Double>();
-		menu.put("Orange chicken", 10.00);
-		menu.put("Beef with brocolli", 8.00);
-		menu.put("Hot and sour soup", 5.00);
+		menu.put("Orange chicken", 13.00);
+		menu.put("Beef with brocolli", 10.00);
+		menu.put("Hot and sour soup", 8.00);
 		
 		mockHousing = new MockHousing_Douglass("Mock House 1");
 		mockBank = new MockBank_Douglass("Mock Bank 1");
@@ -41,7 +41,7 @@ public class PersonTest extends TestCase
 	public void testNormative_HomeBankRestaurantHome() {
 		
 		// setup
-		person.setMoney(20);
+		person.setMoney(5);
 		person.setFoodPreference("Chinese", false);
 		person.setNourishmentLevel(0);
 		person.addBank(mockBank, "BankCustomer");
@@ -49,8 +49,8 @@ public class PersonTest extends TestCase
 		person.addRestaurant(mockRestaurant, "Customer");
 		
 		// step 1 pre-conditions
-		assertEquals("Person: 20 dollars at start",
-				20.00, person.getMoney());
+		assertEquals("Person: 3 dollars at start",
+				3.00, person.getMoney());
 		assertEquals("Person: 0 nourishment at start", 
 				0, person.getNourishmentLevel());
 		
@@ -74,16 +74,32 @@ public class PersonTest extends TestCase
 		assertEquals("Transportation: 1 event log",
 				1, mockTransportation.log.size());
 
+		assertEquals("Person: currentLocation = Mock Bank 1",
+				"Mock Bank 1", person.getCurrLocation());
 		assertEquals("Person: currentLocationState = Bank",
 				"Bank", person.getCurrLocationState());
 		
+		
 		// TODO: Even more tests; make sure all relevant person and transportation variables are tested
 		 
-		// step 2: person requests withdrawal from bank
-		 
+		// step 2: person withdraws money from account
+			// step 2a: person requests withdrawal from bank, blocks
+			// TODO: step 2b: bank checks if withdrawal is valid
+			// step 2b: after brief delay, bank messages that withdrawal approved
+			// step 2c: person receives money, gets released
+		assertTrue("Call scheduler, request withdrawal from bank, scheduler returns true",
+				person.pickAndExecuteAnAction());
 		 
 		// step 2 post-conditions and step 3 pre-conditions
+		assertEquals("Person: 5 event logs",
+				5, person.log.size());
+		assertTrue("Contains log: Want to withdraw 2.0 from Mock Bank 1",
+				person.log.containsString("Want to withdraw 2.0 from Mock Bank 1"));
+		assertTrue("Contains log: Received msgWithdrawalSuccessful: amount = 3.0",
+				person.log.containsString("Received msgWithdrawalSuccessful: amount = 3.0"));
 		
+		assertEquals("Bank: 1 event log",
+				1, mockBank.log.size());
 		
 		// step 3: transportation delivers person to bank
 		
