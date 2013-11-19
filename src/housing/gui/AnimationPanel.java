@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 public class AnimationPanel extends JPanel implements ActionListener {
 
-//    private final int WINDOWX = 350;
-//    private final int WINDOWY = 450;
 	private int lastTableX = 0;
 	private int lastTableY = 0;
 	private int tableWidth = this.getWidth()/9;
@@ -47,10 +45,10 @@ public class AnimationPanel extends JPanel implements ActionListener {
 		repaint();  //Will have paintComponent called
 	}
 	
-	public void pauseOrResume(){
-		if (timer.isRunning()) timer.stop();
-		else timer.start();
-	}
+//	public void pauseOrResume(){
+//		if (timer.isRunning()) timer.stop();
+//		else timer.start();
+//	}
 	
 
     public void paintComponent(Graphics g) {
@@ -63,23 +61,23 @@ public class AnimationPanel extends JPanel implements ActionListener {
         //Here are the tables
         addTable();
         
-        g2.setColor(Color.BLACK);
-        g2.draw(new Line2D.Double(0, this.getHeight()/12, this.getWidth()/2, this.getHeight()/12));
-        g2.draw(new Line2D.Double(3*this.getWidth()/4, 0, 3*this.getWidth()/4, this.getHeight()));
-        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/12, this.getWidth(), 5*this.getHeight()/12));
-        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/6, this.getWidth(), 5*this.getHeight()/6));
-    	
-        g2.drawString("customers", 4*this.getWidth()/9-10, this.getHeight()/12);
-        g2.drawString("waiters", 4*this.getWidth()/9, this.getHeight()/12+10);
-        g2.drawString("kitchen", 5*this.getWidth()/6, 10);
-        g2.drawString("(plating)", 5*this.getWidth()/6, 20);
-        g2.drawString("(cooking)", 5*this.getWidth()/6, 5*this.getHeight()/12+10);
-        g2.drawString("(fridge)", 5*this.getWidth()/6, 5*this.getHeight()/6+10);
-        
-        g2.setColor(Color.BLACK);
-        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/6+20, this.getWidth()/16, this.getHeight()/16); // fridge
-        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/12+20, this.getWidth()/16, this.getHeight()/16); // grill
-        g2.fillRect(5*this.getWidth()/6, 30, this.getWidth()/16, this.getHeight()/16); // plating
+//        g2.setColor(Color.BLACK);
+//        g2.draw(new Line2D.Double(0, this.getHeight()/12, this.getWidth()/2, this.getHeight()/12));
+//        g2.draw(new Line2D.Double(3*this.getWidth()/4, 0, 3*this.getWidth()/4, this.getHeight()));
+//        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/12, this.getWidth(), 5*this.getHeight()/12));
+//        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/6, this.getWidth(), 5*this.getHeight()/6));
+//    	
+//        g2.drawString("customers", 4*this.getWidth()/9-10, this.getHeight()/12);
+//        g2.drawString("waiters", 4*this.getWidth()/9, this.getHeight()/12+10);
+//        g2.drawString("kitchen", 5*this.getWidth()/6, 10);
+//        g2.drawString("(plating)", 5*this.getWidth()/6, 20);
+//        g2.drawString("(cooking)", 5*this.getWidth()/6, 5*this.getHeight()/12+10);
+//        g2.drawString("(fridge)", 5*this.getWidth()/6, 5*this.getHeight()/6+10);
+//        
+//        g2.setColor(Color.BLACK);
+//        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/6+20, this.getWidth()/16, this.getHeight()/16); // fridge
+//        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/12+20, this.getWidth()/16, this.getHeight()/16); // grill
+//        g2.fillRect(5*this.getWidth()/6, 30, this.getWidth()/16, this.getHeight()/16); // plating
         
         for(Gui gui : guis) {
             if (gui.isPresent()) {
@@ -112,24 +110,10 @@ public class AnimationPanel extends JPanel implements ActionListener {
     
     public void addTable() {
     	
-        Table t1 = new Table(100, (int)(this.getHeight()*0.7143), this.getWidth()/10, this.getHeight()/7, false);
-        Table t2 = new Table(200, (int)(this.getHeight()*0.7143), this.getWidth()/10, this.getHeight()/7, false);
-        Table t3 = new Table(300, (int)(this.getHeight()*0.7143), this.getWidth()/10, this.getHeight()/7, false);
-        Table t4 = new Table(400, (int)(this.getHeight()*0.7143), this.getWidth()/10, this.getHeight()/7, false);
+        Table t1 = new Table((int)(this.getWidth()*0.3), (int)(this.getHeight()*0.6), this.getWidth()/5, this.getHeight()/3, false);
         tables.add(t1);
-    	tables.add(t2);
-    	tables.add(t3);
-    	tables.add(t4);
-    	
-    	List<Color> colors = new ArrayList<Color>();
-    	colors.add(Color.RED);
-    	colors.add(Color.ORANGE);
-    	colors.add(Color.BLUE);
-    	colors.add(Color.RED);
-    	
-    	int colorCount = 0;
         for (Table t: tables) {
-        	g2.setColor(colors.get(colorCount++%4));
+        	g2.setColor(Color.gray);
         	g2.fillRect(t.xpos,  t.ypos, t.width, t.height);
         }
         

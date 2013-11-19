@@ -13,9 +13,6 @@ import java.util.Vector;
 public class HousingPanel extends JPanel {
 
     private JPanel restLabel = new JPanel();
-    private ListPanel customerPanel = new ListPanel(this, "customers");
-    private ListPanel waiterPanel = new ListPanel(this, "waiters");
-    private ListPanel marketPanel = new ListPanel(this, "markets");
     private JPanel group = new JPanel();
     private JLabel restSubLabel = new JLabel();
 
@@ -41,12 +38,12 @@ public class HousingPanel extends JPanel {
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 2, 10, 10));
 
-        initRestLabel();
-        add(restLabel);
+//        initRestLabel();
+//        add(restLabel);
         
-        add(customerPanel);
-        add(waiterPanel);
-        add(marketPanel);
+//        add(customerPanel);
+//        add(waiterPanel);
+//        add(marketPanel);
         
 //        add(group);
     }
@@ -130,9 +127,9 @@ public class HousingPanel extends JPanel {
 //    	
 //    }
     
-    public void addButton(JButton b) {
-		restLabel.add(b, BorderLayout.SOUTH);
-	}
+//    public void addButton(JButton b) {
+//		restLabel.add(b, BorderLayout.SOUTH);
+//	}
     
 //    public void resetState(Object person){
 //    	if (person instanceof CustomerAgent) customerPanel.resetCB(person);

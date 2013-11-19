@@ -1,6 +1,10 @@
 package housing;
 
 import agent.Agent;
+import housing.interfaces.Owner;
+import housing.interfaces.Renter;
+import housing.test.mock.EventLog;
+import housing.test.mock.LoggedEvent;
 
 import java.util.*;
 
@@ -9,14 +13,16 @@ import java.util.*;
 /**
  * Housing renter agent.
  */
-public class RenterAgent extends Agent {
+public class RenterAgent extends Agent implements Renter {
 	private String name;
 		
 	// agent correspondents
-	private Building building = null;
-	private OwnerAgent owner = null;
+	private Building building;
+	public Owner owner;
 	private double amt;
 	String food;
+	
+	public EventLog log = new EventLog();
 
 	public enum State
 	{idle, wantsToRent, enteringHouse, paymentDue, readyToCook, wantsMaintenance, leavingHouse};
@@ -39,14 +45,21 @@ public class RenterAgent extends Agent {
 	}
 	// Messages
 
-	public void msgTimeToPay(OwnerAgent o, double amt){
+	public void msgTimeToPay(Owner o, double amt){
 		owner = o;
 		state = State.paymentDue;
 		stateChanged();
 	}
+	
+	public void msgPaymentAccepted(){
+		log.add(new LoggedEvent("Payment accepted by owner"));
+		stateChanged();
+	}
+	
 	public void msgFinishedMaintenance(){
 		stateChanged();
 	}
+	
 	public void msgFoodDone(){
 		stateChanged();
 	}
@@ -54,7 +67,7 @@ public class RenterAgent extends Agent {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
 		if(state == State.enteringHouse){
 			Do("Entering house");
@@ -63,14 +76,17 @@ public class RenterAgent extends Agent {
 		}
 		else if(state == State.paymentDue){
 			owner.msgHereIsPayment(this, amt);
+			state = State.idle;
 			return true;
 		}
 		else if(state == State.readyToCook){
 			owner.msgReadyToCook(this, food);
+			state = State.idle;
 			return true;
 		}
 		else if(state == State.wantsMaintenance){
 			owner.msgWantMaintenance(this);
+			state = State.idle;
 			return true;
 		}
 		else if(state == State.leavingHouse){
@@ -84,9 +100,11 @@ public class RenterAgent extends Agent {
 	// Actions
 	
 	private void EnterHouse(){
+		state = State.idle;
 	}
 	
 	private void LeaveHouse(){
+		state = State.idle;
 	}
 
 	// Accessors, etc.
@@ -103,7 +121,7 @@ public class RenterAgent extends Agent {
 		return "renter " + getName();
 	}
 	
-	public void setOwner(OwnerAgent o) {
+	public void setOwner(Owner o) {
 		owner = o;
 	}
 	

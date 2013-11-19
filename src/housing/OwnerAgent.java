@@ -1,6 +1,7 @@
 package housing;
 
 import agent.Agent;
+import housing.interfaces.Owner;
 
 import java.util.*;
 
@@ -8,7 +9,7 @@ import java.util.*;
  * Restaurant Host Agent
  */
 
-public class OwnerAgent extends Agent {
+public class OwnerAgent extends Agent implements Owner {
 
 	enum State {idle, paymentDue, paymentPending, paymentRcvd, readyToCook, cooking, foodDone, wantsMaintenance, doingMaintenance, maintenanceDone};
 
@@ -45,6 +46,7 @@ public class OwnerAgent extends Agent {
 	// Messages
 	
 	public void msgWantToRent(RenterAgent ra){
+		print("New renter is here");
 		renters.add(new MyRenter(ra));
 		stateChanged();
 	}
@@ -83,7 +85,7 @@ public class OwnerAgent extends Agent {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		/* Think of this next rule as:
             Does there exist a table and customer,
             so that table is unoccupied and customer is waiting.
@@ -99,6 +101,7 @@ public class OwnerAgent extends Agent {
 		}
 		for (MyRenter r: renters) {
 			if (r.state == State.paymentRcvd) {
+				r.agent.msgPaymentAccepted();
 				r.state = State.idle;
 				return true;
 			}
