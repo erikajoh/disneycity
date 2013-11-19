@@ -1,6 +1,6 @@
 package bank.gui;
 
-import bank.PersonAgent;
+import bank.BankCustomerAgent;
 import bank.BankAgent;
 
 import javax.swing.*;

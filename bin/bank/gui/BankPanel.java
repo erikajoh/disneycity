@@ -1,7 +1,8 @@
 package bank.gui;
 
-import bank.PersonAgent;
+import bank.BankCustomerAgent;
 import bank.BankAgent;
+import bank.PersonAgent;
 import bank.TellerAgent;
 
 import javax.swing.*;
@@ -22,9 +23,8 @@ import java.util.Vector;
 public class BankPanel extends JPanel implements ActionListener {
 
     //Host, cook, waiters and customers
-    private BankAgent bank = new BankAgent("Bank");
 
-    private Vector<PersonAgent> customers = new Vector<PersonAgent>();
+    private Vector<BankCustomerAgent> customers = new Vector<BankCustomerAgent>();
     private Vector<TellerAgent> tellers = new Vector<TellerAgent>();
     
 
@@ -36,6 +36,8 @@ public class BankPanel extends JPanel implements ActionListener {
     private JPanel group = new JPanel();
 
     private BankGui gui; //reference to main gui
+    
+    private BankAgent bank = new BankAgent("Bank", gui);
 
     public BankPanel(BankGui gui) {
         this.gui = gui;
@@ -86,7 +88,7 @@ public class BankPanel extends JPanel implements ActionListener {
 
         if (type.equals("Customers")) {
             for (int i = 0; i < customers.size(); i++) {
-                PersonAgent temp = customers.get(i);
+                BankCustomerAgent temp = customers.get(i);
                 if (temp.getName() == name)
                     gui.updateInfoPanel(temp);
             }
@@ -109,8 +111,9 @@ public class BankPanel extends JPanel implements ActionListener {
     public void addPerson(String type, String name) {
 
     	if (type.equals("Customers")) {
-    		PersonAgent c = new PersonAgent(name, gui);	
-    		PersonGui g = new PersonGui(c, gui, gui.getAnimWindowX(), gui.getAnimWindowY());
+    		PersonAgent p = new PersonAgent(name);
+    		BankCustomerAgent c = new BankCustomerAgent(name, gui);	
+    		BankCustomerGui g = new BankCustomerGui(c, gui, gui.getAnimWindowX(), gui.getAnimWindowY());
     		c.setBalance(25.00);
     		c.setBank(bank);
     		gui.animationPanel.addGui(g);// dw

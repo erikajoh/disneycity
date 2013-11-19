@@ -1,7 +1,7 @@
 package bank.gui;
 
-import bank.PersonAgent;
-import bank.interfaces.Person;
+import bank.BankCustomerAgent;
+import bank.interfaces.BankCustomer;
 
 import javax.swing.*;
 
@@ -17,7 +17,7 @@ public class BankGui extends JFrame implements ActionListener {
     /* The GUI has two frames, the control frame (in variable gui) 
      * and the animation frame, (in variable animationFrame within gui)
      */
-	JFrame animationFrame = new JFrame("bank Animation");
+	JFrame animationFrame = new JFrame("Bank Animation");
 	AnimationPanel animationPanel = new AnimationPanel();
 	
     /* bankPanel holds 2 panels
@@ -128,8 +128,8 @@ public class BankGui extends JFrame implements ActionListener {
      */
     public void updateInfoPanel(Object person) {
         currentPerson = person;
-        if (person instanceof PersonAgent) {
-            PersonAgent customer = (PersonAgent) person;
+        if (person instanceof BankCustomerAgent) {
+            BankCustomerAgent customer = (BankCustomerAgent) person;
         	System.out.println(customer.toString() + " " + customer.getGui().isInBank());
             inBank.setVisible(true);
             inBank.setText("Reenter bank?");
@@ -153,8 +153,8 @@ public class BankGui extends JFrame implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
     	 if (e.getSource() == inBank) {
-             if (currentPerson instanceof PersonAgent) {
-                 PersonAgent p = (PersonAgent) currentPerson;
+             if (currentPerson instanceof BankCustomerAgent) {
+                 BankCustomerAgent p = (BankCustomerAgent) currentPerson;
                  p.getBank().msgEnteredBank(p);
                  p.getGui().setInBank(true);
                  inBank.setEnabled(false);

@@ -10,7 +10,7 @@ import bank.gui.Check;
 import bank.gui.Menu;
 import bank.gui.MenuItem;
 import bank.interfaces.Teller;
-import bank.interfaces.Person;
+import bank.interfaces.BankCustomer;
 import bank.interfaces.Market;
 import bank.interfaces.Waiter;
 
@@ -64,7 +64,7 @@ public class MockTeller extends Mock {
 		bills.add(new Bill(market, total));
 	}
 	
-	public void msgProduceCheck(Person c, Waiter w, String choice){
+	public void msgProduceCheck(BankCustomer c, Waiter w, String choice){
 		
 	}
 	
@@ -87,7 +87,7 @@ public class MockTeller extends Mock {
 		
 	}
 	
-	public void msgWaiterHere(Person customer){
+	public void msgWaiterHere(BankCustomer customer){
 		
 	}
 	
@@ -114,7 +114,7 @@ public class MockTeller extends Mock {
 		customer.amountPaid = cash;
 	}
 	
-	public void msgNoMoney(Person c){
+	public void msgNoMoney(BankCustomer c){
 		
 	}
 	

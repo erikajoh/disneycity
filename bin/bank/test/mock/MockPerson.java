@@ -1,11 +1,11 @@
 package bank.test.mock;
 
-import bank.PersonAgent.AgentEvent;
-import bank.PersonAgent.AgentState;
+import bank.BankCustomerAgent.AgentEvent;
+import bank.BankCustomerAgent.AgentState;
 import bank.gui.Check;
 import bank.gui.Menu;
 import bank.interfaces.Teller;
-import bank.interfaces.Person;
+import bank.interfaces.BankCustomer;
 import bank.interfaces.Waiter;
 
 /**
@@ -14,7 +14,7 @@ import bank.interfaces.Waiter;
  * @author Monroe Ekilah
  *
  */
-public class MockPerson extends Mock implements Person {
+public class MockPerson extends Mock implements BankCustomer {
 
 	/**
 	 * Reference to the Cashier under test that can be set by the unit test.

@@ -2,8 +2,9 @@ package bank;
 
 import agent.Agent;
 import bank.interfaces.Bank;
-import bank.interfaces.Person;
 import bank.interfaces.Teller;
+import bank.interfaces.Person;
+import bank.gui.BankGui;
 
 import java.util.*;
 
@@ -18,14 +19,21 @@ public class BankAgent extends Agent implements Bank {
 	   class WaitingCustomer {
 		 Person person;
 		 State state;
-		 public WaitingCustomer(Person p){
+		 Action action;
+		 int accountNum;
+		 double requestAmt;
+		 public WaitingCustomer(Person p, int accNum, double ra, Action a){
+			 action = a;
+			 accountNum = accNum;
 			 person = p;
+			 requestAmt = ra;
 			 state = State.waiting;
 		 }
 	   }
 
 		List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
 		enum State{entered, waiting, leaving, busy};
+		enum Action{newAccount, deposit, withdraw, loan};
 
 		class MyTeller {
 			Teller teller;
@@ -39,12 +47,14 @@ public class BankAgent extends Agent implements Bank {
 
 		public List<MyTeller> tellers = Collections.synchronizedList(new ArrayList<MyTeller>());
 		
+		private BankGui bankGui;
+
 		private String name;
 
 
-	public BankAgent(String name) {
+	public BankAgent(String name, BankGui bg) {
 		super();
-
+		bankGui = bg;
 		this.name = name;
 	}
 
@@ -58,12 +68,6 @@ public class BankAgent extends Agent implements Bank {
 
 	
 	// Messages
-
-	public void msgEnteredBank(Person person){
-		print("PERSON ENTERED BANK");
-		waitingCustomers.add(new WaitingCustomer(person));
-		stateChanged();
-	}
 	
 	public void msgTellerFree(Teller teller){
 		for(MyTeller t : tellers){
@@ -72,6 +76,29 @@ public class BankAgent extends Agent implements Bank {
 			}
 		}
 		stateChanged();
+	}
+	
+	public void msgRequestAccount(double amount, Person person){
+		waitingCustomers.add(new WaitingCustomer(person, -1, amount, Action.newAccount));
+		stateChanged();
+	}
+	
+	public void msgRequestDeposit(int accountNumber, double amount, Person person, boolean forLoan){
+	   if(forLoan == false){
+		  waitingCustomers.add(new WaitingCustomer(person, accountNumber, amount, Action.deposit));
+	   }
+	   else {
+		  waitingCustomers.add(new WaitingCustomer(person, accountNumber, amount, Action.loan));  
+	   }
+		stateChanged();
+	}
+	
+	public void msgRequestWithdrawal(int accountNumber, double amount, Person person){
+		  waitingCustomers.add(new WaitingCustomer(person, accountNumber, amount, Action.withdraw));
+	}
+	
+	public void msgRequestLoan(int accountNumber, double amount, Person person){
+		
 	}
 
 	/**
@@ -114,9 +141,22 @@ public class BankAgent extends Agent implements Bank {
 
 	// Actions
 	private void assignTeller(MyTeller mt, WaitingCustomer wc){
-		wc.person.msgGoToTeller(mt.teller);
+		BankCustomerAgent bca = new BankCustomerAgent(wc.person.getName(), wc.accountNum, this, bankGui);
+		if(wc.action == Action.newAccount){
+			bca.msgRequestNewAccount(wc.requestAmt);
+		}
+		else if(wc.action == Action.deposit){
+			bca.msgRequestDeposit(wc.requestAmt);
+		}
+		else if(wc.action == Action.withdraw){
+			bca.msgRequestWithdraw(wc.requestAmt);
+		}
+		else if(wc.action == Action.loan){
+			bca.msgRequestLoan(wc.requestAmt);
+		}
+		//wc.person.msgGoToTeller(mt.teller);
 		wc.state = State.busy;
-		mt.teller.msgNewCustomer(wc.person);
+		mt.teller.msgNewCustomer(bca);
 		mt.state = TellerState.busy;
 	}
 	private void tellerBusy(WaitingCustomer wc){
@@ -130,5 +170,6 @@ public class BankAgent extends Agent implements Bank {
 		//tellers.add(new MyTeller(t));
 		stateChanged();
 	}
+
 }
 

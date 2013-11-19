@@ -11,7 +11,7 @@ import bank.MarketAgent.Order;
 import bank.gui.Food;
 import bank.gui.Menu;
 import bank.interfaces.Cook;
-import bank.interfaces.Person;
+import bank.interfaces.BankCustomer;
 import bank.interfaces.Waiter;
 import bank.test.mock.MockTeller;
 import bank.test.mock.MockCook;
