@@ -44,6 +44,7 @@ public class PersonAgent extends Agent {
 	
 	// Variables with intention to update
 	private double moneyWanted = 0.0;
+	private double moneyToDeposit = 0.0;
 	private String targetLocation;
 	
 	// Wrapper class lists
@@ -142,6 +143,14 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgDepositSuccessful(double amount) {
+		log.add(new LoggedEvent("Received msgDepositSuccessful: amount = " + amount));
+		moneyOnHand -= amount;
+		moneyToDeposit -= amount;
+		readyForAction.release();
+		stateChanged();
+	}
+	
 	// from Restaurant
 	public void msgDoneEating() {
 		// TODO: Hack; what should this value be?
@@ -234,7 +243,7 @@ public class PersonAgent extends Agent {
 		MyBank myBank = (MyBank)currentMyObject;
 		// TODO: Hacking in account number
 		log.add(new LoggedEvent("Want to withdraw " + moneyWanted + " from " + myBank.name));
-		myBank.theBank.msgRequestWithdrawal(moneyWanted, 1, this);
+		myBank.theBank.msgRequestWithdrawal(1, moneyWanted, this);
 		try {
 			readyForAction.acquire();
 		}

@@ -5,5 +5,8 @@ import simcity.PersonAgent;
 public interface Bank {
 	public String getName();
 	
-	public void msgRequestWithdrawal(double amount, int accountNumber, PersonAgent person);
+	public void msgRequestAccount(double amount, PersonAgent person);
+	public void msgRequestDeposit(int accountNumber, double amount, PersonAgent person, boolean forLoan);
+	public void msgRequestWithdrawal(int accountNumber, double amount, PersonAgent person);
+	public void msgRequestLoan(int accountNumber, double amount, PersonAgent person);
 }
