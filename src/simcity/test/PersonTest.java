@@ -39,7 +39,7 @@ public class PersonTest extends TestCase
 	
 	// TEST #1
 	// Person: leave house, walk to bank, withdraw money, walk to restaurant,
-	// run restaurant scenario (successfully eat and pay), walk to home
+	// run restaurant scenario (successfully eat and pay), walk to home, done
 	public void testNormative_HomeBankRestaurantHome() {
 		
 		// setup
@@ -113,7 +113,7 @@ public class PersonTest extends TestCase
 				"Bank", person.getCurrLocationState());
 		
 		// step 3: person now goes to restaurant
-		assertTrue("Call scheduler, go to restaurant, request meal, scheduler returns true",
+		assertTrue("Call scheduler, go to restaurant, scheduler returns true",
 				person.pickAndExecuteAnAction());
 		 
 		// step 3 post-conditions and step 4 pre-conditions
@@ -130,14 +130,59 @@ public class PersonTest extends TestCase
 		assertEquals("Person: currentLocationState = Restaurant",
 				"Restaurant", person.getCurrLocationState());
 		 
-		// step 4: person goes to eat at restaurant
+		// step 4: person enters and eats at restaurant
+		assertTrue("Call scheduler, enter restaurant, eat, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		long startTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - startTime < 2000);
 		
 		// step 4 post-conditions and step 5 pre-conditions
+		assertEquals("Restaurant: 1 event log",
+				1, mockRestaurant.log.size());
+		assertTrue("Contains log: person eats at restaurant",
+				person.log.containsString("Received msgReachedDestination: destination = Mock Restaurant 1"));
+		
+		assertEquals("Person: 1 nourishment level",
+				1, person.getNourishmentLevel());
 		
 		// step 5: person is done eating, goes home 
-		 
-		// step 5 post-conditions
+		assertTrue("Call scheduler, going home, scheduler returns true",
+				person.pickAndExecuteAnAction());
 		
+		// step 5 post-conditions
+		assertEquals("Person: currentLocation = Mock House 1",
+				"Mock House 1", person.getCurrLocation());
+		assertEquals("Person: currentLocationState = Home",
+				"Home", person.getCurrLocationState());
+		
+	}
+	
+	// TEST #2
+	// Person: start at house, want to eat at home, not enough food,
+	// not enough money, go to bank, go to market, walk to home, cook, eat, done
+	public void testNormative_HomeBankMarketHomeCook() {
+		// setup
+		person.setMoney(5);
+		person.setFoodPreference("Chinese", false);
+		person.setNourishmentLevel(0);
+		person.addBank(mockBank, "BankCustomer");
+		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
+		person.addRestaurant(mockRestaurant, "Customer");
+		
+		
+	}
+	
+	// TEST #3a
+	// Person: start at house, has enough money on hand to buy car, walks to market,
+	// buys car, drives home, done
+	public void testNormative_HomeMarketCarHome() {
+		
+	}
+
+	// TEST #3b
+	// Person: start at house, has enough money on hand and in bank to buy car, walks to market,
+	// buys car, drives home, done 
+	public void testNormative_HomeBankMarketCarHome() {
 		
 	}
 }

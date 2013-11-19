@@ -45,6 +45,6 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank {
 			public void run() {
 				finalPerson.msgWithdrawalSuccessful(finalAmount);
 			}
-	    }, Constants.SECOND / 2);
+	    }, Constants.SECOND);
 	}
 }

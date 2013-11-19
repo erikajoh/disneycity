@@ -2,12 +2,14 @@ package simcity.test.mock;
 
 import java.util.*;
 
+import agent.Constants;
 import simcity.PersonAgent;
 import simcity.interfaces.*;
 
 public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant {
 
 	public EventLog log;
+	public Timer timer;
 	
 	public String type;
 	public Map<String, Double> menu;
@@ -18,6 +20,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 		this.type = type;
 		log = new EventLog();
 		this.menu = menu;
+		timer = new Timer();
 		waitingCustomers = new ArrayList<MyCustomer>();
 	}
 
@@ -40,7 +43,13 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 			MyCustomer newCustomer = new MyCustomer(name, moneyOnHand, foodPreference);
 			waitingCustomers.add(newCustomer);
 		}
-		// TODO msgPersonAs in MockRestaurant
+		final PersonAgent finalPerson = personAgent; 
+		timer.schedule(new TimerTask() {
+			public void run() {
+				finalPerson.setNourishmentLevel(1);
+				finalPerson.msgDoneEating();
+			}
+	    }, Constants.SECOND / 2);
 	}
 	
 	/*

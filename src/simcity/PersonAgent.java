@@ -44,7 +44,6 @@ public class PersonAgent extends Agent {
 	
 	// Variables with intention to update
 	private double moneyWanted = 0.0;
-	private LocationState targetLocationState;
 	private String targetLocation;
 	
 	// Wrapper class lists
@@ -61,6 +60,13 @@ public class PersonAgent extends Agent {
 	// Synchronization
 	Semaphore readyForAction = new Semaphore(0, true);
 	
+	// temporary variables for consideration
+	/*
+	 * BodyState {Sleeping, Awake}
+	 * Time currentTime;
+	 * 
+	 */
+	
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
@@ -70,7 +76,6 @@ public class PersonAgent extends Agent {
 		myPersonality = PersonType.Normal;
 		currentLocation = h.getName();
 		currentLocationState = LocationState.Home;
-		targetLocationState = LocationState.Home;
 		preferredCommute = PreferredCommute.Walk;
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
@@ -111,6 +116,8 @@ public class PersonAgent extends Agent {
 		myObjects.add(tempMyRestaurant);
 	}
 	
+	// TODO: addMarket
+	
 	public String toString() {
 		return "Person " + getName();
 	}
@@ -137,7 +144,8 @@ public class PersonAgent extends Agent {
 	
 	// from Restaurant
 	public void msgDoneEating() {
-		
+		// TODO: Hack; what should this value be?
+		nourishmentLevel = 1;
 		stateChanged();
 	}
 	
@@ -170,7 +178,7 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			// Done at bank, time to transition
-			if(nourishmentLevel <= 0) {
+			if(nourishmentLevel <= 0 && !preferEatAtHome) {
 				hungryToRestaurant();
 				return true;
 			}
@@ -181,6 +189,13 @@ public class PersonAgent extends Agent {
 				enterRestaurant();
 				return true;
 			}
+			else {
+				goHome();
+				return true;
+			}
+		}
+		if(currentLocationState == LocationState.Market) {
+			// TODO Person scheduler while in Market
 		}
 		
 		return false;
@@ -201,6 +216,12 @@ public class PersonAgent extends Agent {
 			return;
 		}
 		targetLocation = targetRestaurant.name;
+		goToTransportation();
+	}
+	
+	private void goHome() {
+		log.add(new LoggedEvent("Going home"));
+		targetLocation = myHome.name;
 		goToTransportation();
 	}
 	
