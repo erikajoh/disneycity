@@ -1,6 +1,7 @@
 package housing;
 
 import agent.Agent;
+import housing.gui.RenterGui;
 import housing.interfaces.Owner;
 import housing.interfaces.Renter;
 import housing.test.mock.EventLog;
@@ -21,14 +22,15 @@ public class RenterAgent extends Agent implements Renter {
 	public Owner owner;
 	private double amt;
 	String food;
+	private RenterGui renterGui;
 	
 	public EventLog log = new EventLog();
 
 	public enum State
 	{idle, wantsToRent, enteringHouse, paymentDue, readyToCook, wantsMaintenance, leavingHouse};
 	
-	State state = State.idle;	
-
+	State state = State.idle;
+	
 	/**
 	 * Constructor for RenterAgent class
 	 *
@@ -100,6 +102,7 @@ public class RenterAgent extends Agent implements Renter {
 	// Actions
 	
 	private void EnterHouse(){
+		renterGui.DoEnterHouse();
 		state = State.idle;
 	}
 	
@@ -125,12 +128,12 @@ public class RenterAgent extends Agent implements Renter {
 		owner = o;
 	}
 	
-//	public void setGui(RenterGui r) {
-//		renterGui = r;
-//	}
+	public void setGui(RenterGui r) {
+		renterGui = r;
+	}
 
-//	public RenterGui getGui() {
-//		return renterGui;
-//	}
+	public RenterGui getGui() {
+		return renterGui;
+	}
 }
 

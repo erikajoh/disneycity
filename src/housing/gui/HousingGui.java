@@ -15,7 +15,7 @@ public class HousingGui extends JFrame implements ActionListener {
      * and the animation frame, (in variable animationFrame within gui)
      */
 //	JFrame animationFrame = new JFrame("Restaurant Animation");
-	AnimationPanel animationPanel = new AnimationPanel(650, 600);
+	AnimationPanel animationPanel = new AnimationPanel(400, 300);
 	
     /* restPanel holds 2 panels
      * 1) the staff listing, menu, and lists of current customers all constructed
@@ -38,24 +38,27 @@ public class HousingGui extends JFrame implements ActionListener {
      * Sets up all the gui components.
      */
     public HousingGui() {
-        int WINDOWX = 650;
-        int WINDOWY = 600;
+        int WINDOWX = 400;
+        int WINDOWY = 300;
 
 //        animationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        animationFrame.setBounds(WINDOWX/5+WINDOWX, WINDOWY/8 , WINDOWX+WINDOWX/5, WINDOWY+WINDOWY/4);
 //        animationFrame.setVisible(true);
 //    	animationFrame.add(animationPanel); 
     	
-    	setBounds(WINDOWX/10, WINDOWY/12, WINDOWX, WINDOWY);
-
-        setLayout(new GridLayout(2,1));
-
-        Dimension houseDim = new Dimension(WINDOWX, (int) (WINDOWY * .6));
-        hPanel.setPreferredSize(houseDim);
-        hPanel.setMinimumSize(houseDim);
-        hPanel.setMaximumSize(houseDim);
-        add(hPanel);
+    	//setBounds(WINDOWX/10, WINDOWY/12, WINDOWX, WINDOWY);
         
+        setBounds(0,0,WINDOWX,WINDOWY);
+        setLayout(new GridLayout(1,1));
+
+        //setLayout(new GridLayout(2,1));
+
+//        Dimension houseDim = new Dimension(WINDOWX, (int) (WINDOWY * .6));
+//        hPanel.setPreferredSize(houseDim);
+//        hPanel.setMinimumSize(houseDim);
+//        hPanel.setMaximumSize(houseDim);
+//        add(hPanel);
+//        
         // Now, setup the info panel
 //        Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .15));
 //        infoPanel = new JPanel();

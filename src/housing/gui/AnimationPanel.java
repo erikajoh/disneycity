@@ -20,17 +20,8 @@ public class AnimationPanel extends JPanel implements ActionListener {
     private Dimension bufferSize;
     
     private List<Gui> guis = new ArrayList<Gui>();
-    public List<Table> tables = new ArrayList<Table>();
     Timer timer = new Timer(5, this);
     Graphics2D g2;
-    
-    public class Table {
-    	int xpos, ypos, width, height;
-    	boolean isOccupied;
-    	public Table(int x, int y, int w, int h, boolean occupied){
-    		xpos = x; ypos = y; width = w; height = h; isOccupied = occupied;
-    	}
-    }
 
     public AnimationPanel(int x, int y) {
     	this.setSize(x, y);
@@ -58,26 +49,17 @@ public class AnimationPanel extends JPanel implements ActionListener {
         g2.setColor(getBackground());
         g2.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        //Here are the tables
-        addTable();
-        
-//        g2.setColor(Color.BLACK);
-//        g2.draw(new Line2D.Double(0, this.getHeight()/12, this.getWidth()/2, this.getHeight()/12));
-//        g2.draw(new Line2D.Double(3*this.getWidth()/4, 0, 3*this.getWidth()/4, this.getHeight()));
-//        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/12, this.getWidth(), 5*this.getHeight()/12));
-//        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/6, this.getWidth(), 5*this.getHeight()/6));
-//    	
-//        g2.drawString("customers", 4*this.getWidth()/9-10, this.getHeight()/12);
-//        g2.drawString("waiters", 4*this.getWidth()/9, this.getHeight()/12+10);
-//        g2.drawString("kitchen", 5*this.getWidth()/6, 10);
-//        g2.drawString("(plating)", 5*this.getWidth()/6, 20);
-//        g2.drawString("(cooking)", 5*this.getWidth()/6, 5*this.getHeight()/12+10);
-//        g2.drawString("(fridge)", 5*this.getWidth()/6, 5*this.getHeight()/6+10);
-//        
-//        g2.setColor(Color.BLACK);
-//        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/6+20, this.getWidth()/16, this.getHeight()/16); // fridge
-//        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/12+20, this.getWidth()/16, this.getHeight()/16); // grill
-//        g2.fillRect(5*this.getWidth()/6, 30, this.getWidth()/16, this.getHeight()/16); // plating
+        g2.setColor(Color.GRAY);
+        g2.fillRect((int)(this.getWidth()*0.5), (int)(this.getHeight()*0.2), this.getWidth()/50, this.getHeight()/5);
+        g2.fillRect((int)(this.getWidth()*0.6), (int)(this.getHeight()*0.93), (int)(this.getWidth()*0.4), (int)(this.getHeight()*0.9));
+        g2.fillRect((int)(this.getWidth()*0.95), (int)(this.getHeight()*0.6), (int)(this.getWidth()*0.2), (int)(this.getHeight()*0.4));
+        g2.fillRect((int)(this.getWidth()*0.15), (int)(this.getHeight()*0.6), (int)(this.getWidth()*0.2), (int)(this.getHeight()*0.15));
+
+        g2.setColor(Color.BLACK);
+        g2.draw(new Line2D.Double(3*this.getWidth()/5, this.getHeight()/2, this.getWidth(), this.getHeight()/2));
+        g2.draw(new Line2D.Double(this.getWidth()/2, 0, this.getWidth()/2, this.getHeight()/2));
+        g2.draw(new Line2D.Double(this.getWidth()/4, (int)(this.getHeight()*0.95), this.getWidth()/4, this.getHeight()));
+        g2.draw(new Line2D.Double(this.getWidth()/3, (int)(this.getHeight()*0.95), this.getWidth()/3, this.getHeight()));
         
         for(Gui gui : guis) {
             if (gui.isPresent()) {
@@ -91,32 +73,13 @@ public class AnimationPanel extends JPanel implements ActionListener {
             }
         }
     }
-
-//    public void addGui(CustomerGui gui) {
-//        guis.add(gui);
-//    }
-//
-//    public void addGui(CashierGui gui) {
-//        guis.add(gui);
-//    }
-//    
-//    public void addGui(WaiterGui gui) {
-//    	guis.add(gui);
-//    }
-//    
-//    public void addGui(CookGui gui) {
-//    	guis.add(gui);
-//    }
     
-    public void addTable() {
-    	
-        Table t1 = new Table((int)(this.getWidth()*0.3), (int)(this.getHeight()*0.6), this.getWidth()/5, this.getHeight()/3, false);
-        tables.add(t1);
-        for (Table t: tables) {
-        	g2.setColor(Color.gray);
-        	g2.fillRect(t.xpos,  t.ypos, t.width, t.height);
-        }
-        
+    public void addGui(RenterGui gui) {
+    	guis.add(gui);
     }
+    
+//    public void addGui(OwnerGui gui) {
+//    	guis.add(gui);
+//    }
    
 }

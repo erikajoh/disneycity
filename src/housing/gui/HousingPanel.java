@@ -6,20 +6,31 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
+import housing.RenterAgent;
+import housing.OwnerAgent;
+
 /**
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
 public class HousingPanel extends JPanel {
+	
+	private RenterAgent renter = new RenterAgent("renter");
+	private OwnerAgent owner = new OwnerAgent("owner");
 
     private JPanel restLabel = new JPanel();
     private JPanel group = new JPanel();
     private JLabel restSubLabel = new JLabel();
 
     private HousingGui gui; //reference to main gui
-
+    private RenterGui renterGui = new RenterGui(renter, gui);
+    
     public HousingPanel(HousingGui gui) {
         this.gui = gui;
+        renter.startThread();
+        owner.startThread();
+        gui.animationPanel.addGui(renterGui);
+        
 //        host.setGui(cashierGui);
 //        host.setGui(cookGui);
 //        for (WaiterAgent w : host.waiters) {
