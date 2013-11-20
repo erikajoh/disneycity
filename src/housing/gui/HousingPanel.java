@@ -17,7 +17,7 @@ public class HousingPanel extends JPanel {
 	
 	private RenterAgent renter = new RenterAgent("renter");
 	private OwnerAgent owner = new OwnerAgent("owner");
-
+	
     private JPanel restLabel = new JPanel();
     private JPanel group = new JPanel();
     private JLabel restSubLabel = new JLabel();
@@ -27,6 +27,7 @@ public class HousingPanel extends JPanel {
     
     public HousingPanel(HousingGui gui) {
         this.gui = gui;
+    	renter.setOwner(owner); //hack
         renter.startThread();
         owner.startThread();
         gui.animationPanel.addGui(renterGui);

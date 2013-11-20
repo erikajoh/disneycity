@@ -11,13 +11,13 @@ import java.util.*;
 
 public class OwnerAgent extends Agent implements Owner {
 
-	enum State {idle, paymentDue, paymentPending, paymentRcvd, readyToCook, cooking, foodDone, wantsMaintenance, doingMaintenance, maintenanceDone};
+	enum State {idle, approved, paymentDue, paymentPending, paymentRcvd, readyToCook, cooking, foodDone, wantsMaintenance, doingMaintenance, maintenanceDone};
 
 	class MyRenter {
 	  RenterAgent agent;
 	  double amt;
 	  String food;
-	  Building building;
+	  Building building = new Building("house"); //hack
 	  State state;
 	  
 	  public MyRenter(RenterAgent ra){
@@ -47,7 +47,9 @@ public class OwnerAgent extends Agent implements Owner {
 	
 	public void msgWantToRent(RenterAgent ra){
 		print("New renter is here");
-		renters.add(new MyRenter(ra));
+		MyRenter myR = new MyRenter(ra);
+//		myR.state = State.approved;
+		renters.add(myR);
 		stateChanged();
 	}
 	
@@ -85,16 +87,10 @@ public class OwnerAgent extends Agent implements Owner {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	public boolean pickAndExecuteAnAction() {
-		/* Think of this next rule as:
-            Does there exist a table and customer,
-            so that table is unoccupied and customer is waiting.
-            If so seat him at the table.
-		 */
-		
+	public boolean pickAndExecuteAnAction() {		
 		for (MyRenter r: renters) {
 			if (r.state == State.paymentDue) {
-				r.agent.msgTimeToPay(this, r.amt);
+				r.agent.msgTimeToPay(r.amt);
 				r.state = State.paymentPending;
 				return true;
 			}
@@ -108,8 +104,9 @@ public class OwnerAgent extends Agent implements Owner {
 		}
 		for (MyRenter r: renters) {
 			if (r.state == State.wantsMaintenance) {
-				r.building.doMaintenance();
 				r.state = State.doingMaintenance;
+				r.building.doMaintenance();
+				r.state = State.maintenanceDone; //hack
 				return true;
 			}
 		}
@@ -124,6 +121,7 @@ public class OwnerAgent extends Agent implements Owner {
 			if (r.state == State.readyToCook) {
 				r.state = State.cooking;
 				r.building.cookFood(r.food);
+				r.state = State.foodDone; //hack
 				return true;
 			}
 		}
@@ -134,11 +132,7 @@ public class OwnerAgent extends Agent implements Owner {
 				return true;
 			}
 		}
-		
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions	

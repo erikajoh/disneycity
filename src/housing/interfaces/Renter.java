@@ -13,7 +13,9 @@ import housing.RenterAgent;
  */
 public interface Renter {
 	
-	public void msgTimeToPay(Owner o, double amt);
+//	public void msgYouAreApproved(Owner o);
+	
+	public void msgTimeToPay(double amt);
 	
 	public void msgPaymentAccepted();
 	

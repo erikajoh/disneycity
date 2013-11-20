@@ -29,43 +29,35 @@ public class RenterTest extends TestCase
 	
 	public void testRenterOwnerScenario() //Normative scenario
 	{
-		
 		//setUp() runs first before this test!
-		owner.renter = renter;				
+		owner.renter = renter;
+		renter.setOwner(owner);
 		
 		//Testing rent setup
 		owner.msgWantToRent(renter);
 		assertTrue("Owner should have logged \"New renter is here\" but didn't. His log reads instead: " + owner.log.getLastLoggedEvent().toString(), owner.log.containsString("New renter is here"));
 		
 		//Testing rent payment
-		renter.msgTimeToPay(owner, 10.0);
-		while(renter.pickAndExecuteAnAction());
-		assertFalse("Renter's scheduler should have returned true (checking to make sure the renter sends the payment to the owner).", renter.pickAndExecuteAnAction());	
+		renter.msgTimeToPay(10.0);
+		assertTrue("Renter's scheduler should have returned true (checking to make sure the renter sends the payment to the owner).", renter.pickAndExecuteAnAction());	
 		assertTrue("Owner should have logged \"Payment received from renter\" but didn't. His log reads instead: " + owner.log.getLastLoggedEvent().toString(), owner.log.containsString("Payment received from renter"));
-		//assertTrue("Renter should have logged \"Payment accepted by owner\" but didn't. His log reads instead: " + renter.log.getLastLoggedEvent().toString(), renter.log.containsString("Payment accepted by owner"));
-		
-		//Testing maintenance
-		
+		renter.msgPaymentAccepted();
+		assertTrue("Renter should have logged \"Payment accepted by owner\" but didn't. His log reads instead: " + renter.log.getLastLoggedEvent().toString(), renter.log.containsString("Payment accepted by owner"));
+
 		//Testing cooking
-				
-		//cashier.msgHereIsBill(market, 7.5);//send the message from a market
-		//check postconditions for step 1 and preconditions for step 2
-//		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
-//						+ market.log.toString(), 0, market.log.size());
-//		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.marketBills.size(), 1);
-//		while(cashier.pickAndExecuteAnAction());
-//		assertFalse("Cashier's scheduler should have returned true (checking to make sure the cashier sends the payment to the market).", cashier.pickAndExecuteAnAction());	
-//		assertEquals(
-//				"MockMarket should have have a log size of 1."
-//						+ market.log.toString(), 1, market.log.size());
-		//step 2 of the test
-//		cashier.msgHereIsChange(8.5);
-		//check postconditions for step 2 / preconditions for step 3
-//		assertTrue("Cashier should have logged \"Received msgHereIsChange\" but didn't. His log reads instead: " 
-//				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received msgHereIsChange"));
-		//step 3			
-//		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
-//				cashier.pickAndExecuteAnAction());	
+		owner.msgReadyToCook(renter, "pizza");
+		assertTrue("Owner should have logged \"Renter wants to cook\" but didn't. His log reads instead: " + owner.log.getLastLoggedEvent().toString(), owner.log.containsString("Renter wants to cook"));
+		renter.msgFoodDone();
+		assertTrue("Renter should have logged \"Food is done\" but didn't. His log reads instead: " + renter.log.getLastLoggedEvent().toString(), renter.log.containsString("Food is done"));
+
+		//Testing maintenance
+		owner.msgWantMaintenance(renter);
+		assertTrue("Owner should have logged \"Renter wants maintenance\" but didn't. His log reads instead: " + owner.log.getLastLoggedEvent().toString(), owner.log.containsString("Renter wants maintenance"));
+		renter.msgFinishedMaintenance();
+		assertTrue("Renter should have logged \"Finished maintenance\" but didn't. His log reads instead: " + renter.log.getLastLoggedEvent().toString(), renter.log.containsString("Finished maintenance"));
 		
+		//Post condition check
+		assertFalse("Renter's scheduler should have returned false (no actions left to do), but didn't.", renter.pickAndExecuteAnAction());	
 	}
+	
 }

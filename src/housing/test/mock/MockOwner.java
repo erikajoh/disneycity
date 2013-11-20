@@ -33,19 +33,19 @@ public class MockOwner extends Mock implements Owner {
 	@Override
 	public void msgHereIsPayment(RenterAgent ra, double amount) {
 		// TODO Auto-generated method stub
-		log.add(new LoggedEvent("Payment received from renter: "));
+		log.add(new LoggedEvent("Payment received from renter"));
 	}
 
 	@Override
 	public void msgReadyToCook(RenterAgent ra, String food) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Renter wants to cook"));	
 	}
 
 	@Override
 	public void msgWantMaintenance(RenterAgent ra) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Renter wants maintenance"));		
 	}
 
 	//@Override

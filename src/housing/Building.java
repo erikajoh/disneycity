@@ -8,8 +8,10 @@ public class Building {
 	}
 	
 	public void doMaintenance(){
+		
 	}
 	
 	public void cookFood(String f){
+		
 	}
 }

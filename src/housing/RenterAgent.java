@@ -45,24 +45,32 @@ public class RenterAgent extends Agent implements Renter {
 	public String getCustomerName() {
 		return name;
 	}
+	
 	// Messages
-
-	public void msgTimeToPay(Owner o, double amt){
-		owner = o;
+	
+	public void msgTimeToPay(double amt){
 		state = State.paymentDue;
 		stateChanged();
 	}
 	
 	public void msgPaymentAccepted(){
+		print("payment accepted");
 		log.add(new LoggedEvent("Payment accepted by owner"));
+		state = State.readyToCook; //hack
 		stateChanged();
 	}
 	
 	public void msgFinishedMaintenance(){
+		print("finished maintenance");
+		log.add(new LoggedEvent("Finished maintenance"));
+		state = State.idle; //hack
 		stateChanged();
 	}
 	
 	public void msgFoodDone(){
+		print("food done");
+		log.add(new LoggedEvent("Food is done"));
+		state = State.wantsMaintenance; //hack
 		stateChanged();
 	}
 
@@ -70,10 +78,11 @@ public class RenterAgent extends Agent implements Renter {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
-		//	CustomerAgent is a finite state machine
 		if(state == State.enteringHouse){
 			Do("Entering house");
 			EnterHouse();
+			owner.msgWantToRent(this);
+			state = State.paymentDue; //hack
 			return true;
 		}
 		else if(state == State.paymentDue){
@@ -135,5 +144,6 @@ public class RenterAgent extends Agent implements Renter {
 	public RenterGui getGui() {
 		return renterGui;
 	}
+	
 }
 
