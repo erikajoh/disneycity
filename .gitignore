@@ -19,3 +19,6 @@ Desktop.ini
 .DS_Store
 .Trashes
 .Trash
+.classpath
+/bin/.classpath
+/bin/restaurants
