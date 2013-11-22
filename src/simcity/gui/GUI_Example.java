@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 
 public class GUI_Example implements Gui {
 	
+	//ALL SPRITES AS PNGS PLEASE
+	
 	String character = "";//This is the name of the folder that the agent's sprites will be pulled from
 	String animation = "";//Each animation is split into its own folder for ease of use
 	//YOU MUST SET A DEFAULT ANIMATION HERE OR THE PROGRAM MAY FREAK OUT AT NOT HAVING A CORRENT FILEPATHWAY
@@ -17,14 +19,16 @@ public class GUI_Example implements Gui {
 	String previousAnimation = "";
 	int currentFrame = 1;//Frame counts start at 1. Make sure that the files are named with no whitespace
 	int totalFrames = 0;
-	int frameDelay = 6;//makes it so that the animation doesn't play at ludicrous speeds. Depending on the character, you may have to find a way to change this for your implementation
+	int frameDelay = 60;
+	//makes it so that the animation doesn't play at ludicrous speeds. Depending on the character, you may have to find a way to change this for your implementation
+	//I would recommend using a map to map animation names to frameDelays and possibly totalFrames
 	int frameDelayCounter = 0;
 	
 	String filePathway;
 	BufferedImage img = null;//This is the image that gets drawn
 
-    private float xPos = -20.0f, yPos = -20.0f;//default position, changed to floats for greater precision.
-    private float xDestination = -20.0f, yDestination = -20.0f;//default destination, changed to floats for greater precision.
+    private float xPos = 0.0f, yPos = 0.0f;//default position, changed to floats for greater precision.
+    private float xDestination = 0.0f, yDestination = 0.0f;//default destination, changed to floats for greater precision.
 	private float xSpeed = 1.0f, ySpeed = 1.0f;//if you have agents with different speeds
 
     //SIZE variable removed, although most sprites for agents are 24x24.
@@ -84,8 +88,8 @@ public class GUI_Example implements Gui {
     			frameDelayCounter++;
     		}
     	}
-    	String filePathway = ".." + File.separator + character + File.separator + animation + File.separator + String.valueOf(currentFrame);
-    	System.out.println(filePathway + ": being drawn.");
+    	String filePathway = "src" + File.separator + "res" + File.separator + character + File.separator + animation + File.separator + String.valueOf(currentFrame) + ".png";
+    	//System.out.println(filePathway + ": being drawn.");
     	
     	try {
     	    img = ImageIO.read(new File(filePathway));
@@ -97,13 +101,20 @@ public class GUI_Example implements Gui {
     }
     
     private int findFrameCount() {//returns the number of frames in the current animation
-    	File f = new File(".." + File.separator + character + File.separator + animation);
+    	File f = new File("src" + File.separator + "res" + File.separator + character + File.separator + animation + File.separator);
+    	try {
+			System.out.println("Current dir : " + f.getCanonicalPath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         int count = 0;
         for (File file : f.listFiles()) {
                 if (file.isFile()) {
                         count++;
                 }
         }
+        System.out.println("Found frames: " + String.valueOf(count));
         return count;
     }
 
