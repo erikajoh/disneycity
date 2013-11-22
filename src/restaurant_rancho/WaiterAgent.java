@@ -7,6 +7,7 @@ import restaurant_rancho.RestMenu;
 import restaurant_rancho.gui.WaiterGui;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
+import restaurant_rancho.interfaces.Person;
 import restaurant_rancho.interfaces.Waiter;
 
 import java.util.*;
@@ -27,6 +28,8 @@ import java.util.concurrent.Semaphore;
 		public WaiterGui waiterGui = null;
 		public Cashier cashier;
 		double cash;
+		
+		Person person;
 		
 		public WaiterAgent(String name) {
 			super();
@@ -50,6 +53,10 @@ import java.util.concurrent.Semaphore;
 		
 		public String getMaitreDName() {
 			return name;
+		}
+		
+		public void setPerson(Person p) {
+			person = p;
 		}
 
 		public String getName() {

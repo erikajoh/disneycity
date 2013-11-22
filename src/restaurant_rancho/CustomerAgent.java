@@ -5,6 +5,7 @@ import restaurant_rancho.gui.CustomerGui;
 import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
+import restaurant_rancho.interfaces.Person;
 import restaurant_rancho.interfaces.Waiter;
 import agent_rancho.Agent;
 
@@ -34,6 +35,7 @@ public class CustomerAgent extends Agent implements Customer{
 	double iOwe= 0; 
 	boolean returning;
 	boolean atWaitingSpot;
+	Person person;
 
 	String choice = "";
 	public enum AgentState
@@ -60,6 +62,14 @@ public class CustomerAgent extends Agent implements Customer{
 	/**
 	 * hack to establish connection to Host agent.
 	 */
+	
+	public void setPerson(Person p) {
+		person = p;
+	}
+	
+	public void setChoice(String choice) {
+		this.choice = choice;
+	}
 	public void setHost(HostAgent host) {
 		this.host = host;
 	}

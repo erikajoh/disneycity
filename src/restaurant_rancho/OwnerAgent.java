@@ -7,7 +7,6 @@ import java.util.*;
 
 public class OwnerAgent extends Agent {
 	//data
-	Person person;
 	private double cash; 
 	public String name;
 	private enum OwnerState{nothing, payingBank};
@@ -17,6 +16,8 @@ public class OwnerAgent extends Agent {
 	private boolean needCook, needCashier, needHost;
 	private int numWaiters;
 	private OwnerState os;
+	Person person;
+	
 	public OwnerAgent(String name) {
 		super();
 		this.name = name;
@@ -28,6 +29,10 @@ public class OwnerAgent extends Agent {
 		hiring = true;
 		os = OwnerState.nothing;
 		
+	}
+	
+	public void setPerson(Person p) {
+		person = p;
 	}
 	
 	public void setRestaurant() {

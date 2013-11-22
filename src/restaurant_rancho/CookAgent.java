@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import restaurant_rancho.Order;
 import restaurant_rancho.gui.CookGui;
+import restaurant_rancho.interfaces.Person;
 
 public class CookAgent extends Agent {
 	
@@ -21,8 +22,8 @@ public class CookAgent extends Agent {
 	List<WaiterAgent> waiters;
 	CookGui gui;
 	private Semaphore cooking = new Semaphore(0,true);
-	
 	int cookNum = 0;
+	Person person;
 	
 
 	public CookAgent(String name) {
@@ -59,6 +60,10 @@ public class CookAgent extends Agent {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setPerson(Person p) {
+		person = p;
 	}
 
 	public void setGui(CookGui cg) {

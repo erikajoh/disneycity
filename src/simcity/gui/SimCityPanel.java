@@ -20,13 +20,14 @@ public class SimCityPanel extends JPanel{
 	     public SimCityPanel() {
 	    	 ranchoGui = new RestaurantRanchoGui("Rancho de Zocales");
 	    	 ranchoRest = ranchoGui.getRestaurant();
-	    	 ranchoRest.addPerson("Cook", "cook", false);
+	    	/* ranchoRest.addPerson("Cook", "cook", false);
 		     ranchoRest.addPerson("Waiters", "w", false);
 		     ranchoRest.addPerson("Cashier", "cash", false);
 		     ranchoRest.addPerson("Market", "Trader Joes", false);
 		     ranchoRest.addPerson("Host", "Host", false);
 		     ranchoRest.addPerson("Customers", "c", true);
 		     ranchoGui.run();
+		     */
 		     
 		     setLayout(new GridLayout());
 	     }

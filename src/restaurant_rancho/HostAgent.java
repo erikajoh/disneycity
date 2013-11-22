@@ -4,6 +4,7 @@ import agent_rancho.Agent;
 import restaurant_rancho.Table;
 import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.gui.WaiterGui;
+import restaurant_rancho.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -22,7 +23,7 @@ public class HostAgent extends Agent {
 	private Collection<Table> tables;
 	private String name;
 	private enum waiterState {working, onBreak};
-
+	Person person;
 
 	public HostAgent(String name) {
 		super();
@@ -37,6 +38,10 @@ public class HostAgent extends Agent {
 			}
 		}
 	
+	}
+	
+	public void setPerson(Person p) {
+		person = p;
 	}
 	
 	public void addWaiter(WaiterAgent waiter) {
