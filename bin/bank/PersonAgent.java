@@ -75,6 +75,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void tellBankHere(){
 		state = State.idle;
+		bank.msgCustomerHere(this);
 		if(accounts.size() == 0){
 			bank.msgRequestAccount(balance*.5, this);
 		}

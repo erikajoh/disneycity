@@ -168,7 +168,10 @@ public class TellerAgent extends Agent implements Teller {
 
 	// Actions
 	private void openAccount(){
-		customer.person.msgAccountOpened(customer.account.getNumber());
+		int accountNum = accounts.size();
+		customer.account = new Account(accountNum);
+		accounts.add(customer.account);
+		customer.person.msgAccountOpened(accountNum);
 		customer.state = State.deciding;
 	}
 

@@ -2,6 +2,7 @@ package bank.gui;
 
 import bank.BankCustomerAgent;
 import bank.interfaces.BankCustomer;
+import bank.gui.BankCustomerGui;
 
 import javax.swing.*;
 
@@ -130,7 +131,7 @@ public class BankGui extends JFrame implements ActionListener {
         currentPerson = person;
         if (person instanceof BankCustomerAgent) {
             BankCustomerAgent customer = (BankCustomerAgent) person;
-        	System.out.println(customer.toString() + " " + customer.getGui().isInBank());
+        	//System.out.println(customer.toString() + " " + customer.getGui().isInBank());
             inBank.setVisible(true);
             inBank.setText("Reenter bank?");
             inBank.setSelected(customer.getGui().isInBank());
@@ -155,7 +156,7 @@ public class BankGui extends JFrame implements ActionListener {
     	 if (e.getSource() == inBank) {
              if (currentPerson instanceof BankCustomerAgent) {
                  BankCustomerAgent p = (BankCustomerAgent) currentPerson;
-                 p.getBank().msgEnteredBank(p);
+                 //p.getBank().msgEnteredBank(p);
                  p.getGui().setInBank(true);
                  inBank.setEnabled(false);
              } 
@@ -175,6 +176,10 @@ public class BankGui extends JFrame implements ActionListener {
     
     public String getNameFieldText(){
     	return nameField.getText();
+    }
+    
+    public void addBankCustomerGui(BankCustomerGui bg){
+    	animationPanel.addGui(bg);
     }
     
     public int getAnimWindowX(){

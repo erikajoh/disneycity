@@ -28,7 +28,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private Teller teller = null;
 
 	public enum State
-	{deciding, openingAccount, depositing, withdrawing, requestingLoan, leaving, idle};
+	{deciding, openingAccount, depositing, withdrawing, requestingLoan, leaving, left, idle};
 	State state = State.idle;
 
 	public enum AnimState{go, walking, idle};
@@ -43,10 +43,9 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public BankCustomerAgent(String name, int an, Bank b, BankGui bg){
+	public BankCustomerAgent(String name, Bank b, BankGui bg){
 		super();
 		this.name = name;
-		accountNum = an;
 		bank = b;
 		bankGui = bg;
 		state = State.idle;
@@ -58,6 +57,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	// Messages
 	
 	public void	msgRequestNewAccount(double ra){
+		print("REQ NEW ACCOUNT");
 		requestAmt = ra;
 		state = State.openingAccount;
 		stateChanged();
@@ -109,7 +109,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	public void msgAnimationFinishedGoToTeller(){
-		print("AT TELLER");
+		print("AT TELLER " + state);
 		animState = AnimState.idle;
 		stateChanged();
 	}
@@ -147,10 +147,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			   leaveBank();
 			   return true;
 		   }
-		 /*  else if(state == State.left){
+		  else if(state == State.left){
 			   leftBank();
 			   return true;
-		   }*/
+		   }
 	    }
 		return false;
 	}
@@ -158,12 +158,15 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	// Actions
 	
 	private void goToTeller(){
-		state = State.idle;
+		//state = State.idle;
 		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
 	    bankGui.updateInfoPanel(this);
 	}
 	
 	private void openAccount(){
+		if(teller == null){
+			print("TELLER NULL");
+		}
 		teller.msgOpenAccount(this, balance*.5);
 		change = -balance*.5;
 		state = State.idle;
@@ -213,6 +216,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	public int getAccountNum(){
 		return accountNum;
+	}
+	
+	public void setAccountNum(int num) {
+		accountNum = num;
 	}
 	
 	public void setTeller(Teller t) {

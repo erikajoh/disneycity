@@ -24,7 +24,7 @@ public class BankPanel extends JPanel implements ActionListener {
 
     //Host, cook, waiters and customers
 
-    private Vector<BankCustomerAgent> customers = new Vector<BankCustomerAgent>();
+    private Vector<PersonAgent> customers = new Vector<PersonAgent>();
     private Vector<TellerAgent> tellers = new Vector<TellerAgent>();
     
 
@@ -37,11 +37,11 @@ public class BankPanel extends JPanel implements ActionListener {
 
     private BankGui gui; //reference to main gui
     
-    private BankAgent bank = new BankAgent("Bank", gui);
+    private BankAgent bank;
 
     public BankPanel(BankGui gui) {
         this.gui = gui;
-
+        bank = new BankAgent("Bank", gui);
         bank.startThread();
         
         setLayout(new GridLayout(1, 2, 20, 20));
@@ -88,7 +88,7 @@ public class BankPanel extends JPanel implements ActionListener {
 
         if (type.equals("Customers")) {
             for (int i = 0; i < customers.size(); i++) {
-                BankCustomerAgent temp = customers.get(i);
+                PersonAgent temp = customers.get(i);
                 if (temp.getName() == name)
                     gui.updateInfoPanel(temp);
             }
@@ -112,14 +112,16 @@ public class BankPanel extends JPanel implements ActionListener {
 
     	if (type.equals("Customers")) {
     		PersonAgent p = new PersonAgent(name);
-    		BankCustomerAgent c = new BankCustomerAgent(name, gui);	
-    		BankCustomerGui g = new BankCustomerGui(c, gui, gui.getAnimWindowX(), gui.getAnimWindowY());
-    		c.setBalance(25.00);
-    		c.setBank(bank);
-    		gui.animationPanel.addGui(g);// dw
-    		c.setGui(g);
-    		customers.add(c);
-    		c.startThread();
+    		p.setBank(bank);
+    		p.msgArrive(-1);
+    		//BankCustomerAgent c = new BankCustomerAgent(name, gui);	
+    		//BankCustomerGui g = new BankCustomerGui(c, gui, gui.getAnimWindowX(), gui.getAnimWindowY());
+    		//c.setBalance(25.00);
+    		//c.setBank(bank);
+    		//gui.animationPanel.addGui(g);// dw
+    		//c.setGui(g);
+    		customers.add(p);
+    		p.startThread();
     	}
     	else if (type.equals("Tellers")) {
     		TellerAgent t = new TellerAgent(name);	

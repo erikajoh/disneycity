@@ -7,6 +7,7 @@ import bank.gui.BankGui;
 public interface Bank {
 	public void msgTellerFree(Teller teller);
 	
+	public void msgCustomerHere(Person person);
 	public void msgRequestAccount(double amount, Person person);
 	public void msgRequestDeposit(int accountNumber, double amount, Person person, boolean forLoan);
 	public void msgRequestWithdrawal(int accountNumber, double amount, Person person);

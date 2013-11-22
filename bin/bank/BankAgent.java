@@ -4,7 +4,9 @@ import agent.Agent;
 import bank.interfaces.Bank;
 import bank.interfaces.Teller;
 import bank.interfaces.Person;
+import bank.interfaces.BankCustomer;
 import bank.gui.BankGui;
+import bank.gui.BankCustomerGui;
 
 import java.util.*;
 
@@ -16,19 +18,31 @@ import java.util.*;
 //the HostAgent. A Host is the manager of a bank who sees that all
 //is proceeded as he wishes.
 public class BankAgent extends Agent implements Bank {
-	   class WaitingCustomer {
+	   public class WaitingCustomer {
+		 BankCustomer bankCustomer;
 		 Person person;
 		 State state;
 		 Action action;
-		 int accountNum;
-		 double requestAmt;
-		 public WaitingCustomer(Person p, int accNum, double ra, Action a){
-			 action = a;
-			 accountNum = accNum;
+		 private int accountNum;
+		 private double requestAmt;
+		 public WaitingCustomer(BankCustomer bc, Person p){
+			 bankCustomer = bc;
 			 person = p;
-			 requestAmt = ra;
 			 state = State.waiting;
 		 }
+		 
+		 public void setAccountNum(int accNum){
+			 accountNum = accNum;
+		 }
+		 public int getAccountNum(){
+			 return accountNum;
+		 }
+		 public void setRequestAmt(double ra){
+			 requestAmt = ra;
+		 }
+		 public double getRequestAmt(){
+			 return requestAmt;
+		 }		 
 	   }
 
 		List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
@@ -78,23 +92,57 @@ public class BankAgent extends Agent implements Bank {
 		stateChanged();
 	}
 	
+	public void msgCustomerHere(Person person){
+		BankCustomerAgent bca = new BankCustomerAgent(person.getName(), this, bankGui);
+		BankCustomerGui g = new BankCustomerGui(bca, bankGui, bankGui.getAnimWindowX(), bankGui.getAnimWindowY());
+		bankGui.addBankCustomerGui(g);// dw
+		bca.setGui(g);
+		bca.startThread();
+		waitingCustomers.add(new WaitingCustomer(bca, person));
+	}
+
 	public void msgRequestAccount(double amount, Person person){
-		waitingCustomers.add(new WaitingCustomer(person, -1, amount, Action.newAccount));
+		//print(person.getName());
+		for(WaitingCustomer wc : waitingCustomers){
+			if(wc.person == person){
+				wc.setAccountNum(-1);
+				wc.setRequestAmt(amount);
+				wc.action = Action.newAccount;
+				break;
+			}
+		}
 		stateChanged();
 	}
 	
 	public void msgRequestDeposit(int accountNumber, double amount, Person person, boolean forLoan){
+		WaitingCustomer waitingCustomer = null;
+		for(WaitingCustomer wc : waitingCustomers){
+			if(wc.person == person){
+				waitingCustomer = wc;
+				wc.setAccountNum(accountNumber);
+				wc.setRequestAmt(amount);
+				break;
+			}
+		}
 	   if(forLoan == false){
-		  waitingCustomers.add(new WaitingCustomer(person, accountNumber, amount, Action.deposit));
+			waitingCustomer.action = Action.deposit;
 	   }
 	   else {
-		  waitingCustomers.add(new WaitingCustomer(person, accountNumber, amount, Action.loan));  
+			waitingCustomer.action = Action.loan;
 	   }
 		stateChanged();
 	}
 	
 	public void msgRequestWithdrawal(int accountNumber, double amount, Person person){
-		  waitingCustomers.add(new WaitingCustomer(person, accountNumber, amount, Action.withdraw));
+		for(WaitingCustomer wc : waitingCustomers){
+			if(wc.person == person){
+				wc.setAccountNum(accountNumber);
+				wc.setRequestAmt(amount);
+				wc.action = Action.withdraw;
+				break;
+			}
+		}
+		  stateChanged();
 	}
 	
 	public void msgRequestLoan(int accountNumber, double amount, Person person){
@@ -110,6 +158,7 @@ public class BankAgent extends Agent implements Bank {
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
+		//print("HERE");
 		for(WaitingCustomer wc : waitingCustomers){
 			if(wc.state == State.waiting){
 				for(MyTeller mt : tellers){
@@ -140,23 +189,23 @@ public class BankAgent extends Agent implements Bank {
 	}
 
 	// Actions
-	private void assignTeller(MyTeller mt, WaitingCustomer wc){
-		BankCustomerAgent bca = new BankCustomerAgent(wc.person.getName(), wc.accountNum, this, bankGui);
+	private void assignTeller(MyTeller mt, WaitingCustomer wc){	
+		wc.bankCustomer.msgGoToTeller(mt.teller);
 		if(wc.action == Action.newAccount){
-			bca.msgRequestNewAccount(wc.requestAmt);
+			wc.bankCustomer.msgRequestNewAccount(wc.requestAmt);
 		}
 		else if(wc.action == Action.deposit){
-			bca.msgRequestDeposit(wc.requestAmt);
+			wc.bankCustomer.msgRequestDeposit(wc.requestAmt);
 		}
 		else if(wc.action == Action.withdraw){
-			bca.msgRequestWithdraw(wc.requestAmt);
+			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt);
 		}
 		else if(wc.action == Action.loan){
-			bca.msgRequestLoan(wc.requestAmt);
+			wc.bankCustomer.msgRequestLoan(wc.requestAmt);
 		}
 		//wc.person.msgGoToTeller(mt.teller);
 		wc.state = State.busy;
-		mt.teller.msgNewCustomer(bca);
+		mt.teller.msgNewCustomer(wc.bankCustomer);
 		mt.state = TellerState.busy;
 	}
 	private void tellerBusy(WaitingCustomer wc){
