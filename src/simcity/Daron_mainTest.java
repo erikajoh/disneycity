@@ -1,6 +1,7 @@
 package simcity;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -22,6 +23,7 @@ public class Daron_mainTest {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
+        gui.setMinimumSize(new Dimension(300,300));
         gui.setSize(300, 300);
         gui.setVisible(true);
         frame.add(gui);
