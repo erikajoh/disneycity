@@ -22,6 +22,8 @@ public class AnimationPanel extends JPanel implements ActionListener {
     private List<Gui> guis = new ArrayList<Gui>();
     Timer timer = new Timer(5, this);
     Graphics2D g2;
+    
+    private JButton kitchen = new JButton(" ");
 
     public AnimationPanel(int x, int y) {
     	this.setSize(x, y);

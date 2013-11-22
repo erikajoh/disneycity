@@ -17,7 +17,7 @@ public class RenterGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, GoToSeat, EnterHouse, LeaveHouse};
+	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, GoToBath, GoToTable, GoToKitchen, LeaveHouse};
 	private Command command=Command.noCommand;
 
 	public static final int hWidth = 400;
@@ -36,19 +36,13 @@ public class RenterGui implements Gui{
 			xPos++;
 		else if (xPos > xDestination)
 			xPos--;
-
-		if (yPos < yDestination)
+		else if (yPos < yDestination)
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
-
+		
 		if (xPos == xDestination && yPos == yDestination) {
-			//if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
-			//else if (command==Command.GoToCashier) agent.msgAnimationFinishedGoToCashier();
-			//else if (command==Command.LeaveRestaurant) {
-				//agent.msgAnimationFinishedLeaveRestaurant();
-				//setEnabled();
-			//}
+			if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
 	}
@@ -82,31 +76,31 @@ public class RenterGui implements Gui{
 	public void DoGoToCouch() {
 		xDestination = -hWidth/5;
 		yDestination = -hHeight/6;
-		command = Command.LeaveHouse;
+		command = Command.GoToCouch;
 	}
 	
 	public void DoGoToBed() {
 		xDestination = -hWidth/5;
 		yDestination = -hHeight/6;
-		command = Command.LeaveHouse;
+		command = Command.GoToBed;
 	}
 	
 	public void DoGoToBath() {
 		xDestination = -hWidth/5;
 		yDestination = -hHeight/6;
-		command = Command.LeaveHouse;
+		command = Command.GoToBath;
 	}
 	
 	public void DoGoToTable() {
 		xDestination = -hWidth/5;
 		yDestination = -hHeight/6;
-		command = Command.LeaveHouse;
+		command = Command.GoToTable;
 	}
 	
 	public void DoGoToKitchen() {
-		xDestination = -hWidth/5;
-		yDestination = -hHeight/6;
-		command = Command.LeaveHouse;
+		xDestination = (int)(hWidth*0.8);
+		yDestination = (int)(hHeight*0.8);
+		command = Command.GoToKitchen;
 	}
 
 	public void DoLeaveHouse() {
