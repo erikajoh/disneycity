@@ -101,8 +101,8 @@ public class PersonTest extends TestCase
 				8.00, person.getMoney());
 		assertTrue("Contains log: Want to withdraw 3.0 from Mock Bank 1",
 				person.log.containsString("Want to withdraw 3.0 from Mock Bank 1"));
-		assertTrue("Contains log: Received msgWithdrawalSuccessful: amount = 3.0",
-				person.log.containsString("Received msgWithdrawalSuccessful: amount = 3.0"));
+		assertTrue("Contains log: Received msgMoneyWithdrawn: amount = 3.0",
+				person.log.containsString("Received msgMoneyWithdrawn: amount = 3.0"));
 		
 		assertEquals("Bank: 1 event log",
 				1, mockBank.log.size());

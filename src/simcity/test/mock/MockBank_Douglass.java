@@ -43,7 +43,7 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank {
 				+ "accountNumber = " + accountNumber));
 		timer.schedule(new TimerTask() {
 			public void run() {
-				finalPerson.msgWithdrawalSuccessful(finalAmount);
+				finalPerson.msgMoneyWithdrawn(finalAmount);
 			}
 	    }, Constants.SECOND);
 	}
@@ -65,7 +65,7 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank {
 				+ "forLoan = " + forLoan));
 		timer.schedule(new TimerTask() {
 			public void run() {
-				finalPerson.msgDepositSuccessful(finalAmount);
+				finalPerson.msgMoneyDeposited();
 			}
 	    }, Constants.SECOND);
 	}

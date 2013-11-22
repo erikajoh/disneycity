@@ -47,7 +47,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 		timer.schedule(new TimerTask() {
 			public void run() {
 				finalPerson.setNourishmentLevel(1);
-				finalPerson.msgDoneEating();
+				finalPerson.msgDoneEating(true);
 			}
 	    }, Constants.SECOND / 2);
 	}

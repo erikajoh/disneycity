@@ -9,6 +9,7 @@ import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 import simcity.interfaces.Bank;
 import simcity.interfaces.Housing;
+import simcity.interfaces.Market;
 import simcity.interfaces.Restaurant;
 import simcity.interfaces.Transportation;
 import simcity.test.mock.EventLog;
@@ -27,12 +28,16 @@ public class PersonAgent extends Agent {
 	private String name;
 	private int nourishmentLevel;
 	private double moneyOnHand;
+	private Map<String, Integer> itemsOnHand;
 	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
 	private PersonType myPersonality;
 	private enum PreferredCommute {Walk, Bus, Car};
 	private PreferredCommute preferredCommute;
+	private enum BodyState {Asleep, Active, Tired};
+	private BodyState bodyState;
 	
-	private final static double MONEY_ON_HAND_LIMIT = 50;
+	private final static double MONEY_ON_HAND_LIMIT = 50.0;
+	private final static int BASE_NOURISHMENT_LEVEL = 10;
 	
 	// Transportation
 	private Transportation transportation;
@@ -60,6 +65,7 @@ public class PersonAgent extends Agent {
 	
 	// Synchronization
 	Semaphore readyForAction = new Semaphore(0, true);
+	private PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
 	
 	// temporary variables for consideration
 	/*
@@ -80,6 +86,8 @@ public class PersonAgent extends Agent {
 		preferredCommute = PreferredCommute.Walk;
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
+		bodyState = BodyState.Active;
+		itemsOnHand = new HashMap<String, Integer>();
 	}
 
 	// get/set methods
@@ -93,7 +101,6 @@ public class PersonAgent extends Agent {
 	public void		setNourishmentLevel(int level)	{ nourishmentLevel = level; }
 	public void		setMoney(double money)			{ moneyOnHand = money; }
 	
-
 	public void	setFoodPreference(String type, boolean atHome) {
 		foodPreference = type;
 		preferEatAtHome = atHome;
@@ -117,7 +124,10 @@ public class PersonAgent extends Agent {
 		myObjects.add(tempMyRestaurant);
 	}
 	
-	// TODO: addMarket
+	public void	addMarket(Market m, String personType) {
+		MyMarket tempMyMarket = new MyMarket(m, m.getName(), personType);
+		myObjects.add(tempMyMarket);
+	}
 	
 	public String toString() {
 		return "Person " + getName();
@@ -125,6 +135,45 @@ public class PersonAgent extends Agent {
 	
 	// ************************* MESSAGES ***********************************
 
+	// from main class
+	// TODO: handle sleeping/waking in scheduler
+	public void msgWakeUp() {
+		bodyState = BodyState.Active;
+		stateChanged();
+	}
+	
+	public void msgGoToSleep() {
+		bodyState = BodyState.Tired;
+		stateChanged();
+	}
+	
+	public void msgNourishmentDecrease(int amount) {
+		nourishmentLevel -= amount;
+		stateChanged();
+	}
+	
+	public void msgSetBodyState() {
+		
+	}
+
+	public void msgReadyForNextAction() {
+		readyForAction.release();
+		stateChanged();
+	}
+	
+	// from Housing
+	public void msgTimeToPayRent(double amount) {
+		// TODO housing message
+	}
+	
+	public void msgFinishedMaintenance() {
+		// TODO housing message
+	}
+	
+	public void msgFoodDone() {
+		// TODO housing message
+	}
+	
 	// from Transportation
 	public void msgReachedDestination(String destination) {
 		log.add(new LoggedEvent("Received msgReachedDestination: destination = " + destination));
@@ -135,42 +184,56 @@ public class PersonAgent extends Agent {
 	}
 
 	// from Bank
-	public void msgWithdrawalSuccessful(double amount) {
-		log.add(new LoggedEvent("Received msgWithdrawalSuccessful: amount = " + amount));
+	public void msgAccountOpened(int accountNumber) {
+		readyForAction.release();
+		stateChanged();
+	}
+	
+	public void msgMoneyWithdrawn(double amount) {
+		log.add(new LoggedEvent("Received msgMoneyWithdrawn: amount = " + amount));
 		moneyOnHand += amount;
 		moneyWanted -= amount;
 		readyForAction.release();
 		stateChanged();
 	}
 	
-	public void msgDepositSuccessful(double amount) {
-		log.add(new LoggedEvent("Received msgDepositSuccessful: amount = " + amount));
-		moneyOnHand -= amount;
-		moneyToDeposit -= amount;
+	public void msgMoneyDeposited() {
+		log.add(new LoggedEvent("Received msgMoneyDeposited"));
+		moneyOnHand -= moneyToDeposit;
+		moneyToDeposit = 0;
+		readyForAction.release();
+		stateChanged();
+	}
+	
+	public void msgLoanDecision(boolean status) {
+		// TODO bank message
 		readyForAction.release();
 		stateChanged();
 	}
 	
 	// from Restaurant
-	public void msgDoneEating() {
-		// TODO: Hack; what should this value be?
-		nourishmentLevel = 1;
+	public void msgDoneEating(boolean success) {
+		if(success)
+			nourishmentLevel = BASE_NOURISHMENT_LEVEL;
 		stateChanged();
 	}
 	
-	public void msgReadyForNextAction() {
-		readyForAction.release();
-		stateChanged();
+	// from Market
+	public void msgHereIsOrder(String order, int quantity) {
+		
 	}
 	
 	// ************************* SCHEDULER ***********************************
 	
 	public boolean pickAndExecuteAnAction() {
 		
+		// based on state/emergencies
+		
+		// based on location
 		if(currentLocationState == LocationState.Home) {
 			if(nourishmentLevel <= 0) {
 				if(preferEatAtHome) {
-					// TODO if person prefers eating at home
+					prepareToCookAtHome();
 				}
 				else {
 					hungryToRestaurant();
@@ -184,6 +247,10 @@ public class PersonAgent extends Agent {
 			// Stuff to do at bank
 			if(moneyWanted > 0) {
 				requestWithdrawal();
+				return true;
+			}
+			if(moneyToDeposit > 0) {
+				requestDeposit();
 				return true;
 			}
 			// Done at bank, time to transition
@@ -212,6 +279,12 @@ public class PersonAgent extends Agent {
 
 	// ************************* ACTIONS ***********************************
 
+	// House actions
+	private void prepareToCookAtHome() {
+		// TODO home action
+	}
+	
+	// Restaurant actions
 	private void hungryToRestaurant() {
 		MyRestaurant targetRestaurant = chooseRestaurant();
 		Map<String, Double> theMenu = targetRestaurant.menu;
@@ -228,21 +301,43 @@ public class PersonAgent extends Agent {
 		goToTransportation();
 	}
 	
+	private void enterRestaurant() {
+		MyRestaurant myRest = (MyRestaurant)currentMyObject;
+		myRest.restaurant.msgPersonAs(this, myRest.personType, name, moneyOnHand, foodPreference);
+		// TODO: blocking
+	}
+	
+	// Transportation actions
+	private void goToTransportation() {
+		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
+		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name());
+		// TODO blocking?
+	}
+	
 	private void goHome() {
 		log.add(new LoggedEvent("Going home"));
 		targetLocation = myHome.name;
 		goToTransportation();
 	}
 	
-	private void goToTransportation() {
-		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
-		transportation.msgGoTo(currentLocation, targetLocation, this, preferredCommute.name());
+	//Bank actions
+	private void createAccount() {
+		MyBank myBank = (MyBank)currentMyObject;
+		log.add(new LoggedEvent("Creating account"));
+		// TODO: Hacking in account number
+		myBank.theBank.msgRequestAccount(moneyToDeposit, this);
+		try {
+			readyForAction.acquire();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void requestWithdrawal() {
 		MyBank myBank = (MyBank)currentMyObject;
-		// TODO: Hacking in account number
 		log.add(new LoggedEvent("Want to withdraw " + moneyWanted + " from " + myBank.name));
+		// TODO: Hacking in account number
 		myBank.theBank.msgRequestWithdrawal(1, moneyWanted, this);
 		try {
 			readyForAction.acquire();
@@ -250,17 +345,22 @@ public class PersonAgent extends Agent {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		/*
-		 * bank.msgRequestAccount(Person p)
-		 * msgDeposit(amount, accountNumber, p);
-		 * msgWithdraw(amount, accountNumber, p);
-		 */
 	}
-
-	private void enterRestaurant() {
-		MyRestaurant myRest = (MyRestaurant)currentMyObject;
-		myRest.restaurant.msgPersonAs(this, myRest.personType, name, moneyOnHand, foodPreference);
+	
+	private void requestDeposit() {
+		MyBank myBank = (MyBank)currentMyObject;
+		log.add(new LoggedEvent("Want to deposit " + moneyToDeposit + " from " + myBank.name));
+		// TODO: Hacking in account number and forLoan
+		myBank.theBank.msgRequestDeposit(1, moneyWanted, this, false);
+		try {
+			readyForAction.acquire();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+	//Market actions
 	
 	// ************************* UTILITIES ***********************************
 	
@@ -275,7 +375,6 @@ public class PersonAgent extends Agent {
 					currentLocationState = LocationState.Bank;
 				else if(tempObject instanceof MyRestaurant)
 					currentLocationState = LocationState.Restaurant;
-				// TODO: Get market going
 				if(tempObject instanceof MyMarket)
 					currentLocationState = LocationState.Market;
 				return;
@@ -321,6 +420,7 @@ public class PersonAgent extends Agent {
 		String name;
 	}
 	
+	// TODO interact with housing more
 	private class MyHousing extends MyObject {
 		
 		String housingType, occupantType;
@@ -333,6 +433,7 @@ public class PersonAgent extends Agent {
 		}
 	}
 	
+	// TODO: Use and update stuff in this class
 	private class MyBankAccount extends MyObject {
 		MyBank theBank;
 		String accountType, bankName;
@@ -346,7 +447,7 @@ public class PersonAgent extends Agent {
 			this.accountNumber = accountNumber;
 		}
 	}
-	
+	// Customers, Waiters, Host, Cook, Cashier
 	private class MyRestaurant extends MyObject {
 		Restaurant restaurant;
 		String restaurantType, personType;
@@ -374,11 +475,37 @@ public class PersonAgent extends Agent {
 	
 	private class MyMarket extends MyObject {
 		
-		//Market theMarket
+		Market theMarket;
 		String personType;
-		public MyMarket(String name, String type) {
+		public MyMarket(Market m, String name, String type) {
+			theMarket = m;
 			this.name = name;
 			personType = type;
 		}
+	}
+	
+	// TODO: determine actions and whatever priorities there are
+	// TODO: determine if I even need this thing
+	// 0 = emergency (highest priority)
+	// 1 = urgent
+	// 2 = necessary
+	// 3 = not really needed at the moment
+	private class Action implements Comparable {
+		String action;
+		int priority;
+		public Action(String a, int p) {
+			action = a;
+			priority = p;
+		}
+		@Override
+		public int compareTo(Object arg) {
+			Action other = (Action)arg;
+			return priority - other.priority;
+		}
+	}
+	
+	private void addAction(String anAction, int aPriority) {
+		Action theAction = new Action(anAction, aPriority);
+		actionQueue.add(theAction);
 	}
 }
