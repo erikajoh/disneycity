@@ -4,6 +4,7 @@ import bank.gui.BankCustomerGui;
 import bank.gui.BankGui;
 import bank.gui.Account;
 import bank.interfaces.BankCustomer;
+import bank.interfaces.Person;
 import bank.interfaces.Teller;
 import bank.interfaces.Bank;
 import agent.Agent;
@@ -63,16 +64,19 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	public void	msgRequestDeposit(double ra){
+		print("REQ DEPOSIT");
 		requestAmt = ra;
 		state = State.depositing;
 		stateChanged();	
 	}
 	public void	msgRequestWithdraw(double ra){
+		print("REQ WITHDRAW");
 		requestAmt = ra;
 		state = State.withdrawing;
 		stateChanged();
 	}
 	public void	msgRequestLoan(double ra){
+		print("REQ LOAN");
 		requestAmt = ra;
 		state = State.requestingLoan;
 		stateChanged();
@@ -183,12 +187,14 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	private void leaveBank(){
 		teller.msgLeavingBank();
-		state = State.idle;
+		animState = AnimState.walking;
+		state = State.left;
 		personGui.DoLeaveBank();
 	}
 	
 	private void leftBank(){
 		state = State.idle;
+		personGui.setInBank(false);
 	    bankGui.updateInfoPanel(this);
 	}
 
@@ -201,9 +207,19 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public void setBalance(double b) {
 		balance = b;
 	}
+	
+	public double getBalance(){
+		return balance;
+	}
 
 	public String toString() {
 		return "customer " + getName();
+	}
+	
+	
+	public Person getPerson() {
+		Person person = bank.getPerson(this);
+		return person;
 	}
 	
 	public void setBank(Bank b) {

@@ -1,4 +1,4 @@
-package restaurant.gui;
+package bank.gui;
 
 public class Account {
 	private int number;
@@ -9,7 +9,7 @@ public class Account {
 	public Account(int num){
 		number = num;
 	}
-	public void getNumber(int num){
+	public void setNumber(int num){
 		number = num;
 	}
 	public int getNumber(){

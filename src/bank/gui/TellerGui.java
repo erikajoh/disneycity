@@ -1,6 +1,6 @@
-package restaurant.gui;
+package bank.gui;
 
-import restaurant.TellerAgent;
+import bank.TellerAgent;
 
 import java.awt.*;
 
@@ -16,9 +16,9 @@ public class TellerGui implements Gui{
 	private int baseX;
 	private int baseY;
 
-	RestaurantGui gui;
+	BankGui gui;
 
-	public TellerGui(TellerAgent c, RestaurantGui gui, int num){
+	public TellerGui(TellerAgent c, BankGui gui, int num){
 		agent = c;
 		setPresent(true);
 		number = num;

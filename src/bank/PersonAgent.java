@@ -1,11 +1,11 @@
-package restaurant;
+package bank;
 
-import restaurant.gui.PersonGui;
-import restaurant.gui.RestaurantGui;
-import restaurant.gui.Account;
-import restaurant.interfaces.Person;
-import restaurant.interfaces.Teller;
-import restaurant.interfaces.Bank;
+import bank.gui.BankCustomerGui;
+import bank.gui.BankGui;
+import bank.gui.Account;
+import bank.interfaces.BankCustomer;
+import bank.interfaces.Person;
+import bank.interfaces.Bank;
 import agent.Agent;
 
 import java.util.*;
@@ -13,25 +13,23 @@ import java.util.*;
 
 
 /**
- * Restaurant customer agent.
+ * bank customer agent.
  */
 public class PersonAgent extends Agent implements Person {
 	private String name;
 	private double balance = 25.00;
-	private double change;
-	
-	private RestaurantGui restaurantGui;
-	private PersonGui personGui;
-	
+	private Account originalAccount;
+	private int newAccountNum;
+	private double newBalance;
+		
 	// agent correspondents
 	private Bank bank = null;
-	private Teller teller = null;
 
-	public enum State
-	{enteredBank, goToTeller, deciding, openingAccount, depositing, withdrawing, idle};
-	
+	private enum State{arrive, leave, idle};
 	State state = State.idle;
-		
+	
+	int decision = 0;
+	
 	List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());;
 	
 
@@ -44,65 +42,35 @@ public class PersonAgent extends Agent implements Person {
 	public PersonAgent(String name){
 		super();
 		this.name = name;
-		state = State.enteredBank;
-	}
-
-	public String getCustomerName() {
-		return name;
-	}
-	// Messages
-
-	public void msgGoToTeller(Teller t){
-		teller = t;
-		state = State.goToTeller;
-		stateChanged();
-	}
-	public void msgAccountOpened(Account account){
-		balance += change;
-		print("ACCOUNT OPENED "+balance);
-		accounts.add(account);
-		state = State.deciding;
-		stateChanged();
-	}
-	public void msgMoneyDeposited(){
-		balance += change;
-		print("MONEY DEPOSITED "+ change);
-		state = State.deciding;
-		stateChanged();
-	}
-	public void msgMoneyWithdrawn(double amtWithdrawn){
-		balance += change;
-		print("MONEY WITHDRAWN "+ balance);
-		state = State.deciding;
-		change = amtWithdrawn;
-		stateChanged();
-	}
-	public void msgLoanDecision(boolean status){
-		print("LOAN "+status);
-		
 	}
 	
-	public void msgAnimationFinishedGoToTeller(){
-		print("AT TELLER");
-		state = State.deciding;
+	// Messages
+
+	public void msgArrive(int num){
+		decision = num;
+		state = State.arrive;
 		stateChanged();
 	}
+	
+	public void msgLeave(int accNum, double balance){
+		newAccountNum = accNum;
+	    newBalance = balance;
+		state = State.leave;
+		stateChanged();
+	}
+	
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
-		if(state == State.enteredBank){
+		if(state == State.arrive){
 			tellBankHere();
 			return true;
 		}
-		else if(state == State.goToTeller){
-			goToTeller();
-			return true;
-		}
-		else if(state == State.deciding){
-			decideAction();
+		else if(state == State.leave){
+			leave();
 			return true;
 		}
 		return false;
@@ -112,47 +80,38 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void tellBankHere(){
 		state = State.idle;
-		bank.msgEnteredBank(this);
-	}
-	
-	private void goToTeller(){
-		state = State.idle;
-		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
-	}
-	private void decideAction(){
+		bank.msgCustomerHere(this);
+		print("YO");
 		if(accounts.size() == 0){
-			openAccount(); return;
+			print("YO REQ");
+			bank.msgRequestAccount(balance*.5, this);
 		}
-			
-		int num = (int) (Math.random() * 3);	
-		switch(num){
-		case 0: depositCash(); break;
-		case 1: withdrawCash(); break;
-		case 2: leaveBank(); break;
+		else if(decision == 0){
+			print("YO DEPOSIT");
+			originalAccount = accounts.get(0); //really a pick method for the index
+		    bank.msgRequestDeposit(accounts.get(0).getNumber(), 5.00, this, false);
 		}
+		else if(decision == 1){
+			print("YO WITHDRAW");
+			 originalAccount = accounts.get(0); //really a pick method for the index
+			 bank.msgRequestWithdrawal(accounts.get(0).getNumber(), 5.00, this);
+		}
+	
 	}
 	
-	private void openAccount(){
-		teller.msgOpenAccount(this, balance*.5);
-		change = -balance*.5;
+	private void leave(){
+		print("LEFT BANK "+ newAccountNum + " " + newBalance);
+		if(originalAccount == null){
+			Account newAccount = new Account(newAccountNum);
+			newAccount.setBalance(newBalance);
+			accounts.add(newAccount);
+		}
+		else {
+			originalAccount.setBalance(newBalance);
+		}
 		state = State.idle;
 	}
-	private void depositCash(){
-		teller.msgDepositCash(accounts.get(0), 5.00);
-		change = -5.00;
-		state = State.idle;
-	}
-	private void withdrawCash(){
-		teller.msgWithdrawCash(accounts.get(0), 5.00);
-		change = 5.00;
-		state = State.idle;
-	}
-	private void leaveBank(){
-		teller.msgLeavingBank();
-		state = State.idle;
-		personGui.DoLeaveBank();
-	}
-
+	
 	// Accessors, etc.
 
 	public String getName() {
@@ -175,16 +134,8 @@ public class PersonAgent extends Agent implements Person {
 		bank = b;
 	}
 	
-	public void setTeller(Teller t) {
-		teller = t;
-	}
-	
-	public void setGui(PersonGui g) {
-		personGui = g;
-	}
-
-	public PersonGui getGui() {
-		return personGui;
+	public Bank getBank() {
+		return bank;
 	}
 }
 

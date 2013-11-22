@@ -1,35 +1,46 @@
-package restaurant;
+package bank;
 
 import agent.Agent;
-import restaurant.gui.TellerGui;
-import restaurant.gui.Account;
-import restaurant.interfaces.Teller;
-import restaurant.interfaces.Bank;
-import restaurant.interfaces.Person;
+import bank.gui.TellerGui;
+import bank.gui.Account;
+import bank.interfaces.Teller;
+import bank.interfaces.Bank;
+import bank.interfaces.BankCustomer;
 
 import java.util.*;
 
 /**
- * Restaurant Host Agent
+ * bank Host Agent
  */
 
 public class TellerAgent extends Agent implements Teller {
-	int accounts;
 	Bank bank;
+	List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
 	enum State {deciding, openingAccount, depositingCash, withdrawingCash, decidingOnLoan, givingLoan, leaving, idle};
 
 	class Customer {
-	  Person person;
-	  List<Account> accounts;
-	  Account pendingAccount;
+	  BankCustomer bankCustomer;
+	  Account account;
 	  int creditRating;
 	  double requestAmt;
 	  State state;
 	  
-	  public Customer(Person p){
-		  person = p;
-		  accounts = p.getAccounts();
+	  public Customer(BankCustomer p){
+		  bankCustomer = p;
+		  int accountNumber = p.getAccountNum();
+		  
+		  if(accountNumber == -1){
+			  account = null;
+		  }
+		  else{
+		      for(Account acc : accounts){
+			      if(acc.getNumber() == accountNumber){
+			    	  account = acc; break;
+			      }
+		      }
+		  }
+		  		  
 		  state = State.idle;
 	  }
 	}
@@ -56,74 +67,65 @@ public class TellerAgent extends Agent implements Teller {
 
 	
 	// Messages
-	public void msgNewCustomer(Person person){
-		print("NEW CUSTOMER");
+	public void msgNewCustomer(BankCustomer bankCustomer){
 		for(Customer cust : customers){
-			if(cust.person == person){
+			if(cust.bankCustomer == bankCustomer){
+				print("CUSTOMER IS "+bankCustomer.toString());
 				customer = cust;
 				customer.state = State.idle;
 			}
 		}
 		if(customer == null){
-			customer = new Customer(person);
+			customer = new Customer(bankCustomer);
 			customers.add(customer);
 		}
 	}
 
-	public void	msgOpenAccount(Person person, double cash){ //open account w/ initial amt of cash
+	public void	msgOpenAccount(BankCustomer bankCustomer, double cash){ //open account w/ initial amt of cash
 		print("OPEN ACCOUNT");
-		Account account = new Account(accounts);
+		Account account = new Account(accounts.size());
 		for(Customer cust : customers){
-			if(cust.person == person){
+			if(cust.bankCustomer == bankCustomer){
 				customer = cust;
 				customer.state = State.openingAccount;
 			}
 		}
-		customer.accounts.add(account);
-		accounts++;
+		accounts.add(account);
 		stateChanged();
 	}
 
-	public void	msgDepositCash(Account account, double cash){
-		print("DEPOSIT CASH "+customer.accounts.size());
-		for(Account acc : customer.accounts){
-			if(account == acc){
-				customer.requestAmt = cash;
-				customer.pendingAccount = account;
-				customer.state = State.depositingCash; break;
-			}
-		}
+	public void	msgDepositCash(int accountNum, double cash){
+		print("DEPOSIT CASH ");
+		customer.requestAmt = cash;
+		customer.state = State.depositingCash; 
 		stateChanged();
 	}
 	
-	public void	msgWithdrawCash(Account account, double cash){
-		print("WITHDRAW CASH "+customer.accounts.size());
-		for(Account acc : customer.accounts){
-			if(account == acc){
-				print("FOUND OR NO???");
-				customer.requestAmt = cash;
-				customer.pendingAccount = account;
-				customer.state = State.withdrawingCash; break;
-			}
-		}
+	public void	msgWithdrawCash(int accountNum, double cash){
+		print("DEPOSIT CASH ");
+		customer.requestAmt = cash;
+		customer.state = State.depositingCash; 
 		stateChanged();
+	}
+	
+
+	public void msgAskForLoan(int accountNum, double cash) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void	msgAskForLoan(Account account, double cash){
 		print("ASK FOR LOAN");
-		for(Account acc : customer.accounts){
-			if(account == acc){
-				customer.requestAmt = cash;
-				customer.pendingAccount = account;
-				customer.state = State.decidingOnLoan; break;
-			}
-		}
+		customer.requestAmt = cash;
+		customer.state = State.decidingOnLoan;
+		
 		stateChanged();
 	}
 	
 	public void	msgLeavingBank(){
 		print("LEAVING");
 		customer.state = State.leaving;
+		stateChanged();
 	}
 	
 	/**
@@ -166,29 +168,31 @@ public class TellerAgent extends Agent implements Teller {
 
 	// Actions
 	private void openAccount(){
-		customer.person.msgAccountOpened(customer.pendingAccount);
+		int accountNum = accounts.size();
+		customer.account = new Account(accountNum);
+		accounts.add(customer.account);
+		customer.bankCustomer.msgAccountOpened(accountNum);
 		customer.state = State.deciding;
 	}
 
 	private void depositCash(){
-		double newBalance = customer.pendingAccount.getBalance()+customer.requestAmt;
-		customer.pendingAccount.setBalance(newBalance);
+		double newBalance = customer.account.getBalance()+customer.requestAmt;
+		customer.account.setBalance(newBalance);
 		customer.requestAmt = 0;
-		customer.person.msgMoneyDeposited();
+		customer.bankCustomer.msgMoneyDeposited();
 		customer.state = State.deciding;
 	}
 
 	private void withdrawCash(){
-		print("HERE???");
-		double newBalance = customer.pendingAccount.getBalance()-customer.requestAmt;
+		double newBalance = customer.account.getBalance()-customer.requestAmt;
 		if(newBalance >= 0){
-		  customer.pendingAccount.setBalance(newBalance);
+		  customer.account.setBalance(newBalance);
 		}
 		else{
-		  customer.pendingAccount.setBalance(0);
-		  customer.requestAmt = customer.pendingAccount.getBalance();
+		  customer.account.setBalance(0);
+		  customer.requestAmt = customer.account.getBalance();
 		}
-		customer.person.msgMoneyWithdrawn(customer.requestAmt);
+		customer.bankCustomer.msgMoneyWithdrawn(customer.requestAmt);
 		customer.requestAmt = 0;
 		customer.state = State.deciding;
 	}
@@ -196,21 +200,21 @@ public class TellerAgent extends Agent implements Teller {
 	private void decideOnLoan(){
 		customer.state = State.deciding;
 		if(customer.creditRating > 75){
-		  customer.person.msgLoanDecision(true);
-		  double newLoanBalance = customer.pendingAccount.getLoanBalance()+customer.requestAmt;
-		  customer.pendingAccount.setLoanBalance(newLoanBalance);
+		  customer.bankCustomer.msgLoanDecision(true);
+		  double newLoanBalance = customer.account.getLoanBalance()+customer.requestAmt;
+		  customer.account.setLoanBalance(newLoanBalance);
 		  //set loanTime
 		}
 		else {
-		  customer.person.msgLoanDecision(false);
+		  customer.bankCustomer.msgLoanDecision(false);
 		}
 		  customer.requestAmt = 0;
 
 	}
 
 	private void customerLeaving(){
-		bank.msgTellerFree(this);
-		customer.state = State.idle;
+		bank.msgTellerFree(this, customer.bankCustomer);
+		customer = null;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package restaurant.test.mock;
+package bank.test.mock;
 
 /**
  * This is the base class for all mocks.

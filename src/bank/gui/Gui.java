@@ -1,4 +1,4 @@
-package restaurant.gui;
+package bank.gui;
 
 import java.awt.*;
 
