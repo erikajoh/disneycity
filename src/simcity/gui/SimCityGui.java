@@ -89,8 +89,8 @@ public class SimCityGui extends JFrame  {
 		c4.gridwidth = GridBagConstraints.REMAINDER;
 		c4.gridheight = 3;
 		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
-		zoomAnimation.add(restAniPanel);
-//		zoomAnimation.add(housAniPanel);
+//		zoomAnimation.add(restAniPanel);
+		zoomAnimation.add(housAniPanel);
 		//zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c4);
 		GridBagConstraints c5 = new GridBagConstraints();
@@ -129,8 +129,6 @@ public class SimCityGui extends JFrame  {
         restRancho.addPerson(null, "Market", "Trader Joes", 50, "Steak");
         restRancho.addPerson(null, "Host", "Host", 50, "Steak");
 		restRancho.addPerson(null, "Customers", "Sally", 50, "Steak");
-		hauntedMansion.setOwner();
-		hauntedMansion.addRenter();
 		
 	}
 	
