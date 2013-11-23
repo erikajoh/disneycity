@@ -5,19 +5,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
+import java.util.Collection;
 import java.util.ArrayList;
 
 import restaurant_rancho.gui.CookGui;
 
 public class AnimationPanel extends JPanel implements ActionListener {
 
-    public static final int WINDOWX = 500;
-    public static final int WINDOWY = 700;
+    public static final int WINDOWX = 400;
+    public static final int WINDOWY = 340;
     private Image bufferImage;
     private Dimension bufferSize;
 
-    private List<Gui> guis = new ArrayList<Gui>();
+    private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 
     public AnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -64,10 +66,12 @@ public class AnimationPanel extends JPanel implements ActionListener {
         g3.setColor(Color.cyan.darker());
         g3.fillRect((WINDOWX*17)/20, (WINDOWY*5)/20, WINDOWY/15, WINDOWY/6);
 
+        synchronized(guis) {
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
             }
+        }
         }
     }
     

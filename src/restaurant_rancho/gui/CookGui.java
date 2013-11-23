@@ -10,7 +10,6 @@ public class CookGui implements Gui{
 	private boolean isPresent = true;
 
 	//private HostAgent host;
-	RestaurantRanchoGui gui;
 	CookAgent cook;
 
 	private int xPos, yPos;
@@ -32,13 +31,12 @@ public class CookGui implements Gui{
 	String custText = "";
 	
 	
-	public CookGui(CookAgent c, RestaurantRanchoGui gui){ //HostAgent m) {
+	public CookGui(CookAgent c){ //HostAgent m) {
 		cook = c;
 		xPos = (AnimationPanel.WINDOWX*15)/20;
 		yPos = (AnimationPanel.WINDOWY*6)/20;
 		//xDestination = (AnimationPanel.WINDOWX*15)/20;
 		//yDestination = (AnimationPanel.WINDOWY*6)/20;
-		this.gui = gui;
 		platingLocations = Collections.synchronizedList(new ArrayList<kitchenLoc>());
 		cookingLocations = Collections.synchronizedList(new ArrayList<kitchenLoc>());
 		cookingLocations.add(new kitchenLoc(432, 202));
@@ -78,7 +76,7 @@ public class CookGui implements Gui{
     	g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*6)/20, 45, 45, null);
     	g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*7)/20, 45, 45, null);
 		Image custImage = Toolkit.getDefaultToolkit().getImage("res/cook.gif");
-		g.drawImage(custImage, xPos, yPos, 40, 50, null);
+		g.drawImage(custImage, xPos, yPos, 20, 25, null);
 		g.setColor(Color.magenta.darker());
 		g.drawString(curText, xPos +20, yPos+40);
 		g.setColor(Color.white);

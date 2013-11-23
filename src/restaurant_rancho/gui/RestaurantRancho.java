@@ -9,6 +9,7 @@ import restaurant_rancho.MarketAgent;
 import restaurant_rancho.WaiterAgent;
 import restaurant_rancho.interfaces.Bank; 
 import restaurant_rancho.interfaces.Person;
+import simcity.gui.SimCityGui;
 
 import javax.swing.*;
 
@@ -44,11 +45,11 @@ public class RestaurantRancho extends JPanel {
     private JPanel group = new JPanel();
 
 
-    private RestaurantRanchoGui gui; //reference to main gui
+    private SimCityGui gui; //reference to main gui
     private CookGui cookgui;
 
     //public RestaurantBase(RestaurantGui gui, String n) {
-    public RestaurantRancho(RestaurantRanchoGui g, String n) {
+    public RestaurantRancho(SimCityGui g, String n) {
     	name = n;
         this.gui = g;
         //host.startThread();
@@ -76,7 +77,7 @@ public class RestaurantRancho extends JPanel {
         add(restLabel);
         add(group);
     }
-    public RestaurantRanchoGui getGui() {
+    public SimCityGui getGui() {
     	return gui;
     }
     
@@ -135,14 +136,16 @@ public class RestaurantRancho extends JPanel {
      *
      * @param type indicates whether the person is a customer or waiter
      * @param name name of person
-     */
+ 
+   */
+    /*
     public void showInfo(String type, String name) {
 
         if (type.equals("Customers")) {
             for (int i = 0; i < customers.size(); i++) {
                 CustomerAgent temp = customers.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
+                //if (temp.getName() == name)
+                  //  gui.updateInfoPanel(temp);
             }
         }
         if (type.equals("Waiters")) {
@@ -154,6 +157,7 @@ public class RestaurantRancho extends JPanel {
         	}
         }
     }
+    */
 
     /**
      * Adds a customer or waiter to the appropriate list
@@ -169,7 +173,7 @@ public class RestaurantRancho extends JPanel {
     	//new	 
     		g.setHungry();
     		// new
-    		gui.animationPanel.addGui(g);
+    		gui.restAniPanel.addGui(g);
     		if (host!=null) c.setHost(host);
     		c.setGui(g);
     		if (cashier!=null) c.setCashier(cashier);
@@ -186,7 +190,7 @@ public class RestaurantRancho extends JPanel {
     	else if (type.equals("Waiters")) {
     		WaiterAgent w = new WaiterAgent(name);
     		WaiterGui g = new WaiterGui(w, waiters.size());
-    		gui.animationPanel.addGui(g);
+    		gui.restAniPanel.addGui(g);
     		if (host!=null) w.setHost(host);
     		if (cook!= null) w.setCook(cook);
     		if (cashier!=null)w.setCashier(cashier);
@@ -213,7 +217,7 @@ public class RestaurantRancho extends JPanel {
     	else if (type.equals("Cook")) {
     		if (cook == null) {
     			cook = new CookAgent(name);
-    			cookgui = new CookGui(cook, gui);
+    			cookgui = new CookGui(cook);
     			cook.setPerson(p);
     			cook.setGui(cookgui);
     			cookgui.updatePosition();
@@ -224,7 +228,7 @@ public class RestaurantRancho extends JPanel {
     			for (MarketAgent m : markets) {
     				cook.addMarket(m);
     			}
-    			gui.animationPanel.addGui(cookgui);
+    			gui.restAniPanel.addGui(cookgui);
     		}
     	}
     	else if (type.equals("Cashier")) {

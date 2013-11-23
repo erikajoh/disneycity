@@ -2,6 +2,7 @@ package restaurant_rancho.gui;
 
 import restaurant_rancho.CustomerAgent;
 import restaurant_rancho.HostAgent;
+import simcity.gui.SimCityGui;
 
 import java.awt.*;
 
@@ -12,7 +13,7 @@ public class CustomerGui implements Gui{
 	private boolean isHungry = false;
 
 	//private HostAgent host;
-	RestaurantRanchoGui gui;
+	SimCityGui gui;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -30,7 +31,7 @@ public class CustomerGui implements Gui{
 	public int waitNum;
 	
 	
-	public CustomerGui(CustomerAgent c, RestaurantRanchoGui gui, int num){ //HostAgent m) {
+	public CustomerGui(CustomerAgent c, SimCityGui gui, int num){ //HostAgent m) {
 		agent = c;
 		xPos = -50;
 		yPos = -50;
@@ -59,7 +60,6 @@ public class CustomerGui implements Gui{
 			else if (command==Command.LeaveRestaurant) {
 				agent.msgAnimationFinishedLeaveRestaurant();
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
 			}
 			else if (command == Command.GoToWaitingSpot) {
 				agent.msgAnimationFinishedGotToWaitingSpot();

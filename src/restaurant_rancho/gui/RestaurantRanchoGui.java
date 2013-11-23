@@ -41,7 +41,7 @@ public class RestaurantRanchoGui extends JFrame implements ActionListener {
      */
     public RestaurantRanchoGui(String name) {
         
-    	restPanel= new RestaurantRancho(this, name);
+    	//restPanel= new RestaurantRancho(this, name);
         this.name = name;
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.add(animationPanel); 
