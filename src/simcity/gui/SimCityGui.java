@@ -90,7 +90,7 @@ public class SimCityGui extends JFrame  {
 		c4.gridheight = 3;
 		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
 		zoomAnimation.add(restAniPanel);
-//		zoomAnimation.add(housAniPanel);
+		zoomAnimation.add(housAniPanel);
 		//zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c4);
 		GridBagConstraints c5 = new GridBagConstraints();
