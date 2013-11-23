@@ -1,9 +1,9 @@
 package simcity.test.mock;
 
 import simcity.PersonAgent;
-import simcity.interfaces.Transportation;
+import simcity.interfaces.Transportation_Douglass;
 
-public class MockTransportation_Douglass extends Mock_Douglass implements Transportation { //implements Bank {
+public class MockTransportation_Douglass extends Mock_Douglass implements Transportation_Douglass { //implements Bank {
 
 	public EventLog log;
 	

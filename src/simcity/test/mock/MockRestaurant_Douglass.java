@@ -6,7 +6,7 @@ import agent.Constants;
 import simcity.PersonAgent;
 import simcity.interfaces.*;
 
-public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant {
+public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant_Douglass {
 
 	public EventLog log;
 	public Timer timer;

@@ -4,9 +4,9 @@ import java.util.*;
 
 import agent.Constants;
 import simcity.PersonAgent;
-import simcity.interfaces.Bank;
+import simcity.interfaces.Bank_Douglass;
 
-public class MockBank_Douglass extends Mock_Douglass implements Bank {
+public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 
 	public EventLog log;
 	public Timer timer;

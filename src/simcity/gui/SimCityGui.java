@@ -22,6 +22,8 @@ public class SimCityGui extends JFrame  {
 	
 	String name;
 	
+	SimCityPanel simCityPanel = new SimCityPanel(this);
+	
 	public static RestaurantRancho restRancho;
 	public AnimationPanel restAniPanel = new AnimationPanel();
 	
