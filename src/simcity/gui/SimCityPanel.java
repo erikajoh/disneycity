@@ -34,8 +34,8 @@ public class SimCityPanel extends JPanel{
 	 
 	 public SimCityPanel(SimCityGui gui) {
 		 this.gui = gui;
-		 ranchoGui = new RestaurantRanchoGui("Rancho de Zocales");
-		 ranchoRest = ranchoGui.getRestaurant();
+//		 ranchoGui = new RestaurantRanchoGui("Rancho de Zocales");
+//		 ranchoRest = ranchoGui.getRestaurant();
 		 
 		 // TODO: No mocks in the end
 		 //Housing firstHousing = new Housing("Haunted Mansion", firstHousingGui);

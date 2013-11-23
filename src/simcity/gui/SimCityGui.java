@@ -22,7 +22,7 @@ public class SimCityGui extends JFrame  {
 	
 	String name;
 	
-	SimCityPanel simCityPanel = new SimCityPanel(this);
+	SimCityPanel simCityPanel;
 	
 	public static RestaurantRancho restRancho;
 	public AnimationPanel restAniPanel = new AnimationPanel();
@@ -42,6 +42,8 @@ public class SimCityGui extends JFrame  {
 	
 	
 	public SimCityGui(String name) {
+		
+		simCityPanel = new SimCityPanel(this);
 		
 		restRancho = new RestaurantRancho(this, name);
 		hauntedMansion = new Housing(this, "Haunted Mansion");
