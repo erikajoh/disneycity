@@ -145,6 +145,10 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgDoneEntering() {
+		
+	}
+	
 	public void msgNourishmentDecrease(int amount) {
 		nourishmentLevel -= amount;
 		stateChanged();
@@ -164,12 +168,20 @@ public class PersonAgent extends Agent {
 		actionQueue.add(new Action("payRent", 1));
 	}
 	
+	public void msgHereIsRent(double amount) {
+		
+	}
+	
 	public void msgFinishedMaintenance() {
 		// TODO housing message
 	}
 	
 	public void msgFoodDone() {
 		// TODO housing message
+	}
+	
+	public void msgDoneLeaving() {
+		
 	}
 	
 	// from Transportation
@@ -282,7 +294,7 @@ public class PersonAgent extends Agent {
 	// ************************* ACTIONS ***********************************
 
 	// House actions
-	private void msgIAmHome() {
+	private void enterHouse() {
 		myHome.housing.msgIAmHome(this);
 	}
 	
