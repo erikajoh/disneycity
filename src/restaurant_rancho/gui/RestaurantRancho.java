@@ -8,7 +8,7 @@ import restaurant_rancho.HostAgent;
 import restaurant_rancho.MarketAgent;
 import restaurant_rancho.WaiterAgent;
 import restaurant_rancho.interfaces.Bank; 
-import restaurant_rancho.interfaces.Person;
+import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
 import restaurant_rancho.RestMenu;
 
@@ -50,6 +50,11 @@ public class RestaurantRancho extends JPanel {
     public RestaurantRancho(SimCityGui g, String n) {
     	name = n;
         this.gui = g;
+        menu.addItem("Citrus Fire-Grilled Chicken", 13.49);
+        menu.addItem("Red Chile Enchilada Platter", 9.99);
+        menu.addItem("Soft Tacos Monterrey", 10.99);
+        menu.addItem("Burrito Sonora", 10.99);
+        menu.addItem("Chicken Tortilla Soup", 5.99);
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
 
@@ -76,7 +81,7 @@ public class RestaurantRancho extends JPanel {
     
     
    // public void personAs(String type, String name, PersonAgent p) {
-    public void personAs(Person p, String type, String name, int money, String choice){
+    public void personAs(PersonAgent p, String type, String name, double money, String choice){
     	addPerson(p, type, name, money, choice);
     }
     public void PauseandUnpauseAgents() {
@@ -154,7 +159,7 @@ public class RestaurantRancho extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(Person p, String type, String name, int money, String choice) {
+    public void addPerson(PersonAgent p, String type, String name, double money, String choice) {
 
     	if (type.equals("Customers")) {
     		CustomerAgent c = new CustomerAgent(name);	
@@ -177,7 +182,7 @@ public class RestaurantRancho extends JPanel {
     		
     	}
     	else if (type.equals("Waiters")) {
-    		WaiterAgent w = new WaiterAgent(name);
+    		WaiterAgent w = new WaiterAgent(name, this);
     		WaiterGui g = new WaiterGui(w, waiters.size());
     		gui.restAniPanel.addGui(g);
     		if (host!=null) w.setHost(host);
@@ -205,7 +210,7 @@ public class RestaurantRancho extends JPanel {
     	}
     	else if (type.equals("Cook")) {
     		if (cook == null) {
-    			cook = new CookAgent(name);
+    			cook = new CookAgent(name, this);
     			cookgui = new CookGui(cook);
     			cook.setPerson(p);
     			cook.setGui(cookgui);

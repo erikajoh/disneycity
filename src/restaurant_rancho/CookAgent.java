@@ -7,7 +7,8 @@ import java.util.concurrent.Semaphore;
 
 import restaurant_rancho.Order;
 import restaurant_rancho.gui.CookGui;
-import restaurant_rancho.interfaces.Person;
+import simcity.PersonAgent;
+import restaurant_rancho.gui.RestaurantRancho;
 
 public class CookAgent extends Agent {
 	
@@ -23,10 +24,10 @@ public class CookAgent extends Agent {
 	CookGui gui;
 	private Semaphore cooking = new Semaphore(0,true);
 	int cookNum = 0;
-	Person person;
+	PersonAgent person;
 	
 
-	public CookAgent(String name) {
+	public CookAgent(String name, RestaurantRancho rest) {
 		super();
 		this.name = name;
 		markets = Collections.synchronizedList(new ArrayList<MyMarket>());
@@ -36,16 +37,16 @@ public class CookAgent extends Agent {
 		foods = Collections.synchronizedList(new ArrayList<Food>());
 		waiters = Collections.synchronizedList(new ArrayList<WaiterAgent>());
 		foodsUnavailable = Collections.synchronizedList(new ArrayList<String>());
-		foods.add(new Food("Chicken", 7, 0, 7, 7000));
-		foods.add(new Food("Steak", 7, 0, 7, 6000));
-		foods.add(new Food("Salad", 7, 0, 7, 4000));
-		foods.add(new Food("Pizza", 0, 0, 7, 7000));
-		foods.add(new Food("Latte", 0, 0, 7, 2500));
-		cookTimes.put("Chicken", 7000);
-		cookTimes.put("Steak", 6000);
-		cookTimes.put("Salad", 4000);
-		cookTimes.put("Pizza", 7000);
-		cookTimes.put("Latte", 2500);
+		foods.add(new Food("Citrus Fire-Grilled Chicken", 7, 0, 7, 7000));
+		foods.add(new Food("Red Chile Enchilada Platter", 7, 0, 7, 6000));
+		foods.add(new Food("Soft Tacos Monterrey", 7, 0, 7, 4000));
+		foods.add(new Food("Burrito Sonora", 7, 0, 7, 7000));
+		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 7, 2500));
+		cookTimes.put("Citrus Fire-Grilled Chicken", 7000);
+		cookTimes.put("Red Chile Enchilada Platter", 6000);
+		cookTimes.put("Soft Tacos Monterrey", 5000);
+		cookTimes.put("Burrito Sonora", 5000);
+		cookTimes.put("Chicken Tortilla Soup", 3500);
 		
 		print("Initial inventory check");
 		synchronized(foods) {
@@ -62,7 +63,7 @@ public class CookAgent extends Agent {
 		return name;
 	}
 	
-	public void setPerson(Person p) {
+	public void setPerson(PersonAgent p) {
 		person = p;
 	}
 
@@ -77,7 +78,7 @@ public class CookAgent extends Agent {
 		markets.add(new MyMarket(m));
 	}
 	
-	public void setInventory(int numAll, int numLatte) {
+/*public void setInventory(int numAll, int numLatte) {
 		if (numAll == numLatte) {
 			synchronized(foods) {
 				for (Food f : foods) {
@@ -95,7 +96,7 @@ public class CookAgent extends Agent {
 				}
 			}
 	}
-
+*/
 	// Messages
 	
 	public void msgAtLoc() {

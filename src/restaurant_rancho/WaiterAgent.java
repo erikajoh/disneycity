@@ -7,8 +7,9 @@ import restaurant_rancho.RestMenu;
 import restaurant_rancho.gui.WaiterGui;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
-import restaurant_rancho.interfaces.Person;
+import simcity.PersonAgent;
 import restaurant_rancho.interfaces.Waiter;
+import restaurant_rancho.gui.RestaurantRancho;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -29,9 +30,9 @@ import java.util.concurrent.Semaphore;
 		public Cashier cashier;
 		double cash;
 		
-		Person person;
+		PersonAgent person;
 		
-		public WaiterAgent(String name) {
+		public WaiterAgent(String name, RestaurantRancho rest) {
 			super();
 			this.name = name;
 			customers = new ArrayList<MyCustomer>();	
@@ -55,7 +56,7 @@ import java.util.concurrent.Semaphore;
 			return name;
 		}
 		
-		public void setPerson(Person p) {
+		public void setPerson(PersonAgent p) {
 			person = p;
 		}
 

@@ -2,18 +2,16 @@ package restaurant_rancho;
 
 import restaurant_rancho.RestMenu;
 import restaurant_rancho.gui.CustomerGui;
-import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
-import restaurant_rancho.interfaces.Person;
 import restaurant_rancho.interfaces.Waiter;
 import agent_rancho.Agent;
+import simcity.PersonAgent;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Random;
 
-import javax.swing.event.MenuListener;
 
 /**
  * Restaurant customer agent.
@@ -35,7 +33,7 @@ public class CustomerAgent extends Agent implements Customer{
 	double iOwe= 0; 
 	boolean returning;
 	boolean atWaitingSpot;
-	Person person;
+	PersonAgent person;
 
 	String choice = "";
 	public enum AgentState
@@ -63,7 +61,7 @@ public class CustomerAgent extends Agent implements Customer{
 	 * hack to establish connection to Host agent.
 	 */
 	
-	public void setPerson(Person p) {
+	public void setPerson(PersonAgent p) {
 		person = p;
 	}
 	
@@ -241,6 +239,7 @@ public class CustomerAgent extends Agent implements Customer{
 		}
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
+			person.msgDoneEating(true);
 			customerGui.setText("");
 			return true;
 		}

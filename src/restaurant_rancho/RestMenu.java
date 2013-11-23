@@ -13,17 +13,7 @@ public class RestMenu {
 	
 	public RestMenu() {
 		menuItems = new Hashtable<String, Double>();
-		menuItems.put("Pizza", 10.50);
-		menuItems.put("Steak", 14.50);
-		menuItems.put("Salad", 7.50);
-		menuItems.put("Chicken", 12.50);
-		menuItems.put("Latte", 3.25);
 		menuList = new ArrayList<String>();
-		menuList.add("Pizza");
-		menuList.add("Steak");
-		menuList.add("Chicken");
-		menuList.add("Salad");
-		menuList.add("Latte");
 		
 	}
 	
@@ -38,8 +28,9 @@ public class RestMenu {
 		}
 	}
 	
-	public void addItem(String choice) {
+	public void addItem(String choice, double price ) {
 		menuList.add(choice);
+		menuItems.put(choice,  price);
 	}
 	
 	public void replenish() {
