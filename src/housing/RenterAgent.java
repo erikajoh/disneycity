@@ -19,7 +19,7 @@ public class RenterAgent extends Agent implements Renter {
 	private String name;
 		
 	// agent correspondents
-	private Building building;
+	private Housing housing;
 	public Owner owner;
 	private double amt;
 	String food;
@@ -29,7 +29,7 @@ public class RenterAgent extends Agent implements Renter {
 	public EventLog log = new EventLog();
 
 	public enum State
-	{idle, wantsToRent, enteringHouse, paymentDue, readyToCook, wantsMaintenance, leavingHouse};
+	{idle, wantsToRent, enteringHouse, goingToBed, paymentDue, readyToCook, foodDone, wantsMaintenance, maintenanceDone, leavingHouse};
 	
 	State state = State.idle;
 	
@@ -58,26 +58,48 @@ public class RenterAgent extends Agent implements Renter {
 	public void msgPaymentAccepted(){
 		print("payment accepted");
 		log.add(new LoggedEvent("Payment accepted by owner"));
-		state = State.readyToCook; //hack
+		// state = State.readyToCook; //hack
 		stateChanged();
 	}
 	
 	public void msgFinishedMaintenance(){
 		print("finished maintenance");
 		log.add(new LoggedEvent("Finished maintenance"));
-		state = State.leavingHouse; //hack
+		state = State.maintenanceDone;
+		// state = State.leavingHouse; //hack
 		stateChanged();
 	}
 	
 	public void msgFoodDone(){
 		print("food done");
 		log.add(new LoggedEvent("Food is done"));
-		state = State.wantsMaintenance; //hack
+		state = State.foodDone;
+		// state = State.wantsMaintenance; //hack
 		stateChanged();
 	}
 	
 	public void msgAnimationFinished(){
 		moving.release();
+		stateChanged();
+	}
+	
+	public void msgLeave() { //from Housing class
+		state = State.leavingHouse;
+		stateChanged();
+	}
+
+	public void msgCookFood(String choice) { //from Housing class
+		state = State.readyToCook;
+		stateChanged();
+	}
+
+	public void msgHome() { //from Housing class
+		state = State.enteringHouse;
+		stateChanged();
+	}
+
+	public void msgToBed() { //from Housing class
+		state = State.goingToBed;
 		stateChanged();
 	}
 
@@ -89,7 +111,7 @@ public class RenterAgent extends Agent implements Renter {
 			Do("Entering house");
 			EnterHouse();
 			owner.msgWantToRent(this);
-			state = State.paymentDue; //hack
+			// state = State.paymentDue; //hack
 			return true;
 		}
 		else if(state == State.paymentDue){
@@ -102,8 +124,18 @@ public class RenterAgent extends Agent implements Renter {
 			GoToKitchen();
 			return true;
 		}
+		else if(state == State.foodDone){
+			housing.msgFoodDone(this);
+			state = State.idle;
+			return true;
+		}
 		else if(state == State.wantsMaintenance){
 			owner.msgWantMaintenance(this);
+			state = State.idle;
+			return true;
+		}
+		else if(state == State.maintenanceDone){
+			housing.msgFinishedMaintenance(this);
 			state = State.idle;
 			return true;
 		}
@@ -125,6 +157,7 @@ public class RenterAgent extends Agent implements Renter {
 			e.printStackTrace();
 		}
 		renterGui.DoEnterHouse();
+		housing.msgEntered(this);
 		state = State.idle;
 	}
 	
@@ -146,6 +179,7 @@ public class RenterAgent extends Agent implements Renter {
 			e.printStackTrace();
 		}
 		renterGui.DoLeaveHouse();
+		housing.msgLeft(this);
 		state = State.idle;
 	}
 
@@ -155,8 +189,8 @@ public class RenterAgent extends Agent implements Renter {
 		return name;
 	}
 	
-	public void setBuilding(Building b) {
-		building = b;
+	public void setHousing(Housing h) {
+		housing = h;
 	}
 
 	public String toString() {
