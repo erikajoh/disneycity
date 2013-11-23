@@ -34,19 +34,23 @@ public class SimCityPanel extends JPanel{
 	 
 	 public SimCityPanel(SimCityGui gui) {
 		 this.gui = gui;
-//		 ranchoGui = new RestaurantRanchoGui("Rancho de Zocales");
-//		 ranchoRest = ranchoGui.getRestaurant();
 		 
 		 // TODO: No mocks in the end
-		 //Housing firstHousing = new Housing("Haunted Mansion", firstHousingGui);
 		 Housing firstHousing = new Housing(gui, "Haunted Mansion");
 
-		 PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, "OwnerResident", transportation);
+		 PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, "Owner", transportation);
 		 people.add(firstHackedPerson);
-		 firstHousing.addRenter(firstHackedPerson);
+		 firstHousing.setOwner(firstHackedPerson);
+
+		 // Alternatively, you can call the next line as a hack (in place of the previous three lines)
+//		 firstHousing.setOwner();
+		 
+		 PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", firstHousing, "Renter", transportation);
+		 people.add(secondHackedPerson);
+		 firstHousing.addRenter(secondHackedPerson);
 		 
 		 firstHackedPerson.startThread();
-		 
+		 secondHackedPerson.startThread();
 
 	     setLayout(new GridLayout());
 	 }

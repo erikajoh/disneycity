@@ -129,8 +129,6 @@ public class SimCityGui extends JFrame  {
         restRancho.addPerson(null, "Market", "Trader Joes", 50, "Steak");
         restRancho.addPerson(null, "Host", "Host", 50, "Steak");
 		restRancho.addPerson(null, "Customers", "Sally", 50, "Steak");
-		hauntedMansion.setOwner();
-		hauntedMansion.addRenter();
 		
 	}
 	
