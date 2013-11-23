@@ -8,5 +8,5 @@ public interface Gui {
     public void updatePosition();
     public void draw(Graphics2D g);
     public boolean isPresent();
-    public void changeAnimation(String animation);
+    //public void changeAnimation(String animation);
 }
