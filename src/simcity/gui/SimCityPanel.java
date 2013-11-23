@@ -6,10 +6,9 @@ import restaurant_rancho.gui.RestaurantRanchoGui;
 import simcity.PersonAgent;
 import simcity.interfaces.Housing_Douglass;
 import simcity.interfaces.Transportation_Douglass;
-import simcity.test.mock.MockHousing_Douglass;
+//import simcity.test.mock.MockHousing_Douglass;
 import simcity.test.mock.MockTransportation_Douglass;
 import housing.Housing;
-import housing.gui.HousingGui;
 
 import javax.swing.*;
 
@@ -21,32 +20,34 @@ import java.util.Random;
 
 public class SimCityPanel extends JPanel{
 	
+	SimCityGui gui = null;
+	
 	 RestaurantRanchoGui ranchoGui;
 	 RestaurantRancho ranchoRest;
-	 
-	 ArrayList<Housing> housings = new ArrayList<Housing>();
-	 
+	 	 
 	 ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
+	 ArrayList<Housing> housings = new ArrayList<Housing>();
 	 
 	 Transportation_Douglass transportation = new MockTransportation_Douglass("Mock Transportation");
 	 
 	 private JPanel group = new JPanel();
 	 
-	 public SimCityPanel() {
+	 public SimCityPanel(SimCityGui gui) {
+		 this.gui = gui;
 		 ranchoGui = new RestaurantRanchoGui("Rancho de Zocales");
 		 ranchoRest = ranchoGui.getRestaurant();
 		 
 		 // TODO: No mocks in the end
-		 HousingGui firstHousingGui = new HousingGui();
 		 //Housing firstHousing = new Housing("Haunted Mansion", firstHousingGui);
-		 Housing firstHousing = new Housing("Haunted Mansion");
-		 
+		 Housing firstHousing = new Housing(gui, "Haunted Mansion");
+
 		 PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, "OwnerResident", transportation);
 		 people.add(firstHackedPerson);
 		 firstHousing.addRenter(firstHackedPerson);
 		 
 		 firstHackedPerson.startThread();
 		 
+
 	     setLayout(new GridLayout());
 	 }
 

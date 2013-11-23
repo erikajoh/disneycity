@@ -1,5 +1,8 @@
 package simcity.gui;
 
+import housing.Housing;
+import housing.gui.HousingAnimationPanel;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -9,6 +12,7 @@ import restaurant_rancho.gui.AnimationPanel;
 import restaurant_rancho.gui.RestaurantRancho;
 import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.gui.RestaurantRancho;
+import simcity.PersonAgent;
 
 
 public class SimCityGui extends JFrame  {
@@ -17,8 +21,15 @@ public class SimCityGui extends JFrame  {
 	public static final int WINDOWY = 600;
 	
 	String name;
+	
+	SimCityPanel simCityPanel = new SimCityPanel(this);
+	
 	public static RestaurantRancho restRancho;
 	public AnimationPanel restAniPanel = new AnimationPanel();
+	
+	public static Housing hauntedMansion;
+	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
+	
 	CityAnimationPanel cityAniPanel = new CityAnimationPanel();
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
@@ -33,6 +44,8 @@ public class SimCityGui extends JFrame  {
 	public SimCityGui(String name) {
 		
 		restRancho = new RestaurantRancho(this, name);
+		hauntedMansion = new Housing(this, "Haunted Mansion");
+		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
 		GridBagConstraints c = new GridBagConstraints();
@@ -112,9 +125,8 @@ public class SimCityGui extends JFrame  {
         restRancho.addPerson(null, "Cashier", "cash", 50, "Steak");
         restRancho.addPerson(null, "Market", "Trader Joes", 50, "Steak");
         restRancho.addPerson(null, "Host", "Host", 50, "Steak");
-		restRancho.addPerson(null, "Customers", "Sally", 50, "Steak");
-		
-	
+		restRancho.addPerson(null, "Customers", "Sally", 50, "Steak");	
+		hauntedMansion.addRenter();
 		
 	}
 	

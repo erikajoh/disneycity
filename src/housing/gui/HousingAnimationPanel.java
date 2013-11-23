@@ -1,5 +1,8 @@
 package housing.gui;
 
+import housing.OwnerAgent;
+import housing.RenterAgent;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -9,7 +12,7 @@ import java.awt.geom.Line2D;
 import java.util.List;
 import java.util.ArrayList;
 
-public class AnimationPanel extends JPanel implements ActionListener {
+public class HousingAnimationPanel extends JPanel implements ActionListener {
 
 	private int lastTableX = 0;
 	private int lastTableY = 0;
@@ -25,8 +28,8 @@ public class AnimationPanel extends JPanel implements ActionListener {
     
     private JButton kitchen = new JButton(" ");
 
-    public AnimationPanel(int x, int y) {
-    	this.setSize(x, y);
+    public HousingAnimationPanel() {
+    	this.setSize(400, 300);
         setVisible(true);
         
         bufferSize = this.getSize();
@@ -78,6 +81,16 @@ public class AnimationPanel extends JPanel implements ActionListener {
     
     public void addGui(RenterGui gui) {
     	guis.add(gui);
+    }
+    
+    public void addRenter(RenterAgent r) {
+    	RenterGui g = new RenterGui(r);
+    	r.startThread();
+    	addGui(g);
+    }
+    
+    public void setOwner(OwnerAgent o) {
+    	o.startThread();
     }
     
 //    public void addGui(OwnerGui gui) {
