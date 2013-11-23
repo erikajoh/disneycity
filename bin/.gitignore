@@ -1,0 +1,33 @@
+# Compiled files
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Editor Temporary Files
+.*.sw[a-z]
+*~
+\#*\#
+*.tmp
+*.bak
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+.DS_Store
+.Trashes
+.Trash
+/README.md
+/docs
+/.classpath
+/bin/.classpath
+/.gitignore
+/.project
+/agent
+/housing
+/res
+/restaurants
+/simcity
+/market
