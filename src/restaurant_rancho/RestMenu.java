@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class RestMenu {
 	
-	Hashtable<String, Double> menuItems;
+	public Hashtable<String, Double> menuItems;
 	public List<String> menuList;
 	
 	
