@@ -17,9 +17,9 @@ public class CookGui implements Gui{
 
 	
 	public static final int homeX = (AnimationPanel.WINDOWX*15)/20;
-	public static final int homeY = (AnimationPanel.WINDOWY*6)/20;
+	public static final int homeY = (AnimationPanel.WINDOWY*5)/20;
 	public static final int loc0X = (AnimationPanel.WINDOWX*15)/20;
-	public static final int loc0Y = (AnimationPanel.WINDOWY*5)/20;
+	public static final int loc0Y = (AnimationPanel.WINDOWY*3)/20;
 	public static final int loc2X = (AnimationPanel.WINDOWX*15)/20;
 	public static final int loc2Y = (AnimationPanel.WINDOWY*7)/20;
 	
@@ -39,12 +39,12 @@ public class CookGui implements Gui{
 		//yDestination = (AnimationPanel.WINDOWY*6)/20;
 		platingLocations = Collections.synchronizedList(new ArrayList<kitchenLoc>());
 		cookingLocations = Collections.synchronizedList(new ArrayList<kitchenLoc>());
-		cookingLocations.add(new kitchenLoc(432, 202));
-		cookingLocations.add(new kitchenLoc(432, 242));
-		cookingLocations.add(new kitchenLoc(432, 282));
-		platingLocations.add(new kitchenLoc(332, 202));
-		platingLocations.add(new kitchenLoc(332, 242));
-		platingLocations.add(new kitchenLoc(332, 282));
+		cookingLocations.add(new kitchenLoc(320, 90));
+		cookingLocations.add(new kitchenLoc(320, 140));
+		cookingLocations.add(new kitchenLoc(320, 190));
+		platingLocations.add(new kitchenLoc(260, 90));
+		platingLocations.add(new kitchenLoc(260, 140));
+		platingLocations.add(new kitchenLoc(260, 190));
 	}
 
 
@@ -71,10 +71,10 @@ public class CookGui implements Gui{
 		
 		g.setColor(Color.white);
     	g.setFont(new Font("helvetica", Font.BOLD, 16));
-    	Image panImage = Toolkit.getDefaultToolkit().getImage("res/pan.gif");
-    	g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*5)/20, 45, 45, null);
-    	g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*6)/20, 45, 45, null);
-    	g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*7)/20, 45, 45, null);
+    	//Image panImage = Toolkit.getDefaultToolkit().getImage("res/pan.gif");
+    	//g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*5)/20, 45, 45, null);
+    	//g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*6)/20, 45, 45, null);
+    	//g.drawImage(panImage, (AnimationPanel.WINDOWX*17)/20, (AnimationPanel.WINDOWY*7)/20, 45, 45, null);
 		Image custImage = Toolkit.getDefaultToolkit().getImage("res/cook.gif");
 		g.drawImage(custImage, xPos, yPos, 20, 25, null);
 		g.setColor(Color.magenta.darker());

@@ -18,6 +18,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
     public static final int WINDOWY = 340;
     private Image bufferImage;
     private Dimension bufferSize;
+    private Image backgroundImage; 
 
     private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 
@@ -26,10 +27,13 @@ public class AnimationPanel extends JPanel implements ActionListener {
         setVisible(true);
         
         bufferSize = this.getSize();
+        
  
     	Timer timer = new Timer(5, this );
     	timer.start();
+
     }
+  
 
 	public void actionPerformed(ActionEvent e) {
 		repaint();  //Will have paintComponent called
@@ -37,27 +41,35 @@ public class AnimationPanel extends JPanel implements ActionListener {
 
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
+       
+      //  g2.drawImage(backgroundImage, 0, 0, 400, 320, null);
+        
+       
 
         //Clear the screen by painting a rectangle the size of the frame
         g2.setColor(getBackground());
-        g2.fillRect(0, 0, WINDOWX, WINDOWY );
+        backgroundImage = Toolkit.getDefaultToolkit().getImage("res/restRanchoImage.png");
+        g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
+        //g2.fillRect(0, 0, WINDOWX, WINDOWY );
 
         //Here is the table
-        g2.setColor(Color.ORANGE);
-        g2.fillRect((WINDOWX*2)/11, (WINDOWY*6)/10, WINDOWY/10, WINDOWY/10);//100 and 250 need to be table params
+       // g2.setColor(Color.ORANGE);
+       // g2.fillRect((WINDOWX*2)/11, (WINDOWY*6)/10, WINDOWY/10, WINDOWY/10);//100 and 250 need to be table params
 
         Graphics2D g3 = (Graphics2D)g;
         
-        g3.setColor(Color.ORANGE);
-        g3.fillRect((WINDOWX*5)/11, (WINDOWY*6)/10, WINDOWY/10, WINDOWY/10); //200 and 250
+       // g3.setColor(Color.ORANGE);
+        //g3.fillRect((WINDOWX*5)/11, (WINDOWY*6)/10, WINDOWY/10, WINDOWY/10); //200 and 250
         
-        g3.fillRect((WINDOWX*8)/11, (WINDOWY*6)/10, WINDOWY/10, WINDOWY/10); // 300 and 250
+      //  g3.fillRect((WINDOWX*8)/11, (WINDOWY*6)/10, WINDOWY/10, WINDOWY/10); // 300 and 250
+        synchronized(guis) {
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.updatePosition();
             }
         }
-        g3.setColor(Color.magenta.darker());
+        }
+       /* g3.setColor(Color.magenta.darker());
         g3.fillRect((WINDOWX*15)/20, (WINDOWY*1)/10, (WINDOWY/15), WINDOWY/15);
         
         g3.setColor(Color.cyan.darker());
@@ -66,6 +78,8 @@ public class AnimationPanel extends JPanel implements ActionListener {
         g3.setColor(Color.cyan.darker());
         g3.fillRect((WINDOWX*17)/20, (WINDOWY*5)/20, WINDOWY/15, WINDOWY/6);
 
+		*/
+        
         synchronized(guis) {
         for(Gui gui : guis) {
             if (gui.isPresent()) {
