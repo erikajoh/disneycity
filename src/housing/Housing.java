@@ -1,17 +1,9 @@
 package housing;
 
-import housing.gui.HousingGui;
-import housing.interfaces.Person;
-
-import java.awt.GridLayout;
-import java.awt.List;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import javax.swing.BoxLayout;
-
-import restaurant_rancho.gui.RestaurantRanchoGui;
 import simcity.PersonAgent;
+import simcity.gui.SimCityGui;
 
 public class Housing {
 	
@@ -19,21 +11,34 @@ public class Housing {
 	PersonAgent ownerPerson;
 	OwnerAgent owner;
 	ArrayList<Renter> renters = new ArrayList<Renter>();
+	SimCityGui gui;
 	
-	public Housing(String n) {
+	public Housing(SimCityGui g, String n) {
+    	gui = g;
     	name = n;
     }
+	
+	public String getName() {
+		return name;
+	}
 	
 	public void setOwner(PersonAgent op) {
 		ownerPerson = op;
 		owner = new OwnerAgent("owner");
-		owner.startThread();
+		gui.housAniPanel.setOwner(owner);
+	}
+	
+	public void addRenter() { //hack
+		RenterAgent r = new RenterAgent("r"+renters.size()+1);
+		r.setHousing(this);
+		gui.housAniPanel.addRenter(r);
 	}
 	
 	public void addRenter(PersonAgent rp) {
 		RenterAgent r = new RenterAgent("r"+renters.size()+1);
+		r.setHousing(this);
 		renters.add(new Renter(r, rp));
-		r.startThread();
+		gui.housAniPanel.addRenter(r);
 	}
 	
 	class Renter {

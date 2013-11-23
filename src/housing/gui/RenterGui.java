@@ -13,8 +13,6 @@ public class RenterGui implements Gui{
 	private boolean isPresent = false;
 	private String text = "";
 
-	HousingGui gui;
-
 	private int xPos, yPos;
 	private int xDestination, yDestination;
 	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, GoToBath, GoToTable, GoToKitchen, LeaveHouse};
@@ -23,12 +21,11 @@ public class RenterGui implements Gui{
 	public static final int hWidth = 400;
 	public static final int hHeight = 300;
 
-	public RenterGui(RenterAgent r, HousingGui gui){ //HostAgent m) {
+	public RenterGui(RenterAgent r){
 		agent = r;
 		agent.setGui(this);
 		xPos = (int)(hWidth*0.27);
 		yPos = (int)(hHeight*0.92);
-		this.gui = gui;
 	}
 
 	public void updatePosition() {

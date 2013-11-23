@@ -20,10 +20,10 @@ public class SimCityPanel extends JPanel{
 	
 	 RestaurantRanchoGui ranchoGui;
 	 RestaurantRancho ranchoRest;
+	 	 
+	 ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
 	 
 	 ArrayList<Housing> housings = new ArrayList<Housing>();
-	 
-	 ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
 	 
 	 Transportation transportation = new MockTransportation_Douglass("Mock Transportation");
 	 
@@ -38,9 +38,7 @@ public class SimCityPanel extends JPanel{
 		 housings.add(firstHousing);
 		 
 		 PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, "Ow	nerResident", transportation);
-		 people.add(firstHackedPerson);
-		 
-		 
+		 people.add(firstHackedPerson);		 
 	     
 	     setLayout(new GridLayout());
 	 }

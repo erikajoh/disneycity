@@ -19,7 +19,7 @@ public class RenterAgent extends Agent implements Renter {
 	private String name;
 		
 	// agent correspondents
-	private Housing housing = new Housing("hack");
+	private Housing housing;
 	public Owner owner;
 	private double amt;
 	String food;
