@@ -142,8 +142,8 @@ public class PersonTest extends TestCase
 		assertTrue("Contains log: person eats at restaurant",
 				person.log.containsString("Received msgReachedDestination: destination = Mock Restaurant 1"));
 		
-		assertEquals("Person: 1 nourishment level",
-				1, person.getNourishmentLevel());
+		assertEquals("Person: 10 nourishment level",
+				10, person.getNourishmentLevel());
 		
 		// step 5: person is done eating, goes home 
 		assertTrue("Call scheduler, going home, scheduler returns true",
