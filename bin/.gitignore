@@ -19,13 +19,8 @@ Desktop.ini
 .DS_Store
 .Trashes
 .Trash
-/.project
-/README.md
-/docs
-/.classpath
-/.gitignore
-/restaurants
-/simcity
 /agent
 /res
+/simcity
 /transportation
+/AnimationTools
