@@ -27,11 +27,13 @@ public class Housing {
 	public void setOwner(PersonAgent op) {
 		ownerPerson = op;
 		owner = new OwnerAgent("owner");
+		owner.startThread();
 	}
 	
 	public void addRenter(PersonAgent rp) {
 		RenterAgent r = new RenterAgent("r"+renters.size()+1);
 		renters.add(new Renter(r, rp));
+		r.startThread();
 	}
 	
 	class Renter {
