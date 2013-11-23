@@ -10,6 +10,7 @@ import restaurant_rancho.WaiterAgent;
 import restaurant_rancho.interfaces.Bank; 
 import restaurant_rancho.interfaces.Person;
 import simcity.gui.SimCityGui;
+import restaurant_rancho.RestMenu;
 
 import javax.swing.*;
 
@@ -30,11 +31,7 @@ public class RestaurantRancho extends JPanel {
 	Bank bank;
     private HostAgent host;
     private CookAgent cook;
-    private CashierAgent cashier;
-   // private MarketAgent market = new MarketAgent("Whole Foods", 0, 0, 0, 7, 0);
-   // private MarketAgent market2 = new MarketAgent("Ralphs", 20, 20, 20, 20, 20);
-   // private MarketAgent market3 = new MarketAgent("Costco", 20, 20, 20, 20, 20);
-    
+    private CashierAgent cashier;    
     private List<WaiterAgent> waiters = new ArrayList<WaiterAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     private List<MarketAgent> markets = new ArrayList<MarketAgent>();
@@ -43,6 +40,7 @@ public class RestaurantRancho extends JPanel {
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private ListPanel waiterPanel = new ListPanel (this, "Waiters");
     private JPanel group = new JPanel();
+    private RestMenu menu = new RestMenu();
 
 
     private SimCityGui gui; //reference to main gui
@@ -52,21 +50,6 @@ public class RestaurantRancho extends JPanel {
     public RestaurantRancho(SimCityGui g, String n) {
     	name = n;
         this.gui = g;
-        //host.startThread();
-        // market.setCashier(cashier);
-        // market2.setCashier(cashier);
-        // market3.setCashier(cashier);
-        // market.startThread();
-        // market2.startThread();
-        // market3.startThread();
-        // cashier.startThread();
-        // cook.addMarket(market);
-        // cook.addMarket(market2);
-        // cook.addMarket(market3);
-        // cook.setGui(cookgui);
-        // gui.animationPanel.addGui(cookgui);
-        //cook.startThread();
-        //cookgui.updatePosition();
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
 
@@ -81,8 +64,14 @@ public class RestaurantRancho extends JPanel {
     	return gui;
     }
     
+    //public RestMenu getMenu
+    
     public void setBank(Bank b) {
     	bank = b;
+    }
+    
+    public RestMenu getMenu() {
+    	return menu;
     }
     
     

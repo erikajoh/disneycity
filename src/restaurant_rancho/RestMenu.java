@@ -11,7 +11,7 @@ public class RestMenu {
 	public List<String> menuList;
 	
 	
-	RestMenu() {
+	public RestMenu() {
 		menuItems = new Hashtable<String, Double>();
 		menuItems.put("Pizza", 10.50);
 		menuItems.put("Steak", 14.50);
