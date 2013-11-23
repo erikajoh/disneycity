@@ -19,3 +19,15 @@ Desktop.ini
 .DS_Store
 .Trashes
 .Trash
+/README.md
+/docs
+/.classpath
+/bin/.classpath
+/.gitignore
+/.project
+/agent
+/housing
+/res
+/restaurants
+/simcity
+/market

@@ -1,18 +1,17 @@
-package agent;
+package agent_rancho;
 
-import java.io.*;
-import java.util.*;
 import java.util.concurrent.*;
 
 /**
  * Base class for simple agents
  */
 public abstract class Agent {
-    Semaphore stateChange = new Semaphore(1, true);//binary semaphore, fair
-    Semaphore paused = new Semaphore(0);
     boolean isPaused = false;
+    Semaphore paused = new Semaphore(0);
+   // Semaphore pauseAction = new Semaphore(0, true);//binary semaphore, fair
+	Semaphore stateChange = new Semaphore(1, true);//binary semaphore, fair
     private AgentThread agentThread;
-    
+
     public void pauseOrRestart() {
     	if (isPaused == true) {
     		restartAgents();
@@ -23,7 +22,7 @@ public abstract class Agent {
     	}
     	
     }
-
+    
     protected Agent() {
     }
 
@@ -34,16 +33,18 @@ public abstract class Agent {
     protected void stateChanged() {
         stateChange.release();
     }
-
+    
     /**
      * Agents must implement this scheduler to perform any actions appropriate for the
      * current state.  Will be called whenever a state change has occurred,
      * and will be called repeated as long as it returns true.
      *
-     * @return true iff some action was executed that might have changed the
-     *         state.
+     * @return true iff some action was executed that might have changed the state.
      */
     protected abstract boolean pickAndExecuteAnAction();
+    
+    //public abstract void pauseAction() throws InterruptedException;
+    //public abstract void resumeAction();
 
     /**
      * Return agent name for messages.  Default is to return java instance
@@ -66,7 +67,7 @@ public abstract class Agent {
     protected void print(String msg) {
         print(msg, null);
     }
-
+    
     public void pauseAgents() {
     	isPaused = true;
     }
@@ -75,6 +76,7 @@ public abstract class Agent {
     	isPaused = false;
     	paused.release();
     }
+
     /**
      * Print message with exception stack trace
      */
@@ -113,6 +115,16 @@ public abstract class Agent {
             agentThread = null;
         }
     }
+    
+	/*public void pauseAction() throws InterruptedException {
+		isPaused = true;
+	}
+	
+	public void resumeAction() {
+		isPaused = false;
+		pauseAction.release();
+	}
+*/
 
     /**
      * Agent scheduler thread, calls respondToStateChange() whenever a state
@@ -124,8 +136,7 @@ public abstract class Agent {
         private AgentThread(String name) {
             super(name);
         }
-     
-        
+
         public void run() {
             goOn = true;
 
@@ -133,16 +144,15 @@ public abstract class Agent {
                 try {
                     // The agent sleeps here until someone calls, stateChanged(),
                     // which causes a call to stateChange.give(), which wakes up agent.
-                	
-                    stateChange.acquire();
+                	stateChange.acquire();
                     while (isPaused == true) {
-                		paused.acquire();
-                	}
+                 		paused.acquire();
+                 	}
                     //The next while clause is the key to the control flow.
                     //When the agent wakes up it will call respondToStateChange()
                     //repeatedly until it returns FALSE.
                     //You will see that pickAndExecuteAnAction() is the agent scheduler.
-                    while (pickAndExecuteAnAction()) ;
+                    while (pickAndExecuteAnAction());
                 } catch (InterruptedException e) {
                     // no action - expected when stopping or when deadline changed
                 } catch (Exception e) {
@@ -157,4 +167,3 @@ public abstract class Agent {
         }
     }
 }
-
