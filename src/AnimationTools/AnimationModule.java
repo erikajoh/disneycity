@@ -1,4 +1,4 @@
-package simcity.gui;
+package AnimationTools;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
