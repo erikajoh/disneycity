@@ -29,7 +29,7 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
     private JButton kitchen = new JButton(" ");
 
     public HousingAnimationPanel() {
-    	this.setSize(400, 300);
+    	this.setSize(400, 360);
         setVisible(true);
         
         bufferSize = this.getSize();

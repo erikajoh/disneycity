@@ -58,7 +58,7 @@ public class RenterAgent extends Agent implements Renter {
 	public void msgPaymentAccepted(){
 		print("payment accepted");
 		log.add(new LoggedEvent("Payment accepted by owner"));
-		// state = State.readyToCook; //hack
+		 state = State.readyToCook; //hack
 		stateChanged();
 	}
 	
@@ -66,7 +66,7 @@ public class RenterAgent extends Agent implements Renter {
 		print("finished maintenance");
 		log.add(new LoggedEvent("Finished maintenance"));
 		state = State.maintenanceDone;
-		// state = State.leavingHouse; //hack
+		 state = State.leavingHouse; //hack
 		stateChanged();
 	}
 	
@@ -74,7 +74,7 @@ public class RenterAgent extends Agent implements Renter {
 		print("food done");
 		log.add(new LoggedEvent("Food is done"));
 		state = State.foodDone;
-		// state = State.wantsMaintenance; //hack
+		 state = State.wantsMaintenance; //hack
 		stateChanged();
 	}
 	
@@ -111,7 +111,7 @@ public class RenterAgent extends Agent implements Renter {
 			Do("Entering house");
 			EnterHouse();
 			owner.msgWantToRent(this);
-			// state = State.paymentDue; //hack
+			 state = State.paymentDue; //hack
 			return true;
 		}
 		else if(state == State.paymentDue){

@@ -22,6 +22,11 @@ public class Housing {
 		return name;
 	}
 	
+	public void setOwner() { //hack
+		owner = new OwnerAgent("owner");
+		gui.housAniPanel.setOwner(owner);
+	}
+	
 	public void setOwner(PersonAgent op) {
 		ownerPerson = op;
 		owner = new OwnerAgent("owner");
@@ -31,12 +36,14 @@ public class Housing {
 	public void addRenter() { //hack
 		RenterAgent r = new RenterAgent("r"+renters.size()+1);
 		r.setHousing(this);
+		r.setOwner(owner);
 		gui.housAniPanel.addRenter(r);
 	}
 	
 	public void addRenter(PersonAgent rp) {
 		RenterAgent r = new RenterAgent("r"+renters.size()+1);
 		r.setHousing(this);
+		r.setOwner(owner);
 		renters.add(new Renter(r, rp));
 		gui.housAniPanel.addRenter(r);
 	}

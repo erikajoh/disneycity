@@ -19,7 +19,7 @@ public class RenterGui implements Gui{
 	private Command command=Command.noCommand;
 
 	public static final int hWidth = 400;
-	public static final int hHeight = 300;
+	public static final int hHeight = 360;
 
 	public RenterGui(RenterAgent r){
 		agent = r;
