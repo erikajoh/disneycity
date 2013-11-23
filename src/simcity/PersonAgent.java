@@ -5,8 +5,6 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
-
 import simcity.interfaces.Bank;
 import simcity.interfaces.Housing;
 import simcity.interfaces.Market;
@@ -107,7 +105,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	public MyHousing addHousing(Housing h, String personType) {
-		MyHousing tempMyHousing = new MyHousing(h.getName(), h.getType(), personType);
+		MyHousing tempMyHousing = new MyHousing(h, h.getName(), h.getType(), personType);
 		if(personType == "Renter" || personType == "OwnerResident")
 			myHome = tempMyHousing; 
 		myObjects.add(tempMyHousing);
@@ -147,6 +145,10 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgDoneEntering() {
+		
+	}
+	
 	public void msgNourishmentDecrease(int amount) {
 		nourishmentLevel -= amount;
 		stateChanged();
@@ -162,8 +164,12 @@ public class PersonAgent extends Agent {
 	}
 	
 	// from Housing
-	public void msgTimeToPayRent(double amount) {
-		// TODO housing message
+	public void msgRentIsDue(double amount) {
+		actionQueue.add(new Action("payRent", 1));
+	}
+	
+	public void msgHereIsRent(double amount) {
+		
 	}
 	
 	public void msgFinishedMaintenance() {
@@ -172,6 +178,10 @@ public class PersonAgent extends Agent {
 	
 	public void msgFoodDone() {
 		// TODO housing message
+	}
+	
+	public void msgDoneLeaving() {
+		
 	}
 	
 	// from Transportation
@@ -228,6 +238,10 @@ public class PersonAgent extends Agent {
 	public boolean pickAndExecuteAnAction() {
 		
 		// based on state/emergencies
+		if(actionQueue.size() > 0) {
+			Action theAction = actionQueue.poll();
+			// TODO: what to do with action
+		}
 		
 		// based on location
 		if(currentLocationState == LocationState.Home) {
@@ -280,8 +294,26 @@ public class PersonAgent extends Agent {
 	// ************************* ACTIONS ***********************************
 
 	// House actions
+	private void enterHouse() {
+		myHome.housing.msgIAmHome(this);
+	}
+	
 	private void prepareToCookAtHome() {
 		// TODO home action
+		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
+	}
+	
+	private void payRent(double amount) {
+		myHome.housing.msgHereIsRent(this, amount);
+		// TODO: Sleep at end of every message sending?
+	}
+	
+	private void leaveHouse() {
+		myHome.housing.msgIAmLeaving(this);
+	}
+	
+	private void goToSleep() {
+		myHome.housing.msgGoToBed(this);
 	}
 	
 	// Restaurant actions
@@ -422,11 +454,12 @@ public class PersonAgent extends Agent {
 	
 	// TODO interact with housing more
 	private class MyHousing extends MyObject {
-		
+		Housing housing;
 		String housingType, occupantType;
 		Map<String, Integer> inventory = new HashMap<String, Integer>();
 		
-		public MyHousing(String housingName, String housingType, String occupantType) {
+		public MyHousing(Housing h, String housingName, String housingType, String occupantType) {
+			housing = h;
 			this.name = housingName; 
 			this.housingType = housingType;  
 			this.occupantType = occupantType;
