@@ -78,6 +78,8 @@ public class ListPanel extends JPanel implements ActionListener {
         	addPerson(nameField.getText(), hungry.isSelected());
 
         }
+    }
+    /*
         else {
 
         	for (JButton temp:list){
@@ -86,6 +88,8 @@ public class ListPanel extends JPanel implements ActionListener {
             }
         }
     }
+    */
+    
 
     /**
      * If the add button is pressed, this function creates
@@ -109,7 +113,7 @@ public class ListPanel extends JPanel implements ActionListener {
             list.add(button);
             view.add(button);
             //restPanel.addPerson(type, name, hungry);//puts customer on list
-            restPanel.showInfo(type, name);//puts hungry button on panel
+           // restPanel.showInfo(type, name);//puts hungry button on panel
             validate();
         }
     }

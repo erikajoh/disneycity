@@ -1,8 +1,15 @@
 package simcity.gui;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
+
+import restaurant_rancho.gui.AnimationPanel;
+import restaurant_rancho.gui.RestaurantRancho;
+import restaurant_rancho.gui.RestaurantRanchoGui;
+import restaurant_rancho.gui.RestaurantRancho;
+
 
 public class SimCityGui extends JFrame  {
 
@@ -10,6 +17,8 @@ public class SimCityGui extends JFrame  {
 	public static final int WINDOWY = 600;
 	
 	String name;
+	public static RestaurantRancho restRancho;
+	public AnimationPanel restAniPanel = new AnimationPanel();
 	CityAnimationPanel cityAniPanel = new CityAnimationPanel();
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
@@ -22,6 +31,8 @@ public class SimCityGui extends JFrame  {
 	
 	
 	public SimCityGui(String name) {
+		
+		restRancho = new RestaurantRancho(this, name);
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
 		GridBagConstraints c = new GridBagConstraints();
@@ -62,7 +73,8 @@ public class SimCityGui extends JFrame  {
 		c4.gridy=1;
 		c4.gridwidth = GridBagConstraints.REMAINDER;
 		c4.gridheight = 3;
-		System.out.println(cityAnimation.getSize());
+		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
+		zoomAnimation.add(restAniPanel);
 		zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c4);
 		GridBagConstraints c5 = new GridBagConstraints();
@@ -95,6 +107,14 @@ public class SimCityGui extends JFrame  {
 		gui.setVisible(true);
 		gui.setResizable(false);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		restRancho.addPerson(null, "Cook", "cook", 50, "Steak");
+        restRancho.addPerson(null, "Waiters", "w", 50, "Steak");
+        restRancho.addPerson(null, "Cashier", "cash", 50, "Steak");
+        restRancho.addPerson(null, "Market", "Trader Joes", 50, "Steak");
+        restRancho.addPerson(null, "Host", "Host", 50, "Steak");
+		restRancho.addPerson(null, "Customers", "Sally", 50, "Steak");
+		
+	
 		
 	}
 	
