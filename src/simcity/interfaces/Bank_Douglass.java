@@ -2,7 +2,7 @@ package simcity.interfaces;
 
 import simcity.PersonAgent;
 
-public interface Bank {
+public interface Bank_Douglass {
 	public String getName();
 	
 	public void msgRequestAccount(double amount, PersonAgent person);

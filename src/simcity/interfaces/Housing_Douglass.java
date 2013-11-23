@@ -4,7 +4,7 @@ import java.util.Map;
 
 import simcity.PersonAgent;
 
-public interface Housing {
+public interface Housing_Douglass {
 	public String getName();
 	public String getType();
 	public void msgHereIsRent(PersonAgent personAgent, double amount);

@@ -5,11 +5,12 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-import simcity.interfaces.Bank;
-import simcity.interfaces.Housing;
-import simcity.interfaces.Market;
-import simcity.interfaces.Restaurant;
-import simcity.interfaces.Transportation;
+import housing.Housing;
+import housing.interfaces.*;
+import simcity.interfaces.Bank_Douglass;
+import simcity.interfaces.Market_Douglass;
+import simcity.interfaces.Restaurant_Douglass;
+import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
 
@@ -38,7 +39,7 @@ public class PersonAgent extends Agent {
 	private final static int BASE_NOURISHMENT_LEVEL = 10;
 	
 	// Transportation
-	private Transportation transportation;
+	private Transportation_Douglass transportation;
 	
 	// Location
 	private enum LocationState {Home, Transit, Restaurant, Bank, Market};
@@ -75,7 +76,7 @@ public class PersonAgent extends Agent {
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
-	public PersonAgent(String aName, Housing h, String relationWithHousing, Transportation t) {
+	public PersonAgent(String aName, Housing h, String relationWithHousing, Transportation_Douglass t) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
@@ -105,24 +106,24 @@ public class PersonAgent extends Agent {
 	}
 	
 	public MyHousing addHousing(Housing h, String personType) {
-		MyHousing tempMyHousing = new MyHousing(h, h.getName(), h.getType(), personType);
+		MyHousing tempMyHousing = new MyHousing(h, h.getName(), personType);
 		if(personType == "Renter" || personType == "OwnerResident")
 			myHome = tempMyHousing; 
 		myObjects.add(tempMyHousing);
 		return tempMyHousing;
 	}
 	
-	public void	addBank(Bank b, String personType) {
+	public void	addBank(Bank_Douglass b, String personType) {
 		MyBank tempMyBank = new MyBank(b, b.getName(), personType);
 		myObjects.add(tempMyBank);
 	}
 	
-	public void	addRestaurant(Restaurant r, String personType) {
+	public void	addRestaurant(Restaurant_Douglass r, String personType) {
 		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getName(), r.getType(), personType, r.getMenu());
 		myObjects.add(tempMyRestaurant);
 	}
 	
-	public void	addMarket(Market m, String personType) {
+	public void	addMarket(Market_Douglass m, String personType) {
 		MyMarket tempMyMarket = new MyMarket(m, m.getName(), personType);
 		myObjects.add(tempMyMarket);
 	}
@@ -455,13 +456,12 @@ public class PersonAgent extends Agent {
 	// TODO interact with housing more
 	private class MyHousing extends MyObject {
 		Housing housing;
-		String housingType, occupantType;
+		String occupantType;
 		Map<String, Integer> inventory = new HashMap<String, Integer>();
 		
-		public MyHousing(Housing h, String housingName, String housingType, String occupantType) {
+		public MyHousing(Housing h, String housingName, String occupantType) {
 			housing = h;
-			this.name = housingName; 
-			this.housingType = housingType;  
+			this.name = housingName;
 			this.occupantType = occupantType;
 		}
 	}
@@ -482,11 +482,11 @@ public class PersonAgent extends Agent {
 	}
 	// Customers, Waiters, Host, Cook, Cashier
 	private class MyRestaurant extends MyObject {
-		Restaurant restaurant;
+		Restaurant_Douglass restaurant;
 		String restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
 		
-		public MyRestaurant(Restaurant r, String restaurantName, String restaurantType, String personType, Map<String, Double> menu) {
+		public MyRestaurant(Restaurant_Douglass r, String restaurantName, String restaurantType, String personType, Map<String, Double> menu) {
 			restaurant = r;
 			this.name = restaurantName;
 			this.restaurantType = restaurantType;
@@ -497,9 +497,9 @@ public class PersonAgent extends Agent {
 	
 	private class MyBank extends MyObject {
 		
-		Bank theBank;
+		Bank_Douglass theBank;
 		String personType;
-		public MyBank(Bank b, String name, String type) {
+		public MyBank(Bank_Douglass b, String name, String type) {
 			theBank = b;
 			this.name = name;
 			personType = type;
@@ -508,9 +508,9 @@ public class PersonAgent extends Agent {
 	
 	private class MyMarket extends MyObject {
 		
-		Market theMarket;
+		Market_Douglass theMarket;
 		String personType;
-		public MyMarket(Market m, String name, String type) {
+		public MyMarket(Market_Douglass m, String name, String type) {
 			theMarket = m;
 			this.name = name;
 			personType = type;

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import simcity.PersonAgent;
 
-public interface Restaurant {
+public interface Restaurant_Douglass {
 	public String getName();
 	public String getType();
 	public Map<String, Double> getMenu();

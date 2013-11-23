@@ -1,6 +1,6 @@
 package simcity.interfaces;
 
-public interface Market {
+public interface Market_Douglass {
 
 	String getName();
 

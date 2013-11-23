@@ -1,9 +1,9 @@
 package simcity.test.mock;
 
 import simcity.PersonAgent;
-import simcity.interfaces.Housing;
+import simcity.interfaces.Housing_Douglass;
 
-public class MockHousing_Douglass extends Mock_Douglass implements Housing {
+public class MockHousing_Douglass extends Mock_Douglass implements Housing_Douglass {
 
 	public EventLog log;
 	
