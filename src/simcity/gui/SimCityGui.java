@@ -98,6 +98,8 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		c4.gridwidth = GridBagConstraints.REMAINDER;
 		c4.gridheight = 3;
 		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
+		zoomAnimation.add(restAniPanel);
+		restAniPanel.setVisible(false);
 		zoomAnimation.add(housAniPanel);
 		//zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c4);
@@ -154,17 +156,17 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	}
 	
 	private void showHousing() {
-		zoomAnimation.remove(restAniPanel);
-		zoomAnimation.add(housAniPanel);
-		zoomAnimation.revalidate();
-		zoomAnimation.repaint();
+		restAniPanel.setVisible(false);
+		housAniPanel.setVisible(true);
+//		zoomAnimation.revalidate();
+//		zoomAnimation.repaint();
 	}
 	
 	private void showRestaurant() {
-		zoomAnimation.remove(housAniPanel);
-		zoomAnimation.add(restAniPanel);
-		zoomAnimation.revalidate();
-		zoomAnimation.repaint();
+		housAniPanel.setVisible(false);
+		restAniPanel.setVisible(true);
+//		zoomAnimation.revalidate();
+//		zoomAnimation.repaint();
 	}
 	
 }
