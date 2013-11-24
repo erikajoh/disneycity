@@ -43,9 +43,11 @@ public class SimCityGui extends JFrame  {
 	
 	public SimCityGui(String name) {
 		
+		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
+		restRancho = new RestaurantRancho(this, name);
+		
 		simCityPanel = new SimCityPanel(this);
 		
-		restRancho = new RestaurantRancho(this, name);
 		hauntedMansion = new Housing(this, "Haunted Mansion");
 		
 		setLayout(new GridBagLayout());
