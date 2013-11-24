@@ -27,7 +27,7 @@ public class PersonAgent extends Agent {
 	
 	// Inherent data - simple variables
 	private String name;
-	private int nourishmentLevel;
+	private boolean isNourished;
 	private double moneyOnHand = 20;
 	private Map<String, Integer> itemsOnHand;
 	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
@@ -38,7 +38,6 @@ public class PersonAgent extends Agent {
 	private BodyState bodyState;
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
-	private final static int BASE_NOURISHMENT_LEVEL = 10;
 	
 	// Transportation
 	private Transportation_Douglass transportation;
@@ -102,12 +101,12 @@ public class PersonAgent extends Agent {
 	// get/set methods
 	
 	public String	getName()				{ return name; }
-	public int		getNourishmentLevel()	{ return nourishmentLevel; }
+	public boolean	getIsNourished()		{ return isNourished; }
 	public double	getMoney()				{ return moneyOnHand; }
-	public String	getCurrLocation()	{ return currentLocation; }
+	public String	getCurrLocation()		{ return currentLocation; }
 	public String	getCurrLocationState()	{ return currentLocationState.name(); }
 
-	public void		setNourishmentLevel(int level)	{ nourishmentLevel = level; }
+	public void		setIsNourished(boolean full)	{ isNourished = full; }
 	public void		setMoney(double money)			{ moneyOnHand = money; }
 	
 	public void	setFoodPreference(String type, boolean atHome) {
@@ -157,8 +156,8 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgNourishmentDecrease(int amount) {
-		nourishmentLevel -= amount;
+	public void msgSetHunger(boolean full) {
+		isNourished = full;
 		stateChanged();
 	}
 	
@@ -190,7 +189,8 @@ public class PersonAgent extends Agent {
 	public void msgFoodDone() {
 		// TODO housing message
 		event = PersonEvent.makingDecision;
-		nourishmentLevel = BASE_NOURISHMENT_LEVEL;
+		isNourished = true;
+		preferEatAtHome = !preferEatAtHome;
 		stateChanged();
 	}
 	
@@ -237,7 +237,8 @@ public class PersonAgent extends Agent {
 	// from Restaurant
 	public void msgDoneEating(boolean success) {
 		if(success)
-			nourishmentLevel = BASE_NOURISHMENT_LEVEL;
+			isNourished = true;
+		preferEatAtHome = !preferEatAtHome;
 		stateChanged();
 	}
 	
@@ -276,7 +277,7 @@ public class PersonAgent extends Agent {
 					event = PersonEvent.onHold;
 					return true;
 				}
-				if(nourishmentLevel <= 0) {
+				if(!isNourished) {
 					if(currentLocation.equals(targetLocation)) {
 						print("Deciding to eat");
 						if(preferEatAtHome) {
@@ -305,13 +306,13 @@ public class PersonAgent extends Agent {
 					return true;
 				}
 				// Done at bank, time to transition
-				if(nourishmentLevel <= 0 && !preferEatAtHome) {
+				if(!isNourished && !preferEatAtHome) {
 					hungryToRestaurant();
 					return true;
 				}
 			}
 			if(currentLocationState == LocationState.Restaurant) {
-				if(nourishmentLevel <= 0) {
+				if(!isNourished) {
 					enterRestaurant();
 					return true;
 				}
@@ -324,7 +325,7 @@ public class PersonAgent extends Agent {
 				// TODO Person scheduler while in Market
 			}
 		}
-		print("Nothing to do for now");
+		print("Nothing to do for now: nourishmentLevel = " + isNourished);
 		return false;
 	}
 

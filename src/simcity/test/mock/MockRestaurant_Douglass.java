@@ -46,7 +46,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 		final PersonAgent finalPerson = personAgent; 
 		timer.schedule(new TimerTask() {
 			public void run() {
-				finalPerson.setNourishmentLevel(1);
+				finalPerson.setIsNourished(true);
 				finalPerson.msgDoneEating(true);
 			}
 	    }, Constants.SECOND / 2);
