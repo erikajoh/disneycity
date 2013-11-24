@@ -7,7 +7,6 @@ import java.util.concurrent.Semaphore;
 
 import housing.Housing;
 import housing.interfaces.*;
-import restaurant_rancho.gui.RestaurantRancho;
 import simcity.interfaces.Bank_Douglass;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Restaurant_Douglass;
@@ -91,6 +90,7 @@ public class PersonAgent extends Agent {
 		
 		currentLocationState = LocationState.Home;
 		preferredCommute = PreferredCommute.Walk;
+		preferEatAtHome = true;
 		this.foodPreference = foodPreference;
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
@@ -128,7 +128,7 @@ public class PersonAgent extends Agent {
 		myObjects.add(tempMyBank);
 	}
 	
-	public void	addRestaurant(RestaurantRancho r, String personType) {
+	public void	addRestaurant(Restaurant r, String personType) {
 		// TODO Hacked in restaurant type
 		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getRestaurantName(), "Restaurant", personType, r.getMenu().menuItems);
 		myObjects.add(tempMyRestaurant);
@@ -202,6 +202,7 @@ public class PersonAgent extends Agent {
 	
 	// from Transportation
 	public void msgReachedDestination(String destination) {
+		print("Received msgReachedDestination: destination = " + destination);
 		log.add(new LoggedEvent("Received msgReachedDestination: destination = " + destination));
 		currentLocation = destination;
 		mapLocationToEnum(currentLocation);
@@ -373,7 +374,7 @@ public class PersonAgent extends Agent {
 	
 	private void enterRestaurant() {
 		MyRestaurant myRest = (MyRestaurant)currentMyObject;
-		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand, foodPreference);
+		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand);
 		// TODO: blocking
 	}
 	
@@ -503,12 +504,12 @@ public class PersonAgent extends Agent {
 	}
 	// Customers, Waiters, Host, Cook, Cashier
 	private class MyRestaurant extends MyObject {
-		RestaurantRancho restaurant;
+		Restaurant restaurant;
 		String restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
 		
 		// TODO More things about different restaurant types
-		public MyRestaurant(RestaurantRancho r, String restaurantName, String restaurantType, String personType, Hashtable<String, Double> menu) {
+		public MyRestaurant(Restaurant r, String restaurantName, String restaurantType, String personType, Hashtable<String, Double> menu) {
 			restaurant = r;
 			this.name = restaurantName;
 			this.restaurantType = restaurantType;
