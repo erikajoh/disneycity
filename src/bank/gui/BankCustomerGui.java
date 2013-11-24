@@ -26,7 +26,7 @@ public class BankCustomerGui implements Gui{
 		windowX = wx;
 		windowY = wy;
 		xPos = windowX/2-10;
-		yPos = windowY-30;
+		yPos = windowY-25;
 		xDestination = xPos;
 		yDestination = yPos;
 		initial = c.toString().substring(9, 10);

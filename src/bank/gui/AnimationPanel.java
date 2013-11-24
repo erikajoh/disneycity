@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class AnimationPanel extends JPanel implements ActionListener {
 
-    private final int WINDOWX = 550;
-    private final int WINDOWY = 450;
+    private final int WINDOWX = 400;
+    private final int WINDOWY = 330;
 	
 	private int tellerCount = 0;
 
@@ -36,23 +36,23 @@ public class AnimationPanel extends JPanel implements ActionListener {
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
         
         //Clear the screen by painting a rectangle the size of the frame
-        for(int i = 0; i<6; i++){
+        for(int i = 0; i<4; i++){
           g2.setColor(getBackground());
-          g2.fillRect(90*i+15, 0, WINDOWX, WINDOWY );
+          g2.fillRect(90*i+35, 0, WINDOWX, WINDOWY );
           
           Color stone = new Color(189, 165, 150);
           g2.setColor(stone);
-          g2.fillRect(90*i+15, 0, 60, 60);
+          g2.fillRect(90*i+35, 0, 60, 60);
         
           g2.setColor(getBackground());
-          g2.fillRect(90*i+25, 10, 40, 40);
+          g2.fillRect(90*i+45, 10, 40, 40);
         
           Color window = new Color(205, 227, 239);
           g2.setColor(window);
-          g2.fillRect(90*i+25, 50, 40, 10);
+          g2.fillRect(90*i+45, 50, 40, 10);
         
           g2.setColor(Color.DARK_GRAY);
-          g2.fillRect(90*i+25, 10, 20, 20);
+          g2.fillRect(90*i+45, 10, 20, 20);
         }
 
         for(Gui gui : guis) {
