@@ -21,7 +21,7 @@ public class ResidentAgent extends Agent implements Resident {
 	private double amt;
 	private String type, foodPreference;
 	private ResidentGui renterGui;
-	private Semaphore moving = new Semaphore(1, true);
+	private Semaphore moving = new Semaphore(0, true);
 	private Building building;
 	
 	public EventLog log = new EventLog();
@@ -166,13 +166,13 @@ public class ResidentAgent extends Agent implements Resident {
 		}
 		else if(state == State.maintenanceDone){
 			housing.msgFinishedMaintenance(this);
-			state = State.idle;
+			state = State.goingToBed;
 //			state = State.leavingHouse; //hack
 			return true;
 		}
 		else if(state == State.goingToBed){
 			GoToBed();
-			state = State.idle;
+			state = State.readyToCook;
 			return true;
 		}
 		else if(state == State.leavingHouse){
@@ -187,65 +187,65 @@ public class ResidentAgent extends Agent implements Resident {
 	// Actions
 	
 	private void EnterHouse(){
+		renterGui.DoEnterHouse();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		renterGui.DoEnterHouse();
 		housing.msgEntered(this);
 	}
 	
 	private void CookFood(){
+		renterGui.DoGoToKitchen();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		renterGui.DoGoToKitchen();
 		building.cookFood();
 	}
 	
 	private void EatFood(){
+		renterGui.DoGoToTable();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		renterGui.DoGoToTable();
 	}
 	
 	private void DoMaintenance(){
+		renterGui.DoMaintenance();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		renterGui.DoMaintenance();
 	}
 	
 	private void GoToBed(){
+		renterGui.DoGoToBed();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		renterGui.DoGoToBed();
 	}
 	
 	private void LeaveHouse(){
+		renterGui.DoLeaveHouse();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		renterGui.DoLeaveHouse();
 		housing.msgLeft(this);
 	}
 
