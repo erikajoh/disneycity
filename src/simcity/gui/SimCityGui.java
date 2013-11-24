@@ -90,11 +90,10 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
 		restBayou = new RestaurantBayou(this, "The Blue Bayou");
 		restPizza = new RestaurantPizza(this);
-		
-		simCityPanel = new SimCityPanel(this);
-		
 		hauntedMansion = new Housing(this, "Haunted Mansion");
 		mickeysMarket = new Market(this, "Mickey's Market");
+		
+		simCityPanel = new SimCityPanel(this);
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
@@ -182,10 +181,10 @@ public class SimCityGui extends JFrame implements ActionListener  {
         restPizza.addPerson(null, "Host", "Host", 50);
 		restPizza.addPerson(null, "Customer", "Sally", 50);
 		
-		mickeysMarket.addPerson(null, "Manager", "MRAWP", 100);
-		mickeysMarket.addPerson(null, "Cashier", "Kapow", 100);
-		mickeysMarket.addPerson(null, "Worker", "Bleep", 100);
-		mickeysMarket.addPerson(null, "Customer", "Beebop", 100);
+		mickeysMarket.addPerson(null, "Manager", "MRAWP", 100, "");
+		mickeysMarket.addPerson(null, "Cashier", "Kapow", 100, "");
+		mickeysMarket.addPerson(null, "Worker", "Bleep", 100, "");
+		mickeysMarket.addPerson(null, "Customer", "Beebop", 100, "American");
 
 	}
 
