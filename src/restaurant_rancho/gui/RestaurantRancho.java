@@ -46,6 +46,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private ListPanel waiterPanel = new ListPanel (this, "Waiters");
     private JPanel group = new JPanel();
     private RestMenu menu = new RestMenu();
+    boolean isOpen;
 
 
     private SimCityGui gui; //reference to main gui
@@ -60,9 +61,6 @@ public class RestaurantRancho extends JPanel implements Restaurant {
         menu.addItem("Soft Tacos Monterrey", 10.99);
         menu.addItem("Burrito Sonora", 10.99);
         menu.addItem("Chicken Tortilla Soup", 5.99);
-        for (int i = 0; i < menu.menuList.size(); i++) {
-        	System.out.println(menu.menuItems.get(menu.menuList.get(i)) );
-        }
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
 
@@ -81,6 +79,10 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     
     public void setBank(Bank b) {
     	bank = b;
+    }
+    
+    public boolean isOpen() {
+    	return isOpen;
     }
     
     public RestMenu getMenu() {
