@@ -94,8 +94,8 @@ public class ResidentGui implements Gui{
 	}
 	
 	public void DoGoToTable() {
-		xDestination = -hWidth/5;
-		yDestination = -hHeight/6;
+		xDestination = (int)(hWidth*0.27);
+		yDestination = (int)(hHeight*0.65);
 		command = Command.GoToTable;
 	}
 	

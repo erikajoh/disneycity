@@ -121,6 +121,7 @@ public class ResidentAgent extends Agent implements Resident {
 		}
 		else if(state == State.foodDone){
 			housing.msgFoodDone(this);
+			EatFood();
 			state = State.idle;
 //			state = State.wantsMaintenance; //hack
 			return true;
@@ -167,6 +168,16 @@ public class ResidentAgent extends Agent implements Resident {
 		}
 		renterGui.DoGoToKitchen();
 		building.cookFood();
+	}
+	
+	private void EatFood(){
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		renterGui.DoGoToTable();
 	}
 	
 	private void DoMaintenance(){
