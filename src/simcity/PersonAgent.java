@@ -246,6 +246,7 @@ public class PersonAgent extends Agent {
 		if(success)
 			isNourished = true;
 		preferEatAtHome = !preferEatAtHome;
+		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 	
