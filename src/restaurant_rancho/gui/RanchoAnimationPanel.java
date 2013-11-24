@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import restaurant_rancho.gui.CookGui;
 
-public class AnimationPanel extends JPanel implements ActionListener {
+public class RanchoAnimationPanel extends JPanel implements ActionListener {
 
     public static final int WINDOWX = 400;
     public static final int WINDOWY = 340;
@@ -22,7 +22,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
 
     private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 
-    public AnimationPanel() {
+    public RanchoAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
         

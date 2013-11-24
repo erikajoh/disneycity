@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import restaurant_rancho.gui.AnimationPanel;
+import restaurant_rancho.gui.RanchoAnimationPanel;
 import restaurant_rancho.gui.RestaurantRancho;
 import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.gui.RestaurantRancho;
@@ -25,7 +25,7 @@ public class SimCityGui extends JFrame  {
 	SimCityPanel simCityPanel;
 	
 	public static RestaurantRancho restRancho;
-	public AnimationPanel restAniPanel = new AnimationPanel();
+	public RanchoAnimationPanel restAniPanel = new RanchoAnimationPanel();
 	
 	public static Housing hauntedMansion;
 	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();

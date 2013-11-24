@@ -20,12 +20,12 @@ public class CustomerGui implements Gui{
 	private enum Command {noCommand, GoToWaitingSpot, GoToSeat, LeaveRestaurant};
 	private Command command=Command.noCommand;
 	
-	public static final int xTable1 = (AnimationPanel.WINDOWX*2)/11;
-	public static final int yTable1 = (AnimationPanel.WINDOWY*6)/10;
-	public static final int xTable2 = (AnimationPanel.WINDOWX*5)/11;
-	public static final int yTable2 = (AnimationPanel.WINDOWY*6)/10;;
-	public static final int xTable3 = (AnimationPanel.WINDOWX*8)/11; 
-	public static final int yTable3 = (AnimationPanel.WINDOWY*6)/10;
+	public static final int xTable1 = (RanchoAnimationPanel.WINDOWX*2)/11;
+	public static final int yTable1 = (RanchoAnimationPanel.WINDOWY*6)/10;
+	public static final int xTable2 = (RanchoAnimationPanel.WINDOWX*5)/11;
+	public static final int yTable2 = (RanchoAnimationPanel.WINDOWY*6)/10;;
+	public static final int xTable3 = (RanchoAnimationPanel.WINDOWX*8)/11; 
+	public static final int yTable3 = (RanchoAnimationPanel.WINDOWY*6)/10;
 	
 	String custText = "";
 	public int waitNum;

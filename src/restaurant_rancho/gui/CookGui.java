@@ -16,12 +16,12 @@ public class CookGui implements Gui{
 	private int xDestination, yDestination;
 
 	
-	public static final int homeX = (AnimationPanel.WINDOWX*15)/20;
-	public static final int homeY = (AnimationPanel.WINDOWY*5)/20;
-	public static final int loc0X = (AnimationPanel.WINDOWX*15)/20;
-	public static final int loc0Y = (AnimationPanel.WINDOWY*3)/20;
-	public static final int loc2X = (AnimationPanel.WINDOWX*15)/20;
-	public static final int loc2Y = (AnimationPanel.WINDOWY*7)/20;
+	public static final int homeX = (RanchoAnimationPanel.WINDOWX*15)/20;
+	public static final int homeY = (RanchoAnimationPanel.WINDOWY*5)/20;
+	public static final int loc0X = (RanchoAnimationPanel.WINDOWX*15)/20;
+	public static final int loc0Y = (RanchoAnimationPanel.WINDOWY*3)/20;
+	public static final int loc2X = (RanchoAnimationPanel.WINDOWX*15)/20;
+	public static final int loc2Y = (RanchoAnimationPanel.WINDOWY*7)/20;
 	
 	List<kitchenLoc> platingLocations;
 	List<kitchenLoc> cookingLocations;
@@ -33,8 +33,8 @@ public class CookGui implements Gui{
 	
 	public CookGui(CookAgent c){ //HostAgent m) {
 		cook = c;
-		xPos = (AnimationPanel.WINDOWX*15)/20;
-		yPos = (AnimationPanel.WINDOWY*6)/20;
+		xPos = (RanchoAnimationPanel.WINDOWX*15)/20;
+		yPos = (RanchoAnimationPanel.WINDOWY*6)/20;
 		//xDestination = (AnimationPanel.WINDOWX*15)/20;
 		//yDestination = (AnimationPanel.WINDOWY*6)/20;
 		platingLocations = Collections.synchronizedList(new ArrayList<kitchenLoc>());
