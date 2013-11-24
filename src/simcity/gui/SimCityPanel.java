@@ -61,8 +61,11 @@ public class SimCityPanel extends JPanel{
 		long currTicks = getNumTicks();
 		if(currTicks % 10 == 0)
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
+		
 		for(int i = 0; i < people.size(); i++) {
 			final PersonAgent person = people.get(i);
+			
+			// hunger signals
 			if(currTicks == MORNING || currTicks == NOON || currTicks == EVENING) {
 				timer.schedule(new TimerTask() {
 					public void run() {
@@ -70,6 +73,15 @@ public class SimCityPanel extends JPanel{
 						person.msgSetHunger(false);
 					}
 				}, (int)(Math.random() * EAT_DELAY_MAX * TICK_DELAY));
+			}
+			
+			
+			// body state signals
+			if(currTicks == START_OF_DAY) {
+				person.msgWakeUp();
+			}
+			if(currTicks == END_OF_DAY) {
+				person.msgGoToSleep();
 			}
 		}
 	}
@@ -83,7 +95,7 @@ public class SimCityPanel extends JPanel{
 	private static final int TICK_DELAY = 125; // every quarter second = one clock tick
 	
 	// these are start times for each of the day's phases
-	private static final long START_OF_DAY = 0;
+	private static final long START_OF_DAY = 1;
 	private static final long MORNING = 30;
 	private static final long NOON = 150;
 	private static final long EVENING = 270;

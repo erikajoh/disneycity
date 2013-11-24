@@ -38,6 +38,8 @@ public class PersonAgent extends Agent {
 	private enum BodyState {Asleep, Active, Tired};
 	private BodyState bodyState;
 	
+	private enum ActionString { wakeUp, goToSleep, payRent, receiveRent };
+	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
 	
 	// Transportation
@@ -145,21 +147,19 @@ public class PersonAgent extends Agent {
 	// from main class
 	// TODO: handle sleeping/waking in scheduler
 	public void msgWakeUp() {
-		bodyState = BodyState.Active;
+		//bodyState = BodyState.Active;
+		actionQueue.add(new Action(ActionString.wakeUp, 0, 0));
 		stateChanged();
 	}
 	
 	public void msgGoToSleep() {
-		bodyState = BodyState.Tired;
+		//bodyState = BodyState.Tired;
+		actionQueue.add(new Action(ActionString.goToSleep, 2, 0));
 		stateChanged();
 	}
 	
 	public void msgSetHunger(boolean full) {
 		isNourished = full;
-		stateChanged();
-	}
-	
-	public void msgSetBodyState() {
 		stateChanged();
 	}
 	
@@ -170,16 +170,15 @@ public class PersonAgent extends Agent {
 	}
 	
 	public void msgRentIsDue(double amount) {
-		actionQueue.add(new Action("payRent", 1));
+		actionQueue.add(new Action(ActionString.payRent, 1, amount));
 	}
 	
 	public void msgHereIsRent(double amount) {
-		actionQueue.add(new Action("receiveRent", 1));
+		actionQueue.add(new Action(ActionString.receiveRent, 1, amount));
 		stateChanged();
 	}
 	
 	public void msgFinishedMaintenance() {
-		// TODO housing message
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
@@ -259,14 +258,24 @@ public class PersonAgent extends Agent {
 			print("Calling PersonAgent's scheduler");
 		}
 		
-		// based on state/emergencies
+		// action queue for urgent actions
 		if(actionQueue.size() > 0) {
 			Action theAction = actionQueue.poll();
 			// TODO: what to do with action...
+			switch(theAction.action) {
+				case wakeUp:
+					bodyState = BodyState.Active; break;
+				case goToSleep:
+					bodyState = BodyState.Tired; break;
+				case payRent:
+					payRent(theAction.amount); break;
+				case receiveRent:
+					moneyOnHand += theAction.amount; break;
+			}
 		}
 		
 		// if no emergenices, proceed with normal decision rules
-		if(event == PersonEvent.makingDecision) {
+		if(event == PersonEvent.makingDecision && bodyState != BodyState.Asleep) {
 			
 			if(currentLocationState == LocationState.Home) {
 				if(!insideHouse) {
@@ -295,6 +304,9 @@ public class PersonAgent extends Agent {
 					else {
 						leaveHouse();
 					}
+				}
+				if(bodyState == BodyState.Tired) {
+					goToSleep();
 				}
 			}
 			if(currentLocationState == LocationState.Bank) {
@@ -561,11 +573,13 @@ public class PersonAgent extends Agent {
 	// 2 = necessary
 	// 3 = not really needed at the moment
 	private class Action implements Comparable {
-		String action;
+		ActionString action;
 		int priority;
-		public Action(String a, int p) {
+		double amount;
+		public Action(ActionString a, int p, double d) {
 			action = a;
 			priority = p;
+			amount = d;
 		}
 		@Override
 		public int compareTo(Object arg) {
@@ -574,8 +588,8 @@ public class PersonAgent extends Agent {
 		}
 	}
 	
-	private void addAction(String anAction, int aPriority) {
-		Action theAction = new Action(anAction, aPriority);
+	private void addAction(ActionString anAction, int aPriority, double anAmount) {
+		Action theAction = new Action(anAction, aPriority, anAmount);
 		actionQueue.add(theAction);
 	}
 }

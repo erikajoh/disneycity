@@ -98,7 +98,7 @@ public class Housing {
 	
 	public void msgFoodDone(ResidentAgent ra) { // from renter
 		for (Renter r: renters) {
-			if (r.agent == ra) r.person.msgFoodDone();
+			if (r.agent == ra) r.person.msgFoodDone(true); // TODO Fix this
 		}  
 	}
 	
