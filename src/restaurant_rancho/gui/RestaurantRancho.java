@@ -33,6 +33,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	private static final long serialVersionUID = 1L;
 	//Host, cook, waiters and customers
 	String name;
+	String type;
 	Bank bank;
     private HostAgent host;
     private CookAgent cook;
@@ -87,6 +88,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	return menu;
     }
     
+    public String getRestaurantName() { return name; }
+    public String getType() { return type; }
     
    // public void personAs(String type, String name, PersonAgent p) {
     public void personAs(PersonAgent p, String type, String name, double money, String choice){
