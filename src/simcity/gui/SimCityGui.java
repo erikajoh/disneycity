@@ -200,7 +200,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		// TODO Auto-generated method stub
 		if (e.getSource() == panelB) {
 			CardLayout cl = (CardLayout)(cards.getLayout());			
-			if (currP == Panel.pizza) {
+			if (currP == Panel.bank) {
 				System.out.println("showing housing");
 				cl.show(cards, "Housing");
 				currP = Panel.housing;
@@ -220,6 +220,10 @@ public class SimCityGui extends JFrame implements ActionListener  {
 				System.out.println("showing pizza");
 				cl.show(cards,  "Pizza");
 				currP = Panel.pizza;
+			} else if (currP == Panel.pizza) {
+				System.out.println("showing bank");
+				cl.show(cards,  "Bank");
+				currP = Panel.bank;
 			}
 		}
 	}
