@@ -1,7 +1,9 @@
 package simcity.gui;
 
 import housing.Housing;
+import housing.ResidentAgent.State;
 import housing.gui.HousingAnimationPanel;
+import housing.test.mock.LoggedEvent;
 
 import javax.swing.*;
 
@@ -24,11 +26,13 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	
 	SimCityPanel simCityPanel;
 	
+	JPanel cards;
+	
 	enum Panel {housing, restaurant, market, bank};
 	Panel currP;
 			
 	public static RestaurantRancho restRancho;
-	public RanchoAnimationPanel restAniPanel = new RanchoAnimationPanel();
+	public RanchoAnimationPanel ranchoAniPanel = new RanchoAnimationPanel();
 	
 	public static Housing hauntedMansion;
 	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
@@ -45,6 +49,18 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	private JButton panelB = new JButton("next panel");
 		
 	public SimCityGui(String name) {
+		
+//		int delay = 1000; //milliseconds
+//		  ActionListener taskPerformer = new ActionListener() {
+//		      public void actionPerformed(ActionEvent evt) {
+////		          housAniPanel.update();
+//		      }
+//		  };
+//		  new Timer(delay, taskPerformer).start();
+				
+		cards = new JPanel(new CardLayout());
+		cards.add(housAniPanel, "Housing");
+		cards.add(ranchoAniPanel, "Restaurant");
 				
 		panelB.addActionListener(this);
 		panelB.setPreferredSize(new Dimension(0, 0));
@@ -98,9 +114,9 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		c4.gridwidth = GridBagConstraints.REMAINDER;
 		c4.gridheight = 3;
 		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
-		zoomAnimation.add(restAniPanel);
-		restAniPanel.setVisible(false);
-		zoomAnimation.add(housAniPanel);
+		zoomAnimation.add(cards);
+//		ranchoAniPanel.setVisible(false);
+//		zoomAnimation.add(housAniPanel);
 		//zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c4);
 		GridBagConstraints c5 = new GridBagConstraints();
@@ -143,30 +159,17 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == panelB) {
+			CardLayout cl = (CardLayout)(cards.getLayout());			
 			if (currP == Panel.restaurant) {
 				System.out.println("showing housing");
-				showHousing();
+				cl.show(cards, "Housing");
 				currP = Panel.housing;
 			} else if (currP == Panel.housing) {
 				System.out.println("showing rest");
-				showRestaurant();
+				cl.show(cards, "Restaurant");
 				currP = Panel.restaurant;
 			}
 		}
-	}
-	
-	private void showHousing() {
-		restAniPanel.setVisible(false);
-		housAniPanel.setVisible(true);
-//		zoomAnimation.revalidate();
-//		zoomAnimation.repaint();
-	}
-	
-	private void showRestaurant() {
-		housAniPanel.setVisible(false);
-		restAniPanel.setVisible(true);
-//		zoomAnimation.revalidate();
-//		zoomAnimation.repaint();
 	}
 	
 }
