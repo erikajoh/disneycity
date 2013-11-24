@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import housing.Housing;
 import housing.interfaces.*;
+import restaurant_rancho.gui.RestaurantRancho;
 import simcity.interfaces.Bank_Douglass;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Restaurant_Douglass;
@@ -43,6 +44,7 @@ public class PersonAgent extends Agent {
 	
 	// Location
 	private enum LocationState {Home, Transit, Restaurant, Bank, Market};
+	private boolean enteredHouse = false;
 	private LocationState currentLocationState;
 	private String currentLocation;
 	
@@ -63,8 +65,10 @@ public class PersonAgent extends Agent {
 	boolean preferEatAtHome;
 	
 	// Synchronization
-	Semaphore readyForAction = new Semaphore(0, true);
 	private PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
+	public enum PersonEvent {makingDecision, onHold};
+	public PersonEvent event = PersonEvent.makingDecision;
+	// TODO Generic eventFired event instead of specific ones?
 	
 	// temporary variables for consideration
 	/*
@@ -81,6 +85,8 @@ public class PersonAgent extends Agent {
 		name = aName;
 		myPersonality = PersonType.Normal;
 		currentLocation = h.getName();
+		targetLocation = currentLocation;
+		
 		currentLocationState = LocationState.Home;
 		preferredCommute = PreferredCommute.Walk;
 		currentMyObject = addHousing(h, relationWithHousing);
@@ -118,8 +124,9 @@ public class PersonAgent extends Agent {
 		myObjects.add(tempMyBank);
 	}
 	
-	public void	addRestaurant(Restaurant_Douglass r, String personType) {
-		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getName(), r.getType(), personType, r.getMenu());
+	public void	addRestaurant(RestaurantRancho r, String personType) {
+		// TODO Hacked in restaurant type
+		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getName(), "Restaurant", personType, r.getMenu().menuItems);
 		myObjects.add(tempMyRestaurant);
 	}
 	
@@ -146,43 +153,46 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgDoneEntering() {
-		
-	}
-	
 	public void msgNourishmentDecrease(int amount) {
 		nourishmentLevel -= amount;
 		stateChanged();
 	}
 	
 	public void msgSetBodyState() {
-		
-	}
-
-	public void msgReadyForNextAction() {
-		readyForAction.release();
 		stateChanged();
 	}
 	
 	// from Housing
+	public void msgDoneEntering() {
+		event = PersonEvent.makingDecision;
+		stateChanged();
+	}
+	
 	public void msgRentIsDue(double amount) {
 		actionQueue.add(new Action("payRent", 1));
 	}
 	
 	public void msgHereIsRent(double amount) {
-		
+		actionQueue.add(new Action("receiveRent", 1));
+		stateChanged();
 	}
 	
 	public void msgFinishedMaintenance() {
 		// TODO housing message
+		event = PersonEvent.makingDecision;
+		stateChanged();
 	}
 	
 	public void msgFoodDone() {
 		// TODO housing message
+		event = PersonEvent.makingDecision;
+		nourishmentLevel = BASE_NOURISHMENT_LEVEL;
+		stateChanged();
 	}
 	
 	public void msgDoneLeaving() {
-		
+		event = PersonEvent.makingDecision;
+		stateChanged();
 	}
 	
 	// from Transportation
@@ -196,7 +206,6 @@ public class PersonAgent extends Agent {
 
 	// from Bank
 	public void msgAccountOpened(int accountNumber) {
-		readyForAction.release();
 		stateChanged();
 	}
 	
@@ -204,7 +213,6 @@ public class PersonAgent extends Agent {
 		log.add(new LoggedEvent("Received msgMoneyWithdrawn: amount = " + amount));
 		moneyOnHand += amount;
 		moneyWanted -= amount;
-		readyForAction.release();
 		stateChanged();
 	}
 	
@@ -212,13 +220,11 @@ public class PersonAgent extends Agent {
 		log.add(new LoggedEvent("Received msgMoneyDeposited"));
 		moneyOnHand -= moneyToDeposit;
 		moneyToDeposit = 0;
-		readyForAction.release();
 		stateChanged();
 	}
 	
 	public void msgLoanDecision(boolean status) {
 		// TODO bank message
-		readyForAction.release();
 		stateChanged();
 	}
 	
@@ -232,63 +238,75 @@ public class PersonAgent extends Agent {
 	// from Market
 	public void msgHereIsOrder(String order, int quantity) {
 		
+		stateChanged();
 	}
 	
 	// ************************* SCHEDULER ***********************************
 	
 	public boolean pickAndExecuteAnAction() {
-		
+		print("Calling PersonAgent's scheduler");
 		// based on state/emergencies
+		
 		if(actionQueue.size() > 0) {
 			Action theAction = actionQueue.poll();
-			// TODO: what to do with action
+			// TODO: what to do with action...
 		}
 		
-		// based on location
-		if(currentLocationState == LocationState.Home) {
-			if(nourishmentLevel <= 0) {
-				if(preferEatAtHome) {
-					prepareToCookAtHome();
+		// if no emergenices, proceed with normal decision rules
+		if(event == PersonEvent.makingDecision) {
+		
+			// based on location
+			if(currentLocationState == LocationState.Home) {
+				if(!enteredHouse && currentLocation.equals(targetLocation)) {
+					print("Entering house");
+					enterHouse();
+					enteredHouse = true;
+					event = PersonEvent.onHold;
+					return true;
+				}
+				if(nourishmentLevel <= 0) {
+					print("Deciding to eat");
+					if(preferEatAtHome) {
+						prepareToCookAtHome();
+					}
+					else {
+						hungryToRestaurant();
+					}
+					event = PersonEvent.onHold;
+					return true;
+				}
+			}
+			if(currentLocationState == LocationState.Bank) {
+				// TODO Person scheduler while in Bank
+				// Stuff to do at bank
+				if(moneyWanted > 0) {
+					requestWithdrawal();
+					return true;
+				}
+				if(moneyToDeposit > 0) {
+					requestDeposit();
+					return true;
+				}
+				// Done at bank, time to transition
+				if(nourishmentLevel <= 0 && !preferEatAtHome) {
+					hungryToRestaurant();
+					return true;
+				}
+			}
+			if(currentLocationState == LocationState.Restaurant) {
+				if(nourishmentLevel <= 0) {
+					enterRestaurant();
+					return true;
 				}
 				else {
-					hungryToRestaurant();
+					goHome();
+					return true;
 				}
 			}
-			return true;
-		}
-		
-		if(currentLocationState == LocationState.Bank) {
-			// TODO Person scheduler while in Bank
-			// Stuff to do at bank
-			if(moneyWanted > 0) {
-				requestWithdrawal();
-				return true;
+			if(currentLocationState == LocationState.Market) {
+				// TODO Person scheduler while in Market
 			}
-			if(moneyToDeposit > 0) {
-				requestDeposit();
-				return true;
-			}
-			// Done at bank, time to transition
-			if(nourishmentLevel <= 0 && !preferEatAtHome) {
-				hungryToRestaurant();
-				return true;
-			}
-		}
-
-		if(currentLocationState == LocationState.Restaurant) {
-			if(nourishmentLevel <= 0) {
-				enterRestaurant();
-				return true;
-			}
-			else {
-				goHome();
-				return true;
-			}
-		}
-		if(currentLocationState == LocationState.Market) {
-			// TODO Person scheduler while in Market
-		}
-		
+		}		
 		return false;
 	}
 
@@ -306,7 +324,6 @@ public class PersonAgent extends Agent {
 	
 	private void payRent(double amount) {
 		myHome.housing.msgHereIsRent(this, amount);
-		// TODO: Sleep at end of every message sending?
 	}
 	
 	private void leaveHouse() {
@@ -336,7 +353,7 @@ public class PersonAgent extends Agent {
 	
 	private void enterRestaurant() {
 		MyRestaurant myRest = (MyRestaurant)currentMyObject;
-		myRest.restaurant.msgPersonAs(this, myRest.personType, name, moneyOnHand, foodPreference);
+		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand, foodPreference);
 		// TODO: blocking
 	}
 	
@@ -344,6 +361,7 @@ public class PersonAgent extends Agent {
 	private void goToTransportation() {
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
 		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name());
+		event = PersonEvent.onHold;
 		// TODO blocking?
 	}
 	
@@ -359,12 +377,6 @@ public class PersonAgent extends Agent {
 		log.add(new LoggedEvent("Creating account"));
 		// TODO: Hacking in account number
 		myBank.theBank.msgRequestAccount(moneyToDeposit, this);
-		try {
-			readyForAction.acquire();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private void requestWithdrawal() {
@@ -372,12 +384,6 @@ public class PersonAgent extends Agent {
 		log.add(new LoggedEvent("Want to withdraw " + moneyWanted + " from " + myBank.name));
 		// TODO: Hacking in account number
 		myBank.theBank.msgRequestWithdrawal(1, moneyWanted, this);
-		try {
-			readyForAction.acquire();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private void requestDeposit() {
@@ -385,12 +391,6 @@ public class PersonAgent extends Agent {
 		log.add(new LoggedEvent("Want to deposit " + moneyToDeposit + " from " + myBank.name));
 		// TODO: Hacking in account number and forLoan
 		myBank.theBank.msgRequestDeposit(1, moneyWanted, this, false);
-		try {
-			readyForAction.acquire();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	//Market actions
@@ -482,11 +482,12 @@ public class PersonAgent extends Agent {
 	}
 	// Customers, Waiters, Host, Cook, Cashier
 	private class MyRestaurant extends MyObject {
-		Restaurant_Douglass restaurant;
+		RestaurantRancho restaurant;
 		String restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
 		
-		public MyRestaurant(Restaurant_Douglass r, String restaurantName, String restaurantType, String personType, Map<String, Double> menu) {
+		// TODO More things about different restaurant types
+		public MyRestaurant(RestaurantRancho r, String restaurantName, String restaurantType, String personType, Hashtable<String, Double> menu) {
 			restaurant = r;
 			this.name = restaurantName;
 			this.restaurantType = restaurantType;
