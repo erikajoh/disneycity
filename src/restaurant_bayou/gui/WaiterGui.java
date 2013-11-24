@@ -3,6 +3,7 @@ package restaurant_bayou.gui;
 
 import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.WaiterAgent;
+import simcity.gui.SimCityGui;
 
 import java.awt.*;
 
@@ -11,7 +12,7 @@ public class WaiterGui implements Gui {
     private WaiterAgent agent = null;
     private String text = "";
     
-    private RestaurantBayouGui gui;
+    private SimCityGui gui;
 
     public static final int xTable = 100;
     public static final int yTable = 250;
@@ -23,10 +24,10 @@ public class WaiterGui implements Gui {
     public boolean leaving = false;
     public boolean atTable = false;
 
-    public WaiterGui(WaiterAgent agent, RestaurantBayouGui gui) {
+    public WaiterGui(WaiterAgent agent, SimCityGui gui, int numWaiters) {
         this.agent = agent;
         this.gui = gui;
-        xHome = xTable/20+(gui.howManyWaiters()*xTable/5);
+        xHome = xTable/20+(numWaiters*xTable/5);
         yHome = yTable/7;
         xPos = xHome;
         yPos = yHome;
@@ -106,7 +107,7 @@ public class WaiterGui implements Gui {
     	text = t;
     }
     
-    public void setEnabled() {
-    	gui.setEnabled(agent);
-    }
+   // public void setEnabled() {
+  //  	gui.setEnabled(agent);
+   // }
 }

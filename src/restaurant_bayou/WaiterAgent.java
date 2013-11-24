@@ -47,12 +47,10 @@ public class WaiterAgent extends Agent implements Waiter {
 	{none, seatCustomer, leaveCustomer, takeOrder, deliverOrder};
 	AgentEvent event = AgentEvent.none;
 
-	public WaiterAgent(String name, HostAgent host) {
+	public WaiterAgent(String name) {
 		super();
 
 		this.name = name;
-		this.host = host;
-		this.cook = host.cook;
 	
 	}
 	
@@ -71,6 +69,10 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void setHost(HostAgent h) {
 		host = h;
+	}
+	
+	public void setCook(CookAgent c) {
+		cook = c;
 	}
 
 	public void msgLeavingTable(CustomerAgent cust) {
@@ -129,7 +131,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void msgOKToGoOnBreak(boolean ok) {
 		if (ok) takeBreak();
-		else waiterGui.setEnabled();
+		//else waiterGui.setEnabled();
 		wantBreak = false;
 	}
 	

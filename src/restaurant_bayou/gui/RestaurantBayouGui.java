@@ -26,7 +26,7 @@ public class RestaurantBayouGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
-    private RestaurantBayou restPanel = new RestaurantBayou(this);
+   // private RestaurantBayou restPanel = new RestaurantBayou(this);
     
     private int lineLength = 0;
     
@@ -59,10 +59,11 @@ public class RestaurantBayouGui extends JFrame implements ActionListener {
         setLayout(new GridLayout(2,1));
 
         Dimension restDim = new Dimension(WINDOWX, (int) (WINDOWY * .6));
-        restPanel.setPreferredSize(restDim);
+      /*  restPanel.setPreferredSize(restDim);
         restPanel.setMinimumSize(restDim);
         restPanel.setMaximumSize(restDim);
         add(restPanel);
+        */
         
         // Now, setup the info panel
 //        Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .15));
@@ -77,7 +78,7 @@ public class RestaurantBayouGui extends JFrame implements ActionListener {
         stateCB.addActionListener(this);
         
         pauseB.addActionListener(this);
-        restPanel.addButton(pauseB);
+     //   restPanel.addButton(pauseB);
 
 //        infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
 //        
@@ -173,7 +174,7 @@ public class RestaurantBayouGui extends JFrame implements ActionListener {
      * @param c reference to the customer
      */
     public void setEnabled(Object person) {
-    	restPanel.resetState(person);
+    //	restPanel.resetState(person);
 //        if (currentPerson instanceof CustomerAgent) {
 //            CustomerAgent cust = (CustomerAgent) currentPerson;
 //            if (c.equals(cust)) {
@@ -205,7 +206,7 @@ public class RestaurantBayouGui extends JFrame implements ActionListener {
     public void decreaseLine() {
     	lineLength--;
     }
-    public int howManyWaiters() {
-    	return restPanel.howManyWaiters();
-    }
+  //  public int howManyWaiters() {
+ //   	return restPanel.howManyWaiters();
+ //   }
 }

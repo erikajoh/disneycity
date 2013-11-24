@@ -2,6 +2,7 @@ package restaurant_bayou.gui;
 
 import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.HostAgent;
+import simcity.gui.SimCityGui;
 
 import java.awt.*;
 
@@ -15,7 +16,7 @@ public class CustomerGui implements Gui{
 	private boolean isHungry = false;
 	private String text = "";
 
-	RestaurantBayouGui gui;
+	SimCityGui gui;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -25,11 +26,11 @@ public class CustomerGui implements Gui{
 	public static final int xTable = 100;
 	public static final int yTable = 250;
 
-	public CustomerGui(CustomerAgent c, RestaurantBayouGui gui){ //HostAgent m) {
+	public CustomerGui(CustomerAgent c, SimCityGui gui, int numCustomers){ //HostAgent m) {
 		agent = c;
-		xPos = xTable/20+(gui.howManyCustomers()*xTable/5);
+		xPos = xTable/20+(numCustomers*xTable/5);
 		yPos = (yTable/50);
-		xDestination = xTable/20+(gui.howManyCustomers()*xTable/5);
+		xDestination = xTable/20+(numCustomers*xTable/5);
 		yDestination = yTable/50;
 		this.gui = gui;
 	}
@@ -71,7 +72,7 @@ public class CustomerGui implements Gui{
 		return isPresent;
 	}
 	public void setHungry() {
-		gui.increaseLine();
+		//gui.increaseLine();
 		isHungry = true;
 		agent.gotHungry();
 		setPresent(true);
@@ -85,7 +86,7 @@ public class CustomerGui implements Gui{
 	}
 
 	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
-		gui.decreaseLine();
+		//gui.decreaseLine();
 		xDestination = xTable*seatnumber;
 		yDestination = yTable;
 		command = Command.GoToSeat;
@@ -104,7 +105,7 @@ public class CustomerGui implements Gui{
 	}
 	
 	public void setEnabled() {
-		gui.setEnabled(agent);
+		//gui.setEnabled(agent);
 	}
 	
 	public void setText(String t) {
