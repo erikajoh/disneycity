@@ -147,13 +147,13 @@ public class PersonAgent extends Agent {
 	// from main class
 	// TODO: handle sleeping/waking in scheduler
 	public void msgWakeUp() {
-		//bodyState = BodyState.Active;
+		print("Must wake up");
 		actionQueue.add(new Action(ActionString.wakeUp, 0, 0));
 		stateChanged();
 	}
 	
 	public void msgGoToSleep() {
-		//bodyState = BodyState.Tired;
+		print("Must go to sleep");
 		actionQueue.add(new Action(ActionString.goToSleep, 2, 0));
 		stateChanged();
 	}
@@ -318,6 +318,7 @@ public class PersonAgent extends Agent {
 				}
 				if(bodyState == BodyState.Tired) {
 					goToSleep();
+					event = PersonEvent.onHold;
 				}
 			}
 			if(currentLocationState == LocationState.Bank) {
@@ -340,13 +341,12 @@ public class PersonAgent extends Agent {
 			if(currentLocationState == LocationState.Restaurant) {
 				if(!isNourished) {
 					enterRestaurant();
-					event = PersonEvent.onHold;
-					return true;
 				}
 				else {
 					goHome();
-					return true;
 				}
+				event = PersonEvent.onHold;
+				return true;
 			}
 			if(currentLocationState == LocationState.Market) {
 				// TODO Person scheduler while in Market

@@ -45,10 +45,15 @@ public class SimCityPanel extends JPanel{
 		//		 firstHousing.setOwner();
 		 
 		firstHackedPerson.startThread();
+
+	    setLayout(new GridLayout());
 	
 		/* timing */
-	    setLayout(new GridLayout());
-	    timer = new Timer();
+	    newDay();
+	}
+	
+	public void newDay() {
+		timer = new Timer();
 	    timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				incrementNumTicks();
@@ -85,7 +90,7 @@ public class SimCityPanel extends JPanel{
 			
 			// house maintenance signal
 			if(currTicks == NOON && getCurrentDay().equals("Friday")) {
-				
+				// TODO: do maintenance
 			}
 		}
 	}
@@ -141,6 +146,13 @@ public class SimCityPanel extends JPanel{
 			numTicks = 0;
 			setNextDay();
 			timer.cancel(); // TODO test that this stops entire simulation
+			System.out.println("New day beginning soon");
+			timer = new Timer();
+			timer.schedule(new TimerTask(){
+				public void run() {
+					newDay();
+				}
+			}, 2000);
 		}
 	}
 }
