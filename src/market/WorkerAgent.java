@@ -18,6 +18,7 @@ public class WorkerAgent extends Agent {
 	private ManagerAgent manager;
 	private List<MyOrder> orders = new ArrayList<MyOrder>();
 	private Semaphore moving = new Semaphore(0, true);
+	int num;
 	
 	class MyOrder {
 		CustomerAgent c;
@@ -31,16 +32,22 @@ public class WorkerAgent extends Agent {
 	private CashierAgent cashier;
 	private Market market;
 	
-	public WorkerAgent(String name, ManagerAgent manager) {
+	public WorkerAgent(String name, ManagerAgent manager, int num) {
 		super();
 
 		this.name = name;
 		this.manager = manager;
-	
+		this.num = num;
+		print(""+num);
+
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public int getNum() {
+		return num;
 	}
 	
 	public void setPerson(PersonAgent person) {
@@ -86,11 +93,17 @@ public class WorkerAgent extends Agent {
 			orders.remove(o);
 			return true;
 		}
+		workerGui.DoGoToHome();
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
 	public int GetItem(String item, int quantity) {
-		workerGui.setPresent(true);
 		workerGui.DoGoGetItem(market.getLocation(item));
 		try {
 			moving.acquire();
@@ -103,6 +116,7 @@ public class WorkerAgent extends Agent {
 
 	public void setGui(WorkerGui gui) {
 		workerGui = gui;
+		workerGui.setPresent(true);
 	}
 
 	public WorkerGui getGui() {

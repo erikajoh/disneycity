@@ -124,7 +124,7 @@ public class Market {
     public void addPerson(PersonAgent p, String type, String name) {
 
     	if (type.equals("Worker")) {
-    		WorkerAgent w = new WorkerAgent(name, manager);
+    		WorkerAgent w = new WorkerAgent(name, manager, workers.size());
     		WorkerGui g = new WorkerGui(w);
     		gui.markAniPanel.addGui(g);
     		if (cashier!=null) w.setCashier(cashier);

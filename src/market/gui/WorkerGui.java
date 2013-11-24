@@ -16,10 +16,10 @@ public class WorkerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, getItem};
+	private enum Command {noCommand, getItem, goHome};
 	private Command command=Command.noCommand;
 	
-	private Semaphore moving = new Semaphore(1, true);
+//	private Semaphore moving = new Semaphore(0, true);
 
 	public static final int mWidth = 400;
 	public static final int mHeight = 360;
@@ -27,19 +27,32 @@ public class WorkerGui implements Gui{
 	public WorkerGui(WorkerAgent w){
 		agent = w;
 		agent.setGui(this);
-		xPos = (int)(mWidth*0.27);
-		yPos = (int)(mHeight*0.92);
+		xPos = (int)(mWidth*0.6) - agent.getNum()*mWidth/15;
+		yPos = (int)(mHeight*0.1);
 	}
 
 	public void updatePosition() {
-		if (xPos < xDestination)
-			xPos++;
-		else if (xPos > xDestination)
-			xPos--;
-		else if (yPos < yDestination)
-			yPos++;
-		else if (yPos > yDestination)
-			yPos--;
+		if (command == Command.goHome) {
+			if (yPos < yDestination)
+				yPos++;
+			else if (yPos > yDestination)
+				yPos--;
+			else if (xPos < xDestination)
+				xPos++;
+			else if (xPos > xDestination)
+				xPos--;
+		} else {
+			if (xPos < xDestination)
+				xPos++;
+			else if (xPos > xDestination)
+				xPos--;
+			else if (yPos < yDestination)
+				yPos++;
+			else if (yPos > yDestination)
+				yPos--;
+		}
+		
+		
 		
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command != Command.noCommand) agent.msgAnimationFinished();
@@ -69,6 +82,12 @@ public class WorkerGui implements Gui{
     	xDestination = 200;
     	yDestination = 200;
     	command = Command.getItem;
+    }
+    
+    public void DoGoToHome() {
+    	xDestination = (int)(mWidth*0.6) - agent.getNum()*mWidth/15;
+		yDestination = (int)(mHeight*0.08);
+    	command = Command.goHome;
     }
 
     public int getXPos() {
