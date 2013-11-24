@@ -112,15 +112,15 @@ public class TransportationController extends Agent {
 	private void spawnMover(Mover mover) {
 		//Try to spawn mover
 		switch(mover.method) {
-			case "car":
+			case "Car":
 				//spawn car
 				break;
 			
-			case  "walk":
+			case  "Walk":
 				//spawn walker
 				break;
 			
-			case "bus":
+			case "Bus":
 				//find bus stop and spawn walker to go to bus stop
 				break;
 		}
