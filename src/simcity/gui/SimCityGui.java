@@ -15,7 +15,7 @@ import restaurant_rancho.gui.RestaurantRancho;
 import simcity.PersonAgent;
 
 
-public class SimCityGui extends JFrame  {
+public class SimCityGui extends JFrame implements ActionListener  {
 
 	public static final int WINDOWX = 800;
 	public static final int WINDOWY = 600;
@@ -24,12 +24,15 @@ public class SimCityGui extends JFrame  {
 	
 	SimCityPanel simCityPanel;
 	
+	enum Panel {housing, restaurant, market, bank};
+	Panel currP;
+			
 	public static RestaurantRancho restRancho;
 	public RanchoAnimationPanel restAniPanel = new RanchoAnimationPanel();
 	
 	public static Housing hauntedMansion;
 	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
-	
+		
 	CityAnimationPanel cityAniPanel = new CityAnimationPanel();
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
@@ -39,10 +42,14 @@ public class SimCityGui extends JFrame  {
 	private JPanel zoomPanel = new JPanel();
 	private JLabel cityLabel = new JLabel("Disney City View");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
-	
-	
-	public SimCityGui(String name) {
+	private JButton panelB = new JButton("next panel");
 		
+	public SimCityGui(String name) {
+				
+		panelB.addActionListener(this);
+		panelB.setPreferredSize(new Dimension(0, 0));
+		currP = Panel.housing;
+					
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
 		
@@ -91,7 +98,6 @@ public class SimCityGui extends JFrame  {
 		c4.gridwidth = GridBagConstraints.REMAINDER;
 		c4.gridheight = 3;
 		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
-//		zoomAnimation.add(restAniPanel);
 		zoomAnimation.add(housAniPanel);
 		//zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c4);
@@ -107,16 +113,14 @@ public class SimCityGui extends JFrame  {
 		add(cityPanel, c5);
 		GridBagConstraints c6 = new GridBagConstraints();
 		c6.fill = GridBagConstraints.BOTH;
-		c6.weightx= .5;
+		c6.weightx= 0;
 		c6.weighty = .18;
 		c6.gridx=3;
 		c6.gridy=5;
 		c6.gridwidth = GridBagConstraints.REMAINDER;
 		c6.gridheight =2;
 		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom Panel"));
-		add(zoomPanel, c6);
-		
-		
+		add(panelB, c6);			
 	}
 	
 	public static void main(String[] args) {
@@ -132,6 +136,35 @@ public class SimCityGui extends JFrame  {
         restRancho.addPerson(null, "Host", "Host", 50);
 		restRancho.addPerson(null, "Customers", "Sally", 50);
 		
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == panelB) {
+			if (currP == Panel.restaurant) {
+				System.out.println("showing housing");
+				showHousing();
+				currP = Panel.housing;
+			} else if (currP == Panel.housing) {
+				System.out.println("showing rest");
+				showRestaurant();
+				currP = Panel.restaurant;
+			}
+		}
+	}
+	
+	private void showHousing() {
+		zoomAnimation.remove(restAniPanel);
+		zoomAnimation.add(housAniPanel);
+		zoomAnimation.revalidate();
+		zoomAnimation.repaint();
+	}
+	
+	private void showRestaurant() {
+		zoomAnimation.remove(housAniPanel);
+		zoomAnimation.add(restAniPanel);
+		zoomAnimation.revalidate();
+		zoomAnimation.repaint();
 	}
 	
 }
