@@ -46,7 +46,7 @@ public class HostAgent extends Agent {
 
 		waiters = new ArrayList<WaiterAgent>(NWAITERS);
 		for (int ix = 1; ix <= NWAITERS; ix++) {
-			waiters.add(new WaiterAgent("le waiter "+ix, this));
+			waiters.add(new WaiterAgent("le waiter "+ix));
 		}
 
 		
@@ -175,9 +175,12 @@ public class HostAgent extends Agent {
 		cashierGui = gui;
 	}
 	
+	public void setCashier(CashierAgent c) {
+		cashier = c;
+	}
+	
 	public void setGui(CookGui gui) {
 		cookGui = gui;
-		cook.setGui(gui);
 	}
 
 	public CashierGui getGui() {

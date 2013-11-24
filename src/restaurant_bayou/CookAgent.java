@@ -30,10 +30,8 @@ public class CookAgent extends Agent {
 	 *
 	 * @param name name of the cook
 	 */
-	public CookAgent(CashierAgent c, String name, RestMenu menu){
+	public CookAgent(String name, RestMenu menu){
 		super();
-		this.cashier = c;
-		c.setCook(this);
 		this.name = name;
 		for (String item: menu.menuList) {
 			i.add(item, 1);
@@ -45,6 +43,10 @@ public class CookAgent extends Agent {
 		person = p;
 	}
 
+	public void setCashier(CashierAgent c) {
+		this.cashier = c;
+	}
+	
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table){
 		orders.add(new Order(w, choice, table));
 //		if (!waiters.contains(w)) waiters.add(w);

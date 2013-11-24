@@ -23,8 +23,7 @@ public class CookGui implements Gui {
     public boolean leaving = false;
     public boolean atTable = false;
 
-    public CookGui(HostAgent agent) {
-        this.host = agent;
+    public CookGui() {
         xHome = xTable*13/2;
         yHome = 11*yTable/12;
         xPos = xHome;
@@ -33,6 +32,9 @@ public class CookGui implements Gui {
         yDestination = yHome;
     }
 
+    public void setHost(HostAgent h) {
+    	host = h;
+    }
     public void updatePosition() {
     	
     	if (xPos < xDestination)

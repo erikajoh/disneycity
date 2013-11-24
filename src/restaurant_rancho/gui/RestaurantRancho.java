@@ -170,13 +170,14 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     public void addPerson(PersonAgent p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
-    		if (returningCusts.contains(p)) {
-    			returningCusts.get(p).getGui().setHungry();	
-    		}
-    		else {
+    		//if ((p!=null) && returningCusts.containsKey(p)) {
+    		//	returningCusts.get(p).getGui().setHungry();	
+    		//}
+    		//else {
+    		
     			CustomerAgent c = new CustomerAgent(name);	
     			CustomerGui g = new CustomerGui(c, gui, customers.size());
-    			returningCusts.put(p, c);
+    			//returningCusts.put(p, c);
     			g.setHungry();
     			gui.restAniPanel.addGui(g);
     			if (host!=null) c.setHost(host);
@@ -189,7 +190,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     			g.updatePosition();
     		}
     		
-    	}
+    	//}
     	else if (type.equals("Waiter")) {
     		WaiterAgent w = new WaiterAgent(name, this);
     		WaiterGui g = new WaiterGui(w, waiters.size());

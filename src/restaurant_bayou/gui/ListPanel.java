@@ -100,7 +100,7 @@ public class ListPanel extends JPanel implements ActionListener {
         	for (JCheckBox temp:list){
                 if (e.getSource() == temp) {
 //                	if (temp.isSelected()) {
-                	restPanel.showInfo(type, temp.getText());
+                //	restPanel.showInfo(type, temp.getText());
                 	if (!type.equals("waiters")) temp.setEnabled(false);
 //                	}
                 }
