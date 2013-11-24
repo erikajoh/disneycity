@@ -36,9 +36,18 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
         bufferSize = this.getSize();
                 
     	timer.start();	
+    	
     }
 
 	public void actionPerformed(ActionEvent e) {
+//		SwingUtilities.invokeLater(new Runnable() {
+//		    public void run() {
+//		      // Here, we can safely update the GUI
+//		      // because we'll be called from the
+//		      // event dispatch thread
+//		    	repaint();
+//		    }
+//		  });
 		repaint();  //Will have paintComponent called
 	}	
 
@@ -63,6 +72,23 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
         
         for(Gui gui : guis) {
             if (gui.isPresent()) {
+                gui.updatePosition();
+            }
+        }
+
+        for(Gui gui : guis) {
+            if (gui.isPresent()) {
+                gui.draw(g2);
+            }
+        }
+    }
+    
+    public void update() {
+    	this.getParent().setVisible(true);
+    	System.out.println("updating");
+    	for(Gui gui : guis) {
+            if (gui.isPresent()) {
+            	System.out.println("a gui is present");
                 gui.updatePosition();
             }
         }

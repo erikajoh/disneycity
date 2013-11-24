@@ -10,6 +10,7 @@ import simcity.gui.SimCityGui;
 public class Housing {
 	
 	String name, type;
+	double rentAmt = 5;
 	
 	PersonAgent ownerPerson;
 	ArrayList<Renter> renters = new ArrayList<Renter>();
@@ -79,9 +80,16 @@ public class Housing {
 		}
 	}
 	
-	public void msgHereIsTime() { // from timer
-//		rp.msgDoMaintenance();
-//		rp.msgRentIsDue();
+	public void msgDoMaintenance() { // from timer
+		for (Renter r: renters) {
+			r.agent.msgDoMaintenance();
+		}
+	}
+	
+	public void msgRentDue() { // from timer
+		for (Renter r: renters) {
+			r.person.msgRentIsDue(rentAmt);
+		}
 	}
 	
 	public void msgEntered(ResidentAgent ra) { // from renter

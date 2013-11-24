@@ -74,6 +74,11 @@ public class ResidentAgent extends Agent implements Resident {
 		stateChanged();
 	}
 	
+	public void msgDoMaintenance(){
+		state = State.wantsMaintenance;
+		stateChanged();
+	}
+	
 	public void msgMaintenanceAnimationFinished(){
 		moving.release();
 		print("finished maintenance");
