@@ -16,5 +16,5 @@ public interface Restaurant {
 
 	public void personAs(PersonAgent p, String type, String name, double money);
 	
-	public void addPerson(PersonAgent p, String type, String name, double money, String choice);
+	public void addPerson(PersonAgent p, String type, String name, double money);
 }
