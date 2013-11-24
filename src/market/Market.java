@@ -36,26 +36,21 @@ public class Market {
     
     // Messages
     
-    public void msgEnterMarket() { // from customer to market
+    // Food: steak, cheese, bread, soup, lettuce, tortilla, chicken, pasta
+    
+    public void msgVirtualOrder(PersonAgent p, String choice) { // from person
     	
     }
     
-    public void msgHereIsPayment(double amt) { // from customer to cashier
-    	
-    }
-    
-    public void msgLeaveMarket() { // from customer to market
-    	
-    }
-    
-    public void msgOrderFulfilled(String choice, int quantity) { // from worker to manager
-    	
+    public void msgLeaveMarket(CustomerAgent c) { // from customer
+    	customers.remove(c);
     }
     
      /* msgHereYouGo(String order, double amt); // to customer from manager
      * msgRestaurantDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
      * msgHomeDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
      * msgFulfillOrder(String order, int quantity); // to worker from manager
+     * msgDoneAtMarket(boolean fulfilled);
      */
 
     private SimCityGui gui;
@@ -75,7 +70,6 @@ public class Market {
     
     public String getName() { return name; }
     
-   // public void personAs(String type, String name, PersonAgent p) {
     public void personAs(PersonAgent p, String type, String name, double money){
     	addPerson(p, type, name, money);
     }
@@ -85,7 +79,7 @@ public class Market {
     	if (type.equals("Customer")) {
     		CustomerAgent c = new CustomerAgent(name, 100);	
     		CustomerGui g = new CustomerGui(c);
-//    		gui.markAniPanel.addGui(g);
+    		gui.markAniPanel.addGui(g);
     		if (manager!=null) c.setManager(manager);
     		c.setGui(g);
     		if (cashier!=null) c.setCashier(cashier);
@@ -93,12 +87,11 @@ public class Market {
     		customers.add(c);
     		c.startThread();
     		g.updatePosition();
-    		
     	}
     	else if (type.equals("Worker")) {
     		WorkerAgent w = new WorkerAgent(name, manager);
     		WorkerGui g = new WorkerGui(w);
-//    		gui.markAniPanel.addGui(g);
+    		gui.markAniPanel.addGui(g);
 //    		if (cashier!=null) w.setCashier(cashier);
     		if (manager!=null) manager.addWorker(w);
     		w.setGui(g);
@@ -106,7 +99,6 @@ public class Market {
     		workers.add(w);
     		w.startThread();
     		g.updatePosition();
-    		
     	}
     	else if (type.equals("Manager")) {
     		if (manager == null) {

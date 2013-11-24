@@ -3,6 +3,7 @@ package market;
 import agent.Agent;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
 import market.gui.CustomerGui;
@@ -11,11 +12,9 @@ import market.gui.CustomerGui;
  * Restaurant customer agent.
  */
 public class CustomerAgent extends Agent {
-	private String name;
-	private int hungerLevel = 10;        // determines length of meal
+	private String name, choice;
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
-	private String choice;
 	private Wallet wallet;
 	private Timer t = new Timer();
 
@@ -24,15 +23,12 @@ public class CustomerAgent extends Agent {
 	private WorkerAgent worker;
 	private PersonAgent person;
 	
+	private Semaphore moving = new Semaphore(1, true);
+	
 	public int table;
 
-	public enum AgentState
-	{DoingNothing, Waiting, BeingSeated, Seated, Ordered, WaitingForOrder, WaitingForCheck, Paying, Leaving};
-	private AgentState state = AgentState.DoingNothing;
-
-	public enum AgentEvent 
-	{none, gotHungry, followHost, seated, orderFood, orderTaken, itemArrived, rcvdCheck, arrivedAtCashier, donePaying, doneLeaving};
-	AgentEvent event = AgentEvent.none;
+	public enum State {idle, entering, ordering, paying, leaving};
+	private State state = State.idle;
 	
 	/**
 	 * Constructor for CustomerAgent class
@@ -43,9 +39,8 @@ public class CustomerAgent extends Agent {
 	public CustomerAgent(String name, double amt){
 		super();
 		this.name = name;
-		if (name.equalsIgnoreCase("broke") || name.equalsIgnoreCase("bad")) wallet = new Wallet(0); //hack to test customer's ability to pay
-		else if (name.equalsIgnoreCase("cheap")) wallet = new Wallet(7.5);
-		else wallet = new Wallet(amt);
+		wallet = new Wallet(amt);
+		state = State.entering;
 	}
 
 	/**
@@ -64,167 +59,87 @@ public class CustomerAgent extends Agent {
 		this.cashier = cashier;
 	}
 	
-	public void gotHungry() {
-		event = AgentEvent.gotHungry;
-		stateChanged();
-	}
-
-	public void msgFollowMeToTable(ManagerAgent m) {
-		manager = m;
-		event = AgentEvent.followHost;
+	public void msgWhatWouldYouLike() { // from manager
+		state = State.ordering;
 		stateChanged();
 	}
 	
-	public void msgAnimationFinishedGoToSeat() {
-		//from animation
-		event = AgentEvent.seated;
-		stateChanged();
-	}
-	
-	public void msgWhatWouldYouLike() {
-		event = AgentEvent.orderFood;
-		stateChanged();
-	}
-	
-	public void msgOrderHasBeenReceived() {
-		event = AgentEvent.orderTaken;
-		stateChanged();
-	}
-	
-	public void msgHereIsYourItem() {
-		event = AgentEvent.itemArrived;
-		stateChanged();
-	}
-
-	public void msgAnimationFinishedLeaveMarket() {
-		//from animation
-		event = AgentEvent.doneLeaving;
-		stateChanged();
-	}
-	
-	public void msgAnimationFinishedGoToCashier() {
-		//from animation
-		event = AgentEvent.arrivedAtCashier;
+	public void msgHereIsYourItem() { // from worker
+		state = State.paying;
 		stateChanged();
 	}
 	
 	public void msgHereIsChange(double amt) {
-		event = AgentEvent.donePaying;
 		wallet.update(amt);
+		state = State.leaving;
+		stateChanged();
+	}
+	
+	public void msgAnimationFinished() {
+		//from animation
+		moving.release();
 		stateChanged();
 	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
-		//	CustomerAgent is a finite state machine
-		try {
-			if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry){
-				if (manager.isFull() && !name.equalsIgnoreCase("wait")) {
-					//customerGui.setEnabled();
-					//customerGui.DoExitRestaurant();
-					return true;
-				}
-				state = AgentState.Waiting;
-				GoToRestaurant();
-				return true;
-			}
-			if (state == AgentState.Waiting && event == AgentEvent.followHost){
-				state = AgentState.BeingSeated;
-				return true;
-			}
-			if (state == AgentState.BeingSeated && event == AgentEvent.seated){
-				state = AgentState.Seated;
-				return true;
-			}
-			if (state == AgentState.Seated && event == AgentEvent.orderFood){
-				state = AgentState.Ordered;
-				OrderFood();
-				return true;
-			}
-			if (state == AgentState.Ordered && event == AgentEvent.orderTaken){
-				state = AgentState.WaitingForOrder;
-				return true;
-			}
-			if (state == AgentState.WaitingForCheck && event == AgentEvent.rcvdCheck){
-				state = AgentState.Paying;
-				return true;
-			}
-			if (state == AgentState.Paying && event == AgentEvent.arrivedAtCashier){
-				manager.cashier.msgHereIsMoney(this, wallet.getAmt());
-				return true;
-			}
-			if (state == AgentState.Paying && event == AgentEvent.donePaying){
-				state = AgentState.Leaving;
-				LeaveRestaurant();
-				return true;
-			}
-			if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
-				state = AgentState.DoingNothing;
-				worker.msgDoneLeaving(this);
-				return true;
-			}
-			return false;
-		} catch (ConcurrentModificationException e) {
-			return false;
+	protected boolean pickAndExecuteAnAction() {	
+		if (state == State.entering){
+			EnterMarket();
+			state = State.idle;
+//			state = State.ordering; //hack
+			return true;
 		}
-	}
-	
-	private void OrderFood() {
-		choice = name.toLowerCase();
-		int count = 0;
-		worker.msgHereIsMyChoice(this, choice);
-		//customerGui.setText(choice+"?");
+		else if (state == State.ordering){
+			manager.msgWantToOrder("water", 1);
+			state = State.idle;
+//			state = State.paying; //hack
+			return true;
+		}
+		else if (state == State.paying){
+			state = State.idle;
+//			state = State.leaving; //hack
+			return true;
+		}
+		else if (state == State.leaving){
+			LeaveMarket();
+			state = State.idle;
+			return true;
+		}
+		return false;
 	}
 
-	private void GoToRestaurant() {
-		Do("Going to restaurant");
+	private void EnterMarket() {
+		Do("Entering market");
+		customerGui.setPresent(true);
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		customerGui.DoEnterMarket();
 		manager.msgIAmHere(this);
 	}
-
-	private void LeaveRestaurant() {
-		Do("Leaving.");
-//		customerGui.setText("");
-//		customerGui.DoExitRestaurant();
-	}
 	
-	private void DoDishes() {
-		Do("Finished doing dishes as punishment");
-		event = AgentEvent.donePaying;
-		stateChanged();
+	private void PlaceOrder() {
+		worker.msgHereIsMyChoice(this, choice);
+	}
+
+	private void LeaveMarket() {
+		Do("Leaving market");
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		customerGui.DoLeaveMarket();
 	}
 	
 	public String getName() {
 		return name;
-	}
-	
-	public boolean isWaiting() {
-		return (state == AgentState.Waiting);
-	}
-	
-	public boolean isSeated() {
-		return (state == AgentState.Seated);
-	}
-	
-	public boolean hasOrdered() {
-		return (state == AgentState.Ordered);
-	}
-	
-	public boolean isWaitingForOrder() {
-		return (state == AgentState.WaitingForOrder);
-	}
-	
-	public boolean isWaitingForCheck() {
-		return (state == AgentState.WaitingForCheck);
-	}
-	
-	public int getHungerLevel() {
-		return hungerLevel;
-	}
-
-	public void setHungerLevel(int hungerLevel) {
-		this.hungerLevel = hungerLevel;
 	}
 	
 	public String getChoice() {

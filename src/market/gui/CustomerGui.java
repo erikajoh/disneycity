@@ -1,8 +1,9 @@
 package market.gui;
 
 import market.CustomerAgent;
-import market.ManagerAgent;
+
 import java.awt.*;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -11,23 +12,23 @@ public class CustomerGui implements Gui{
 
 	private CustomerAgent agent = null;
 	private boolean isPresent = false;
-	private boolean isHungry = false;
 	private String text = "";
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, GoToSeat, GoToCashier, LeaveRestaurant};
+	private enum Command {noCommand, EnterMarket, LeaveMarket};
 	private Command command=Command.noCommand;
+	
+	private Semaphore moving = new Semaphore(1, true);
 
-	public static final int xTable = 100;
-	public static final int yTable = 250;
+	public static final int mWidth = 400;
+	public static final int mHeight = 360;
 
 	public CustomerGui(CustomerAgent c){
 		agent = c;
-		xPos = xTable/20+(xTable/5);
-		yPos = (yTable/50);
-		xDestination = xTable/20+(xTable/5);
-		yDestination = yTable/50;
+		agent.setGui(this);
+		xPos = -mWidth/20;
+		yPos = 0;
 	}
 
 	public void updatePosition() {
@@ -35,22 +36,20 @@ public class CustomerGui implements Gui{
 			xPos++;
 		else if (xPos > xDestination)
 			xPos--;
-
-		if (yPos < yDestination)
+		else if (yPos < yDestination)
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
-
+		
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
-			else if (command==Command.GoToCashier) agent.msgAnimationFinishedGoToCashier();
+			if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.CYAN);
-		g.fillRect(xPos, yPos, xTable/6, yTable/12);
+		g.fillRect(xPos, yPos, mWidth/20, mHeight/15);
 //		Image img = Toolkit.getDefaultToolkit().getImage("customer.jpg");
 //		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
 		g.setColor(Color.GRAY);
@@ -62,30 +61,21 @@ public class CustomerGui implements Gui{
 		return isPresent;
 	}
 
-	public boolean isHungry() {
-		return isHungry;
-	}
-
 	public void setPresent(boolean p) {
 		isPresent = p;
 	}
 
-	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
-		xDestination = xTable*seatnumber;
-		yDestination = yTable;
-		command = Command.GoToSeat;
-	}
-	
-	public void DoGoToCashier() {
-		xDestination = xTable*9/2;
-		yDestination = yTable/5;
-		command = Command.GoToCashier;
+	public void DoEnterMarket() {//later you will map seatnumber to table coordinates.
+		System.out.println("enter");
+		xDestination = (int)(mWidth*0.08);
+		yDestination = (int)(mHeight*0.42);
+		command = Command.EnterMarket;
 	}
 
-	public void DoExitRestaurant() {
-		xDestination = -xTable/5;
-		yDestination = -yTable/6;
-		command = Command.LeaveRestaurant;
+	public void DoLeaveMarket() {
+		xDestination = 0;
+		yDestination = -mHeight/15;
+		command = Command.LeaveMarket;
 	}
 	
 	public void setText(String t) {

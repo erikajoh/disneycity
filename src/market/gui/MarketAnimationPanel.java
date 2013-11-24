@@ -38,13 +38,7 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		repaint();  //Will have paintComponent called
-	}
-	
-//	public void pauseOrResume(){
-//		if (timer.isRunning()) timer.stop();
-//		else timer.start();
-//	}
-	
+	}	
 
     public void paintComponent(Graphics g) {
         g2 = (Graphics2D)g;
@@ -81,16 +75,9 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
     	guis.add(gui);
     }
     
-    public void addGui(CashierGui gui) {
-    	guis.add(gui);
-    }
-    
     public void addGui(CustomerGui gui) {
+    	System.out.println("added gui");
     	guis.add(gui);
     }
-    
-//    public void addGui(OwnerGui gui) {
-//    	guis.add(gui);
-//    }
    
 }

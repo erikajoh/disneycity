@@ -1,91 +1,78 @@
 package market.gui;
 
-
-import market.CustomerAgent;
 import market.WorkerAgent;
 
 import java.awt.*;
+import java.util.concurrent.Semaphore;
 
-public class WorkerGui implements Gui {
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
-    private WorkerAgent agent = null;
-    private String text = "";
-    
-    public static final int xTable = 100;
-    public static final int yTable = 250;
-    
-    private int xHome, yHome, xPos, yPos, xDestination, yDestination;//default start position
-    
-    private int table = xTable;
-    
-    public boolean leaving = false;
-    public boolean atTable = false;
+public class WorkerGui implements Gui{
 
-    public WorkerGui(WorkerAgent agent) {
-        this.agent = agent;
-        xHome = xTable/20+(xTable/5);
-        yHome = yTable/7;
-        xPos = xHome;
-        yPos = yHome;
-        xDestination = xHome;
-        yDestination = yHome;
-    }
+	private WorkerAgent agent = null;
+	private boolean isPresent = false;
+	private String text = "";
 
-    public void updatePosition() {
-    	
-    	if (xPos < xDestination)
-            xPos++;
-        else if (xPos > xDestination)
-            xPos--;
+	private int xPos, yPos;
+	private int xDestination, yDestination;
+	private enum Command {noCommand, EnterMarket, LeaveMarket};
+	private Command command=Command.noCommand;
+	
+	private Semaphore moving = new Semaphore(1, true);
 
-        if (yPos < yDestination)
-            yPos++;
-        else if (yPos > yDestination)
-            yPos--;
+	public static final int mWidth = 400;
+	public static final int mHeight = 360;
 
-        if (xPos == xDestination && yPos == yDestination){
-        	if ((xDestination == xTable*table + xTable/10) && (yDestination == yTable - yTable/12)) {
-        		atTable = true;
-        	} else if (leaving && xDestination == xTable*13/2-6*xTable/5 && yDestination == 11*yTable/12-3*xTable/2) {
-        		leaving = false;
-        	} else if (leaving) {
-        		leaving = false;
-        		atTable = false;
-        	}
-    	}
-             
-    }
+	public WorkerGui(WorkerAgent w){
+		agent = w;
+		agent.setGui(this);
+		xPos = (int)(mWidth*0.27);
+		yPos = (int)(mHeight*0.92);
+	}
 
-    public void draw(Graphics2D g) {
-        g.setColor(Color.GREEN);
-        g.fillRect(xPos, yPos, xTable/6, yTable/12);
-//        Image img = Toolkit.getDefaultToolkit().getImage("host.jpg");
+	public void updatePosition() {
+		if (xPos < xDestination)
+			xPos++;
+		else if (xPos > xDestination)
+			xPos--;
+		else if (yPos < yDestination)
+			yPos++;
+		else if (yPos > yDestination)
+			yPos--;
+		
+		if (xPos == xDestination && yPos == yDestination) {
+			if (command != Command.noCommand) agent.msgAnimationFinished();
+			command=Command.noCommand;
+		}
+	}
+
+	public void draw(Graphics2D g) {
+		g.setColor(Color.GREEN);
+		g.fillRect(xPos, yPos, mWidth/20, mHeight/15);
+//		Image img = Toolkit.getDefaultToolkit().getImage("customer.jpg");
 //		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
-        g.setColor(Color.GRAY);
+		g.setColor(Color.GRAY);
 		if (text == null) text = "";
 		g.drawString(text, xPos, yPos);
-    }
+	}
 
-    public boolean isPresent() {
-        return true;
-    }
+	public boolean isPresent() {
+		return isPresent;
+	}
 
-    public void DoGoToTable(int seatnumber) {
-    	table = seatnumber;
-        xDestination = xTable*seatnumber + xTable/10;
-        yDestination = yTable - yTable/12;
-    }
+	public void setPresent(boolean p) {
+		isPresent = p;
+	}
     
-    public void DoGoGetFood() {
-    	xDestination = xTable*13/2-6*xTable/5;
-    	yDestination = 11*yTable/12-3*xTable/2;
-    	leaving = true;
+    public void DoGoGetItem() {
+    	xDestination = mWidth*13/2-6*mWidth/5;
+    	yDestination = 11*mHeight/12-3*mWidth/2;
     }
 
     public void DoLeaveCustomer() {
-        xDestination = xHome;
-        yDestination = yHome;
-        leaving = true;
+        xDestination = xPos;
+        yDestination = yPos;
     }
 
     public int getXPos() {
