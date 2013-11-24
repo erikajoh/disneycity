@@ -75,13 +75,17 @@ public class SimCityPanel extends JPanel{
 				}, (int)(Math.random() * EAT_DELAY_MAX * TICK_DELAY));
 			}
 			
-			
 			// body state signals
 			if(currTicks == START_OF_DAY) {
 				person.msgWakeUp();
 			}
 			if(currTicks == END_OF_DAY) {
 				person.msgGoToSleep();
+			}
+			
+			// house maintenance signal
+			if(currTicks == NOON && getCurrentDay().equals("Friday")) {
+				
 			}
 		}
 	}
