@@ -22,7 +22,7 @@ public class TellerGui implements Gui{
 		agent = c;
 		setPresent(true);
 		number = num;
-		baseX = number*90+45;
+		baseX = number*90+65;
 		baseY = 60;
 		this.gui = gui;
 	}
@@ -33,10 +33,10 @@ public class TellerGui implements Gui{
 	public void draw(Graphics2D g) {
 		
 		g.setColor(Color.GREEN);
-		g.fillRect(number*90+45, 30, 20, 20);
+		g.fillRect(number*90+65, 30, 20, 20);
 		g.setColor(Color.BLACK);
 		g.setFont(cashFont);
-		g.drawString("$", number*90+50, 45);
+		g.drawString("$", number*90+70, 45);
 		g.setFont(otherFont);
 	}
 	
