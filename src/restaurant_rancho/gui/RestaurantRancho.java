@@ -90,6 +90,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     public void personAs(PersonAgent p, String type, String name, double money){
     	addPerson(p, type, name, money);
     }
+    
     public void PauseandUnpauseAgents() {
     	for (WaiterAgent w : waiters) {
     		w.pauseOrRestart();
