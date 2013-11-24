@@ -102,8 +102,4 @@ public class WorkerGui implements Gui {
     public void setText(String t) {
     	text = t;
     }
-    
-    public void setEnabled() {
-    	gui.setEnabled(agent);
-    }
 }

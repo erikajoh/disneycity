@@ -26,9 +26,9 @@ public class CustomerGui implements Gui{
 
 	public CustomerGui(CustomerAgent c, MarketGui gui){ //HostAgent m) {
 		agent = c;
-		xPos = xTable/20+(gui.howManyCustomers()*xTable/5);
+		xPos = xTable/20+(xTable/5);
 		yPos = (yTable/50);
-		xDestination = xTable/20+(gui.howManyCustomers()*xTable/5);
+		xDestination = xTable/20+(xTable/5);
 		yDestination = yTable/50;
 		this.gui = gui;
 	}
@@ -47,10 +47,6 @@ public class CustomerGui implements Gui{
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
 			else if (command==Command.GoToCashier) agent.msgAnimationFinishedGoToCashier();
-			else if (command==Command.LeaveRestaurant) {
-				isHungry = false;
-				setEnabled();
-			}
 			command=Command.noCommand;
 		}
 	}
@@ -68,12 +64,7 @@ public class CustomerGui implements Gui{
 	public boolean isPresent() {
 		return isPresent;
 	}
-	public void setHungry() {
-		gui.increaseLine();
-		isHungry = true;
-		agent.gotHungry();
-		setPresent(true);
-	}
+
 	public boolean isHungry() {
 		return isHungry;
 	}
@@ -83,7 +74,6 @@ public class CustomerGui implements Gui{
 	}
 
 	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
-		gui.decreaseLine();
 		xDestination = xTable*seatnumber;
 		yDestination = yTable;
 		command = Command.GoToSeat;
@@ -99,10 +89,6 @@ public class CustomerGui implements Gui{
 		xDestination = -xTable/5;
 		yDestination = -yTable/6;
 		command = Command.LeaveRestaurant;
-	}
-	
-	public void setEnabled() {
-		gui.setEnabled(agent);
 	}
 	
 	public void setText(String t) {
