@@ -92,6 +92,7 @@ public class SimCityPanel extends JPanel{
 			if(currTicks == MORNING && getCurrentDay().equals("Friday")) {
 				person.msgNeedMaintenance();
 			}
+			
 		}
 		
 		// handle ticks for housing
@@ -115,7 +116,9 @@ public class SimCityPanel extends JPanel{
 	// these are start times for each of the day's phases
 	private static final long START_OF_DAY = 1;
 	private static final long MORNING = 30;
+	private static final long WORK_ONE = 120;
 	private static final long NOON = 150;
+	private static final long WORK_TWO = 220;
 	private static final long EVENING = 270;
 	private static final long END_OF_DAY = 390;
 	
@@ -151,7 +154,7 @@ public class SimCityPanel extends JPanel{
 	
 	public void incrementNumTicks() {
 		numTicks++;
-		if(numTicks > END_OF_DAY) {
+		if(numTicks > END_OF_DAY && allPeopleSleeping()) {
 			numTicks = 0;
 			setNextDay();
 			timer.cancel(); // TODO test that this stops entire simulation
@@ -161,7 +164,14 @@ public class SimCityPanel extends JPanel{
 				public void run() {
 					newDay();
 				}
-			}, 2000);
+			}, 5000);
 		}
+	}
+	
+	public boolean allPeopleSleeping() {
+		for(int i = 0; i < people.size(); i++)
+			if(!people.get(i).getBodyState().equals("Asleep"))
+				return false;
+		return true;
 	}
 }

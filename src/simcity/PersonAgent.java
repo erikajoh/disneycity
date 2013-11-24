@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import housing.Housing;
 import housing.interfaces.*;
+import restaurant_rancho.interfaces.Person;
 import simcity.interfaces.Bank_Douglass;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Restaurant_Douglass;
@@ -106,6 +107,7 @@ public class PersonAgent extends Agent {
 	public double	getMoney()				{ return moneyOnHand; }
 	public String	getCurrLocation()		{ return currentLocation; }
 	public String	getCurrLocationState()	{ return currentLocationState.name(); }
+	public String	getBodyState()			{ return bodyState.toString(); }
 
 	public void		setIsNourished(boolean full)	{ isNourished = full; }
 	public void		setMoney(double money)			{ moneyOnHand = money; }
@@ -323,6 +325,7 @@ public class PersonAgent extends Agent {
 				}
 				if(bodyState == BodyState.Tired) {
 					goToSleep();
+					bodyState = BodyState.Asleep;
 					event = PersonEvent.onHold;
 				}
 			}
@@ -362,7 +365,9 @@ public class PersonAgent extends Agent {
 			}
 		}
 		print("Nothing to do for now: isNourished = " + isNourished
-				+ "; currentLocationState = " + currentLocationState.toString());
+				+ "; currentLocationState = " + currentLocationState.toString()
+				+ "; bodyState = " + bodyState
+				+ "; personEvent = " + event);
 		return false;
 	}
 
@@ -414,6 +419,7 @@ public class PersonAgent extends Agent {
 			targetLocation = "Mock Bank 1";
 			return;
 		}
+		print("I have enough money");
 		targetLocation = targetRestaurant.name;
 	}
 	
