@@ -19,7 +19,7 @@ public class ResidentAgent extends Agent implements Resident {
 	// agent correspondents
 	private Housing housing;
 	private double amt;
-	private String type, food;
+	private String type, foodPreference;
 	private ResidentGui renterGui;
 	private Semaphore moving = new Semaphore(1, true);
 	private Building building;
@@ -27,7 +27,7 @@ public class ResidentAgent extends Agent implements Resident {
 	public EventLog log = new EventLog();
 
 	public enum State
-	{idle, enteringHouse, readyToCook, foodDone, wantsMaintenance, maintenanceDone, goingToBed, leavingHouse};
+	{idle, enteringHouse, readyToCook, noFood, foodDone, wantsMaintenance, maintenanceDone, goingToBed, leavingHouse};
 	
 	State state = State.idle;
 	
@@ -51,16 +51,37 @@ public class ResidentAgent extends Agent implements Resident {
 	class Building {
 		String type;
 		Timer timer = new Timer();
+		private HashMap<String, Integer> inventory = new HashMap<String, Integer>();
 		Building(String t) {
 			type = t;
+			inventory.put("Mexican", 1);
+			inventory.put("Southern", 1);
+			inventory.put("Italian", 1);
+			inventory.put("German", 1);
+			inventory.put("American", 1);
+		}
+		private boolean getFood(String f) {
+			if (inventory.get(f) != 0) {
+				inventory.put(f, inventory.get(f)-1);
+				return true;
+			} else {
+				return false;
+			}
 		}
 		public void cookFood() {
 			timer.schedule(new TimerTask() {
 				public void run() {
-					print("food done");
-					log.add(new LoggedEvent("Food is done"));
-					state = State.foodDone;
-					stateChanged();
+					if (getFood(foodPreference)) {
+						print("food done");
+						log.add(new LoggedEvent("Food is done"));
+						state = State.foodDone;
+						stateChanged();
+					} else {
+						print("no food");
+						log.add(new LoggedEvent("Food is done"));
+						state = State.noFood;
+						stateChanged();
+					}
 				}
 			},
 			5000);
@@ -94,6 +115,7 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 
 	public void msgCookFood(String choice) { //from Housing class
+		foodPreference = choice;
 		state = State.readyToCook;
 		stateChanged();
 	}
@@ -124,8 +146,14 @@ public class ResidentAgent extends Agent implements Resident {
 			state = State.idle;
 			return true;
 		}
+		else if(state == State.noFood){
+			housing.msgFoodDone(this, false);
+			state = State.idle;
+//			state = State.wantsMaintenance; //hack
+			return true;
+		}
 		else if(state == State.foodDone){
-			housing.msgFoodDone(this);
+			housing.msgFoodDone(this, true);
 			EatFood();
 			state = State.idle;
 //			state = State.wantsMaintenance; //hack
