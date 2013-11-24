@@ -5,6 +5,7 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import simcity.PersonAgent;
 import market.gui.WorkerGui;
 
 /**
@@ -23,6 +24,7 @@ public class WorkerAgent extends Agent {
 	private boolean onBreak = false;
 	
 	public WorkerGui workerGui = null;
+	private PersonAgent person;
 		
 	public enum AgentEvent 
 	{none, seatCustomer, leaveCustomer, takeOrder, deliverOrder};
@@ -38,6 +40,14 @@ public class WorkerAgent extends Agent {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setPerson(PersonAgent person) {
+		this.person = person;
+	}
+	
+	public void setManager(ManagerAgent manager) {
+		this.manager = manager;
 	}
 	
 	public void msgServeCustomer(CustomerAgent cust) {

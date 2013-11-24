@@ -5,9 +5,12 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import simcity.PersonAgent;
+
 public class CashierAgent extends Agent {
 	private String name;
 	private CashRegister r;
+	private PersonAgent person;
 	public List<Bill> marketBills =  Collections.synchronizedList(new ArrayList<Bill>());
 	
 	//public EventLog log = new EventLog();
@@ -21,6 +24,10 @@ public class CashierAgent extends Agent {
 		super();
 		this.name = name;
 		r = new CashRegister(amt);
+	}
+	
+	public void setPerson(PersonAgent person) {
+		this.person = person;
 	}
 
 	// Messages

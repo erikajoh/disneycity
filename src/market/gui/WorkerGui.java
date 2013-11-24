@@ -11,8 +11,6 @@ public class WorkerGui implements Gui {
     private WorkerAgent agent = null;
     private String text = "";
     
-    private MarketGui gui;
-
     public static final int xTable = 100;
     public static final int yTable = 250;
     
@@ -23,9 +21,8 @@ public class WorkerGui implements Gui {
     public boolean leaving = false;
     public boolean atTable = false;
 
-    public WorkerGui(WorkerAgent agent, MarketGui gui) {
+    public WorkerGui(WorkerAgent agent) {
         this.agent = agent;
-        this.gui = gui;
         xHome = xTable/20+(xTable/5);
         yHome = yTable/7;
         xPos = xHome;

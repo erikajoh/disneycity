@@ -17,25 +17,8 @@ public class MarketGui extends JFrame implements ActionListener {
     /* The GUI has two frames, the control frame (in variable gui) 
      * and the animation frame, (in variable animationFrame within gui)
      */
-//	JFrame animationFrame = new JFrame("Restaurant Animation");
 	MarketAnimationPanel animationPanel = new MarketAnimationPanel();
-	
-    /* restPanel holds 2 panels
-     * 1) the staff listing, menu, and lists of current customers all constructed
-     *    in RestaurantPanel()
-     * 2) the infoPanel about the clicked Customer (created just below)
-     */        
-    
-    /* infoPanel holds information about the clicked customer, if there is one*/
-//    private JPanel infoPanel;
-//    private JPanel aboutPanel;
-//    private JLabel infoLabel; //part of infoPanel
-//    private JLabel aboutLabel;
-    private JCheckBox stateCB;//part of infoLabel
-    private JButton pauseB = new JButton("pause");
 
-    private Object currentPerson;/* Holds the agent that the info is about.
-    								Seems like a hack */
 
     /**
      * Constructor for RestaurantGui class.
@@ -48,23 +31,6 @@ public class MarketGui extends JFrame implements ActionListener {
     	setBounds(WINDOWX/10, WINDOWY/12, WINDOWX, WINDOWY);
         setLayout(new GridLayout(2,1));
         add(animationPanel);
-    }
-    /**
-     * updateInfoPanel() takes the given customer object and
-     * changes the information panel to hold that person's info.
-     *
-     * @param person customer (or worker) object
-     */
-    public void updateInfoPanel(Object person) {
-    	currentPerson = person;
-        if (person instanceof CustomerAgent) {
-            CustomerAgent c = (CustomerAgent) person;
-        }
-        if (person instanceof WorkerAgent) {
-            WorkerAgent w = (WorkerAgent) person;
-            if (!w.isOnBreak()) w.askForBreak();
-            else w.finishBreak();
-        }
     }
 
     /**

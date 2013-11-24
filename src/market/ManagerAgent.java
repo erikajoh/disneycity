@@ -3,6 +3,7 @@ package market;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import simcity.PersonAgent;
 import market.gui.CashierGui;
 import agent.Agent;
 
@@ -23,6 +24,8 @@ public class ManagerAgent extends Agent {
 	public CashierGui cashierGui = null;
 	public CashierAgent cashier;
 	private String name;
+	
+	private PersonAgent person;
 	
 	public ManagerAgent(String name) {
 		super();
@@ -46,6 +49,10 @@ public class ManagerAgent extends Agent {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setPerson(PersonAgent person) {
+		this.person = person;
 	}
 
 	public List getCustomers() {
@@ -136,11 +143,9 @@ public class ManagerAgent extends Agent {
 
 	// Actions
 	
-	public WorkerAgent addWorker() {
-		WorkerAgent w = new WorkerAgent("W"+(int)(workers.size()+1), this);
+	public void addWorker(WorkerAgent w) {
 		workers.add(w);
 		stateChanged();
-		return w;
 	}
 	
 	public boolean approveBreak(WorkerAgent w) {

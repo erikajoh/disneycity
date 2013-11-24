@@ -14,8 +14,6 @@ public class CustomerGui implements Gui{
 	private boolean isHungry = false;
 	private String text = "";
 
-	MarketGui gui;
-
 	private int xPos, yPos;
 	private int xDestination, yDestination;
 	private enum Command {noCommand, GoToSeat, GoToCashier, LeaveRestaurant};
@@ -24,13 +22,12 @@ public class CustomerGui implements Gui{
 	public static final int xTable = 100;
 	public static final int yTable = 250;
 
-	public CustomerGui(CustomerAgent c, MarketGui gui){ //HostAgent m) {
+	public CustomerGui(CustomerAgent c){
 		agent = c;
 		xPos = xTable/20+(xTable/5);
 		yPos = (yTable/50);
 		xDestination = xTable/20+(xTable/5);
 		yDestination = yTable/50;
-		this.gui = gui;
 	}
 
 	public void updatePosition() {

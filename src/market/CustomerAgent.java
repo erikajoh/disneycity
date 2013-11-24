@@ -4,6 +4,7 @@ import agent.Agent;
 
 import java.util.*;
 
+import simcity.PersonAgent;
 import market.gui.CustomerGui;
 
 /**
@@ -19,7 +20,9 @@ public class CustomerAgent extends Agent {
 	private Timer t = new Timer();
 
 	private ManagerAgent manager;
+	private CashierAgent cashier;
 	private WorkerAgent worker;
+	private PersonAgent person;
 	
 	public int table;
 
@@ -48,8 +51,17 @@ public class CustomerAgent extends Agent {
 	/**
 	 * hack to establish connection to Host agent.
 	 */
+	
+	public void setPerson(PersonAgent person) {
+		this.person = person;
+	}
+	
 	public void setManager(ManagerAgent manager) {
 		this.manager = manager;
+	}
+	
+	public void setCashier(CashierAgent cashier) {
+		this.cashier = cashier;
 	}
 	
 	public void gotHungry() {
