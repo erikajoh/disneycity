@@ -43,6 +43,18 @@ public class Bank extends JPanel implements ActionListener {
         bank = new ManagerAgent("Bank", gui);
         bank.startThread();
         
+        for(int i = 0; i<4; i++){
+        	String name = "Teller"+i;
+        	TellerAgent t = new TellerAgent(name);	
+    		TellerGui g = new TellerGui(t, gui, tellers.size());
+    		gui.bankAniPanel.addGui(g);
+    		t.setBank(bank);
+    		tellers.add(t);
+    		t.setGui(g);
+    		bank.addTeller(t);
+    		t.startThread();
+        }
+        
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 2, 10, 10));
 

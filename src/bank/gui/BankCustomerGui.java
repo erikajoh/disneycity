@@ -33,7 +33,6 @@ public class BankCustomerGui implements Gui{
 		yDestination = yPos;
 		initial = c.toString().substring(9, 10);
 		isPresent = true;
-		//maitreD = m;
 		this.gui = gui;
 	}
 
@@ -73,27 +72,6 @@ public class BankCustomerGui implements Gui{
 			g.drawString(drawString, xPos+20, yPos+15);
 		}
 	}
-	
-	public void setDrawString(String choice, boolean eating){
-		if(choice.equals("Steak")){
-			drawString = "St";
-		}
-		else if(choice.equals("Chicken")){
-			drawString = "C";
-		}
-		else if(choice.equals("Salad")){
-			drawString = "Sa";
-		}
-		else if(choice.equals("Pizza")){
-			drawString = "P";
-		}
-		else{
-			drawString = "";
-		}
-		if(!eating){
-			drawString += "?";
-		}
-	}
 
 	public boolean isPresent() {
 		return isPresent;
@@ -111,7 +89,7 @@ public class BankCustomerGui implements Gui{
 		isPresent = p;
 	}
 
-	public void DoGoToTeller(int xd, int yd) {//later you will map seatnumber to table coordinates.
+	public void DoGoToTeller(int xd, int yd) {
 		isInBank = true;
 		xDestination = xd;
 		yDestination = yd;
