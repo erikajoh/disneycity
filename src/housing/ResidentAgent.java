@@ -110,7 +110,8 @@ public class ResidentAgent extends Agent implements Resident {
 		if(state == State.enteringHouse){
 			Do("Entering house");
 			EnterHouse();
-			state = State.readyToCook; //hack
+			state = State.idle;
+//			state = State.readyToCook; //hack
 			return true;
 		}
 		else if(state == State.readyToCook){
@@ -121,7 +122,7 @@ public class ResidentAgent extends Agent implements Resident {
 		else if(state == State.foodDone){
 			housing.msgFoodDone(this);
 			state = State.idle;
-			state = State.wantsMaintenance; //hack
+//			state = State.wantsMaintenance; //hack
 			return true;
 		}
 		else if(state == State.wantsMaintenance){
@@ -138,6 +139,7 @@ public class ResidentAgent extends Agent implements Resident {
 		else if(state == State.leavingHouse){
 			Do("Leaving house");
 			LeaveHouse();
+			state = State.idle;
 			return true;
 		}
 		return false;
@@ -154,7 +156,6 @@ public class ResidentAgent extends Agent implements Resident {
 		}
 		renterGui.DoEnterHouse();
 		housing.msgEntered(this);
-		state = State.idle;
 	}
 	
 	private void CookFood(){
@@ -187,7 +188,6 @@ public class ResidentAgent extends Agent implements Resident {
 		}
 		renterGui.DoLeaveHouse();
 		housing.msgLeft(this);
-		state = State.idle;
 	}
 
 	// Accessors, etc.
