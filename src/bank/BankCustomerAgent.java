@@ -1,12 +1,12 @@
 package bank;
 
 import bank.gui.BankCustomerGui;
-import bank.gui.BankGui;
+import simcity.gui.SimCityGui;
 import bank.gui.Account;
 import bank.interfaces.BankCustomer;
 import bank.interfaces.Person;
 import bank.interfaces.Teller;
-import bank.interfaces.Bank;
+import bank.interfaces.Manager;
 import agent.Agent;
 
 import java.util.*;
@@ -21,11 +21,11 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private double balance = 25.00;
 	private double change;
 	
-	private BankGui bankGui;
+	private SimCityGui simCityGui;
 	private BankCustomerGui personGui;
 	
 	// agent correspondents
-	private Bank bank = null;
+	private Manager bank = null;
 	private Teller teller = null;
 
 	public enum State
@@ -44,11 +44,11 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public BankCustomerAgent(String name, Bank b, BankGui bg){
+	public BankCustomerAgent(String name, Manager b, SimCityGui bg){
 		super();
 		this.name = name;
 		bank = b;
-		bankGui = bg;
+		simCityGui = bg;
 		state = State.idle;
 	}
 
@@ -165,7 +165,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void goToTeller(){
 		//state = State.idle;
 		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
-	    bankGui.updateInfoPanel(this);
+	    //simCityGui.updateInfoPanel(this);
 	}
 	
 	private void openAccount(){
@@ -196,7 +196,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void leftBank(){
 		state = State.idle;
 		personGui.setInBank(false);
-	    bankGui.updateInfoPanel(this);
+	   // simCityGui.updateInfoPanel(this);
 	}
 
 	// Accessors, etc.
@@ -223,11 +223,11 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		return person;
 	}
 	
-	public void setBank(Bank b) {
+	public void setBank(Manager b) {
 		bank = b;
 	}
 	
-	public Bank getBank() {
+	public Manager getBank() {
 		return bank;
 	}
 	

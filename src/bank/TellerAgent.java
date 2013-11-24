@@ -4,7 +4,7 @@ import agent.Agent;
 import bank.gui.TellerGui;
 import bank.gui.Account;
 import bank.interfaces.Teller;
-import bank.interfaces.Bank;
+import bank.interfaces.Manager;
 import bank.interfaces.BankCustomer;
 
 import java.util.*;
@@ -14,7 +14,7 @@ import java.util.*;
  */
 
 public class TellerAgent extends Agent implements Teller {
-	Bank bank;
+	Manager bank;
 	List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
 	enum State {deciding, openingAccount, depositingCash, withdrawingCash, decidingOnLoan, givingLoan, leaving, idle};
@@ -223,7 +223,7 @@ public class TellerAgent extends Agent implements Teller {
 		tellerGui = gui;	
 	}
 		
-	public void setBank(Bank b) {
+	public void setBank(Manager b) {
 		bank = b;
 	}
 

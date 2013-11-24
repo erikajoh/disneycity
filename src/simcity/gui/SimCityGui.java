@@ -5,6 +5,9 @@ import housing.ResidentAgent.State;
 import housing.gui.HousingAnimationPanel;
 import housing.test.mock.LoggedEvent;
 
+import bank.gui.Bank;
+import bank.gui.BankAnimationPanel;
+
 import javax.swing.*;
 
 import market.Market;
@@ -42,18 +45,21 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	public static RestaurantRancho restRancho;
 	public RanchoAnimationPanel ranchoAniPanel = new RanchoAnimationPanel();
 	
-	public static Housing hauntedMansion;
-	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
-	
 	public static RestaurantBayou restBayou;
 	public BayouAnimationPanel bayouAniPanel = new BayouAnimationPanel();
 	
-	public static Market mickeysMarket;
-	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
-	
 	public static RestaurantPizza restPizza;
 	public PizzaAnimationPanel pizzaAniPanel = new PizzaAnimationPanel();
+	
+	public static Housing hauntedMansion;
+	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
+	
+	public static Market mickeysMarket;
+	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
 		
+	public static Bank pirateBank;
+	public BankAnimationPanel bankAniPanel = new BankAnimationPanel();
+	
 	CityAnimationPanel cityAniPanel = new CityAnimationPanel();
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
@@ -78,6 +84,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		cards = new JPanel(new CardLayout());
 		cards.add(housAniPanel, "Housing");
 		cards.add(markAniPanel, "Market");
+		cards.add(bankAniPanel, "Bank");
 		cards.add(ranchoAniPanel, "Rancho");
 		cards.add(bayouAniPanel, "Bayou");
 		cards.add(pizzaAniPanel, "Pizza");
@@ -92,6 +99,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		restPizza = new RestaurantPizza(this);
 		hauntedMansion = new Housing(this, "Haunted Mansion");
 		mickeysMarket = new Market(this, "Mickey's Market");
+		pirateBank = new Bank(this);
 		
 		simCityPanel = new SimCityPanel(this);
 		

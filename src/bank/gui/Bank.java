@@ -1,12 +1,13 @@
 package bank.gui;
 
 import bank.BankCustomerAgent;
-import bank.BankAgent;
+import bank.ManagerAgent;
 import bank.PersonAgent;
 import bank.TellerAgent;
 
 import javax.swing.*;
 
+import simcity.gui.SimCityGui;
 import agent.Agent;
 
 import java.awt.*;
@@ -20,7 +21,7 @@ import java.util.Vector;
  * Panel in frame that contains all the bank information,
  * including host, cook, waiters, and customers.
  */
-public class BankPanel extends JPanel implements ActionListener {
+public class Bank extends JPanel implements ActionListener {
 
     //Host, cook, waiters and customers
 
@@ -29,26 +30,21 @@ public class BankPanel extends JPanel implements ActionListener {
     
 
     private JPanel restLabel = new JPanel();
-    private ListPanel customerPanel = new ListPanel(this, "Customers");
-    private ListPanel tellerPanel = new ListPanel(this, "Tellers");
     private JButton  pauseButton = new JButton("Pause Agents");
     private JPanel pauseGroup = new JPanel();
     private JPanel group = new JPanel();
 
-    private BankGui gui; //reference to main gui
+    private SimCityGui gui; //reference to main gui
     
-    private BankAgent bank;
+    private ManagerAgent bank;
 
-    public BankPanel(BankGui gui) {
+    public Bank(SimCityGui gui) {
         this.gui = gui;
-        bank = new BankAgent("Bank", gui);
+        bank = new ManagerAgent("Bank", gui);
         bank.startThread();
         
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 2, 10, 10));
-
-        group.add(customerPanel);
-        group.add(tellerPanel);
 
         initRestLabel();
         pauseGroup.setLayout(new BorderLayout());
@@ -76,14 +72,14 @@ public class BankPanel extends JPanel implements ActionListener {
         restLabel.add(new JLabel("               "), BorderLayout.WEST);
     }
 
-    /**
+/*   //
      * When a customer or waiter is clicked, this function calls
      * updatedInfoPanel() from the main gui so that person's information
      * will be shown
      *
      * @param type indicates whether the person is a customer or waiter
      * @param name name of person
-     */
+     //
     public void showInfo(String type, String name) {
 
         if (type.equals("Customers")) {
@@ -100,7 +96,7 @@ public class BankPanel extends JPanel implements ActionListener {
                  }
              }	
         }
-    }
+    }*/
 
     /**
      * Adds a customer or waiter to the appropriate list
@@ -126,7 +122,7 @@ public class BankPanel extends JPanel implements ActionListener {
     	else if (type.equals("Tellers")) {
     		TellerAgent t = new TellerAgent(name);	
     		TellerGui g = new TellerGui(t, gui, tellers.size());
-    		gui.animationPanel.addGui(g);
+    		gui.bankAniPanel.addGui(g);
     		t.setBank(bank);
     		tellers.add(t);
     		t.setGui(g);
@@ -136,7 +132,7 @@ public class BankPanel extends JPanel implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == pauseButton){
+      /*  if(e.getSource() == pauseButton){
         	if(pauseButton.getText().equals("Pause Agents")){
         		pauseButton.setText("Resume Agents");
         		Agent.pause = true;
@@ -145,12 +141,12 @@ public class BankPanel extends JPanel implements ActionListener {
         		pauseButton.setText("Pause Agents");
         		Agent.pause = false;
         	}
-        }
+        }*/
     }
     
-    public String getNameFieldText(){
+    /*public String getNameFieldText(){
     	return gui.getNameFieldText();
-    }
+    }*/
   
 }
 

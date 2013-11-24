@@ -1,6 +1,7 @@
 package bank.gui;
 
 import bank.TellerAgent;
+import simcity.gui.SimCityGui;
 
 import java.awt.*;
 
@@ -16,9 +17,9 @@ public class TellerGui implements Gui{
 	private int baseX;
 	private int baseY;
 
-	BankGui gui;
+	SimCityGui gui;
 
-	public TellerGui(TellerAgent c, BankGui gui, int num){
+	public TellerGui(TellerAgent c, SimCityGui gui, int num){
 		agent = c;
 		setPresent(true);
 		number = num;

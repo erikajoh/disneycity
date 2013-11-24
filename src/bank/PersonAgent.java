@@ -1,11 +1,10 @@
 package bank;
 
 import bank.gui.BankCustomerGui;
-import bank.gui.BankGui;
 import bank.gui.Account;
 import bank.interfaces.BankCustomer;
 import bank.interfaces.Person;
-import bank.interfaces.Bank;
+import bank.interfaces.Manager;
 import agent.Agent;
 
 import java.util.*;
@@ -23,7 +22,7 @@ public class PersonAgent extends Agent implements Person {
 	private double newBalance;
 		
 	// agent correspondents
-	private Bank bank = null;
+	private Manager bank = null;
 
 	private enum State{arrive, leave, idle};
 	State state = State.idle;
@@ -131,11 +130,11 @@ public class PersonAgent extends Agent implements Person {
 		return "customer " + getName();
 	}
 	
-	public void setBank(Bank b) {
+	public void setBank(Manager b) {
 		bank = b;
 	}
 	
-	public Bank getBank() {
+	public Manager getBank() {
 		return bank;
 	}
 }

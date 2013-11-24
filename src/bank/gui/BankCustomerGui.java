@@ -4,12 +4,14 @@ import bank.BankCustomerAgent;
 
 import java.awt.*;
 
+import simcity.gui.SimCityGui;
+
 public class BankCustomerGui implements Gui{
 
 	private BankCustomerAgent agent = null;
 	private boolean isPresent = false;
 
-	BankGui gui;
+	SimCityGui gui;
 
 	private int windowX, windowY;
 	private int xPos, yPos;
@@ -21,7 +23,7 @@ public class BankCustomerGui implements Gui{
 	private boolean isInBank = false;
 
 
-	public BankCustomerGui(BankCustomerAgent c, BankGui gui, int wx, int wy){ //HostAgent m) {
+	public BankCustomerGui(BankCustomerAgent c, SimCityGui gui, int wx, int wy){ //HostAgent m) {
 		agent = c;
 		windowX = wx;
 		windowY = wy;

@@ -1,12 +1,12 @@
 package bank;
 
 import agent.Agent;
-import bank.interfaces.Bank;
+import bank.interfaces.Manager;
 import bank.interfaces.Teller;
 import bank.interfaces.Person;
 import bank.interfaces.BankCustomer;
-import bank.gui.BankGui;
 import bank.gui.BankCustomerGui;
+import simcity.gui.SimCityGui;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ import java.util.*;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a bank who sees that all
 //is proceeded as he wishes.
-public class BankAgent extends Agent implements Bank {
+public class ManagerAgent extends Agent implements Manager {
 	   public class WaitingCustomer {
 		 BankCustomer bankCustomer;
 		 Person person;
@@ -61,14 +61,14 @@ public class BankAgent extends Agent implements Bank {
 
 		public List<MyTeller> tellers = Collections.synchronizedList(new ArrayList<MyTeller>());
 		
-		private BankGui bankGui;
+		private SimCityGui simCityGui;
 
 		private String name;
 
 
-	public BankAgent(String name, BankGui bg) {
+	public ManagerAgent(String name, SimCityGui bg) {
 		super();
-		bankGui = bg;
+		simCityGui = bg;
 		this.name = name;
 	}
 
@@ -106,9 +106,10 @@ public class BankAgent extends Agent implements Bank {
 		    }
 		}
 		if(found == false){
-			 BankCustomerAgent bca = new BankCustomerAgent(person.getName(), this, bankGui);
-		      BankCustomerGui g = new BankCustomerGui(bca, bankGui, bankGui.getAnimWindowX(), bankGui.getAnimWindowY());
-		      bankGui.addBankCustomerGui(g);// dw
+			  BankCustomerAgent bca = new BankCustomerAgent(person.getName(), this, simCityGui);
+		      BankCustomerGui g = new BankCustomerGui(bca, simCityGui, 400, 330);
+		      
+		      simCityGui.bankAniPanel.addGui(g);// dw
 		      bca.setGui(g);
 		      bca.startThread();
 		      waitingCustomers.add(new WaitingCustomer(bca, person));
@@ -261,8 +262,8 @@ public class BankAgent extends Agent implements Bank {
 		stateChanged();
 	}
 	
-	public BankGui getGui(){
-	  return bankGui;
+	public SimCityGui getGui(){
+	  return simCityGui;
 	}
 	
 }
