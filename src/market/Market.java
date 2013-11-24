@@ -35,18 +35,11 @@ public class Market {
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     private Hashtable<String, Integer> inventory = new Hashtable<String, Integer>();
     private Hashtable<String, Double> prices = new Hashtable<String, Double>();
+    private Hashtable<String, Integer> locations = new Hashtable<String, Integer>();
     
     boolean isOpen;
     
     // Messages
-        
-    public void msgVirtualOrder(PersonAgent p, String choice) { // from person
-    	
-    }
-    
-    public void msgLeaveMarket(CustomerAgent c) { // from customer
-    	customers.remove(c);
-    }
     
 	public void msgLeaving(CustomerAgent c) {
 		customers.remove(c);
@@ -66,16 +59,22 @@ public class Market {
         this.gui = g;
         inventory.put("Mexican", 5);
         prices.put("Mexican", 10.0);
+        locations.put("Mexican", 1);
 		inventory.put("Southern", 5);
 		prices.put("Southern", 10.0);
+		locations.put("Southern", 1);
 		inventory.put("Italian", 5);
 		prices.put("Italian", 10.0);
+		locations.put("Italian", 2);
 		inventory.put("German", 5);
 		prices.put("German", 10.0);
+		locations.put("German", 2);
 		inventory.put("American", 5);
 		prices.put("American", 10.0);
+		locations.put("American", 2);
 		inventory.put("Car", 5);
 		prices.put("Car", 10.0);
+		locations.put("Car", 3);
     }
     
     public SimCityGui getGui() {
@@ -88,14 +87,18 @@ public class Market {
     
     public String getName() { return name; }
     
-    public void personAs(PersonAgent p, String type, String name, double money, String choice){
-    	addPerson(p, type, name, money, choice);
+    public void personAs(PersonAgent p, String type, String name, double money, String choice, int quantity){
+    	addPerson(p, type, name, money, choice, quantity);
     }
     
-    public void addPerson(PersonAgent p, String type, String name, double money, String choice) {
+    public void personAs(PersonAgent p, String type, String name){
+    	addPerson(p, type, name);
+    }
+    
+    public void addPerson(PersonAgent p, String type, String name, double money, String choice, int quantity) {
 
     	if (type.equals("Customer")) {
-    		CustomerAgent c = new CustomerAgent(name, money, choice);	
+    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity);	
     		CustomerGui g = new CustomerGui(c);
     		gui.markAniPanel.addGui(g);
     		if (manager!=null) c.setManager(manager);
@@ -108,7 +111,7 @@ public class Market {
     		g.updatePosition();
     	}
     	else if (type.equals("VirtualCustomer")) {
-    		CustomerAgent c = new CustomerAgent(name, money, choice);	
+    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity);	
     		if (manager!=null) c.setManager(manager);
     		if (cashier!=null) c.setCashier(cashier);
     		c.setPerson(p);
@@ -116,7 +119,11 @@ public class Market {
     		customers.add(c);
     		c.startThread();
     	}
-    	else if (type.equals("Worker")) {
+    }
+    
+    public void addPerson(PersonAgent p, String type, String name) {
+
+    	if (type.equals("Worker")) {
     		WorkerAgent w = new WorkerAgent(name, manager);
     		WorkerGui g = new WorkerGui(w);
     		gui.markAniPanel.addGui(g);
@@ -125,6 +132,7 @@ public class Market {
     		w.setPerson(p);
     		w.setMarket(this);
     		workers.add(w);
+    		manager.addWorker(w);
     		w.startThread();
     		g.updatePosition();
     	}
@@ -152,13 +160,19 @@ public class Market {
     	return prices.get(f);
     }
     
-    private boolean getItem(String f) {
-		if (inventory.get(f) != 0) {
-			inventory.put(f, inventory.get(f)-1);
-			return true;
-		} else {
-			return false;
-		}
+    public int getLocation(String f) {
+    	return locations.get(f);
+    }
+    
+    public int getItem(String f, int amt) {
+		if (inventory.get(f) >= amt) {
+			inventory.put(f, inventory.get(f)-amt);
+			return amt;
+		} else if (inventory.get(f) >= 0) {
+			int getAmt = inventory.get(f);
+			inventory.put(f, 0);
+			return getAmt;
+		} else return 0;
 	}
 
 }

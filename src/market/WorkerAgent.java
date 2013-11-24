@@ -17,22 +17,20 @@ public class WorkerAgent extends Agent {
 	private String name;
 	private ManagerAgent manager;
 	private List<MyOrder> orders = new ArrayList<MyOrder>();
+	private Semaphore moving = new Semaphore(0, true);
 	
 	class MyOrder {
 		CustomerAgent c;
 		String item;
 		int quantity;
+		MyOrder(CustomerAgent cust, String i, int q) { c = cust; item = i; quantity = q; }
 	}
 	
 	public WorkerGui workerGui = null;
 	private PersonAgent person;
 	private CashierAgent cashier;
 	private Market market;
-		
-	public enum AgentEvent 
-	{none, seatCustomer, leaveCustomer, takeOrder, deliverOrder};
-	AgentEvent event = AgentEvent.none;
-
+	
 	public WorkerAgent(String name, ManagerAgent manager) {
 		super();
 
@@ -63,11 +61,13 @@ public class WorkerAgent extends Agent {
 	
 	public void msgAnimationFinished() {
 		//from animation
+		moving.release();
 		stateChanged();
 	}
 	
-	public void msgGoGetItem(CustomerAgent cust, String c) { // from customer
-//		orders.put(cust, c);
+	public void msgGoGetItem(CustomerAgent cust, String c, int quantity) { // from customer
+		print("rcvd msgGoGetItem");
+		orders.add(new MyOrder(cust, c, quantity));
 		stateChanged();
 	}
 
@@ -75,10 +75,30 @@ public class WorkerAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-//		for (CustomerAgent c: orders.keys()) {
-			
-//		}
+		for (MyOrder o: orders) {
+			print("in scheduler");
+			int numItems = GetItem(o.item, o.quantity);
+			if (numItems == 0) o.c.msgOutOfItem();
+			else {
+				o.c.msgHereIsItemAndBill(numItems, market.getPrice(o.item)*numItems);
+				cashier.msgHereIsBill(o.c, market.getPrice(o.item)*numItems);
+			}
+			orders.remove(o);
+			return true;
+		}
 		return false;
+	}
+	
+	public int GetItem(String item, int quantity) {
+		workerGui.setPresent(true);
+		workerGui.DoGoGetItem(market.getLocation(item));
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return market.getItem(item, quantity);
 	}
 
 	public void setGui(WorkerGui gui) {

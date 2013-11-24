@@ -16,7 +16,7 @@ public class WorkerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, EnterMarket, LeaveMarket};
+	private enum Command {noCommand, getItem};
 	private Command command=Command.noCommand;
 	
 	private Semaphore moving = new Semaphore(1, true);
@@ -65,14 +65,10 @@ public class WorkerGui implements Gui{
 		isPresent = p;
 	}
     
-    public void DoGoGetItem() {
-    	xDestination = mWidth*13/2-6*mWidth/5;
-    	yDestination = 11*mHeight/12-3*mWidth/2;
-    }
-
-    public void DoLeaveCustomer() {
-        xDestination = xPos;
-        yDestination = yPos;
+    public void DoGoGetItem(int shelf) {
+    	xDestination = 200;
+    	yDestination = 200;
+    	command = Command.getItem;
     }
 
     public int getXPos() {

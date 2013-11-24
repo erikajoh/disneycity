@@ -44,7 +44,9 @@ public class CashierAgent extends Agent {
 	// Messages
 	
 	public void msgHereIsBill(CustomerAgent c, double amount){ // from worker
+		print("rcvd bill");
 		marketBills.add(new Bill(c, amount));
+		stateChanged();
 	}
 	
 	public void msgHereIsMoney(CustomerAgent c, double amount){ // from customer
@@ -63,6 +65,7 @@ public class CashierAgent extends Agent {
 			for (Bill b: marketBills){
 				if (b.cust == customer){
 					ProcessPayment(b, amt);
+					marketBills.remove(b);
 					state = State.idle;
 					return true;
 				}
@@ -97,6 +100,7 @@ public class CashierAgent extends Agent {
 	}
 	
 	public void ProcessPayment(Bill b, double amtRcvd){
+		print(""+amtRcvd);
 		if (amtRcvd >= b.amt){
 			r.increase(b.amt);
 			b.cust.msgHereIsChange(amtRcvd - b.amt);

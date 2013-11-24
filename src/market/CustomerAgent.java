@@ -39,7 +39,7 @@ public class CustomerAgent extends Agent {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name, double amt, String choice){
+	public CustomerAgent(String name, double amt, String choice, int quantity){
 		super();
 		this.name = name;
 		this.choice = choice;
@@ -72,15 +72,17 @@ public class CustomerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgOutOfItem() {
-		state = State.leaving;
-		stateChanged();
-	}
-	
-	public void msgHereIsYourBill(double amt) { // from worker
+	public void msgHereIsItemAndBill(int num, double amt) {
+		quantity = num;
 		amtDue = amt;
 		if (wallet.getAmt() < amtDue) state = State.leaving;
 		else state = State.paying;
+		stateChanged();
+	}
+	
+	public void msgOutOfItem() {
+		quantity = 0;
+		state = State.leaving;
 		stateChanged();
 	}
 	
@@ -108,7 +110,7 @@ public class CustomerAgent extends Agent {
 			return true;
 		}
 		else if (state == State.ordering){
-			print("Ordering food");
+			print("Ordering items");
 			PlaceOrder();
 			state = State.idle;
 //			state = State.paying; //hack
@@ -124,7 +126,7 @@ public class CustomerAgent extends Agent {
 		else if (state == State.leaving){
 			print("Leaving");
 			LeaveMarket();
-//			person.msgDoneAtMarket();
+//			person.msgDoneAtMarket(quantity);
 			market.msgLeaving(this);
 			state = State.idle;
 			return true;

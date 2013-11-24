@@ -20,12 +20,19 @@ public class ManagerAgent extends Agent {
 	private Market market;
 	private PersonAgent person;
 	public CashierAgent cashier;
+	private List<WorkerAgent> myWorkers = new ArrayList<WorkerAgent>();
+	private List<Order> myOrders = new ArrayList<Order>();
+	
+	class Order {
+		CustomerAgent c;
+		String choice;
+		int quantity;
+		Order(CustomerAgent cust, String ch, int q) { c = cust; choice = ch; quantity = q; }
+	}
 	
 	public ManagerAgent(String name) {
 		super();
-
 		this.name = name;
-		
 	}
 	
 	public void setPerson(PersonAgent person) {
@@ -39,16 +46,21 @@ public class ManagerAgent extends Agent {
 	public void setCashier(CashierAgent cashier) {
 		this.cashier = cashier;
 	}
+	
+	public void addWorker(WorkerAgent worker) {
+		myWorkers.add(worker);
+	}
 
 	public String getName() {
 		return name;
 	}
 	
 	public void msgWantToOrder(CustomerAgent c, String choice, int quantity) { // from customer
-    	
+		myOrders.add(new Order(c, choice, quantity));
+    	stateChanged();
     }
 	
-	public void msgTransportationReady() { // from transportation
+	public void TransportationReady() { // from transportation
     	
     }
 
@@ -61,7 +73,13 @@ public class ManagerAgent extends Agent {
             such that table is unoccupied, customer is waiting, and waiter is ready.
             If so, tell waiter to seat customer at table.
 		 */
-		
+		for (Order o: myOrders) {
+	    	myWorkers.get(0).msgGoGetItem(o.c, o.choice, o.quantity);
+	    	myWorkers.add(myWorkers.get(0));
+	    	myWorkers.remove(0);
+	    	myOrders.remove(o);
+	    	return true;
+		}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
