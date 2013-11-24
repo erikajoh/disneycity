@@ -221,8 +221,8 @@ public class ResidentGui implements Gui{
 				e.printStackTrace();
 			}
 		}
-		xDestination = (int)(hWidth);
-		yDestination = (int)(hHeight*0.15);
+		xDestination = (int)(hWidth*0.27);
+        yDestination = (int)(hHeight*0.92);
 		command = Command.LeaveHouse;
 	}
 	
