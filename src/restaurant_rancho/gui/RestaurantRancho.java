@@ -41,7 +41,6 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private List<WaiterAgent> waiters = new ArrayList<WaiterAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     private List<MarketAgent> markets = new ArrayList<MarketAgent>();
-
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private ListPanel waiterPanel = new ListPanel (this, "Waiters");
@@ -50,10 +49,9 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     boolean isOpen;
 
 
-    private SimCityGui gui; //reference to main gui
+    private SimCityGui gui;
     private CookGui cookgui;
 
-    //public RestaurantBase(RestaurantGui gui, String n) {
     public RestaurantRancho(SimCityGui g, String n) {
     	name = n;
         this.gui = g;
@@ -64,19 +62,14 @@ public class RestaurantRancho extends JPanel implements Restaurant {
         menu.addItem("Chicken Tortilla Soup", 5.99);
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
-
         group.add(customerPanel);
         group.add(waiterPanel);
-
-        
         add(restLabel);
         add(group);
     }
     public SimCityGui getGui() {
     	return gui;
     }
-    
-    //public RestMenu getMenu
     
     public void setBank(Bank b) {
     	bank = b;
@@ -94,8 +87,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     public String getType() { return type; }
     
    // public void personAs(String type, String name, PersonAgent p) {
-    public void personAs(PersonAgent p, String type, String name, double money, String choice){
-    	addPerson(p, type, name, money, choice);
+    public void personAs(PersonAgent p, String type, String name, double money){
+    	addPerson(p, type, name, money);
     }
     public void PauseandUnpauseAgents() {
     	for (WaiterAgent w : waiters) {
@@ -145,6 +138,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
      * @param name name of person
  
    */
+    
     /*
     public void showInfo(String type, String name) {
 
@@ -165,6 +159,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
         }
     }
     */
+ 
 
     /**
      * Adds a customer or waiter to the appropriate list
@@ -172,22 +167,17 @@ public class RestaurantRancho extends JPanel implements Restaurant {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(PersonAgent p, String type, String name, double money, String choice) {
+    public void addPerson(PersonAgent p, String type, String name, double money) {
 
     	if (type.equals("Customers")) {
     		CustomerAgent c = new CustomerAgent(name);	
     		CustomerGui g = new CustomerGui(c, gui, customers.size());
-    	//new	 
     		g.setHungry();
-    		// new
     		gui.restAniPanel.addGui(g);
     		if (host!=null) c.setHost(host);
     		c.setGui(g);
     		if (cashier!=null) c.setCashier(cashier);
-    		//Random rand = new Random();
-    		//c.setCash(rand.nextInt(20)+10);
     		c.setCash(money);
-    		c.setChoice(choice);
     		c.setPerson(p);
     		customers.add(c);
     		c.startThread();
