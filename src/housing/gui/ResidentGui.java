@@ -207,7 +207,7 @@ public class ResidentGui implements Gui{
 			}
 		}
 		xDestination = (int)(hWidth*0.8);
-		yDestination = (int)(hHeight*0.8);
+		yDestination = (int)(hHeight*0.7);
 		command = Command.GoToKitchen;
 	}
 
