@@ -6,28 +6,28 @@ import transportation.Agents.Bus;
 import simcity.PersonAgent;
 
 public class BusStop {
-	List<BusRider> busRiders;
+	List<BusWaiter> busWaiters;
 	float fare;
 	Bus currentBus;
 	
-	class BusRider {
+	class BusWaiter {
 		PersonAgent person;
 		boolean payedFare;
 		
-		public BusRider(PersonAgent person) {
+		public BusWaiter(PersonAgent person) {
 			this.person = person;
 			payedFare = false;
 		}
 	}
 	
 	public BusStop() {
-		busRiders = new ArrayList<BusRider>();
+		busWaiters = new ArrayList<BusWaiter>();
 		fare = 1.50f;
 		currentBus = null;
 	}
 	
 	public void personWaitingAtStop(PersonAgent person) {
-		busRiders.add(new BusRider(person));
+		busWaiters.add(new BusWaiter(person));
 	}
 	
 	public void busArrived(Bus bus) {
@@ -43,16 +43,16 @@ public class BusStop {
 			System.out.println("NoBusFound. Find agent calling function.");
 			return;
 		}
-		synchronized(busRiders) {
-			for(BusRider busRider : busRiders) {
-				if(!busRider.payedFare) {
-					//busRider.person.msgPayFare(fare, currentBus);
+		synchronized(busWaiters) {
+			for(BusWaiter busWaiter : busWaiters) {
+				if(!busWaiter.payedFare) {
+					busWaiter.person.msgPayFare(fare, currentBus);
 				}
 			}
 		}
 	}
 	
 	public void clearRiders() {
-		busRiders = new ArrayList<BusRider>();
+		busWaiters = new ArrayList<BusWaiter>();
 	}
 }

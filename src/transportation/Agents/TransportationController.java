@@ -40,15 +40,23 @@ public class TransportationController extends Agent {
 
 	class Building {
 		String name;
-		List <MovementTile> enteringTiles;
+		MovementTile walkingTile;
+		MovementTile vehicleTile;
+		BusStop closestBusStop;
 
 		public Building(String name) {
 			this.name  = name;
-			enteringTiles = new ArrayList<MovementTile>();
+			walkingTile = null;
+			vehicleTile = null;
 		}
 
-		public void addTile(MovementTile enterTile) {
-			enteringTiles.add(enterTile);
+		public void addEnteringTiles(MovementTile walkingTile, MovementTile vehicleTile) {
+			this.walkingTile = walkingTile;
+			this.vehicleTile = vehicleTile;
+		}
+		
+		public void setBusStop(BusStop busStop) {
+			this.closestBusStop = busStop;
 		}
 	}
 
