@@ -19,12 +19,12 @@ public class CookAgent extends Agent {
 	List<Food> foods;
 	List<MyMarket> markets;
 	List<MarketOrder> marketOrders;
-	List<String> foodsUnavailable;
 	List<WaiterAgent> waiters;
 	CookGui gui;
 	private Semaphore cooking = new Semaphore(0,true);
 	int cookNum = 0;
 	PersonAgent person;
+	RestaurantRancho restaurant;
 	
 
 	public CookAgent(String name, RestaurantRancho rest) {
@@ -36,7 +36,6 @@ public class CookAgent extends Agent {
 		cookTimes = new Hashtable<String, Integer>();
 		foods = Collections.synchronizedList(new ArrayList<Food>());
 		waiters = Collections.synchronizedList(new ArrayList<WaiterAgent>());
-		foodsUnavailable = Collections.synchronizedList(new ArrayList<String>());
 		foods.add(new Food("Citrus Fire-Grilled Chicken", 7, 0, 7, 7000));
 		foods.add(new Food("Red Chile Enchilada Platter", 7, 0, 7, 6000));
 		foods.add(new Food("Soft Tacos Monterrey", 7, 0, 7, 4000));
@@ -47,6 +46,7 @@ public class CookAgent extends Agent {
 		cookTimes.put("Soft Tacos Monterrey", 5000);
 		cookTimes.put("Burrito Sonora", 5000);
 		cookTimes.put("Chicken Tortilla Soup", 3500);
+		restaurant = rest;
 		
 		print("Initial inventory check");
 		synchronized(foods) {
@@ -77,26 +77,7 @@ public class CookAgent extends Agent {
 	public void addMarket(MarketAgent m) {
 		markets.add(new MyMarket(m));
 	}
-	
-/*public void setInventory(int numAll, int numLatte) {
-		if (numAll == numLatte) {
-			synchronized(foods) {
-				for (Food f : foods) {
-					f.amount = numAll;
-				}
-			}
-		}
-		else 
-			synchronized(foods) {
-				for (Food f : foods) {
-					if (f.choice == "Latte") {
-						f.amount = numLatte;
-					}
-					else (f.amount) = numAll;
-				}
-			}
-	}
-*/
+
 	// Messages
 	
 	public void msgAtLoc() {
@@ -123,10 +104,10 @@ public class CookAgent extends Agent {
 			}
 		}
 		if (amount != 0) {
-			foodsUnavailable.remove(choice);
+			restaurant.getMenu().add(choice);
 			synchronized(waiters) {
 				for (WaiterAgent w : waiters) {
-					w.msgUpdateMenu(foodsUnavailable);
+					w.msgUpdateMenu();
 				}
 			}
 			
@@ -141,8 +122,6 @@ public class CookAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 	
-		//rules 
-	//	try{
 			if (!orders.isEmpty() || !marketOrders.isEmpty()) {
 				synchronized(orders) {
 					for (Order order :orders ) {
@@ -171,11 +150,6 @@ public class CookAgent extends Agent {
 				}
 				return true;
 			}
-		//}
-		//catch(Exception e) {
-	    //	return false;
-			
-	 //	}
 		return false;
 	
 	}
@@ -184,10 +158,10 @@ public class CookAgent extends Agent {
 
 	private void cookIt(final Order o) {
 		if (findFood(o.choice).amount == 0) {
-			if (!foodsUnavailable.contains(o.choice)) foodsUnavailable.add(o.choice);
+			restaurant.getMenu().remove(o.choice);
 			o.w.msgOutOfFood(o);
 			synchronized(waiters) {
-				for (WaiterAgent w : waiters) w.msgUpdateMenu(foodsUnavailable);
+				for (WaiterAgent w : waiters) w.msgUpdateMenu();
 			}
 			print("We are out of " + o.choice);
 			orders.remove(o);
@@ -223,7 +197,6 @@ public class CookAgent extends Agent {
 	}
 	
 	private void plateIt(Order o) {
-		//print("Plated order, telling waiter order is ready ");
 		DoGoToFood(o.cookingNum);
 		gui.setText(o.choice.substring(0, 3), 1, o.cookingNum);
 		DoGoToHome();

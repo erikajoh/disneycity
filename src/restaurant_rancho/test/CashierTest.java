@@ -8,6 +8,7 @@ import restaurant_rancho.CashierAgent.checkState;
 import restaurant_rancho.test.mock.MockCustomer;
 import restaurant_rancho.test.mock.MockMarket;
 import restaurant_rancho.test.mock.MockWaiter;
+import restaurant_rancho.gui.RestaurantRancho;
 
 /**
  * 

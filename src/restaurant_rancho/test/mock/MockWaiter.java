@@ -38,7 +38,7 @@ public class MockWaiter extends Mock implements Waiter{
 		
 	}
 	
-	public void msgUpdateMenu(List<String> foodsUnavailable){
+	public void msgUpdateMenu(){
 		
 	}
 	

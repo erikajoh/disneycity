@@ -7,7 +7,7 @@ import restaurant_rancho.interfaces.Customer;
 import restaurant_rancho.interfaces.Waiter;
 import agent_rancho.Agent;
 import simcity.PersonAgent;
-
+import simcity.Restaurant;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Random;

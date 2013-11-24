@@ -29,6 +29,7 @@ import java.util.concurrent.Semaphore;
 		public WaiterGui waiterGui = null;
 		public Cashier cashier;
 		double cash;
+		RestaurantRancho restaurant;
 		
 		PersonAgent person;
 		
@@ -36,6 +37,8 @@ import java.util.concurrent.Semaphore;
 			super();
 			this.name = name;
 			customers = new ArrayList<MyCustomer>();	
+			restaurant = rest;
+			menu = rest.getMenu();
 		}
 		
 		public void setGui(WaiterGui wg) {
@@ -110,10 +113,10 @@ import java.util.concurrent.Semaphore;
 		    stateChanged();  
 		}
 		
-		public void msgUpdateMenu(List<String> foodsUnavailable) {
-			menu.replenish();
-			for (String food : foodsUnavailable ) {
-				menu.removeItem(food);
+		public void msgUpdateMenu() {
+			menu = restaurant.getMenu();
+			for (int i = 0; i <menu.menuList.size(); i++) {
+				System.out.println(menu.menuList.get(i));
 			}
 		}
 		
@@ -305,7 +308,7 @@ import java.util.concurrent.Semaphore;
 		
 		private void tellCashierMakeCheck(MyCustomer c) {
 			print("Telling cashier to compute check");
-			cashier.msgComputeCheck(this, c.c, c.choice);
+			cashier.msgComputeCheck(this, c.c, c.choice, menu);
 		}
 		
 		private void notifyHostFreeTable(MyCustomer c) {

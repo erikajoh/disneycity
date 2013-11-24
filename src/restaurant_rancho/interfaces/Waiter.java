@@ -20,7 +20,7 @@ public interface Waiter {
 	
 	public abstract void msgHereIsMyOrder(Customer c, String choice);
 	
-	public abstract void msgUpdateMenu(List<String> foodsUnavailable);
+	public abstract void msgUpdateMenu();
 	
 	public abstract void msgOutOfFood(Order o);
 	

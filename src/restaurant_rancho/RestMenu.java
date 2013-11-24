@@ -22,7 +22,7 @@ public class RestMenu {
 		
 	}
 	
-	public void removeItem(String choice) {
+	public void remove(String choice) {
 		for (int i = 0; i < menuList.size(); i++) {
 			if (menuList.get(i) == choice) menuList.remove(i);
 		}
@@ -33,14 +33,11 @@ public class RestMenu {
 		menuItems.put(choice,  price);
 	}
 	
-	public void replenish() {
-		menuList.clear();
-		menuList.add("Pizza");
-		menuList.add("Steak");
-		menuList.add("Chicken");
-		menuList.add("Salad");
-		menuList.add("Latte");
+	public void add(String choice) {
+		menuList.add(choice);
 	}
+	
+
 	
 	
 	

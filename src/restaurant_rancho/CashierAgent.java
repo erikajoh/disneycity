@@ -25,7 +25,7 @@ public class CashierAgent extends Agent implements Cashier{
 	public List<Check> checks;
 	public List<MarketBill> bills;
 	public double money;
-	public RestMenu menu= new RestMenu();
+	//public RestMenu menu= new RestMenu();
 	public enum checkState {nothing, pending, readyForCust, waitingForCust, paid, complete, notComplete, completing};
 	public CashierAgent(String name) {
 		super();
@@ -52,8 +52,9 @@ public class CashierAgent extends Agent implements Cashier{
 	// Messages
 	
 	
-	public void msgComputeCheck(Waiter w, Customer c, String choice) {
+	public void msgComputeCheck(Waiter w, Customer c, String choice, RestMenu menu) {
 		log.add(new LoggedEvent("Received Compute Check"));
+		print( "Choice is " + choice);
 		checks.add(new Check(c, w, choice, menu.menuItems.get(choice)));
 		stateChanged();
 	}

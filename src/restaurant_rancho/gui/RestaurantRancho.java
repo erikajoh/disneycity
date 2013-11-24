@@ -11,6 +11,7 @@ import restaurant_rancho.interfaces.Bank;
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
 import restaurant_rancho.RestMenu;
+import simcity.Restaurant;
 
 import javax.swing.*;
 
@@ -24,9 +25,13 @@ import java.util.Random;
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class RestaurantRancho extends JPanel {
+public class RestaurantRancho extends JPanel implements Restaurant {
 
-    //Host, cook, waiters and customers
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//Host, cook, waiters and customers
 	String name;
 	Bank bank;
     private HostAgent host;
@@ -55,6 +60,9 @@ public class RestaurantRancho extends JPanel {
         menu.addItem("Soft Tacos Monterrey", 10.99);
         menu.addItem("Burrito Sonora", 10.99);
         menu.addItem("Chicken Tortilla Soup", 5.99);
+        for (int i = 0; i < menu.menuList.size(); i++) {
+        	System.out.println(menu.menuItems.get(menu.menuList.get(i)) );
+        }
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
 
