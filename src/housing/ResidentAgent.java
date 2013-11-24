@@ -54,11 +54,12 @@ public class ResidentAgent extends Agent implements Resident {
 		private HashMap<String, Integer> inventory = new HashMap<String, Integer>();
 		Building(String t) {
 			type = t;
-			inventory.put("Mexican", 1);
-			inventory.put("Southern", 1);
-			inventory.put("Italian", 1);
-			inventory.put("German", 1);
-			inventory.put("American", 1);
+			// TODO: This be hacked
+			inventory.put("Mexican", 0);
+			inventory.put("Southern", 0);
+			inventory.put("Italian", 0);
+			inventory.put("German", 0);
+			inventory.put("American", 0);
 		}
 		private boolean getFood(String f) {
 			if (inventory.get(f) != 0) {

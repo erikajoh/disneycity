@@ -8,6 +8,8 @@ import housing.Housing;
 
 import javax.swing.*;
 
+import market.Market;
+
 import java.awt.*;
 import java.util.*;
 import java.util.Timer;
@@ -30,7 +32,8 @@ public class SimCityPanel extends JPanel{
 		this.gui = gui;
 		restRancho = gui.restRancho;
 		
-		Housing firstHousing = new Housing(gui, "Haunted Mansion");
+		Housing firstHousing = gui.hauntedMansion;
+		Market firstMarket = gui.mickeysMarket;
 		String foodPreferenceMexican = "Mexican";
 	 
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
@@ -107,7 +110,7 @@ public class SimCityPanel extends JPanel{
 	
 	/* all time-related variables and methods */
 	public enum DayOfTheWeek { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
-	public DayOfTheWeek currentDay = DayOfTheWeek.Friday;
+	public DayOfTheWeek currentDay = DayOfTheWeek.Thursday;
 	public long numTicks = 0;
 	
 	/* Time intervals */
@@ -120,7 +123,7 @@ public class SimCityPanel extends JPanel{
 	private static final long NOON = 150;
 	private static final long WORK_TWO = 220;
 	private static final long EVENING = 270;
-	private static final long END_OF_DAY = 390;
+	private static final long END_OF_DAY = 500;
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 50;

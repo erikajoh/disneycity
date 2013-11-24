@@ -5,11 +5,11 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import market.Market;
 import housing.Housing;
 import housing.interfaces.*;
 import restaurant_rancho.interfaces.Person;
 import simcity.interfaces.Bank_Douglass;
-import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Restaurant_Douglass;
 import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.EventLog;
@@ -92,7 +92,7 @@ public class PersonAgent extends Agent {
 		preferredCommute = PreferredCommute.Walk;
 		
 		this.foodPreference = foodPreference;
-		preferEatAtHome = false;
+		preferEatAtHome = true;
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
@@ -136,7 +136,7 @@ public class PersonAgent extends Agent {
 		myObjects.add(tempMyRestaurant);
 	}
 	
-	public void	addMarket(Market_Douglass m, String personType) {
+	public void	addMarket(Market m, String personType) {
 		MyMarket tempMyMarket = new MyMarket(m, m.getName(), personType);
 		myObjects.add(tempMyMarket);
 	}
@@ -469,6 +469,11 @@ public class PersonAgent extends Agent {
 	
 	//Market actions
 	
+	private void buyFromMarket() {
+		// TODO Work with this
+		
+	}
+	
 	// ************************* UTILITIES ***********************************
 	
 	private void mapLocationToEnum(String location) {
@@ -584,9 +589,9 @@ public class PersonAgent extends Agent {
 	
 	private class MyMarket extends MyObject {
 		
-		Market_Douglass theMarket;
+		Market theMarket;
 		String personType;
-		public MyMarket(Market_Douglass m, String name, String type) {
+		public MyMarket(Market m, String name, String type) {
 			theMarket = m;
 			this.name = name;
 			personType = type;
