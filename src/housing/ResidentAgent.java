@@ -166,13 +166,13 @@ public class ResidentAgent extends Agent implements Resident {
 		}
 		else if(state == State.maintenanceDone){
 			housing.msgFinishedMaintenance(this);
-			state = State.idle;
+			state = State.goingToBed;
 //			state = State.leavingHouse; //hack
 			return true;
 		}
 		else if(state == State.goingToBed){
 			GoToBed();
-			state = State.idle;
+			state = State.readyToCook;
 			return true;
 		}
 		else if(state == State.leavingHouse){

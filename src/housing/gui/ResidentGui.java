@@ -16,10 +16,11 @@ public class ResidentGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, AtBed, GoToBath, GoToTable, GoToKitchen, DoMaintenance, DoneMaintenance, LeaveHouse};
+	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, AtBed, GoToBath, GoToTable, GoToKitchen, LeaveBedroom, DoMaintenance, DoneMaintenance, LeaveHouse};
 	private Command command=Command.noCommand;
 	
 	private Semaphore moving = new Semaphore(1, true);
+	private boolean inBedroom = false;
 
 	public static final int hWidth = 400;
 	public static final int hHeight = 360;
@@ -42,10 +43,13 @@ public class ResidentGui implements Gui{
 			yPos--;
 		
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command == Command.DoMaintenance || command == Command.GoToBed) moving.release();
-			else if (command == Command.DoneMaintenance) agent.msgMaintenanceAnimationFinished();
+			
+			if (command == Command.DoMaintenance || command == Command.DoneMaintenance || command == Command.GoToBed || command == Command.AtBed || command == Command.LeaveBedroom) moving.release();
+			
+			if (command == Command.DoneMaintenance) agent.msgMaintenanceAnimationFinished();
 			else if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
+			
 		}
 	}
 
@@ -75,9 +79,25 @@ public class ResidentGui implements Gui{
 		command = Command.EnterHouse;
 	}
 	
+	public void DoLeaveBedroom() {
+		xDestination = (int)(hWidth*0.53);
+		yDestination = (int)(hHeight*0.15);
+		command = Command.LeaveBedroom;
+		inBedroom = false;
+	}
+	
 	public void DoGoToCouch() {
-		xDestination = -hWidth/5;
-		yDestination = -hHeight/6;
+		if (inBedroom) {
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			DoLeaveBedroom();
+		}
+		xDestination = (int)(hWidth*0.8);
+		yDestination = (int)(hHeight*0.15);
 		command = Command.GoToCouch;
 	}
 		
@@ -91,6 +111,7 @@ public class ResidentGui implements Gui{
 			}
 			GoTowardBed(i);
 		}
+		inBedroom = true;
 	}
 	
 	private void GoTowardBed(int i) {
@@ -112,12 +133,30 @@ public class ResidentGui implements Gui{
 	}
 	
 	public void DoGoToTable() {
+		if (inBedroom) {
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			DoLeaveBedroom();
+		}
 		xDestination = (int)(hWidth*0.27);
 		yDestination = (int)(hHeight*0.65);
 		command = Command.GoToTable;
 	}
 	
 	public void DoMaintenance() {
+		if (inBedroom) {
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			DoLeaveBedroom();
+		}
 		for (int i=0; i<6; i++) {
 			try {
 				moving.acquire();
@@ -158,19 +197,32 @@ public class ResidentGui implements Gui{
 	}
 	
 	public void DoGoToKitchen() {
+		if (inBedroom) {
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			DoLeaveBedroom();
+		}
 		xDestination = (int)(hWidth*0.8);
 		yDestination = (int)(hHeight*0.8);
 		command = Command.GoToKitchen;
 	}
 
 	public void DoLeaveHouse() {
-		if (xPos < hWidth*0.5 && yPos > hHeight*0.5) {
-			xDestination = (int)(hWidth*0.27);
-			yDestination = (int)(hHeight*0.92);
-		} else {
-			xDestination = (int)(hWidth);
-			yDestination = (int)(hHeight*0.15);
+		if (inBedroom) {
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			DoLeaveBedroom();
 		}
+		xDestination = (int)(hWidth);
+		yDestination = (int)(hHeight*0.15);
 		command = Command.LeaveHouse;
 	}
 	
