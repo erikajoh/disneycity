@@ -7,6 +7,7 @@ import restaurant_bayou.CashierAgent.Check;
 import restaurant_bayou.CustomerAgent.AgentEvent;
 import restaurant_bayou.CustomerAgent.AgentState;
 import restaurant_bayou.HostAgent.Menu;
+import simcity.RestMenu;
 
 /**
  * A sample Customer interface built to unit test a CashierAgent.
@@ -15,7 +16,7 @@ import restaurant_bayou.HostAgent.Menu;
  *
  */
 public interface Customer {
-	public void msgFollowMeToTable(WaiterAgent w, Menu m, List<String> uf);
+	public void msgFollowMeToTable(WaiterAgent w, RestMenu m, List<String> uf);
 	
 	public void msgAnimationFinishedGoToSeat();
 	

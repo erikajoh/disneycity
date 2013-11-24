@@ -5,6 +5,8 @@ import agent_bayou.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import simcity.PersonAgent;
+import simcity.RestMenu;
 import restaurant_bayou.CustomerAgent.AgentEvent;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.interfaces.Customer;
@@ -17,10 +19,11 @@ public class CashierAgent extends Agent {
 	private String name;
 	public List<Check> checks =  Collections.synchronizedList(new ArrayList<Check>());
 	private CashRegister r;
-	private Menu myMenu;
+	private RestMenu myMenu;
 	public List<Bill> marketBills =  Collections.synchronizedList(new ArrayList<Bill>());
 	public List<Market> cutoffMarkets =  Collections.synchronizedList(new ArrayList<Market>());
 	private CookAgent cook;
+	private PersonAgent person;
 	
 	public EventLog log = new EventLog();
 
@@ -29,16 +32,20 @@ public class CashierAgent extends Agent {
 	 *
 	 * @param name name of the cook
 	 */
-	public CashierAgent(String name, Menu menu, double amt){
+	public CashierAgent(String name, RestMenu m, double amt){
 		super();
 		this.name = name;
 		r = new CashRegister(amt);
-		myMenu = menu;
+		myMenu = m;
+	}
+	
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 
 	public void msgGiveMeCheck(Waiter w, Customer c, String choice, int table){
 		log.add(new LoggedEvent("Received msgGiveMeCheck"));
-		double cost = myMenu.getCost(choice);
+		double cost = myMenu.menuItems.get(choice);
 		checks.add(new Check(w, c, cost, table));
 		stateChanged();
 	}

@@ -9,6 +9,7 @@ import restaurant_bayou.CashierAgent.CheckState;
 import restaurant_bayou.CustomerAgent.AgentEvent;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.interfaces.Market;
+import simcity.RestMenu;
 
 public class MarketAgent extends Agent implements Market {
 	private String name;
@@ -22,10 +23,10 @@ public class MarketAgent extends Agent implements Market {
 	 *
 	 * @param name name of the cook
 	 */
-	public MarketAgent(String name, Menu m){
+	public MarketAgent(String name, RestMenu menu){
 		super();
 		this.name = name;
-		for (String item: m.menuNames) {
+		for (String item: menu.menuList) {
 			i.add(item, 3);
 			i.setCost(item, 10);
 		}

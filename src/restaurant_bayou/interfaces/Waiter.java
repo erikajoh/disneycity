@@ -6,6 +6,7 @@ import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.CashierAgent.Check;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.HostAgent.Table;
+import simcity.RestMenu;
 
 /**
  * A sample Waiter interface built to unit test a CashierAgent.
@@ -20,7 +21,7 @@ public interface Waiter {
 
 	public void msgAtTable();
 	
-	public void msgSeatCustomer(CustomerAgent cust, Menu m);
+	public void msgSeatCustomer(CustomerAgent cust, RestMenu m);
 	
 	public void msgImReadyToOrder(CustomerAgent cust);
 	

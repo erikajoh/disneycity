@@ -1,5 +1,7 @@
 package restaurant_bayou.gui;
 
+import restaurant_bayou.CashierAgent;
+import restaurant_bayou.CookAgent;
 import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.HostAgent;
 import restaurant_bayou.MarketAgent;
@@ -7,12 +9,16 @@ import restaurant_bayou.WaiterAgent;
 import restaurant_bayou.interfaces.Market;
 import simcity.Restaurant;
 import simcity.PersonAgent;
+import simcity.RestMenu;
 
 import javax.swing.*;
 
+import java.util.Hashtable;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -21,23 +27,27 @@ import java.util.Vector;
 public class RestaurantBayou extends JPanel{
 
     //Host, cook, waiters and customers
-    private HostAgent host = new HostAgent("le host");
-    private CashierGui cashierGui = new CashierGui(host);
+    private HostAgent host; 
+    private CashierAgent cashier;
+    private CashierGui cashierGui; 
+    private CookAgent cook;
     private CookGui cookGui = new CookGui(host);
-
+    private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
+    private List<WaiterAgent> waiters = new ArrayList<WaiterAgent>();
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "customers");
     private ListPanel waiterPanel = new ListPanel(this, "waiters");
     private ListPanel marketPanel = new ListPanel(this, "markets");
     private JPanel group = new JPanel();
     private JLabel restSubLabel = new JLabel();
+    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
+    public RestMenu menu = new RestMenu();
 
     private RestaurantBayouGui gui; //reference to main gui
 
     public RestaurantBayou(RestaurantBayouGui gui) {
         this.gui = gui;
-        host.setGui(cashierGui);
-        host.setGui(cookGui);
+     
         for (WaiterAgent w : host.waiters) {
         	WaiterGui waiterGui = new WaiterGui(w, gui);
         	w.setGui(waiterGui);
@@ -50,6 +60,8 @@ public class RestaurantBayou extends JPanel{
         for (WaiterAgent w : host.waiters) {
         	w.startThread();
         }
+        
+       
 
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 2, 10, 10));
@@ -129,16 +141,57 @@ public class RestaurantBayou extends JPanel{
      */
     public void addPerson(PersonAgent p, String type, String name, double money, String choice) {
 
-    	if (type.equals("customers")) {
-    		CustomerAgent c = new CustomerAgent(name, money); // hack to make customer start with $100
-    		CustomerGui g = new CustomerGui(c, gui);
-    		g.setHungry();
-    		gui.animationPanel.addGui(g);// dw
-    		if (host!=null) c.setHost(host);
-    		c.setGui(g);
-    		//set cashier to customer
-    		host.customers.add(c);
-    		c.startThread();
+    	if (type.equals("Customer")) {
+    		if (returningCusts.contains(p)) {
+    			returningCusts.get(p).getGui().setHungry();
+    		}
+    		else {
+    			CustomerAgent c = new CustomerAgent(name, money); // hack to make customer start with $100
+    			CustomerGui g = new CustomerGui(c, gui);
+    			customers.add(c);
+    			returningCusts.put(p, c);
+    			g.setHungry();
+    			gui.animationPanel.addGui(g);// dw
+    			if (host!=null) c.setHost(host);
+    			c.setGui(g);
+    			//set cashier to customer
+    			if (host!= null) host.customers.add(c);
+    			c.startThread();
+    		}
+    	}
+    	
+    	else if (type.equals("Waiter")) {
+    		WaiterAgent w;
+    		if (host!=null) {
+    			w = new WaiterAgent(name, host);
+    		}
+    		else {
+    			w= new WaiterAgent(name, null);
+    		}
+        	WaiterGui waiterGui = new WaiterGui(w, gui);
+        	w.setGui(waiterGui);
+        	gui.animationPanel.addGui(waiterGui);
+        	w.startThread();	
+    	}
+    	else if (type.equals("Host")) {
+    		host = new HostAgent("le host");
+    		if (cashierGui!=null) host.setGui(cashierGui);
+            if (cookGui!=null) host.setGui(cookGui);
+    		
+    	}
+    	else if (type.equals("Cook")) {
+    		cook = new CookAgent(cashier, name, menu);
+    		cook.startThread();
+    		
+    	}
+    	else if (type.equals("Cashier")) {
+    		cashier = new CashierAgent(name, menu, 100);
+    		cashierGui = new CashierGui(host);
+    		cashier.startThread();
+    		//set cook's cashier if cook isn't null 
+    		if (host!=null) host.setGui(cashierGui);
+    		if (cook!=null) host.setGui(cookGui);
+    		
     	}
     	
     }
@@ -164,7 +217,8 @@ public class RestaurantBayou extends JPanel{
     }
     
     public String addWaiter(Boolean onBreak){
-    	WaiterAgent w = host.addWaiter();
+    	WaiterAgent w = new WaiterAgent("w", host);
+    	host.addWaiter(w);
     	WaiterGui waiterGui = new WaiterGui(w, gui);
     	w.setGui(waiterGui);
     	gui.animationPanel.addGui(waiterGui);

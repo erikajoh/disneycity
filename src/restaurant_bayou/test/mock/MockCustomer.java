@@ -9,6 +9,7 @@ import restaurant_bayou.CashierAgent.Check;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.interfaces.Cashier;
 import restaurant_bayou.interfaces.Customer;
+import simcity.RestMenu;
 
 /**
  * A sample MockCustomer built to unit test a CashierAgent.
@@ -29,7 +30,7 @@ public class MockCustomer extends Mock implements Customer {
 	}
 
 	@Override
-	public void msgFollowMeToTable(WaiterAgent w, Menu m, List<String> uf) {
+	public void msgFollowMeToTable(WaiterAgent w, RestMenu m, List<String> uf) {
 		// TODO Auto-generated method stub
 		
 	}

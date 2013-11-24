@@ -4,6 +4,8 @@ import agent_bayou.Agent;
 import restaurant_bayou.gui.CashierGui;
 import restaurant_bayou.gui.CookGui;
 import restaurant_bayou.gui.WaiterGui;
+import simcity.PersonAgent;
+import simcity.RestMenu;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -23,13 +25,14 @@ public class HostAgent extends Agent {
 	public List<CustomerAgent> waitingCustomers =  Collections.synchronizedList(new ArrayList<CustomerAgent>());
 	public List<CustomerAgent> unseatedCustomers =  Collections.synchronizedList(new ArrayList<CustomerAgent>());
 	public List<WaiterAgent> waiters =  Collections.synchronizedList(new ArrayList<WaiterAgent>());
-	public Menu menu = new Menu();
+	public RestMenu menu = new RestMenu();
 	public Collection<Table> tables;
 	public CashierGui cashierGui = null;
 	public CookGui cookGui = null;
 	public CookAgent cook;
 	public CashierAgent cashier;
 	private String name;
+	private PersonAgent person;
 	
 	public HostAgent(String name) {
 		super();
@@ -45,21 +48,17 @@ public class HostAgent extends Agent {
 		for (int ix = 1; ix <= NWAITERS; ix++) {
 			waiters.add(new WaiterAgent("le waiter "+ix, this));
 		}
+
 		
-		menu.add("salad", 7.50);
-		menu.add("pizza", 8.00);
-		menu.add("pasta", 8.50);
-		menu.add("steak", 9.00);
 		
-		cashier = new CashierAgent("le cashier", menu, 100);
-		cashier.startThread();
-		
-		cook = new CookAgent(cashier, "le cook", menu);
-		cook.startThread();
 	}
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 
 	public List getCustomers() {
@@ -151,11 +150,11 @@ public class HostAgent extends Agent {
 
 	// Actions
 	
-	public WaiterAgent addWaiter() {
-		WaiterAgent w = new WaiterAgent("W"+(int)(waiters.size()+1), this);
+	public void addWaiter(WaiterAgent w) {
+		//WaiterAgent w = new WaiterAgent("W"+(int)(waiters.size()+1), this);
 		waiters.add(w);
 		stateChanged();
-		return w;
+		//return w;
 	}
 	
 	public MarketAgent addMarket() {

@@ -9,6 +9,7 @@ import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.interfaces.Cashier;
 import restaurant_bayou.interfaces.Customer;
 import restaurant_bayou.interfaces.Waiter;
+import simcity.RestMenu;
 
 /**
  * A sample MockWaiter built to unit test a CashierAgent.
@@ -47,7 +48,7 @@ public class MockWaiter extends Mock implements Waiter {
 	}
 
 	@Override
-	public void msgSeatCustomer(CustomerAgent cust, Menu m) {
+	public void msgSeatCustomer(CustomerAgent cust, RestMenu m) {
 		// TODO Auto-generated method stub
 		
 	}

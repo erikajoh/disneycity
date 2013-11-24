@@ -5,6 +5,8 @@ import agent_bayou.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import simcity.PersonAgent;
+import simcity.RestMenu;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.gui.CookGui;
 import restaurant_bayou.interfaces.Market;
@@ -21,21 +23,26 @@ public class CookAgent extends Agent {
 	private List<MyMarket> cutoffMarkets =  Collections.synchronizedList(new ArrayList<MyMarket>()); 
 	public List<MyMarket> markets =  Collections.synchronizedList(new ArrayList<MyMarket>());
 	private CookGui cookGui;
+	private PersonAgent person;
 
 	/**
 	 * Constructor for CookAgent class
 	 *
 	 * @param name name of the cook
 	 */
-	public CookAgent(CashierAgent c, String name, Menu m){
+	public CookAgent(CashierAgent c, String name, RestMenu menu){
 		super();
 		this.cashier = c;
 		c.setCook(this);
 		this.name = name;
-		for (String item: m.menuNames) {
+		for (String item: menu.menuList) {
 			i.add(item, 1);
 		}
 		i.empty();
+	}
+	
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table){

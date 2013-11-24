@@ -16,10 +16,9 @@ import simcity.Restaurant;
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Hashtable;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -35,6 +34,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	String name;
 	String type;
 	Bank bank;
+	private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private HostAgent host;
     private CookAgent cook;
     private CashierAgent cashier;    
@@ -142,14 +142,14 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     /*
     public void showInfo(String type, String name) {
 
-        if (type.equals("Customers")) {
+        if (type.equals("Customer")) {
             for (int i = 0; i < customers.size(); i++) {
                 CustomerAgent temp = customers.get(i);
                 //if (temp.getName() == name)
                   //  gui.updateInfoPanel(temp);
             }
         }
-        if (type.equals("Waiters")) {
+        if (type.equals("Waiter")) {
         	for (int i = 0; i < waiters.size(); i++) {
         		WaiterAgent temp = waiters.get(i);
         		if(temp.getName() == name) {
@@ -169,22 +169,28 @@ public class RestaurantRancho extends JPanel implements Restaurant {
      */
     public void addPerson(PersonAgent p, String type, String name, double money) {
 
-    	if (type.equals("Customers")) {
-    		CustomerAgent c = new CustomerAgent(name);	
-    		CustomerGui g = new CustomerGui(c, gui, customers.size());
-    		g.setHungry();
-    		gui.restAniPanel.addGui(g);
-    		if (host!=null) c.setHost(host);
-    		c.setGui(g);
-    		if (cashier!=null) c.setCashier(cashier);
-    		c.setCash(money);
-    		c.setPerson(p);
-    		customers.add(c);
-    		c.startThread();
-    		g.updatePosition();
+    	if (type.equals("Customer")) {
+    		if (returningCusts.contains(p)) {
+    			returningCusts.get(p).getGui().setHungry();	
+    		}
+    		else {
+    			CustomerAgent c = new CustomerAgent(name);	
+    			CustomerGui g = new CustomerGui(c, gui, customers.size());
+    			returningCusts.put(p, c);
+    			g.setHungry();
+    			gui.restAniPanel.addGui(g);
+    			if (host!=null) c.setHost(host);
+    			c.setGui(g);
+    			if (cashier!=null) c.setCashier(cashier);
+    			c.setCash(money);
+    			c.setPerson(p);
+    			customers.add(c);
+    			c.startThread();
+    			g.updatePosition();
+    		}
     		
     	}
-    	else if (type.equals("Waiters")) {
+    	else if (type.equals("Waiter")) {
     		WaiterAgent w = new WaiterAgent(name, this);
     		WaiterGui g = new WaiterGui(w, waiters.size());
     		gui.restAniPanel.addGui(g);

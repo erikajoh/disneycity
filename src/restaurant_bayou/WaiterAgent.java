@@ -10,6 +10,8 @@ import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.HostAgent.Table;
 import restaurant_bayou.gui.WaiterGui;
 import restaurant_bayou.interfaces.Waiter;
+import simcity.PersonAgent;
+import simcity.RestMenu;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -26,11 +28,13 @@ public class WaiterAgent extends Agent implements Waiter {
 	private Semaphore atTable = new Semaphore(0, true);
 	private List<CustomerAgent> myCustomers = new ArrayList<CustomerAgent>();
 	private List<Integer> myTables = new ArrayList<Integer>();
-	private Menu myMenu;
+	private RestMenu myMenu;
 	private Hashtable<CustomerAgent, String> myChoices = new Hashtable<CustomerAgent, String>();
 	private List<String> unavailableFood = new ArrayList<String>();
 	private Hashtable<Integer, Check> checks = new Hashtable<Integer, Check>();
 	private List<Integer> checksReady = new ArrayList<Integer>();
+	private PersonAgent person;
+	
 	
 	private boolean readyForNextTask = true;
 	private boolean wantBreak = false;
@@ -60,6 +64,14 @@ public class WaiterAgent extends Agent implements Waiter {
 		myTables.add(t);
 		stateChanged();
 	}
+	
+	public void setPerson(PersonAgent p) {
+		person = p;
+	}
+	
+	public void setHost(HostAgent h) {
+		host = h;
+	}
 
 	public void msgLeavingTable(CustomerAgent cust) {
 		for (Table table : host.tables) {
@@ -77,7 +89,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		stateChanged();
 	}
 	
-	public void msgSeatCustomer(CustomerAgent cust, Menu m) {
+	public void msgSeatCustomer(CustomerAgent cust, RestMenu m) {
 		myCustomers.add(cust);
 		myMenu = m;
 		stateChanged();
@@ -269,7 +281,7 @@ public class WaiterAgent extends Agent implements Waiter {
 //		time);
 	}
 
-	private void DoSeatCustomer(CustomerAgent customer, Table table, Menu m) {
+	private void DoSeatCustomer(CustomerAgent customer, Table table, RestMenu m) {
 		print("Seating " + customer + " at " + table.num);
 		waiterGui.DoGoToTable(table.num);
 		customer.msgFollowMeToTable(this, m, unavailableFood);

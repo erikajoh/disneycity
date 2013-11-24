@@ -8,6 +8,8 @@ import restaurant_bayou.gui.CustomerGui;
 import restaurant_bayou.gui.RestaurantBayouGui;
 import restaurant_bayou.interfaces.Customer;
 import agent_bayou.Agent;
+import simcity.PersonAgent;
+import simcity.RestMenu;
 
 import java.util.*;
 
@@ -19,13 +21,14 @@ public class CustomerAgent extends Agent implements Customer {
 	private int hungerLevel = 10;        // determines length of meal
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
-	private Menu menu;
+	private RestMenu menu;
 	private List<String> unavailableFood =  new ArrayList<String>();
 	private String choice;
 	private Check myCheck;
 	private Wallet wallet;
 	private int dishDoingTime = 0;
 	private Timer t = new Timer();
+	private PersonAgent person;
 
 	private HostAgent host;
 	private WaiterAgent waiter;
@@ -61,13 +64,16 @@ public class CustomerAgent extends Agent implements Customer {
 		this.host = host;
 	}
 	
+	public void setPerson(PersonAgent p) {
+		person = p;
+	}
 	
 	public void gotHungry() {
 		event = AgentEvent.gotHungry;
 		stateChanged();
 	}
 
-	public void msgFollowMeToTable(WaiterAgent w, Menu m, List<String> uf) {
+	public void msgFollowMeToTable(WaiterAgent w, RestMenu m, List<String> uf) {
 		waiter = w;
 		menu = m;
 		unavailableFood = uf;
@@ -211,8 +217,8 @@ public class CustomerAgent extends Agent implements Customer {
 	private void OrderFood() {
 		choice = name.toLowerCase();
 		int count = 0;
-		while (!menu.menuNames.contains(choice) || unavailableFood.contains(choice) || (menu.getCost(choice) > wallet.getAmt() && !name.equalsIgnoreCase("bad"))) {
-			if (count == menu.menuNames.size()) {
+		while (!menu.menuList.contains(choice) || unavailableFood.contains(choice) || (menu.menuItems.get(choice) > wallet.getAmt() && !name.equalsIgnoreCase("bad"))) {
+			if (count == menu.menuList.size()) {
 				state = AgentState.Leaving;
 				LeaveRestaurant();
 				return;
@@ -220,7 +226,7 @@ public class CustomerAgent extends Agent implements Customer {
 //			Random rand = new Random(System.currentTimeMillis());
 //			int det = Math.abs(rand.nextInt()%(menu.menuNames.size()));
 //			order = menu.menuNames.get(det);
-			choice = menu.menuNames.get(count++);
+			choice = menu.menuList.get(count++);
 			Do(""+choice);
 		}
 		waiter.msgHereIsMyChoice(this, choice);

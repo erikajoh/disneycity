@@ -7,6 +7,7 @@ import restaurant_bayou.test.mock.MockCustomer;
 import restaurant_bayou.test.mock.MockMarket;
 import restaurant_bayou.test.mock.MockWaiter;
 import junit.framework.*;
+import simcity.RestMenu;
 
 /**
  * 
@@ -24,7 +25,7 @@ public class CashierTest extends TestCase
 	MockCustomer customer;
 	MockMarket market;
 	HostAgent host = new HostAgent("host");
-	Menu m = host.menu;
+	RestMenu m = host.menu;
 	
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
