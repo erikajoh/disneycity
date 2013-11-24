@@ -220,6 +220,7 @@ public class BankAgent extends Agent implements Bank {
 			wc.bankCustomer.msgRequestDeposit(wc.requestAmt);
 		}
 		else if(wc.action == Action.withdraw){
+			print("RA: "+wc.requestAmt);
 			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt);
 		}
 		else if(wc.action == Action.loan){

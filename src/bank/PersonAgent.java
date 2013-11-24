@@ -47,6 +47,7 @@ public class PersonAgent extends Agent implements Person {
 	// Messages
 
 	public void msgArrive(int num){
+		print("PERSON ARRIVE");
 		decision = num;
 		state = State.arrive;
 		stateChanged();
@@ -89,18 +90,18 @@ public class PersonAgent extends Agent implements Person {
 		else if(decision == 0){
 			print("YO DEPOSIT");
 			originalAccount = accounts.get(0); //really a pick method for the index
-		    bank.msgRequestDeposit(accounts.get(0).getNumber(), 5.00, this, false);
+		    bank.msgRequestDeposit(originalAccount.getNumber(), 5.00, this, false);
 		}
 		else if(decision == 1){
 			print("YO WITHDRAW");
 			 originalAccount = accounts.get(0); //really a pick method for the index
-			 bank.msgRequestWithdrawal(accounts.get(0).getNumber(), 5.00, this);
+			 bank.msgRequestWithdrawal(originalAccount.getNumber(), 5.00, this);
 		}
 	
 	}
 	
 	private void leave(){
-		print("LEFT BANK "+ newAccountNum + " " + newBalance);
+		print("PERSON LEFT BANK "+ newAccountNum + " " + newBalance);
 		if(originalAccount == null){
 			Account newAccount = new Account(newAccountNum);
 			newAccount.setBalance(newBalance);

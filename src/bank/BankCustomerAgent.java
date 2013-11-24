@@ -72,6 +72,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public void	msgRequestWithdraw(double ra){
 		print("REQ WITHDRAW");
 		requestAmt = ra;
+		print("RA: "+requestAmt);
 		state = State.withdrawing;
 		stateChanged();
 	}
