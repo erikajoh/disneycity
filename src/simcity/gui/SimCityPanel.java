@@ -27,7 +27,6 @@ public class SimCityPanel extends JPanel{
 	 
 	public SimCityPanel(SimCityGui gui) {
 		
-		
 		this.gui = gui;
 		restRancho = gui.restRancho;
 		
@@ -52,25 +51,26 @@ public class SimCityPanel extends JPanel{
 	    timer = new Timer();
 	    timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
-				System.out.println("Timer has ticked: # ticks = " + getNumTicks());
-				setNumTicks(getNumTicks() + 1);
+				incrementNumTicks();
 				handleTick();
 			}
 		}, 0, TICK_DELAY);
 	}
 	
 	public void handleTick() {
+		long currTicks = getNumTicks();
+		if(currTicks % 10 == 0)
+			System.out.println("Timer has ticked: # ticks = " + currTicks);
 		for(int i = 0; i < people.size(); i++) {
 			final PersonAgent person = people.get(i);
-			if(getNumTicks() == NOON) {
+			if(currTicks == MORNING || currTicks == NOON || currTicks == EVENING) {
 				timer.schedule(new TimerTask() {
 					public void run() {
-						person.setIsNourished(false);
+						System.out.println("Setting person to be hungry");
+						person.msgSetHunger(false);
 					}
-				}, (int)(Math.random() * EAT_DELAY_MAX));
+				}, (int)(Math.random() * EAT_DELAY_MAX * TICK_DELAY));
 			}
-			person.setIsNourished(false);
-			
 		}
 	}
 	
@@ -80,29 +80,22 @@ public class SimCityPanel extends JPanel{
 	public long numTicks = 0;
 	
 	/* Time intervals */
-	private static final int TICK_DELAY = 250; // every quarter second = one clock tick
+	private static final int TICK_DELAY = 125; // every quarter second = one clock tick
 	
 	// these are start times for each of the day's phases
-	private static final long MORNING = 0;
-	private static final long NOON = 180;
-	private static final long EVENING = 360;
-	private static final long END_OF_DAY = 540;
+	private static final long START_OF_DAY = 0;
+	private static final long MORNING = 30;
+	private static final long NOON = 150;
+	private static final long EVENING = 270;
+	private static final long END_OF_DAY = 390;
 	
 	// for setting random delay for eating
-	private static final int EAT_DELAY_MAX = 40; // 10 seconds later at most when noon hits, for example
+	private static final int EAT_DELAY_MAX = 10;
 	
 	public String getCurrentDay() {
 		return currentDay.toString();
 	}
-	
-	public long getNumTicks() {
-		return numTicks;
-	}
-	
-	public void setNumTicks(long numTicks) {
-		this.numTicks = numTicks;
-	}
-	
+
 	public void setNextDay() {
 		switch(currentDay) {
 			case Sunday:
@@ -119,6 +112,19 @@ public class SimCityPanel extends JPanel{
 				currentDay = DayOfTheWeek.Saturday; break;
 			case Saturday:
 				currentDay = DayOfTheWeek.Sunday; break;
+		}
+	}
+	
+	public long getNumTicks() {
+		return numTicks;
+	}
+	
+	public void incrementNumTicks() {
+		numTicks++;
+		if(numTicks > END_OF_DAY) {
+			numTicks = 0;
+			setNextDay();
+			timer.cancel(); // TODO test that this stops entire simulation
 		}
 	}
 }

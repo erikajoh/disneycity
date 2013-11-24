@@ -28,6 +28,7 @@ public class PersonAgent extends Agent {
 	// Inherent data - simple variables
 	private String name;
 	private boolean isNourished;
+	private boolean needToWork;
 	private double moneyOnHand = 20;
 	private Map<String, Integer> itemsOnHand;
 	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
@@ -52,6 +53,7 @@ public class PersonAgent extends Agent {
 	private double moneyWanted = 0.0;
 	private double moneyToDeposit = 0.0;
 	private String targetLocation;
+	private enum MarketState { None, WantToBuy, WantToWork };
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -70,13 +72,6 @@ public class PersonAgent extends Agent {
 	public PersonEvent event = PersonEvent.makingDecision;
 	// TODO Generic eventFired event instead of specific ones?
 	
-	// temporary variables for consideration
-	/*
-	 * BodyState {Sleeping, Awake}
-	 * Time currentTime;
-	 * 
-	 */
-	
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
@@ -84,18 +79,20 @@ public class PersonAgent extends Agent {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
+		isNourished = true;
 		currentLocation = h.getName();
 		targetLocation = currentLocation;
 		
 		currentLocationState = LocationState.Home;
 		preferredCommute = PreferredCommute.Walk;
-		preferEatAtHome = true;
+		
 		this.foodPreference = foodPreference;
+		preferEatAtHome = false;
+		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
 		bodyState = BodyState.Active;
 		itemsOnHand = new HashMap<String, Integer>();
-		
 	}
 
 	// get/set methods
@@ -323,9 +320,14 @@ public class PersonAgent extends Agent {
 			}
 			if(currentLocationState == LocationState.Market) {
 				// TODO Person scheduler while in Market
+				if(!isNourished && !preferEatAtHome) {
+					hungryToRestaurant();
+					return true;
+				}
 			}
 		}
-		print("Nothing to do for now: nourishmentLevel = " + isNourished);
+		print("Nothing to do for now: isNourished = " + isNourished
+				+ "; currentLocationState = " + currentLocationState.toString());
 		return false;
 	}
 
@@ -344,6 +346,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void payRent(double amount) {
+		print("Paying rent");
 		myHome.housing.msgHereIsRent(this, amount);
 	}
 	
@@ -353,6 +356,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void goToSleep() {
+		print("Going to sleep");
 		myHome.housing.msgGoToBed(this);
 	}
 	
@@ -374,6 +378,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void enterRestaurant() {
+		print("Entering restaurant");
 		MyRestaurant myRest = (MyRestaurant)currentMyObject;
 		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand);
 		// TODO: blocking
@@ -389,6 +394,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void goHome() {
+		print("Going home");
 		log.add(new LoggedEvent("Going home"));
 		targetLocation = myHome.name;
 		goToTransportation();
@@ -459,6 +465,7 @@ public class PersonAgent extends Agent {
 	
 	private MyRestaurant chooseRestaurant() {
 		// TODO: hack in choosing restaurants - choose first available
+		// TODO: refine criteria for choosing restaurant
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)
 			if(myObjectsArray[i] instanceof MyRestaurant)
