@@ -33,6 +33,30 @@ public class Market {
     private List<WorkerAgent> workers = new ArrayList<WorkerAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     boolean isOpen;
+    
+    // Messages
+    
+    public void msgEnterMarket() { // from customer to market
+    	
+    }
+    
+    public void msgHereIsPayment(double amt) { // from customer to cashier
+    	
+    }
+    
+    public void msgLeaveMarket() { // from customer to market
+    	
+    }
+    
+    public void msgOrderFulfilled(String choice, int quantity) { // from worker to manager
+    	
+    }
+    
+     /* msgHereYouGo(String order, double amt); // to customer from manager
+     * msgRestaurantDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
+     * msgHomeDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
+     * msgFulfillOrder(String order, int quantity); // to worker from manager
+     */
 
     private SimCityGui gui;
 
@@ -54,26 +78,6 @@ public class Market {
    // public void personAs(String type, String name, PersonAgent p) {
     public void personAs(PersonAgent p, String type, String name, double money){
     	addPerson(p, type, name, money);
-    }
-    
-    public void PauseandUnpauseAgents() {
-    	for (WorkerAgent w : workers) {
-    		w.pauseOrRestart();
-    	}
-    	for (CustomerAgent c : customers) {
-    		c.pauseOrRestart();
-    	}
-    	cashier.pauseOrRestart();
-    	manager.pauseOrRestart(); 	
-    	cashier.pauseOrRestart();
-    }
-    
-    public void workerWantsBreak(WorkerAgent w) {
-    	manager.msgWantToGoOnBreak(w);
-    }
-    
-    public void workerWantsOffBreak(WorkerAgent w) {
-    	manager.msgBackFromBreak(w);
     }
     
     public void addPerson(PersonAgent p, String type, String name, double money) {
