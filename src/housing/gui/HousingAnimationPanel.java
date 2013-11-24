@@ -40,13 +40,7 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		repaint();  //Will have paintComponent called
-	}
-	
-//	public void pauseOrResume(){
-//		if (timer.isRunning()) timer.stop();
-//		else timer.start();
-//	}
-	
+	}	
 
     public void paintComponent(Graphics g) {
         g2 = (Graphics2D)g;
@@ -89,9 +83,5 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
     	r.startThread();
     	addGui(g);
     }
-    
-//    public void addGui(OwnerGui gui) {
-//    	guis.add(gui);
-//    }
    
 }
