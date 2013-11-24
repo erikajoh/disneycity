@@ -54,6 +54,7 @@ public class PersonAgent extends Agent {
 	private double moneyToDeposit = 0.0;
 	private String targetLocation;
 	private enum MarketState { None, WantToBuy, WantToWork };
+	private MarketState marketState;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -183,11 +184,16 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgFoodDone() {
+	public void msgFoodDone(boolean doneEating) {
 		// TODO housing message
+		if(doneEating) {
+			isNourished = true;
+			preferEatAtHome = !preferEatAtHome;
+		}
+		else {
+			marketState = MarketState.WantToBuy;
+		}
 		event = PersonEvent.makingDecision;
-		isNourished = true;
-		preferEatAtHome = !preferEatAtHome;
 		stateChanged();
 	}
 	
@@ -341,7 +347,7 @@ public class PersonAgent extends Agent {
 	
 	private void prepareToCookAtHome() {
 		// TODO home action
-		print("Preparing to cook at home");
+		print("I'm hungry and I want to cook at home");
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
 	}
 	
