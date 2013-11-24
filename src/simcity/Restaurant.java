@@ -9,6 +9,8 @@ public interface Restaurant {
 	public RestMenu getMenu();
 	
 	public void setBank(Bank b);
+	
+	public boolean isOpen();
 
 	public void personAs(PersonAgent p, String type, String name, double money, String choice);
 	

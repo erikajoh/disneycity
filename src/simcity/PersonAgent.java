@@ -21,13 +21,15 @@ public class PersonAgent extends Agent {
 	
 	// ************************* DATA ***********************************
 	
+	int printCount = 100;
+	
 	// Unit testing
 	public EventLog log = new EventLog();
 	
 	// Inherent data - simple variables
 	private String name;
 	private int nourishmentLevel;
-	private double moneyOnHand;
+	private double moneyOnHand = 20;
 	private Map<String, Integer> itemsOnHand;
 	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
 	private PersonType myPersonality;
@@ -44,7 +46,7 @@ public class PersonAgent extends Agent {
 	
 	// Location
 	private enum LocationState {Home, Transit, Restaurant, Bank, Market};
-	private boolean enteredHouse = false;
+	private boolean insideHouse = false;
 	private LocationState currentLocationState;
 	private String currentLocation;
 	
@@ -80,7 +82,7 @@ public class PersonAgent extends Agent {
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
-	public PersonAgent(String aName, Housing h, String relationWithHousing, Transportation_Douglass t) {
+	public PersonAgent(String aName, Housing h, String foodPreference, String relationWithHousing, Transportation_Douglass t) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
@@ -89,10 +91,12 @@ public class PersonAgent extends Agent {
 		
 		currentLocationState = LocationState.Home;
 		preferredCommute = PreferredCommute.Walk;
+		this.foodPreference = foodPreference;
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
 		bodyState = BodyState.Active;
 		itemsOnHand = new HashMap<String, Integer>();
+		
 	}
 
 	// get/set methods
@@ -126,7 +130,7 @@ public class PersonAgent extends Agent {
 	
 	public void	addRestaurant(RestaurantRancho r, String personType) {
 		// TODO Hacked in restaurant type
-		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getName(), "Restaurant", personType, r.getMenu().menuItems);
+		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getRestaurantName(), "Restaurant", personType, r.getMenu().menuItems);
 		myObjects.add(tempMyRestaurant);
 	}
 	
@@ -191,6 +195,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	public void msgDoneLeaving() {
+		insideHouse = false;
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
@@ -244,9 +249,12 @@ public class PersonAgent extends Agent {
 	// ************************* SCHEDULER ***********************************
 	
 	public boolean pickAndExecuteAnAction() {
-		print("Calling PersonAgent's scheduler");
-		// based on state/emergencies
+		if(printCount > 0) {
+			printCount--;
+			print("Calling PersonAgent's scheduler");
+		}
 		
+		// based on state/emergencies
 		if(actionQueue.size() > 0) {
 			Action theAction = actionQueue.poll();
 			// TODO: what to do with action...
@@ -254,26 +262,34 @@ public class PersonAgent extends Agent {
 		
 		// if no emergenices, proceed with normal decision rules
 		if(event == PersonEvent.makingDecision) {
-		
-			// based on location
+			
 			if(currentLocationState == LocationState.Home) {
-				if(!enteredHouse && currentLocation.equals(targetLocation)) {
-					print("Entering house");
-					enterHouse();
-					enteredHouse = true;
+				if(!insideHouse) {
+					if(currentLocation.equals(targetLocation)) {
+						enterHouse();
+						insideHouse = true;
+					}
+					else {
+						goToTransportation();
+					}
 					event = PersonEvent.onHold;
 					return true;
 				}
 				if(nourishmentLevel <= 0) {
-					print("Deciding to eat");
-					if(preferEatAtHome) {
-						prepareToCookAtHome();
+					if(currentLocation.equals(targetLocation)) {
+						print("Deciding to eat");
+						if(preferEatAtHome) {
+							prepareToCookAtHome();
+							event = PersonEvent.onHold;
+						}
+						else {
+							hungryToRestaurant();
+						}
+						return true;
 					}
 					else {
-						hungryToRestaurant();
+						leaveHouse();
 					}
-					event = PersonEvent.onHold;
-					return true;
 				}
 			}
 			if(currentLocationState == LocationState.Bank) {
@@ -306,7 +322,8 @@ public class PersonAgent extends Agent {
 			if(currentLocationState == LocationState.Market) {
 				// TODO Person scheduler while in Market
 			}
-		}		
+		}
+		print("Nothing to do for now");
 		return false;
 	}
 
@@ -314,11 +331,13 @@ public class PersonAgent extends Agent {
 
 	// House actions
 	private void enterHouse() {
+		print("Entering house");
 		myHome.housing.msgIAmHome(this);
 	}
 	
 	private void prepareToCookAtHome() {
 		// TODO home action
+		print("Preparing to cook at home");
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
 	}
 	
@@ -327,6 +346,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void leaveHouse() {
+		print("Leaving house");
 		myHome.housing.msgIAmLeaving(this);
 	}
 	
@@ -336,19 +356,19 @@ public class PersonAgent extends Agent {
 	
 	// Restaurant actions
 	private void hungryToRestaurant() {
+		print("I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
 		Map<String, Double> theMenu = targetRestaurant.menu;
+		// TODO do restaurant types as well
 		double lowestPrice = getLowestPrice(theMenu);
 		if(moneyOnHand < lowestPrice) {
 			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
 			moneyWanted = lowestPrice - moneyOnHand;
 			// TODO: bank name hacked; MyBank and finding banks must be implemented
 			targetLocation = "Mock Bank 1";
-			goToTransportation();
 			return;
 		}
 		targetLocation = targetRestaurant.name;
-		goToTransportation();
 	}
 	
 	private void enterRestaurant() {
@@ -359,6 +379,7 @@ public class PersonAgent extends Agent {
 	
 	// Transportation actions
 	private void goToTransportation() {
+		print("Going from " + currentLocation + " to " + targetLocation);
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
 		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name());
 		event = PersonEvent.onHold;
