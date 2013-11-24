@@ -19,7 +19,7 @@ public class ResidentGui implements Gui{
 	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, AtBed, GoToBath, GoToTable, GoToKitchen, LeaveBedroom, DoMaintenance, DoneMaintenance, LeaveHouse};
 	private Command command=Command.noCommand;
 	
-	private Semaphore moving = new Semaphore(1, true);
+	private Semaphore moving = new Semaphore(0, true);
 	private boolean inBedroom = false;
 
 	public static final int hWidth = 400;
@@ -81,20 +81,20 @@ public class ResidentGui implements Gui{
 	
 	public void DoLeaveBedroom() {
 		xDestination = (int)(hWidth*0.53);
-		yDestination = (int)(hHeight*0.15);
+		yDestination = (int)(hHeight*0.65);
 		command = Command.LeaveBedroom;
 		inBedroom = false;
 	}
 	
 	public void DoGoToCouch() {
 		if (inBedroom) {
+			DoLeaveBedroom();
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			DoLeaveBedroom();
 		}
 		xDestination = (int)(hWidth*0.8);
 		yDestination = (int)(hHeight*0.15);
@@ -103,13 +103,13 @@ public class ResidentGui implements Gui{
 		
 	public void DoGoToBed() {
 		for (int i=0; i<2; i++) {
+			GoTowardBed(i);
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			GoTowardBed(i);
 		}
 		inBedroom = true;
 	}
@@ -134,13 +134,13 @@ public class ResidentGui implements Gui{
 	
 	public void DoGoToTable() {
 		if (inBedroom) {
+			DoLeaveBedroom();
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			DoLeaveBedroom();
 		}
 		xDestination = (int)(hWidth*0.27);
 		yDestination = (int)(hHeight*0.65);
@@ -149,22 +149,22 @@ public class ResidentGui implements Gui{
 	
 	public void DoMaintenance() {
 		if (inBedroom) {
+			DoLeaveBedroom();
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			DoLeaveBedroom();
 		}
 		for (int i=0; i<6; i++) {
+			MaintainArea(i);
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			MaintainArea(i);
 		}
 	}
 	
@@ -198,13 +198,13 @@ public class ResidentGui implements Gui{
 	
 	public void DoGoToKitchen() {
 		if (inBedroom) {
+			DoLeaveBedroom();
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			DoLeaveBedroom();
 		}
 		xDestination = (int)(hWidth*0.8);
 		yDestination = (int)(hHeight*0.8);
@@ -213,13 +213,13 @@ public class ResidentGui implements Gui{
 
 	public void DoLeaveHouse() {
 		if (inBedroom) {
+			DoLeaveBedroom();
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			DoLeaveBedroom();
 		}
 		xDestination = (int)(hWidth);
 		yDestination = (int)(hHeight*0.15);
