@@ -38,7 +38,7 @@ public class PersonAgent extends Agent {
 	private enum BodyState {Asleep, Active, Tired};
 	private BodyState bodyState;
 	
-	private enum ActionString { wakeUp, goToSleep, payRent, receiveRent };
+	private enum ActionString { wakeUp, goToSleep, payRent, receiveRent, needMaintenance };
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
 	
@@ -178,6 +178,10 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgNeedMaintenance() {
+		actionQueue.add(new Action(ActionString.needMaintenance, 1, 0));
+	}
+	
 	public void msgFinishedMaintenance() {
 		event = PersonEvent.makingDecision;
 		stateChanged();
@@ -209,6 +213,7 @@ public class PersonAgent extends Agent {
 		currentLocation = destination;
 		mapLocationToEnum(currentLocation);
 		updateCurrentMyObject(currentLocation);
+		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 
@@ -271,7 +276,10 @@ public class PersonAgent extends Agent {
 					payRent(theAction.amount); break;
 				case receiveRent:
 					moneyOnHand += theAction.amount; break;
+				case needMaintenance: 
+					break;
 			}
+			return true;
 		}
 		
 		// if no emergenices, proceed with normal decision rules
@@ -279,6 +287,7 @@ public class PersonAgent extends Agent {
 			
 			if(currentLocationState == LocationState.Home) {
 				if(!insideHouse) {
+					print("Not inside my house");
 					if(currentLocation.equals(targetLocation)) {
 						enterHouse();
 						insideHouse = true;
@@ -303,6 +312,7 @@ public class PersonAgent extends Agent {
 					}
 					else {
 						leaveHouse();
+						event = PersonEvent.onHold;
 					}
 				}
 				if(bodyState == BodyState.Tired) {
@@ -329,6 +339,7 @@ public class PersonAgent extends Agent {
 			if(currentLocationState == LocationState.Restaurant) {
 				if(!isNourished) {
 					enterRestaurant();
+					event = PersonEvent.onHold;
 					return true;
 				}
 				else {
@@ -407,7 +418,6 @@ public class PersonAgent extends Agent {
 		print("Going from " + currentLocation + " to " + targetLocation);
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
 		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name());
-		event = PersonEvent.onHold;
 		// TODO blocking?
 	}
 	
