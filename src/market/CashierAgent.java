@@ -10,10 +10,17 @@ import simcity.PersonAgent;
 public class CashierAgent extends Agent {
 	private String name;
 	private CashRegister r;
-	private PersonAgent person;
-	public List<Bill> marketBills =  Collections.synchronizedList(new ArrayList<Bill>());
+	private double amt;
+	public List<Bill> marketBills = Collections.synchronizedList(new ArrayList<Bill>());
 	
-	//public EventLog log = new EventLog();
+	private PersonAgent person;
+	private CustomerAgent customer;
+	private Market market;
+	
+	enum State {idle, rcvdPayment};
+	State state = State.idle;
+	
+//	public EventLog log = new EventLog();
 
 	/**
 	 * Constructor for CashierAgent class
@@ -29,21 +36,36 @@ public class CashierAgent extends Agent {
 	public void setPerson(PersonAgent person) {
 		this.person = person;
 	}
+	
+	public void setMarket(Market market) {
+		this.market = market;
+	}
 
 	// Messages
-	public void msgHereIsMoney(CustomerAgent c, double amount){
-		//log.add(new LoggedEvent("Received msgHereIsMoney"));
+	
+	public void msgHereIsBill(CustomerAgent c, double amount){ // from worker
+		marketBills.add(new Bill(c, amount));
 	}
 	
+	public void msgHereIsMoney(CustomerAgent c, double amount){ // from customer
+//		log.add(new LoggedEvent("Received msgHereIsMoney"));
+		customer = c;
+		amt = amount;
+		state = State.rcvdPayment;
+		stateChanged();
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
-		synchronized(marketBills){
-			for (Bill b: marketBills) {
-				marketBills.remove(b);
-				return true;
+		if (state == State.rcvdPayment){
+			for (Bill b: marketBills){
+				if (b.cust == customer){
+					ProcessPayment(b, amt);
+					state = State.idle;
+					return true;
+				}
 			}
 		}
 		return false;
@@ -66,9 +88,18 @@ public class CashierAgent extends Agent {
 	}
 	
 	public class Bill {
+		CustomerAgent cust;
 		double amt;
-		Bill(double a){
+		Bill(CustomerAgent c, double a){
+			cust = c;
 			amt = a;
+		}
+	}
+	
+	public void ProcessPayment(Bill b, double amtRcvd){
+		if (amtRcvd >= b.amt){
+			r.increase(b.amt);
+			b.cust.msgHereIsChange(amtRcvd - b.amt);
 		}
 	}
 	

@@ -13,6 +13,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -32,12 +33,13 @@ public class Market {
     private CashierAgent cashier;    
     private List<WorkerAgent> workers = new ArrayList<WorkerAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
+    private Hashtable<String, Integer> inventory = new Hashtable<String, Integer>();
+    private Hashtable<String, Double> prices = new Hashtable<String, Double>();
+    
     boolean isOpen;
     
     // Messages
-    
-    // Food: steak, cheese, bread, soup, lettuce, tortilla, chicken, pasta
-    
+        
     public void msgVirtualOrder(PersonAgent p, String choice) { // from person
     	
     }
@@ -46,7 +48,11 @@ public class Market {
     	customers.remove(c);
     }
     
-     /* msgHereYouGo(String order, double amt); // to customer from manager
+	public void msgLeaving(CustomerAgent c) {
+		customers.remove(c);
+	}
+    
+     /*
      * msgRestaurantDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
      * msgHomeDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
      * msgFulfillOrder(String order, int quantity); // to worker from manager
@@ -58,6 +64,18 @@ public class Market {
     public Market(SimCityGui g, String n) {
     	name = n;
         this.gui = g;
+        inventory.put("Mexican", 5);
+        prices.put("Mexican", 10.0);
+		inventory.put("Southern", 5);
+		prices.put("Southern", 10.0);
+		inventory.put("Italian", 5);
+		prices.put("Italian", 10.0);
+		inventory.put("German", 5);
+		prices.put("German", 10.0);
+		inventory.put("American", 5);
+		prices.put("American", 10.0);
+		inventory.put("Car", 5);
+		prices.put("Car", 10.0);
     }
     
     public SimCityGui getGui() {
@@ -70,32 +88,42 @@ public class Market {
     
     public String getName() { return name; }
     
-    public void personAs(PersonAgent p, String type, String name, double money){
-    	addPerson(p, type, name, money);
+    public void personAs(PersonAgent p, String type, String name, double money, String choice){
+    	addPerson(p, type, name, money, choice);
     }
     
-    public void addPerson(PersonAgent p, String type, String name, double money) {
+    public void addPerson(PersonAgent p, String type, String name, double money, String choice) {
 
     	if (type.equals("Customer")) {
-    		CustomerAgent c = new CustomerAgent(name, 100);	
+    		CustomerAgent c = new CustomerAgent(name, money, choice);	
     		CustomerGui g = new CustomerGui(c);
     		gui.markAniPanel.addGui(g);
     		if (manager!=null) c.setManager(manager);
     		c.setGui(g);
     		if (cashier!=null) c.setCashier(cashier);
     		c.setPerson(p);
+    		c.setMarket(this);
     		customers.add(c);
     		c.startThread();
     		g.updatePosition();
+    	}
+    	else if (type.equals("VirtualCustomer")) {
+    		CustomerAgent c = new CustomerAgent(name, money, choice);	
+    		if (manager!=null) c.setManager(manager);
+    		if (cashier!=null) c.setCashier(cashier);
+    		c.setPerson(p);
+    		c.setMarket(this);
+    		customers.add(c);
+    		c.startThread();
     	}
     	else if (type.equals("Worker")) {
     		WorkerAgent w = new WorkerAgent(name, manager);
     		WorkerGui g = new WorkerGui(w);
     		gui.markAniPanel.addGui(g);
-//    		if (cashier!=null) w.setCashier(cashier);
-    		if (manager!=null) manager.addWorker(w);
+    		if (cashier!=null) w.setCashier(cashier);
     		w.setGui(g);
     		w.setPerson(p);
+    		w.setMarket(this);
     		workers.add(w);
     		w.startThread();
     		g.updatePosition();
@@ -106,7 +134,6 @@ public class Market {
     			manager.setPerson(p);
     			manager.startThread();
     			for (WorkerAgent w : workers) {
-    				manager.addWorker(w);
     				w.setManager(manager);
     			}
     		}
@@ -115,9 +142,23 @@ public class Market {
     		if (cashier == null) {
     			cashier = new CashierAgent(name, 100);
     			cashier.setPerson(p);
+    			cashier.setMarket(this);
     			cashier.startThread();
     		}
     	}	
     }
+    
+    public double getPrice(String f) {
+    	return prices.get(f);
+    }
+    
+    private boolean getItem(String f) {
+		if (inventory.get(f) != 0) {
+			inventory.put(f, inventory.get(f)-1);
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }

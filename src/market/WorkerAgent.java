@@ -16,10 +16,18 @@ public class WorkerAgent extends Agent {
 
 	private String name;
 	private ManagerAgent manager;
-	private List<CustomerAgent> myCustomers = new ArrayList<CustomerAgent>();
+	private List<MyOrder> orders = new ArrayList<MyOrder>();
+	
+	class MyOrder {
+		CustomerAgent c;
+		String item;
+		int quantity;
+	}
 	
 	public WorkerGui workerGui = null;
 	private PersonAgent person;
+	private CashierAgent cashier;
+	private Market market;
 		
 	public enum AgentEvent 
 	{none, seatCustomer, leaveCustomer, takeOrder, deliverOrder};
@@ -45,13 +53,21 @@ public class WorkerAgent extends Agent {
 		this.manager = manager;
 	}
 	
+	public void setMarket(Market market) {
+		this.market = market;
+	}
+	
+	public void setCashier(CashierAgent cashier) {
+		this.cashier = cashier;
+	}
+	
 	public void msgAnimationFinished() {
 		//from animation
 		stateChanged();
 	}
 	
-	public void msgHereIsMyChoice(CustomerAgent cust, String c) { // from customer
-		myCustomers.add(cust);
+	public void msgGoGetItem(CustomerAgent cust, String c) { // from customer
+//		orders.put(cust, c);
 		stateChanged();
 	}
 
@@ -59,6 +75,9 @@ public class WorkerAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
+//		for (CustomerAgent c: orders.keys()) {
+			
+//		}
 		return false;
 	}
 
@@ -68,10 +87,6 @@ public class WorkerAgent extends Agent {
 
 	public WorkerGui getGui() {
 		return workerGui;
-	}
-	
-	public int getCustomers() {
-		return myCustomers.size();
 	}
 	
 }

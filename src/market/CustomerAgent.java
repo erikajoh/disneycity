@@ -16,14 +16,17 @@ public class CustomerAgent extends Agent {
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
 	private Wallet wallet;
+	double amtDue;
+	int quantity;
 	private Timer t = new Timer();
 
 	private ManagerAgent manager;
 	private CashierAgent cashier;
 	private WorkerAgent worker;
 	private PersonAgent person;
+	private Market market;
 	
-	private Semaphore moving = new Semaphore(1, true);
+	private Semaphore moving = new Semaphore(0, true);
 	
 	public int table;
 
@@ -36,9 +39,10 @@ public class CustomerAgent extends Agent {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name, double amt){
+	public CustomerAgent(String name, double amt, String choice){
 		super();
 		this.name = name;
+		this.choice = choice;
 		wallet = new Wallet(amt);
 		state = State.entering;
 	}
@@ -59,17 +63,28 @@ public class CustomerAgent extends Agent {
 		this.cashier = cashier;
 	}
 	
+	public void setMarket(Market market) {
+		this.market = market;
+	}
+	
 	public void msgWhatWouldYouLike() { // from manager
 		state = State.ordering;
 		stateChanged();
 	}
 	
-	public void msgHereIsYourItem() { // from worker
-		state = State.paying;
+	public void msgOutOfItem() {
+		state = State.leaving;
 		stateChanged();
 	}
 	
-	public void msgHereIsChange(double amt) {
+	public void msgHereIsYourBill(double amt) { // from worker
+		amtDue = amt;
+		if (wallet.getAmt() < amtDue) state = State.leaving;
+		else state = State.paying;
+		stateChanged();
+	}
+	
+	public void msgHereIsChange(double amt) { // from cashier
 		wallet.update(amt);
 		state = State.leaving;
 		stateChanged();
@@ -86,24 +101,31 @@ public class CustomerAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {	
 		if (state == State.entering){
+			print("Entering market");
 			EnterMarket();
 			state = State.idle;
-//			state = State.ordering; //hack
+			state = State.ordering; //hack
 			return true;
 		}
 		else if (state == State.ordering){
-			manager.msgWantToOrder("water", 1);
+			print("Ordering food");
+			PlaceOrder();
 			state = State.idle;
 //			state = State.paying; //hack
 			return true;
 		}
 		else if (state == State.paying){
+			print("Paying");
+			cashier.msgHereIsMoney(this, wallet.getAmt());
 			state = State.idle;
 //			state = State.leaving; //hack
 			return true;
 		}
 		else if (state == State.leaving){
+			print("Leaving");
 			LeaveMarket();
+//			person.msgDoneAtMarket();
+			market.msgLeaving(this);
 			state = State.idle;
 			return true;
 		}
@@ -111,31 +133,28 @@ public class CustomerAgent extends Agent {
 	}
 
 	private void EnterMarket() {
-		Do("Entering market");
 		customerGui.setPresent(true);
+		customerGui.DoEnterMarket();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		customerGui.DoEnterMarket();
-		manager.msgIAmHere(this);
 	}
 	
 	private void PlaceOrder() {
-		worker.msgHereIsMyChoice(this, choice);
+		manager.msgWantToOrder(this, choice, 1);
 	}
 
 	private void LeaveMarket() {
-		Do("Leaving market");
+		customerGui.DoLeaveMarket();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		customerGui.DoLeaveMarket();
 	}
 	
 	public String getName() {

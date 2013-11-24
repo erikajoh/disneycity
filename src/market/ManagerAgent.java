@@ -15,14 +15,11 @@ import agent.Agent;
 
 public class ManagerAgent extends Agent {
 	
-	static final int NTABLES = 4;
-	static final int NWORKERS = 0;
-	public List<CustomerAgent> customers =  Collections.synchronizedList(new ArrayList<CustomerAgent>());
-	public List<WorkerAgent> workers =  Collections.synchronizedList(new ArrayList<WorkerAgent>());
-	public CashierAgent cashier;
 	private String name;
 	
+	private Market market;
 	private PersonAgent person;
+	public CashierAgent cashier;
 	
 	public ManagerAgent(String name) {
 		super();
@@ -30,40 +27,24 @@ public class ManagerAgent extends Agent {
 		this.name = name;
 		
 	}
+	
+	public void setPerson(PersonAgent person) {
+		this.person = person;
+	}
+	
+	public void setMarket(Market market) {
+		this.market = market;
+	}
+	
+	public void setCashier(CashierAgent cashier) {
+		this.cashier = cashier;
+	}
 
 	public String getName() {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent person) {
-		this.person = person;
-	}
-
-	public List getCustomers() {
-		return customers;
-	}
-	
-	public List getWorkers() {
-		return workers;
-	}
-		
-	public void msgIAmHere(CustomerAgent cust) { // from customer
-		customers.add(cust);
-		for (CustomerAgent c: customers) {
-			if (c == cust) {
-				stateChanged();
-				return;
-			}
-		}
-		customers.add(cust);
-		stateChanged();
-	}
-	
-	public void msgWantToOrder(String choice, int quantity) { // from customer
-    	
-    }
-	
-    public void msgOrderFulfilled(String choice, int quantity) { // from worker
+	public void msgWantToOrder(CustomerAgent c, String choice, int quantity) { // from customer
     	
     }
 	
@@ -89,22 +70,5 @@ public class ManagerAgent extends Agent {
 
 	// Actions
 	
-	public void addWorker(WorkerAgent w) {
-		workers.add(w);
-		stateChanged();
-	}
-	
-	public void setCashier(CashierAgent ca) {
-		cashier = ca;
-	}
-	
-	public void addCustomer(CustomerAgent c) {
-		customers.add(c);
-		stateChanged();
-	}
-	
-	public int howManyWorkers() {
-		return workers.size();
-	}
 }
 
