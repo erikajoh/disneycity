@@ -13,6 +13,8 @@ import market.gui.MarketAnimationPanel;
 import java.awt.*;
 import java.awt.event.*;
 
+import restaurant_bayou.gui.BayouAnimationPanel;
+import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_rancho.gui.RanchoAnimationPanel;
 import restaurant_rancho.gui.RestaurantRancho;
 import restaurant_rancho.gui.RestaurantRanchoGui;
@@ -31,7 +33,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	
 	JPanel cards;
 	
-	enum Panel {housing, restaurant, market, bank};
+	enum Panel {housing, rancho, bayou, market, bank};
 	Panel currP;
 			
 	public static RestaurantRancho restRancho;
@@ -39,6 +41,9 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	
 	public static Housing hauntedMansion;
 	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
+	
+	public static RestaurantBayou restBayou;
+	public BayouAnimationPanel bayouAniPanel = new BayouAnimationPanel();
 	
 	public static Market mickeysMarket;
 	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
@@ -67,7 +72,8 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		cards = new JPanel(new CardLayout());
 		cards.add(housAniPanel, "Housing");
 		cards.add(markAniPanel, "Market");
-		cards.add(ranchoAniPanel, "Restaurant");
+		cards.add(ranchoAniPanel, "Rancho");
+		cards.add(bayouAniPanel, "Bayou");
 				
 		panelB.addActionListener(this);
 		panelB.setPreferredSize(new Dimension(0, 0));
@@ -167,7 +173,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		// TODO Auto-generated method stub
 		if (e.getSource() == panelB) {
 			CardLayout cl = (CardLayout)(cards.getLayout());			
-			if (currP == Panel.restaurant) {
+			if (currP == Panel.bayou) {
 				System.out.println("showing housing");
 				cl.show(cards, "Housing");
 				currP = Panel.housing;
@@ -176,9 +182,13 @@ public class SimCityGui extends JFrame implements ActionListener  {
 				cl.show(cards, "Market");
 				currP = Panel.market;
 			} else if (currP == Panel.market) {
-				System.out.println("showing rest");
-				cl.show(cards, "Restaurant");
-				currP = Panel.restaurant;
+				System.out.println("showing rancho");
+				cl.show(cards, "Rancho");
+				currP = Panel.rancho;
+			} else if (currP == Panel.rancho) {
+				System.out.println("showing bayou");
+				cl.show(cards, "Bayou");
+				currP = Panel.bayou;
 			}
 		}
 	}
