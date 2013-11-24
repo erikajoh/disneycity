@@ -55,6 +55,7 @@ public class PersonAgent extends Agent {
 	private double moneyWanted = 0.0;
 	private double moneyToDeposit = 0.0;
 	private String targetLocation;
+	private enum RestaurantState { None, JustArrived,  };
 	private enum MarketState { None, WantToBuy, WantToWork };
 	private MarketState marketState;
 	
@@ -149,6 +150,7 @@ public class PersonAgent extends Agent {
 	public void msgWakeUp() {
 		print("Must wake up");
 		actionQueue.add(new Action(ActionString.wakeUp, 0, 0));
+		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 	
@@ -171,6 +173,7 @@ public class PersonAgent extends Agent {
 	
 	public void msgRentIsDue(double amount) {
 		actionQueue.add(new Action(ActionString.payRent, 1, amount));
+		stateChanged();
 	}
 	
 	public void msgHereIsRent(double amount) {
@@ -180,6 +183,7 @@ public class PersonAgent extends Agent {
 	
 	public void msgNeedMaintenance() {
 		actionQueue.add(new Action(ActionString.needMaintenance, 1, 0));
+		stateChanged();
 	}
 	
 	public void msgFinishedMaintenance() {
@@ -278,8 +282,9 @@ public class PersonAgent extends Agent {
 				case receiveRent:
 					moneyOnHand += theAction.amount; break;
 				case needMaintenance: 
-					break;
+					doMaintenance(); break;
 			}
+			event = PersonEvent.makingDecision;
 			return true;
 		}
 		
@@ -373,6 +378,11 @@ public class PersonAgent extends Agent {
 		// TODO home action
 		print("I'm hungry and I want to cook at home");
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
+	}
+	
+	private void doMaintenance() {
+		print("Performing maintenance");
+		myHome.housing.msgDoMaintenance();
 	}
 	
 	private void payRent(double amount) {

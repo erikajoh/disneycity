@@ -67,6 +67,7 @@ public class SimCityPanel extends JPanel{
 		if(currTicks % 10 == 0)
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
 		
+		// handle ticks for people
 		for(int i = 0; i < people.size(); i++) {
 			final PersonAgent person = people.get(i);
 			
@@ -87,10 +88,18 @@ public class SimCityPanel extends JPanel{
 			if(currTicks == END_OF_DAY) {
 				person.msgGoToSleep();
 			}
-			
-			// house maintenance signal
-			if(currTicks == NOON && getCurrentDay().equals("Friday")) {
-				// TODO: do maintenance
+			// person maintenance signal
+			if(currTicks == MORNING && getCurrentDay().equals("Friday")) {
+				person.msgNeedMaintenance();
+			}
+		}
+		
+		// handle ticks for housing
+		for(int i = 0; i < housings.size(); i++) {
+			Housing theHousing = housings.get(i);
+			// rent is due signal
+			if(currTicks == EVENING) {
+				theHousing.msgRentDue();
 			}
 		}
 	}
@@ -111,7 +120,7 @@ public class SimCityPanel extends JPanel{
 	private static final long END_OF_DAY = 390;
 	
 	// for setting random delay for eating
-	private static final int EAT_DELAY_MAX = 10;
+	private static final int EAT_DELAY_MAX = 50;
 	
 	public String getCurrentDay() {
 		return currentDay.toString();
