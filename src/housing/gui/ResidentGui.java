@@ -16,10 +16,10 @@ public class ResidentGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, GoToBath, GoToTable, GoToKitchen, DoMaintenance, DoneMaintenance, LeaveHouse};
+	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, AtBed, GoToBath, GoToTable, GoToKitchen, DoMaintenance, DoneMaintenance, LeaveHouse};
 	private Command command=Command.noCommand;
 	
-	private Semaphore maintaining = new Semaphore(1, true);
+	private Semaphore moving = new Semaphore(1, true);
 
 	public static final int hWidth = 400;
 	public static final int hHeight = 360;
@@ -42,7 +42,7 @@ public class ResidentGui implements Gui{
 			yPos--;
 		
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command == Command.DoMaintenance) maintaining.release();
+			if (command == Command.DoMaintenance || command == Command.GoToBed) moving.release();
 			else if (command == Command.DoneMaintenance) agent.msgMaintenanceAnimationFinished();
 			else if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
@@ -80,11 +80,29 @@ public class ResidentGui implements Gui{
 		yDestination = -hHeight/6;
 		command = Command.GoToCouch;
 	}
-	
+		
 	public void DoGoToBed() {
-		xDestination = -hWidth/5;
-		yDestination = -hHeight/6;
-		command = Command.GoToBed;
+		for (int i=0; i<2; i++) {
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			GoTowardBed(i);
+		}
+	}
+	
+	private void GoTowardBed(int i) {
+		if (i == 0) {
+			xDestination = (int)(hWidth*0.53);
+			yDestination = (int)(hHeight*0.15);
+			command = Command.GoToBed;
+		} else {
+			xDestination = (int)(hWidth*0.8);
+			yDestination = (int)(hHeight*0.15);
+			command = Command.AtBed;
+		}
 	}
 	
 	public void DoGoToBath() {
@@ -102,7 +120,7 @@ public class ResidentGui implements Gui{
 	public void DoMaintenance() {
 		for (int i=0; i<6; i++) {
 			try {
-				maintaining.acquire();
+				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -136,9 +154,7 @@ public class ResidentGui implements Gui{
 			xDestination = (int)(hWidth*0.27);
 			yDestination = (int)(hHeight*0.65);
 			command = Command.DoneMaintenance;
-		}
-			
-			
+		}		
 	}
 	
 	public void DoGoToKitchen() {
@@ -148,8 +164,13 @@ public class ResidentGui implements Gui{
 	}
 
 	public void DoLeaveHouse() {
-		xDestination = (int)(hWidth*0.27);
-		yDestination = (int)(hHeight*0.92);
+		if (xPos < hWidth*0.5 && yPos > hHeight*0.5) {
+			xDestination = (int)(hWidth*0.27);
+			yDestination = (int)(hHeight*0.92);
+		} else {
+			xDestination = (int)(hWidth);
+			yDestination = (int)(hHeight*0.15);
+		}
 		command = Command.LeaveHouse;
 	}
 	

@@ -7,6 +7,9 @@ import housing.test.mock.LoggedEvent;
 
 import javax.swing.*;
 
+import market.Market;
+import market.gui.MarketAnimationPanel;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -36,6 +39,9 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	
 	public static Housing hauntedMansion;
 	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
+	
+	public static Market mickeysMarket;
+	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
 		
 	CityAnimationPanel cityAniPanel = new CityAnimationPanel();
 	private JPanel cityBanner = new JPanel();
@@ -60,6 +66,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 				
 		cards = new JPanel(new CardLayout());
 		cards.add(housAniPanel, "Housing");
+		cards.add(markAniPanel, "Market");
 		cards.add(ranchoAniPanel, "Restaurant");
 				
 		panelB.addActionListener(this);
@@ -165,6 +172,10 @@ public class SimCityGui extends JFrame implements ActionListener  {
 				cl.show(cards, "Housing");
 				currP = Panel.housing;
 			} else if (currP == Panel.housing) {
+				System.out.println("showing market");
+				cl.show(cards, "Market");
+				currP = Panel.market;
+			} else if (currP == Panel.market) {
 				System.out.println("showing rest");
 				cl.show(cards, "Restaurant");
 				currP = Panel.restaurant;

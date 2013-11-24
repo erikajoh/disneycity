@@ -79,29 +79,13 @@ public class ManagerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgTableIsFree(Shelf t) {
-		t.setUnoccupied();
-		stateChanged();
-	}
-	
-	public void msgIAmReady() {
-		stateChanged();
-	}
-	
-	public void msgWantToGoOnBreak(WorkerAgent w) {
-		if (approveBreak(w)) {
-			Do("Break approved!");
-			w.msgOKToGoOnBreak(true);
-		} else {
-			Do("Break not approved.");
-			w.msgOKToGoOnBreak(false);
-		}
-		stateChanged();
-	}
-	
-	public void msgBackFromBreak(WorkerAgent w) {
-		stateChanged();
-	}
+	public void msgTransportationReady() { // from transportation to manager
+    	
+    }
+    
+    public void msgWantToOrder(String choice, int quantity) { // from customer to manager
+    	
+    }
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.

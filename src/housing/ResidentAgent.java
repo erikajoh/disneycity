@@ -170,6 +170,11 @@ public class ResidentAgent extends Agent implements Resident {
 //			state = State.leavingHouse; //hack
 			return true;
 		}
+		else if(state == State.goingToBed){
+			GoToBed();
+			state = State.idle;
+			return true;
+		}
 		else if(state == State.leavingHouse){
 			Do("Leaving house");
 			LeaveHouse();
@@ -221,6 +226,16 @@ public class ResidentAgent extends Agent implements Resident {
 			e.printStackTrace();
 		}
 		renterGui.DoMaintenance();
+	}
+	
+	private void GoToBed(){
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		renterGui.DoGoToBed();
 	}
 	
 	private void LeaveHouse(){
