@@ -81,10 +81,12 @@ public class SimCityGui extends JFrame implements ActionListener  {
 					
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
+		restBayou = new RestaurantBayou(this, "The Blue Bayou");
 		
 		simCityPanel = new SimCityPanel(this);
 		
 		hauntedMansion = new Housing(this, "Haunted Mansion");
+		mickeysMarket = new Market(this, "Mickey's Market");
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
@@ -166,7 +168,11 @@ public class SimCityGui extends JFrame implements ActionListener  {
         restRancho.addPerson(null, "Market", "Trader Joes", 50);
         restRancho.addPerson(null, "Host", "Host", 50);
 		restRancho.addPerson(null, "Customer", "Sally", 50);
-		
+		mickeysMarket.addPerson(null, "Manager", "MRAWP", 100);
+		mickeysMarket.addPerson(null, "Cashier", "Kapow", 100);
+		mickeysMarket.addPerson(null, "Worker", "Bleep", 100);
+		mickeysMarket.addPerson(null, "Customer", "Beebop", 100);
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
