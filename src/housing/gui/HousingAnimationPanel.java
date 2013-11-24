@@ -1,9 +1,10 @@
 package housing.gui;
 
-import housing.OwnerAgent;
-import housing.RenterAgent;
+import housing.ResidentAgent;
 
 import javax.swing.*;
+
+import simcity.PersonAgent;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -79,18 +80,14 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
         }
     }
     
-    public void addGui(RenterGui gui) {
+    public void addGui(ResidentGui gui) {
     	guis.add(gui);
     }
     
-    public void addRenter(RenterAgent r) {
-    	RenterGui g = new RenterGui(r);
+    public void addRenter(ResidentAgent r) {
+    	ResidentGui g = new ResidentGui(r);
     	r.startThread();
     	addGui(g);
-    }
-    
-    public void setOwner(OwnerAgent o) {
-    	o.startThread();
     }
     
 //    public void addGui(OwnerGui gui) {

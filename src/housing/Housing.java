@@ -1,5 +1,7 @@
 package housing;
 
+import housing.gui.HousingAnimationPanel;
+
 import java.util.ArrayList;
 
 import simcity.PersonAgent;
@@ -7,51 +9,44 @@ import simcity.gui.SimCityGui;
 
 public class Housing {
 	
-	String name;
+	String name, type;
+	
 	PersonAgent ownerPerson;
-	OwnerAgent owner;
 	ArrayList<Renter> renters = new ArrayList<Renter>();
 	SimCityGui gui;
-	
+		
 	public Housing(SimCityGui g, String n) {
     	gui = g;
     	name = n;
+    	if (name == "Haunted Mansion") type = "house";
+    	else if (name == "Main St Apartment") type = "apt";
     }
 	
 	public String getName() {
 		return name;
 	}
 	
-	public void setOwner() { //hack
-		owner = new OwnerAgent("owner");
-		gui.housAniPanel.setOwner(owner);
-	}
-	
 	public void setOwner(PersonAgent op) {
 		ownerPerson = op;
-		owner = new OwnerAgent("owner");
-		gui.housAniPanel.setOwner(owner);
 	}
 	
 	public void addRenter() { //hack
-		RenterAgent r = new RenterAgent("r"+renters.size()+1);
+		ResidentAgent r = new ResidentAgent("r"+renters.size()+1, type);
 		r.setHousing(this);
-		r.setOwner(owner);
 		gui.housAniPanel.addRenter(r);
 	}
 	
 	public void addRenter(PersonAgent rp) {
-		RenterAgent r = new RenterAgent("r"+renters.size()+1);
+		ResidentAgent r = new ResidentAgent("r"+renters.size()+1, type);
 		r.setHousing(this);
-		r.setOwner(owner);
 		renters.add(new Renter(r, rp));
 		gui.housAniPanel.addRenter(r);
 	}
 	
 	class Renter {
-		RenterAgent agent;
+		ResidentAgent agent;
 		PersonAgent person;
-		Renter(RenterAgent a, PersonAgent p) { agent = a; person = p; }
+		Renter(ResidentAgent a, PersonAgent p) { agent = a; person = p; }
 	}
 	
 	//Messages
@@ -89,25 +84,25 @@ public class Housing {
 //		rp.msgRentIsDue();
 	}
 	
-	public void msgEntered(RenterAgent ra) { // from renter
+	public void msgEntered(ResidentAgent ra) { // from renter
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgDoneEntering();
 		} 
 	}
 	
-	public void msgFinishedMaintenance(RenterAgent ra) { // from renter
+	public void msgFinishedMaintenance(ResidentAgent ra) { // from renter
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgFinishedMaintenance();
 		}  
 	}
 	
-	public void msgFoodDone(RenterAgent ra) { // from renter
+	public void msgFoodDone(ResidentAgent ra) { // from renter
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgFoodDone();
 		}  
 	}
 	
-	public void msgLeft(RenterAgent ra) { // from renter
+	public void msgLeft(ResidentAgent ra) { // from renter
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgDoneLeaving();
 		} 

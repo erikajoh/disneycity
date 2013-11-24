@@ -1,9 +1,8 @@
 package housing;
 
 import agent.Agent;
-import housing.gui.RenterGui;
-import housing.interfaces.Owner;
-import housing.interfaces.Renter;
+import housing.gui.ResidentGui;
+import housing.interfaces.Resident;
 import housing.test.mock.EventLog;
 import housing.test.mock.LoggedEvent;
 
@@ -11,25 +10,24 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 
-
 /**
  * Housing renter agent.
  */
-public class RenterAgent extends Agent implements Renter {
+public class ResidentAgent extends Agent implements Resident {
 	private String name;
 		
 	// agent correspondents
 	private Housing housing;
-	public Owner owner;
 	private double amt;
-	String food;
-	private RenterGui renterGui;
+	private String type, food;
+	private ResidentGui renterGui;
 	private Semaphore moving = new Semaphore(1, true);
+	private Building building;
 	
 	public EventLog log = new EventLog();
 
 	public enum State
-	{idle, wantsToRent, enteringHouse, goingToBed, paymentDue, readyToCook, foodDone, wantsMaintenance, maintenanceDone, leavingHouse};
+	{idle, enteringHouse, readyToCook, foodDone, wantsMaintenance, maintenanceDone, goingToBed, leavingHouse};
 	
 	State state = State.idle;
 	
@@ -38,9 +36,11 @@ public class RenterAgent extends Agent implements Renter {
 	 *
 	 * @param name name of the customer
 	 */
-	public RenterAgent(String name){
+	public ResidentAgent(String name, String type){
 		super();
 		this.name = name;
+		this.type = type;
+		building = new Building(type);
 		state = State.idle;
 	}
 
@@ -48,42 +48,42 @@ public class RenterAgent extends Agent implements Renter {
 		return name;
 	}
 	
+	class Building {
+		String type;
+		Timer timer = new Timer();
+		Building(String t) {
+			type = t;
+		}
+		public void cookFood() {
+			timer.schedule(new TimerTask() {
+				public void run() {
+					print("food done");
+					log.add(new LoggedEvent("Food is done"));
+					state = State.foodDone;
+					stateChanged();
+				}
+			},
+			5000);
+		}
+	}
+	
 	// Messages
-	
-	public void msgTimeToPay(double amt){
-		state = State.paymentDue;
-		stateChanged();
-	}
-	
-	public void msgPaymentAccepted(){
-		print("payment accepted");
-		log.add(new LoggedEvent("Payment accepted by owner"));
-//		 state = State.readyToCook; //hack
-		stateChanged();
-	}
-	
-	public void msgFinishedMaintenance(){
-		print("finished maintenance");
-		log.add(new LoggedEvent("Finished maintenance"));
-		state = State.maintenanceDone;
-//		 state = State.leavingHouse; //hack
-		stateChanged();
-	}
-	
-	public void msgFoodDone(){
-		print("food done");
-		log.add(new LoggedEvent("Food is done"));
-		state = State.foodDone;
-//		 state = State.wantsMaintenance; //hack
-		stateChanged();
-	}
 	
 	public void msgAnimationFinished(){
 		moving.release();
 		stateChanged();
 	}
 	
+	public void msgMaintenanceAnimationFinished(){
+		moving.release();
+		print("finished maintenance");
+		log.add(new LoggedEvent("Finished maintenance"));
+		state = State.maintenanceDone;
+		stateChanged();
+	}
+	
 	public void msgLeave() { //from Housing class
+		log.add(new LoggedEvent("Leaving"));
 		state = State.leavingHouse;
 		stateChanged();
 	}
@@ -110,33 +110,29 @@ public class RenterAgent extends Agent implements Renter {
 		if(state == State.enteringHouse){
 			Do("Entering house");
 			EnterHouse();
-			owner.msgWantToRent(this);
-//			 state = State.paymentDue; //hack
-			return true;
-		}
-		else if(state == State.paymentDue){
-			owner.msgHereIsPayment(this, amt);
-			state = State.idle;
+			state = State.readyToCook; //hack
 			return true;
 		}
 		else if(state == State.readyToCook){
-			owner.msgReadyToCook(this, food);
-			GoToKitchen();
+			CookFood();
+			state = State.idle;
 			return true;
 		}
 		else if(state == State.foodDone){
 			housing.msgFoodDone(this);
 			state = State.idle;
+			state = State.wantsMaintenance; //hack
 			return true;
 		}
 		else if(state == State.wantsMaintenance){
-			owner.msgWantMaintenance(this);
+			DoMaintenance();
 			state = State.idle;
 			return true;
 		}
 		else if(state == State.maintenanceDone){
 			housing.msgFinishedMaintenance(this);
 			state = State.idle;
+//			state = State.leavingHouse; //hack
 			return true;
 		}
 		else if(state == State.leavingHouse){
@@ -161,7 +157,7 @@ public class RenterAgent extends Agent implements Renter {
 		state = State.idle;
 	}
 	
-	private void GoToKitchen(){
+	private void CookFood(){
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
@@ -169,6 +165,17 @@ public class RenterAgent extends Agent implements Renter {
 			e.printStackTrace();
 		}
 		renterGui.DoGoToKitchen();
+		building.cookFood();
+	}
+	
+	private void DoMaintenance(){
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		renterGui.DoMaintenance();
 	}
 	
 	private void LeaveHouse(){
@@ -197,15 +204,11 @@ public class RenterAgent extends Agent implements Renter {
 		return "renter " + getName();
 	}
 	
-	public void setOwner(Owner o) {
-		owner = o;
-	}
-	
-	public void setGui(RenterGui r) {
+	public void setGui(ResidentGui r) {
 		renterGui = r;
 	}
 
-	public RenterGui getGui() {
+	public ResidentGui getGui() {
 		return renterGui;
 	}
 	
