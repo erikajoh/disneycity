@@ -27,6 +27,7 @@ public class MarketAgent extends Agent implements Market {
 		super();
 		this.name = name;
 		for (String item: menu.menuList) {
+			print("heyo");
 			i.add(item, 3);
 			i.setCost(item, 10);
 		}
@@ -148,7 +149,7 @@ public class MarketAgent extends Agent implements Market {
 					stateChanged();
 				}
 			},
-			10000);
+			100);
 		}
 	}
 	

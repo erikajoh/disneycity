@@ -1,5 +1,5 @@
 package restaurant_rancho.interfaces;
-import restaurant_rancho.RestMenu;
+import simcity.RestMenu;
 
 public interface Cashier {
 	

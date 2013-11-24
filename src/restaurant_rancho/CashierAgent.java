@@ -16,6 +16,7 @@ import restaurant_rancho.interfaces.Waiter;
 import simcity.PersonAgent;
 import restaurant_rancho.test.mock.EventLog;
 import restaurant_rancho.test.mock.LoggedEvent;
+import simcity.RestMenu;
 
 
 public class CashierAgent extends Agent implements Cashier{

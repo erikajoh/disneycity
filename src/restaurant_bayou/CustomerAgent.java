@@ -223,9 +223,8 @@ public class CustomerAgent extends Agent implements Customer {
 				LeaveRestaurant();
 				return;
 			}
-//			Random rand = new Random(System.currentTimeMillis());
-//			int det = Math.abs(rand.nextInt()%(menu.menuNames.size()));
-//			order = menu.menuNames.get(det);
+		//	Random rand = new Random(System.currentTimeMillis());
+		//	int det = Math.abs(rand.nextInt()%(menu.menuList.size()));
 			choice = menu.menuList.get(count++);
 			Do(""+choice);
 		}

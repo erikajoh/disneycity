@@ -10,7 +10,7 @@ import restaurant_rancho.WaiterAgent;
 import restaurant_rancho.interfaces.Bank; 
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
-import restaurant_rancho.RestMenu;
+import simcity.RestMenu;
 import simcity.Restaurant;
 
 import javax.swing.*;

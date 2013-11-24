@@ -1,6 +1,6 @@
 package restaurant_rancho.interfaces;
 
-import restaurant_rancho.RestMenu;
+import simcity.RestMenu;
 import restaurant_rancho.WaiterAgent;
 import restaurant_rancho.CustomerAgent.AgentEvent;
 import restaurant_rancho.CustomerAgent.AgentState;

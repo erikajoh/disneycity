@@ -1,7 +1,7 @@
 package restaurant_rancho.test.mock;
 
 
-import restaurant_rancho.RestMenu;
+import simcity.RestMenu;
 import restaurant_rancho.WaiterAgent;
 import restaurant_rancho.gui.CustomerGui;
 import restaurant_rancho.interfaces.Cashier;

@@ -1,4 +1,4 @@
-package restaurant_bayou.gui;
+ package restaurant_bayou.gui;
 
 
 import restaurant_bayou.CustomerAgent;

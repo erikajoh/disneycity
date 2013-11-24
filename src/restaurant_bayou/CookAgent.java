@@ -24,15 +24,20 @@ public class CookAgent extends Agent {
 	public List<MyMarket> markets =  Collections.synchronizedList(new ArrayList<MyMarket>());
 	private CookGui cookGui;
 	private PersonAgent person;
+	private RestMenu menu = new RestMenu();;
 
 	/**
 	 * Constructor for CookAgent class
 	 *
 	 * @param name name of the cook
 	 */
-	public CookAgent(String name, RestMenu menu){
+	public CookAgent(String name, RestMenu m){
 		super();
 		this.name = name;
+	    menu.addItem("Filet Mignon", 42.99);
+	    menu.addItem("Pan-Seared Salmon", 33.99);
+	    menu.addItem("Portobello Mushroom and Couscous Macque Choux", 29.99);
+	    menu.addItem("Seafood Jambalaya", 31.99);
 		for (String item: menu.menuList) {
 			i.add(item, 1);
 		}

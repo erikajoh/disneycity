@@ -3,7 +3,7 @@
 package restaurant_rancho;
 
 import agent_rancho.Agent;
-import restaurant_rancho.RestMenu;
+import simcity.RestMenu;
 import restaurant_rancho.gui.WaiterGui;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;

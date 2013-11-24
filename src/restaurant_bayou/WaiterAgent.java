@@ -28,7 +28,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	private Semaphore atTable = new Semaphore(0, true);
 	private List<CustomerAgent> myCustomers = new ArrayList<CustomerAgent>();
 	private List<Integer> myTables = new ArrayList<Integer>();
-	private RestMenu myMenu;
+	private RestMenu myMenu = new RestMenu();
 	private Hashtable<CustomerAgent, String> myChoices = new Hashtable<CustomerAgent, String>();
 	private List<String> unavailableFood = new ArrayList<String>();
 	private Hashtable<Integer, Check> checks = new Hashtable<Integer, Check>();
@@ -51,6 +51,11 @@ public class WaiterAgent extends Agent implements Waiter {
 		super();
 
 		this.name = name;
+		
+		myMenu.addItem("Filet Mignon", 42.99);
+		myMenu.addItem("Pan-Seared Salmon", 33.99);
+	    myMenu.addItem("Portobello Mushroom and Couscous Macque Choux", 29.99);
+	    myMenu.addItem("Seafood Jambalaya", 31.99);
 	
 	}
 	
@@ -93,7 +98,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void msgSeatCustomer(CustomerAgent cust, RestMenu m) {
 		myCustomers.add(cust);
-		myMenu = m;
+		//myMenu = m;
 		stateChanged();
 	}
 	

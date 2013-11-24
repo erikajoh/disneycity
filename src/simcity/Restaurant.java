@@ -1,6 +1,6 @@
 package simcity;
 
-import restaurant_rancho.RestMenu;
+import simcity.RestMenu;
 import restaurant_rancho.interfaces.Bank;
 
 

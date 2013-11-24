@@ -8,20 +8,22 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class BayouAnimationPanel extends JPanel implements ActionListener {
 
-//    private final int WINDOWX = 350;
-//    private final int WINDOWY = 450;
+    private final int WINDOWX = 400;
+    private final int WINDOWY = 330;
 	private int lastTableX = 0;
 	private int lastTableY = 0;
 	private int tableWidth = this.getWidth()/9;
 	private int tableHeight = this.getHeight()/7;
+	private Image backgroundImage; 
 	
     private Image bufferImage;
     private Dimension bufferSize;
     
-    private List<Gui> guis = new ArrayList<Gui>();
+    private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
     public List<Table> tables = new ArrayList<Table>();
     Timer timer = new Timer(5, this);
     Graphics2D g2;
@@ -34,8 +36,8 @@ public class BayouAnimationPanel extends JPanel implements ActionListener {
     	}
     }
 
-    public BayouAnimationPanel(int x, int y) {
-    	this.setSize(x, y);
+    public BayouAnimationPanel() {
+    	this.setSize(WINDOWX, WINDOWY);
         setVisible(true);
         
         bufferSize = this.getSize();
@@ -59,38 +61,16 @@ public class BayouAnimationPanel extends JPanel implements ActionListener {
     	//Clear the screen by painting a rectangle the size of the frame
         g2.setColor(getBackground());
         g2.fillRect(0, 0, this.getWidth(), this.getHeight());
-
-        //Here are the tables
-        addTable();
-        
-        g2.setColor(Color.BLACK);
-        g2.draw(new Line2D.Double(0, this.getHeight()/12, this.getWidth()/2, this.getHeight()/12));
-        g2.draw(new Line2D.Double(3*this.getWidth()/4, 0, 3*this.getWidth()/4, this.getHeight()));
-        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/12, this.getWidth(), 5*this.getHeight()/12));
-        g2.draw(new Line2D.Double(3*this.getWidth()/4, 5*this.getHeight()/6, this.getWidth(), 5*this.getHeight()/6));
-    	
-        g2.drawString("customers", 4*this.getWidth()/9-10, this.getHeight()/12);
-        g2.drawString("waiters", 4*this.getWidth()/9, this.getHeight()/12+10);
-        g2.drawString("kitchen", 5*this.getWidth()/6, 10);
-        g2.drawString("(plating)", 5*this.getWidth()/6, 20);
-        g2.drawString("(cooking)", 5*this.getWidth()/6, 5*this.getHeight()/12+10);
-        g2.drawString("(fridge)", 5*this.getWidth()/6, 5*this.getHeight()/6+10);
-        
-        g2.setColor(Color.BLACK);
-        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/6+20, this.getWidth()/16, this.getHeight()/16); // fridge
-        g2.fillRect(5*this.getWidth()/6, 5*this.getHeight()/12+20, this.getWidth()/16, this.getHeight()/16); // grill
-        g2.fillRect(5*this.getWidth()/6, 30, this.getWidth()/16, this.getHeight()/16); // plating
-        
+        backgroundImage = Toolkit.getDefaultToolkit().getImage("res/BlueBayou.png");
+        g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
+      
+        synchronized(guis) {
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.updatePosition();
-            }
-        }
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
                 gui.draw(g2);
             }
+        }
         }
     }
 

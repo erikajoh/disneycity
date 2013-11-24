@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
-import java.util.Collection;
 import java.util.ArrayList;
 
 import restaurant_rancho.gui.CookGui;
@@ -16,8 +15,6 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
 
     public static final int WINDOWX = 400;
     public static final int WINDOWY = 340;
-    private Image bufferImage;
-    private Dimension bufferSize;
     private Image backgroundImage; 
 
     private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
@@ -25,8 +22,6 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
     public RanchoAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
-        
-        bufferSize = this.getSize();
         
  
     	Timer timer = new Timer(5, this );

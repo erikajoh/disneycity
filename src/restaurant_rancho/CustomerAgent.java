@@ -1,6 +1,6 @@
 package restaurant_rancho;
 
-import restaurant_rancho.RestMenu;
+import simcity.RestMenu;
 import restaurant_rancho.gui.CustomerGui;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
@@ -356,7 +356,6 @@ public class CustomerAgent extends Agent implements Customer{
 
 	private void leaveTable() {
 		Do("Leaving.");
-		cash+=20;
 		if (waiter!=null) waiter.msgLeavingTable(this);
 		customerGui.DoExitRestaurant();
 	}

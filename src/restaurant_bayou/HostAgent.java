@@ -157,10 +157,10 @@ public class HostAgent extends Agent {
 		//return w;
 	}
 	
-	public MarketAgent addMarket() {
-		MarketAgent mkt = new MarketAgent("M"+(int)(cook.numMarkets()+1), menu);
+	public void addMarket(MarketAgent mkt) {
+		//MarketAgent mkt = new MarketAgent("M"+(int)(cook.numMarkets()+1), menu);
 		cook.addMarket(mkt);
-		return mkt;
+		//return mkt;
 	}
 	
 	public boolean approveBreak(WaiterAgent w) {
