@@ -19,7 +19,7 @@ public class RestaurantRanchoGui extends JFrame implements ActionListener {
 	public static final int WINDOWY = 700;
    
 	String name;
-	AnimationPanel animationPanel = new AnimationPanel();
+	RanchoAnimationPanel animationPanel = new RanchoAnimationPanel();
 	private RestaurantRancho restPanel;
     private JPanel leftPanel = new JPanel(); 
     private JPanel rightPanel = new JPanel();
