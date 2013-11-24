@@ -67,7 +67,7 @@ public class SimCityPanel extends JPanel{
 	
 	public void handleTick() {
 		long currTicks = getNumTicks();
-		if(currTicks % 10 == 0)
+		if(currTicks % 100 == 0)
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
 		
 		// handle ticks for people

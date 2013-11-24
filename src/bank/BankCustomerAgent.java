@@ -129,7 +129,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
-		
 	    if(animState == AnimState.go){
 			goToTeller();
 			return true;
@@ -163,7 +162,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	// Actions
 	
 	private void goToTeller(){
-		//state = State.idle;
+		state = State.idle;
+		animState = AnimState.walking;
 		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
 	    //simCityGui.updateInfoPanel(this);
 	}

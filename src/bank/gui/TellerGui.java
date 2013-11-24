@@ -20,7 +20,7 @@ public class TellerGui implements Gui{
 		agent = c;
 		setPresent(true);
 		number = num;
-		baseX = number*90+49;
+		baseX = number*90+55;
 		baseY = 80;
 		this.gui = gui;
 	}
