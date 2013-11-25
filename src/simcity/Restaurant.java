@@ -1,7 +1,7 @@
 package simcity;
 
 import simcity.RestMenu;
-import restaurant_rancho.interfaces.Bank;
+import bank.gui.Bank;
 
 
 public interface Restaurant {

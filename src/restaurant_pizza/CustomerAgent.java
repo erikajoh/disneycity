@@ -262,8 +262,8 @@ public class CustomerAgent extends Agent implements Customer {
 		// Special rules
 		if(event == AgentEvent.cannotAffordAnything) {
 			state = AgentState.DoingNothing;
+			person.msgDoneEating(true);
 			waiter.msgLeavingRestaurant(this);
-			person.msgFoodDone(true);
 			LeaveTable();
 		}
 		return false;

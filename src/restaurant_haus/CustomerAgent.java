@@ -221,7 +221,7 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		
 		if (state == AgentState.Leaving & event == AgentEvent.doneLeaving) {
-			person.msgFoodDone(true);
+			person.msgDoneEating(true);
 			state = AgentState.DoingNothing;
 		}
 		return false;

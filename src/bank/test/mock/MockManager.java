@@ -215,7 +215,6 @@ public class MockManager extends Mock {
 			MockBankCustomer bc = wc.bankCustomer;
 			log.add(new LoggedEvent(bc.getAccountNum() + " $" + bc.getBalance()));
 			wc.state = State.idle;
-			System.out.println("MANAGER CHANGE: "+bc.getBalance());
 			bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getChange(), bc.getLoanAmount(), bc.getLoanTime());
 		}
 		

@@ -102,9 +102,7 @@ public class MockPerson extends Mock implements Person {
 	
 	private void leave(){
 		log.add(new LoggedEvent("PERSON LEFT BANK "+ newAccountNum + " " + change + " " + loanAmt + " " + loanTime));
-		System.out.println("CHANGE: "+ change);
 		balance+=change;
-		System.out.println(balance);
 		if(originalAccount == null){
 			Account newAccount = new Account(newAccountNum, balance);
 			newAccount.setBalance(balance);

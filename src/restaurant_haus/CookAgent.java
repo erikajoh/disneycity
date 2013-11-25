@@ -56,16 +56,16 @@ public class CookAgent extends Agent {
 			this.choice = choice;
 			this.time = time;
 			this.inventory = 7;//hack to test inventory
-			if(this.choice.equals("steak")) {
+			if(this.choice.equals("Pastrami Cheeseburger")) {
 				this.inventory = 5;
 			}
-			if(this.choice.equals("chicken")) {
+			if(this.choice.equals("Chicken Sausage Pretzel Roll")) {
 				this.inventory = 2;
 			}
-			if(this.choice.equals("pizza")) {
+			if(this.choice.equals("BLT Flatbread")) {
 				this.inventory = 8;
 			}
-			if(this.choice.equals("salad")) {
+			if(this.choice.equals("Apple & Cheddar Salad")) {
 				this.inventory = 0;
 			}
 			s = InventoryState.Steady;
@@ -107,10 +107,10 @@ public class CookAgent extends Agent {
 		super();
 		this.name = name;
 		
-		foodInventory.put("steak", new Food("steak", 5000));
-		foodInventory.put("chicken", new Food("chicken", 10000));
-		foodInventory.put("pizza", new Food("pizza", 7000));
-		foodInventory.put("salad", new Food("salad", 1000));
+		foodInventory.put("Pastrami Cheeseburger", new Food("Pastrami Cheeseburger", 5000));
+		foodInventory.put("Chicken Sausage Pretzel Roll", new Food("Chicken Sausage Pretzel Roll", 10000));
+		foodInventory.put("BLT Flatbread", new Food("BLT Flatbread", 7000));
+		foodInventory.put("Apple & Cheddar Salad", new Food("Apple & Cheddar Salad", 1000));
 		
 		for(Map.Entry<String, Food> foodItem : foodInventory.entrySet()) {
 			if(inventoryLow(foodItem.getValue().inventory) && foodItem.getValue().s != InventoryState.Ordered && foodItem.getValue().s != InventoryState.marketEmtpy) {

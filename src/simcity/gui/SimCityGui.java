@@ -86,7 +86,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	public static RestaurantHaus restHaus; 
 	public HausAnimationPanel hausAniPanel = new HausAnimationPanel();
 	
-	TransportationPanel cityAniPanel = new TransportationPanel();
+	TransportationPanel cityAniPanel = new TransportationPanel(this);
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
 	private JPanel cityAnimation = new JPanel();
@@ -309,4 +309,9 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		}
 	}
 	
+	public void showPanel(String panel) {
+		System.out.println("showing " + panel);
+		((CardLayout)(cards.getLayout())).show(cards, panel);
+		currP = Panel.valueOf(panel);
+	}
 }

@@ -22,7 +22,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private String name;
 	private int hungerLevel = 5;  
 	private int tableNumber = 1; //which table the customer should go to
-	private double balance = 25.00;
+	private double balance;
 	private int number;
 	Timer timer = new Timer();
 	private SimCityGui gui;
@@ -236,7 +236,7 @@ public class CustomerAgent extends Agent implements Customer {
 
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
-			person.msgFoodDone(true);
+			person.msgDoneEating(true);
 			//no action
 			return true;
 		}

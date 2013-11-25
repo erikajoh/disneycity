@@ -71,7 +71,6 @@ public class MockBankCustomer extends Mock {
 		animState = AnimState.go; 
 	}
 	public void msgAccountOpened(int an, double amountWithdrawn){
-		System.out.println(""+amountWithdrawn);
 		balance += change;
 		change = amountWithdrawn;
 		log.add(new LoggedEvent("ACCOUNT OPENED "+balance));
@@ -150,7 +149,6 @@ public class MockBankCustomer extends Mock {
 		log.add(new LoggedEvent("OPEN ACCOUNT"));
 		if(teller == null){
 			log.add(new LoggedEvent("TELLER NULL"));
-			System.out.println("TELLER NULL");
 		}
 		teller.msgOpenAccount(this, requestAmt);
 		state = State.idle;

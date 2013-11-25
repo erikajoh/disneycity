@@ -6,14 +6,18 @@ import restaurant_haus.CustomerAgent;
 import restaurant_haus.HostAgent;
 import restaurant_haus.MarketAgent;
 import restaurant_haus.WaiterAgent;
+import bank.gui.Bank;
 import simcity.PersonAgent;
+import simcity.RestMenu;
 import simcity.gui.SimCityGui;
+import simcity.Restaurant;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.JTabbedPane;
@@ -22,13 +26,13 @@ import javax.swing.JTabbedPane;
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class RestaurantHaus extends JPanel {
+public class RestaurantHaus extends JPanel implements Restaurant{
 
     //Host, cook, waiters and customers
     private HostAgent host;
     private CashierAgent cashier;
     CookAgent cook;
-    
+    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
@@ -46,6 +50,7 @@ public class RestaurantHaus extends JPanel {
     private JLabel nameLabel;
     private JLabel pictureLabel;
     private ImageIcon personalPicture; 
+    private RestMenu menu = new RestMenu();
     
     private JTabbedPane restruantPane = new JTabbedPane();
 
@@ -65,8 +70,10 @@ public class RestaurantHaus extends JPanel {
         tempMarket.startThread();
         markets.add(tempMarket);
         
-        
-        
+        menu.addItem("Pastrami Cheeseburger", 11.49);
+        menu.addItem("Chicken Sausage Pretzel Roll", 8.99);
+        menu.addItem("BLT Flatbread", 8.79);
+        menu.addItem("Apple & Cheddar Salad", 7.99);
         setLayout(new GridLayout(1, 1));
         group.setLayout(new GridLayout(1, 3, 10, 10));
 
@@ -139,8 +146,13 @@ public class RestaurantHaus extends JPanel {
     public void addPerson(PersonAgent p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
+    		//if ((p!=null) && returningCusts.containsKey(p)) {
+    		//	returningCusts.get(p).getGui().setHungry();	
+    		//}
+    		//else {
     		CustomerAgent c = new CustomerAgent(name);	
     		if (p!=null) c.setPerson(p);
+    		//returningCusts.put(p, c);
     		CustomerGui g = new CustomerGui(c, gui);
     		gui.hausAniPanel.addGui(g);// dw
     		if (host!=null) c.setHost(host);
@@ -149,6 +161,7 @@ public class RestaurantHaus extends JPanel {
     		customers.add(c);
     		c.startThread();
     		c.getGui().setHungry();
+    		//}
     	}
     	if(type.equals("Waiter")) {
     		WaiterAgent w = new WaiterAgent(name);
@@ -233,4 +246,33 @@ public class RestaurantHaus extends JPanel {
     		//gui.animationPanel.pauseAnim();
     	}
     }
+
+	@Override
+	public RestMenu getMenu() {
+		return null;
+	}
+
+	@Override
+	public String getRestaurantName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBank(Bank b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isOpen() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void personAs(PersonAgent p, String type, String name, double money) {
+		// TODO Auto-generated method stub
+		
+	}
 }

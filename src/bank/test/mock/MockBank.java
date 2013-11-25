@@ -48,7 +48,6 @@ public class MockBank {
 	
 	public void msgLeave(MockBankCustomer bc, int accountNum, double change, double loanAmt, int loanTime){
 		MockPerson person = (MockPerson)spawns.get(bc);
-		System.out.println("BANK CHANGE: "+change);
 		person.msgLeave(accountNum, change, loanAmt, loanTime);
 	}
     

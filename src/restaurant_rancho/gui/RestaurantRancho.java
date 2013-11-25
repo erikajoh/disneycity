@@ -7,7 +7,7 @@ import restaurant_rancho.CustomerAgent;
 import restaurant_rancho.HostAgent;
 import restaurant_rancho.MarketAgent;
 import restaurant_rancho.WaiterAgent;
-import restaurant_rancho.interfaces.Bank; 
+import bank.gui.Bank;
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
 import simcity.RestMenu;
@@ -26,9 +26,7 @@ import java.util.Hashtable;
  */
 public class RestaurantRancho extends JPanel implements Restaurant {
 
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	//Host, cook, waiters and customers
 	String name;
@@ -178,6 +176,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		
     			CustomerAgent c = new CustomerAgent(name);	
     			CustomerGui g = new CustomerGui(c, gui, customers.size());
+    			if (p!=null) c.setPerson(p);
     			//returningCusts.put(p, c);
     			g.setHungry();
     			gui.ranchoAniPanel.addGui(g);
@@ -185,7 +184,6 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     			c.setGui(g);
     			if (cashier!=null) c.setCashier(cashier);
     			c.setCash(money);
-    			c.setPerson(p);
     			customers.add(c);
     			c.startThread();
     			g.updatePosition();
@@ -195,13 +193,13 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	else if (type.equals("Waiter")) {
     		WaiterAgent w = new WaiterAgent(name, this);
     		WaiterGui g = new WaiterGui(w, waiters.size());
+    		if (p!=null) w.setPerson(p);
     		gui.ranchoAniPanel.addGui(g);
     		if (host!=null) w.setHost(host);
     		if (cook!= null) w.setCook(cook);
     		if (cashier!=null)w.setCashier(cashier);
     		if (host!=null) host.addWaiter(w);
     		w.setGui(g);
-    		w.setPerson(p);
     		waiters.add(w);
     		w.startThread();
     		g.updatePosition();
@@ -210,7 +208,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	else if (type.equals("Host")) {
     		if (host == null) {
     			host = new HostAgent(name);
-    			host.setPerson(p);
+      			if (p!=null) host.setPerson(p);
     			host.startThread();
     			initRestLabel();
     			for (WaiterAgent w : waiters) {
@@ -223,7 +221,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		if (cook == null) {
     			cook = new CookAgent(name, this);
     			cookgui = new CookGui(cook);
-    			cook.setPerson(p);
+    			if (p!=null) cook.setPerson(p);
     			cook.setGui(cookgui);
     			cookgui.updatePosition();
     			cook.startThread();
@@ -239,7 +237,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	else if (type.equals("Cashier")) {
     		if (cashier == null) {
     			cashier = new CashierAgent(name);
-    			cashier.setPerson(p);
+    			if (p!=null) cashier.setPerson(p);
     			cashier.startThread();
     			for (WaiterAgent w : waiters) {
     				w.setCashier(cashier);
