@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
  * 
  * The Following two lines must be within your draw function with whatever name you give the AnimationModule (named animModule in example)
  * animModule.updateAnimation();//updates the frame and animation 
- * g.drawImage(animModule.getIMG(), (int)xPos, (int)yPos, null);
+ * g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
  * 
  * You can use whatever you want for determining the xPos and yPos, the null is there for something unnecessary. Just ignore it.
  */
@@ -39,6 +39,7 @@ public class AnimationModule {
 	int frameDelayCounter = 0;//Don't worry about this. Animation variable
 	String filePathway;//Stores the file pathway to the image
 	BufferedImage img = null;//This is the image that gets drawn
+	boolean moving = true;
 
 	public AnimationModule(String character, String firstAnimation, int frameDelay) {//Give it all the information you can
 		this.character = character;
@@ -71,7 +72,7 @@ public class AnimationModule {
 		}
 		else {
 			//Frame updates
-			if(frameDelayCounter == frameDelay) {//UpdateFrame
+			if(frameDelayCounter == frameDelay && moving) {//UpdateFrame
 				currentFrame ++;
 				if(currentFrame > totalFrames)
 					currentFrame = 1;
@@ -95,19 +96,19 @@ public class AnimationModule {
 
 	private int findFrameCount() {//returns the number of frames in the current animation
 		File f = new File("src" + File.separator + "res" + File.separator + character + File.separator + animation + File.separator);
-		try {
+		/*try {
 			System.out.println("Current dir : " + f.getCanonicalPath());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		int count = 0;
 		for (File file : f.listFiles()) {
 			if (file.isFile()) {
 				count++;
 			}
 		}
-		System.out.println("Found frames: " + String.valueOf(count));
+		// System.out.println("Found frames: " + String.valueOf(count));
 		return count;
 	}
 
@@ -138,7 +139,16 @@ public class AnimationModule {
 		this.character = character;
 	}
 	
-	public Image getImage() {
+	public void setStill() {
+		moving = false;
+		currentFrame = 1;
+	}
+	
+	public void setMoving() {
+		moving = true;
+	}
+	
+	public Image getImage(){
 		return img;
 	}
 }

@@ -1,5 +1,6 @@
 package bank.gui;
 
+import AnimationTools.AnimationModule;
 import bank.BankCustomerAgent;
 
 import java.awt.*;
@@ -19,8 +20,11 @@ public class BankCustomerGui implements Gui{
 	private String drawString = "";
 	private String initial;
 	private enum Command {noCommand, GoToTeller, LeaveBank}; //shortened to noCommand and walking?
+	private enum Direction{left, right, up, down};
+	private Direction direction;
 	private Command command=Command.noCommand;
 	private boolean isInBank = false;
+	private AnimationModule animModule = new AnimationModule();
 
 
 	public BankCustomerGui(BankCustomerAgent c, SimCityGui gui, boolean present, int wx, int wy){ //HostAgent m) {
@@ -38,15 +42,23 @@ public class BankCustomerGui implements Gui{
 	}
 
 	public void updatePosition() {
-		if (xPos < xDestination)
+		if (xPos < xDestination){
 			xPos++;
-		else if (xPos > xDestination)
+			direction = Direction.right;
+		}
+		else if (xPos > xDestination){
 			xPos--;
-
-		if (yPos < yDestination)
+			direction = Direction.left;
+		}
+		if (yPos < yDestination){
 			yPos++;
-		else if (yPos > yDestination)
+			direction = Direction.down;
+		}
+		else if (yPos > yDestination){
 			yPos--;
+			direction = Direction.up;
+		}
+		
 
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToTeller) {
@@ -58,10 +70,21 @@ public class BankCustomerGui implements Gui{
 			}
 			command=Command.noCommand;
 		}
+		
+		switch(direction){
+			case right:
+			animModule.changeAnimation("WalkRight"); break;
+			case left:
+			animModule.changeAnimation("WalkLeft"); break;
+			case up:
+			animModule.changeAnimation("WalkUp"); break;
+			case down:
+			animModule.changeAnimation("WalkDown"); break;
+		}
 	}
 
 	public void draw(Graphics2D g) {
-		g.setColor(Color.CYAN);
+		/*g.setColor(Color.CYAN);
 		g.fillRect(xPos, yPos, 20, 20);
 		g.setColor(Color.BLACK);
 		g.drawString(initial, xPos+5, yPos+15);
@@ -71,7 +94,9 @@ public class BankCustomerGui implements Gui{
 			g.fillRect(xPos+20, yPos, 20, 20);
 			g.setColor(Color.BLACK);
 			g.drawString(drawString, xPos+20, yPos+15);
-		}
+		}*/
+		animModule.updateAnimation();//updates the frame and animation 
+		g.drawImage(animModule.getImage(), xPos, yPos, null);
 	}
 
 	public boolean isPresent() {

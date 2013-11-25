@@ -25,6 +25,8 @@ public class Bank extends JPanel implements ActionListener {
 
     //Host, cook, waiters and customers
 
+	String bankName;
+	
     private Vector<PersonAgent> customers = new Vector<PersonAgent>();
     private Vector<TellerAgent> tellers = new Vector<TellerAgent>();
 	private Map<BankCustomer, PersonAgent> spawns = new HashMap<BankCustomer, PersonAgent>();
@@ -34,8 +36,9 @@ public class Bank extends JPanel implements ActionListener {
     
     private ManagerAgent manager;
 
-    public Bank(SimCityGui gui) {
+    public Bank(SimCityGui gui, String bankName) {
         this.gui = gui;
+        this.bankName = bankName;
         manager = new ManagerAgent("Bank", this, gui);
         manager.startThread();
         
@@ -59,9 +62,9 @@ public class Bank extends JPanel implements ActionListener {
 		p.startThread();*/
     }
     
-    public void msgRequestAccount(PersonAgent person, double balance, boolean present){
+    public void msgRequestAccount(PersonAgent person, double reqAmt, boolean present){
     	BankCustomer bca = createBankCustomer(person, present);
-    	manager.msgRequestAccount(bca, balance);
+    	manager.msgRequestAccount(bca, reqAmt);
     }
     
     public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt, boolean present){
@@ -92,7 +95,9 @@ public class Bank extends JPanel implements ActionListener {
     	 return bca;
     }
 
-
+    public String getBankName() {
+    	return bankName;
+    }
  
 
 

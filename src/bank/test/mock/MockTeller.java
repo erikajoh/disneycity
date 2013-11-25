@@ -8,25 +8,24 @@ import bank.gui.Account;
 import bank.gui.TellerGui;
 import bank.interfaces.BankCustomer;
 import bank.interfaces.Manager;
-import bank.interfaces.Teller;
 
-public class MockTeller extends Mock implements Teller {
+public class MockTeller extends Mock {
 	
 	  public EventLog log;
-	  Manager manager;
+	  MockManager manager;
 	  List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
 		enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
 
 		class Customer {
-		  BankCustomer bankCustomer;
+		  MockBankCustomer bankCustomer;
 		  Account account;
 		  int creditRating;
 		  double requestAmt;
 		  
 		  State state;
 		  
-		  public Customer(BankCustomer p){
+		  public Customer(MockBankCustomer p){
 			  bankCustomer = p;
 			  int accountNumber = p.getAccountNum();
 			  
@@ -47,13 +46,12 @@ public class MockTeller extends Mock implements Teller {
 		
 		Customer customer;
 		List<Customer> customers = Collections.synchronizedList(new ArrayList<Customer>());
-
 		private String name;
 		TellerGui tellerGui;
 		
 		public MockTeller(String name) {
 			super(name);
-
+			log = new EventLog();
 			this.name = name;
 		}
 
@@ -67,7 +65,7 @@ public class MockTeller extends Mock implements Teller {
 
 		
 		// Messages
-		public void msgNewCustomer(BankCustomer bankCustomer){
+		public void msgNewCustomer(MockBankCustomer bankCustomer){
 			for(Customer cust : customers){
 				if(cust.bankCustomer == bankCustomer){
 					log.add(new LoggedEvent("CUSTOMER IS "+bankCustomer.toString()));
@@ -81,16 +79,22 @@ public class MockTeller extends Mock implements Teller {
 			}
 		}
 
-		public void	msgOpenAccount(BankCustomer bankCustomer, double cash){ //open account w/ initial amt of cash
+		public void	msgOpenAccount(MockBankCustomer bankCustomer, double cash){ //open account w/ initial amt of cash
 			log.add(new LoggedEvent("OPEN ACCOUNT"));
-			Account account = new Account(accounts.size());
+
+			boolean found = false;
 			for(Customer cust : customers){
 				if(cust.bankCustomer == bankCustomer){
 					customer = cust;
 					customer.state = State.openingAccount;
+					found = true; break;
 				}
 			}
-			accounts.add(account);
+			if(found == false){
+				customer = new Customer(bankCustomer);
+				customers.add(customer);
+			}
+			customer.requestAmt = cash;
 		}
 
 		public void	msgDepositCash(int accountNum, double cash){
@@ -113,7 +117,7 @@ public class MockTeller extends Mock implements Teller {
 		/**
 		 * Scheduler.  Determine what action is called for, and do it.
 		 */
-		protected boolean pickAndExecuteAnAction() {
+		public boolean pickAndExecuteAnAction() {
 			if(customer != null){
 			    if(customer.state == State.openingAccount){
 				   openAccount();
@@ -141,10 +145,11 @@ public class MockTeller extends Mock implements Teller {
 
 		// Actions
 		private void openAccount(){
-			int accountNum = accounts.size();
-			customer.account = new Account(accountNum);
-			accounts.add(customer.account);
-			customer.bankCustomer.msgAccountOpened(accountNum, customer.requestAmt);
+			Account newAccount = new Account(accounts.size(), customer.requestAmt);
+			accounts.add(newAccount);
+			customer.account = newAccount;
+			customer.account.change = -customer.requestAmt;
+			customer.bankCustomer.msgAccountOpened(newAccount.number, customer.account.change);
 			customer.state = State.deciding;
 		}
 
@@ -196,7 +201,7 @@ public class MockTeller extends Mock implements Teller {
 			tellerGui = gui;	
 		}
 			
-		public void setManager(Manager m) {
+		public void setManager(MockManager m) {
 			manager = m;
 		}
 

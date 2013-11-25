@@ -228,7 +228,7 @@ public class ManagerAgent extends Agent implements Manager {
 		BankCustomer bc = wc.bankCustomer;
 		print(bc.getAccountNum() + " $" + bc.getBalance());
 		wc.state = State.idle;
-		bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getBalance(), bc.getLoanAmount(), bc.getLoanTime());
+		bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getChange(), bc.getLoanAmount(), bc.getLoanTime());
 	}
 	
 	

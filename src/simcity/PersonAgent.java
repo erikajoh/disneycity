@@ -78,12 +78,14 @@ public class PersonAgent extends Agent {
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
-	public PersonAgent(String aName, Housing h, String foodPreference, String relationWithHousing, Transportation_Douglass t) {
+	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference,
+			String relationWithHousing, Transportation_Douglass t) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
-		isNourished = true;
+		isNourished = false;
 		currentLocation = h.getName();
+		moneyOnHand = startMoney;
 		targetLocation = currentLocation;
 		
 		currentLocationState = LocationState.Home;
@@ -124,7 +126,7 @@ public class PersonAgent extends Agent {
 	}
 	
 	public void	addBank(Bank b, String personType) {
-		MyBank tempMyBank = new MyBank(b, b.getName(), personType);
+		MyBank tempMyBank = new MyBank(b, b.getBankName(), personType);
 		myObjects.add(tempMyBank);
 	}
 	
@@ -223,32 +225,7 @@ public class PersonAgent extends Agent {
 
 	// from Bank
 	public void msgLeftBank(int accountNumber, double change, double loanAmount, int loanTime) {
-		
-	}
-	
-	public void msgAccountOpened(int accountNumber) {
-		log.add(new LoggedEvent("Account created: accountNumber = " + accountNumber));
-		
-		// TODO msgAccountOpened
-		stateChanged();
-	}
-	
-	public void msgMoneyWithdrawn(double amount) {
-		log.add(new LoggedEvent("Received msgMoneyWithdrawn: amount = " + amount));
-		moneyOnHand += amount;
-		moneyWanted -= amount;
-		stateChanged();
-	}
-	
-	public void msgMoneyDeposited() {
-		log.add(new LoggedEvent("Received msgMoneyDeposited"));
-		moneyOnHand -= moneyToDeposit;
-		moneyToDeposit = 0;
-		stateChanged();
-	}
-	
-	public void msgLoanDecision(boolean status) {
-		// TODO bank message
+		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 	
@@ -342,6 +319,17 @@ public class PersonAgent extends Agent {
 					}
 					return true;
 				}
+				if(currentLocation.equals(targetLocation)) {
+					if(moneyOnHand > MONEY_ON_HAND_LIMIT) {
+						haveMoneyToDeposit(); 
+						return true;
+					}
+				}
+				else {
+					leaveHouse();
+					event = PersonEvent.onHold;
+					return true;
+				}
 				if(bodyState == BodyState.Tired) {
 					goToSleep();
 					bodyState = BodyState.Asleep;
@@ -353,12 +341,15 @@ public class PersonAgent extends Agent {
 				// Stuff to do at bank
 				if(myPersonalBankAccount == null) {
 					requestNewAccount();
+					event = PersonEvent.onHold;
 				}
 				if(moneyWanted > 0) {
 					requestWithdrawal();
+					event = PersonEvent.onHold;
 				}
 				if(moneyToDeposit > 0) {
 					requestDeposit();
+					event = PersonEvent.onHold;
 				}
 				// Done at bank, time to transition
 				if(!isNourished && !preferEatAtHome) {
@@ -432,12 +423,19 @@ public class PersonAgent extends Agent {
 		if(moneyOnHand < price) {
 			log.add(new LoggedEvent("Want to buy food at market; not enough money"));
 			moneyWanted = price - moneyOnHand;
-			// TODO: bank name hacked; MyBank and finding banks must be implemented
-			targetLocation = "Mock Bank 1";
+			MyBank targetBank = chooseBank();
+			targetLocation = targetBank.name;
 			return;
 		}
 		print("I have enough money to buy food from market");
 		targetLocation = targetMarket.name;
+	}
+	
+	private void haveMoneyToDeposit() {
+		print("I have excess money to deposit");
+		moneyToDeposit = moneyOnHand - MONEY_ON_HAND_LIMIT;
+		MyBank targetBank = chooseBank();
+		targetLocation = targetBank.name;
 	}
 
 	private void doMaintenance() {
@@ -470,8 +468,8 @@ public class PersonAgent extends Agent {
 		if(moneyOnHand < lowestPrice) {
 			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
 			moneyWanted = lowestPrice - moneyOnHand;
-			// TODO: bank name hacked; MyBank and finding banks must be implemented
-			targetLocation = "Mock Bank 1";
+			MyBank targetBank = chooseBank();
+			targetLocation = targetBank.name;
 			return;
 		}
 		print("I have enough money to buy from restaurant");
@@ -586,13 +584,21 @@ public class PersonAgent extends Agent {
 	}
 	
 	private MyMarket chooseMarket() {
-		// TODO: hack in choosing market - choose first available
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)
 			if(myObjectsArray[i] instanceof MyMarket)
 				return (MyMarket)myObjectsArray[i];
 		return null;
 	}
+	
+	private MyBank chooseBank() {
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++)
+			if(myObjectsArray[i] instanceof MyBank)
+				return (MyBank)myObjectsArray[i];
+		return null;
+	}
+	
 	
 	private MyObject[] getObjects() {
 		return (MyObject[])myObjects.toArray(new MyObject[myObjects.size()]);

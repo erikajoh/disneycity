@@ -13,6 +13,7 @@ import bank.TellerAgent;
 import bank.gui.TellerGui;
 import bank.interfaces.BankCustomer;
 import bank.test.mock.MockBank;
+import bank.test.mock.MockBankCustomer;
 import bank.test.mock.MockManager;
 import bank.test.mock.MockTeller;
 import bank.test.mock.MockPerson;
@@ -51,48 +52,53 @@ public class BankCustomerTest extends TestCase
 		super.setUp();	
 		bank = new MockBank(null);
 		manager = new MockManager("Bank", bank, null);
+		bank.setManager(manager);
         teller0 = new MockTeller("Teller0");	
         teller0.setManager(manager);
+    	manager.addTeller(teller0);
+        teller1 = new MockTeller("Teller1");	
+        teller1.setManager(manager);
+    	manager.addTeller(teller0);
+        teller2 = new MockTeller("Teller2");	
+        teller2.setManager(manager);
+    	manager.addTeller(teller0);
+        teller3 = new MockTeller("Teller3");	
+        teller3.setManager(manager);
     	manager.addTeller(teller0);
     	
 	}	
 	/**
-	 * This tests the cashier under very simple terms: paying one market
+	 * This tests the cashier under very simple terms: opening an account and having the correct amount of cash at the end
 	 */
 	public void testBankOpenAccountScenario(){
-		for(MockMarket market : markets){
-           market.setAllStockToAmt(4);
-		}
-		MockMarket market = null;
-		Food food = null;
-		for(MockMarket m : markets){
-			market = m; break; //get first MockMarket
-		}
-		for(Food f : foods){
-			food = f; break; //get first Food
-		}
-		
-		market.msgHereIsOrder(cook, food, 4);
-		
-		//check preconditions
-		assertEquals("Make sure cashier doesn't have any bills", cashier.bills.size(), 0);		
-		assertTrue("Market's scheduler should have returned true (as it is biling the cashier)", market.pickAndExecuteAnAction());
-		assertFalse("Market's scheduler should have returned false (as it has already billed the cashier and is idle)", market.pickAndExecuteAnAction());
-
-		//test
-		assertEquals("Make sure cashier has a bill", cashier.bills.size(), 1);		
-		assertTrue("Cashier's scheduler should have returned true (as it is paying the markets' bill(s))", cashier.pickAndExecuteAnAction());
-		assertFalse("Cashier's scheduler should have returned true (as it has already paid the markets' bill(s) and is idle)", cashier.pickAndExecuteAnAction());
-		//market hasn't cleared the cashier yet
-		assertEquals("Make sure cashier removes bill since it is paid", cashier.bills.size(), 1);		
-		
-		assertTrue("Market is now making sure the cashier paid enough", market.pickAndExecuteAnAction());
-		assertFalse("Market doesn't have anything to do", market.pickAndExecuteAnAction());
-		assertTrue("Cashier is removing the bill now", cashier.pickAndExecuteAnAction());
-		assertFalse("Cashier doesn't have any bills left to remove", cashier.pickAndExecuteAnAction());
-		
-		//bill is officially cleared
-		assertEquals("Make sure cashier removes bill since it is paid", cashier.bills.size(), 0);		
+		customer0 = new MockPerson("Person");
+		customer0.setBalance(50.00);
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.setBank(bank);
+		assertEquals(customer0.accounts.size(), 0);
+		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		MockBankCustomer mbc = bank.getMBC(customer0);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+		mbc.msgAnimationFinishedGoToTeller();
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
+		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
+		assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
+		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue(customer0.log.getLastLoggedEvent().toString(), customer0.log.containsString("TRANSACTION COMPLETE"));
+		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+		assertEquals(customer0.balance, 25.0);
+		assertEquals(customer0.accounts.size(), 1);
 	}
 	
 }

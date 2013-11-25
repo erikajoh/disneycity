@@ -25,6 +25,8 @@ public class ResidentAgent extends Agent implements Resident {
 	private Building building;
 	
 	public EventLog log = new EventLog();
+	
+	private final static int START_INVENTORY = 1;
 
 	public enum State
 	{idle, enteringHouse, readyToCook, noFood, foodDone, wantsMaintenance, maintenanceDone, goingToBed, leavingHouse};
@@ -55,11 +57,11 @@ public class ResidentAgent extends Agent implements Resident {
 		Building(String t) {
 			type = t;
 			// TODO: This be hacked
-			inventory.put("Mexican", 0);
-			inventory.put("Southern", 0);
-			inventory.put("Italian", 0);
-			inventory.put("German", 0);
-			inventory.put("American", 0);
+			inventory.put("Mexican", START_INVENTORY);
+			inventory.put("Southern", START_INVENTORY);
+			inventory.put("Italian", START_INVENTORY);
+			inventory.put("German", START_INVENTORY);
+			inventory.put("American", START_INVENTORY);
 		}
 		private boolean getFood(String f) {
 			if (inventory.get(f) != 0) {
