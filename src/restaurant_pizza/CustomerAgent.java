@@ -7,7 +7,7 @@ import restaurant_pizza.interfaces.Waiter;
 import agent_pizza.Agent;
 import agent_pizza.Constants;
 import simcity.RestMenu;
-
+import simcity.PersonAgent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -26,7 +26,8 @@ public class CustomerAgent extends Agent implements Customer {
 	private int orderTime = 2; // determines how long it takes for customer to choose
 	private int tableNumber = -1;
 	private int foodPointer = 0; // helps customer keep track of what has been ordered already
-	
+	PersonAgent person;
+
 	// money scenario
 	private double money;
 	private int maxNumCents = 2500; // max amount of money in cents customer can have: $25
@@ -65,6 +66,10 @@ public class CustomerAgent extends Agent implements Customer {
 		super();
 		this.name = name;
 		
+	}
+
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 
 	public void setHost(HostAgent aHost) {
@@ -251,12 +256,14 @@ public class CustomerAgent extends Agent implements Customer {
 		if (state == AgentState.CashierProcessing && event == AgentEvent.leaving) {
 			state = AgentState.DoingNothing;
 			LeaveTable();
+			person.msgFoodDone(true);
 			return true;
 		}
 		// Special rules
 		if(event == AgentEvent.cannotAffordAnything) {
 			state = AgentState.DoingNothing;
 			waiter.msgLeavingRestaurant(this);
+			person.msgFoodDone(true);
 			LeaveTable();
 		}
 		return false;

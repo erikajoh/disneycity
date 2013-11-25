@@ -3,6 +3,7 @@ package restaurant_cafe.gui;
 
 import restaurant_cafe.CookAgent;
 import restaurant_cafe.CustomerAgent;
+import simcity.gui.SimCityGui; 
 
 import java.awt.*;
 
@@ -16,9 +17,11 @@ public class CookGui implements Gui {
 	private String grillName = "";
 	private String plateName = "";
 	boolean grillVisible = false, plateVisible = false;
-	RestaurantGui gui;
+	SimCityGui gui;
+	int aniWindowX = 400;
+	int aniWindowY = 400; 
 
-    public CookGui(CookAgent agent, RestaurantGui gui) {
+    public CookGui(CookAgent agent, SimCityGui gui) {
         this.agent = agent;
     	this.gui = gui;
 		xPos = 530;
@@ -58,15 +61,15 @@ public class CookGui implements Gui {
 		
 		if(grillVisible == true){
 			g.setColor(Color.WHITE);
-			g.fillRect(gui.getAnimWindowX()-80, gui.getAnimWindowY()-40, 20, 20);
+			g.fillRect(aniWindowX-80, aniWindowY-40, 20, 20);
 			g.setColor(Color.BLACK);
-			g.drawString(grillName, gui.getAnimWindowX()-75, gui.getAnimWindowY()-25);
+			g.drawString(grillName, aniWindowX-75, aniWindowY-25);
 		}
 		if(plateVisible == true){
 			g.setColor(Color.WHITE);
-			g.fillRect(gui.getAnimWindowX()-40, gui.getAnimWindowY()-80, 20, 20);
+			g.fillRect(aniWindowX-40, aniWindowY-80, 20, 20);
 			g.setColor(Color.BLACK);
-			g.drawString(plateName, gui.getAnimWindowX()-35, gui.getAnimWindowY()-65);
+			g.drawString(plateName, aniWindowX-35, aniWindowY-65);
 		}
     }
 
@@ -75,14 +78,14 @@ public class CookGui implements Gui {
     }
     
     public void DoGrilling(String name){
-    	xDestination = gui.getAnimWindowX()-60;
-    	yDestination = gui.getAnimWindowY()-20;
+    	xDestination = aniWindowX-60;
+    	yDestination = aniWindowY-20;
     	grillName = getOrderString(name);
 		command = Command.cook;
     }
     public void DoPlating(String name){
-    	xDestination = gui.getAnimWindowX()-20;
-    	yDestination = gui.getAnimWindowY()-60;
+    	xDestination = aniWindowX-20;
+    	yDestination = aniWindowY-60;
     	plateName = getOrderString(name);
 		command = Command.plate;
     }

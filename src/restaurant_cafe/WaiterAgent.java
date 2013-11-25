@@ -12,6 +12,7 @@ import restaurant_cafe.gui.WaiterGui;
 import restaurant_cafe.interfaces.Cashier;
 import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Waiter;
+import simcity.PersonAgent;
 
 import java.awt.Point;
 import java.util.*;
@@ -45,6 +46,7 @@ public class WaiterAgent extends Agent implements Waiter {
 			state = s;
 		}
 	}
+	PersonAgent person;
 	enum CustomerState{idle, waiting, readyToSit, readyToOrder, reorder, ordering, ordered, foodCooking, foodReady, foodBeingDelivered, produceCheck, gettingCheck, givingCheck, paying, eating, doneEating};
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	boolean shouldReturnToHome = false; //necessary boolean (independent of CustomerStates) that greatly increases waiter's efficiency. If the waiter doesn't have to go anywhere else it then leaves the customer.
@@ -77,6 +79,10 @@ public class WaiterAgent extends Agent implements Waiter {
 			tables.add(new Table(ix));//how you add to a collections
 		}
 		menu = m;
+	}
+	
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 
 	public String getMaitreDName() {

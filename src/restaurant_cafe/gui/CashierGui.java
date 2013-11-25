@@ -1,6 +1,8 @@
 package restaurant_cafe.gui;
 
 import restaurant_cafe.CashierAgent;
+import simcity.gui.SimCityGui;
+
 
 import java.awt.*;
 
@@ -11,9 +13,9 @@ public class CashierGui implements Gui{
 	private Font cashFont = new Font("Sans-Serif", Font.BOLD, 14);
 	private Font otherFont = new Font("Sans-Serif", Font.BOLD, 12);
 
-	RestaurantGui gui;
+	SimCityGui gui;
 
-	public CashierGui(CashierAgent c, RestaurantGui gui){
+	public CashierGui(CashierAgent c, SimCityGui gui){
 		agent = c;
 		setPresent(true);
 		this.gui = gui;

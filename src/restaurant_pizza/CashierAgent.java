@@ -16,6 +16,7 @@ import restaurant_pizza.interfaces.Waiter;
 import restaurant_pizza.test.mock.EventLog;
 import restaurant_pizza.test.mock.LoggedEvent;
 import simcity.RestMenu;
+import simcity.PersonAgent;
 
 public class CashierAgent extends Agent implements Cashier {
 	
@@ -33,6 +34,8 @@ public class CashierAgent extends Agent implements Cashier {
 	public enum CustomerState {NewCustomer, ValidPayment, InvalidPayment};
 	public enum CheckState {NewCheck, InTransit, SentToWaiter, PaidByCustomer};
 	private String name;
+	PersonAgent person;
+
 	
 	// TODO: CashierMarket interaction MarketAgent added stuff
 	// TODO: CashierMarket interaction what is CheckTwo? A new class?
@@ -49,6 +52,10 @@ public class CashierAgent extends Agent implements Cashier {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 	
 	public double getTotalMoney() {

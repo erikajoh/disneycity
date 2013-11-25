@@ -5,6 +5,7 @@ import restaurant_pizza.gui.WaiterGui;
 import restaurant_pizza.interfaces.Cashier;
 import restaurant_pizza.interfaces.Customer;
 import restaurant_pizza.interfaces.Waiter;
+import simcity.PersonAgent;
 import simcity.RestMenu;
 
 import java.io.BufferedReader;
@@ -42,6 +43,8 @@ public class WaiterAgent extends Agent implements Waiter {
 	public CookAgent cook = null;
 	public CashierAgent cashier = null;
 	public RestMenu menu = new RestMenu();
+	PersonAgent person;
+
 
 	public WaiterAgent(String name) {
 		super();
@@ -59,6 +62,10 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void setHost(HostAgent aHost) {
 		host = aHost;
+	}
+	
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 	
 	public void setCook(CookAgent aCook) {
