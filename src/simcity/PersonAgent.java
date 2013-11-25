@@ -43,6 +43,7 @@ public class PersonAgent extends Agent {
 	// TODO: Use goToWork
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
+	private final static int MARKET_PURCHASE_QUANTITY = 5;
 	
 	// Transportation
 	private Transportation_Douglass transportation;
@@ -506,7 +507,9 @@ public class PersonAgent extends Agent {
 	//Market actions
 	
 	private void enterMarket() {
+		print("Entering market");
 		MyMarket myMarket = (MyMarket)currentMyObject;
+		myMarket.theMarket.personAs(this, "Customer", name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
 		//TODO m.theMarket.personAs(this, "VirtualCustomer", this.name, moneyOnHand, foodPreference);
 	}
 	
