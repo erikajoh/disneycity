@@ -105,6 +105,7 @@ public class MockTeller extends Mock {
 		
 		public void	msgWithdrawCash(int accountNum, double cash){
 			log.add(new LoggedEvent("WITHDRAW CASH"));
+			System.out.println("WITHDRAW CASH");
 			customer.requestAmt = cash;
 			customer.state = State.withdrawingCash; 
 		}
@@ -168,25 +169,27 @@ public class MockTeller extends Mock {
 		    if(customer.requestAmt > 0){
 			  double newBalance = customer.account.getBalance()+customer.requestAmt;
 			  customer.account.setBalance(newBalance);
+			  customer.account.change = -customer.requestAmt;
 		    }
-			customer.bankCustomer.msgMoneyDeposited(-customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
+			customer.bankCustomer.msgMoneyDeposited(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
 			customer.state = State.deciding;
 		}
 
 		private void withdrawCash(){
-			double newBalance = customer.account.getBalance()-customer.requestAmt;
+			double newBalance = customer.account.balance-customer.requestAmt;
 			if(newBalance >= 0){
-			  customer.account.setBalance(newBalance);
+			  customer.account.balance = newBalance;
+			  customer.account.change = customer.requestAmt;
 			  customer.account.loanAmount = 0.00;
 			  customer.account.loanTime = 0;
 			}
 			else{
-			  customer.account.setBalance(0);
-			  customer.requestAmt = customer.account.getBalance();
-			  customer.account.loanAmount = -customer.requestAmt;
+			  customer.account.change = customer.requestAmt;
+			  customer.account.loanAmount = -newBalance;
+			  customer.account.balance = 0.00;
 			  customer.account.loanTime = 0;
 			}
-			customer.bankCustomer.msgMoneyWithdrawn(customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
+			customer.bankCustomer.msgMoneyWithdrawn(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
 			customer.state = State.deciding;
 		}
 

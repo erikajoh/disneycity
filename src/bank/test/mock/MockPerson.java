@@ -14,8 +14,8 @@ public class MockPerson extends Mock implements Person {
 	public double balance = 25.00;
 	private Account originalAccount;
 	public int newAccountNum;
-	private double loanAmt;
-	private int loanTime;
+	public double loanAmt;
+	public int loanTime;
 
 	private double change;
 		

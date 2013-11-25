@@ -86,8 +86,12 @@ public class MockBankCustomer extends Mock {
 		state = State.leaving;
 	}
 	public void msgMoneyWithdrawn(double amountWithdrawn, double loanAmt, int lt){
-		balance += change;
+		//balance += change;
 		log.add(new LoggedEvent("MONEY WITHDRAWN "+ balance));
+		if(change > amountWithdrawn){
+			balance = 0;
+			change = -amountWithdrawn;
+		}
 		change = amountWithdrawn;
 		loanAmount = loanAmt;
 		loanTime = lt;
