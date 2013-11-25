@@ -4,6 +4,8 @@ import restaurant_rancho.gui.RestaurantRancho;
 import simcity.PersonAgent;
 import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.MockTransportation_Douglass;
+import transportation.Transportation;
+import transportation.TransportationPanel;
 import housing.Housing;
 
 import javax.swing.*;
@@ -18,6 +20,7 @@ import java.util.Timer;
 public class SimCityPanel extends JPanel{
 	
 	Timer timer;
+	Timer animationTimer;
 	
 	SimCityGui gui = null;
 	RestaurantRancho restRancho;
@@ -26,7 +29,9 @@ public class SimCityPanel extends JPanel{
 	ArrayList<Housing> housings = new ArrayList<Housing>();
 	ArrayList<Market> markets = new ArrayList<Market>();
 	
-	Transportation_Douglass transportation = new MockTransportation_Douglass("Mock Transportation");
+	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
+	
+	Transportation transportation;
 	
 	private JPanel group = new JPanel();
 	 
@@ -41,7 +46,10 @@ public class SimCityPanel extends JPanel{
 		String foodPreferenceMexican = "Mexican";
 		
 		Housing secondHousing = gui.mainStApts1;
-	 
+		
+		animationPanelsList = gui.animationPanelsList;
+		transportation = gui.cityAniPanel.getTransportation();
+		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 50, foodPreferenceMexican, "OwnerResident", transportation);

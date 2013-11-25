@@ -22,15 +22,13 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
     public RanchoAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
-        
  
     	Timer timer = new Timer(5, this );
     	timer.start();
-
     }
-  
 
 	public void actionPerformed(ActionEvent e) {
+		updatePosition();
 		repaint();  //Will have paintComponent called
 	}
 
@@ -41,16 +39,24 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
         g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
 
         synchronized(guis) {
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-                gui.draw(g2);
-            }
-        }
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
         }
   
     }
     
+    public void updatePosition() {
+    	synchronized(guis) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.updatePosition();
+	            }
+	        }
+        }
+    }
 
     public void addGui(CustomerGui gui) {
         guis.add(gui);
@@ -59,6 +65,7 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
     public void addGui(WaiterGui gui) {
         guis.add(gui);
     }
+    
     public void addGui(CookGui gui) {
     	guis.add(gui);
     }

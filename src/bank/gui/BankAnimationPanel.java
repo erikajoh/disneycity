@@ -2,9 +2,12 @@ package bank.gui;
 
 import javax.swing.*;
 
+import bank.gui.Gui;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -17,11 +20,9 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	private Image tellerLayoutImage  = Toolkit.getDefaultToolkit().getImage("res/bankTellerLayout.png");
 	boolean initialPaint = false;
 
-	
 	private int tellerCount = 0;
 
-
-    private List<Gui> guis = new ArrayList<Gui>();
+	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 
     public BankAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -31,6 +32,7 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
     }
 
 	public void actionPerformed(ActionEvent e) {
+		updatePosition();
 		repaint();  //Will have paintComponent called
 	}
 
@@ -42,20 +44,27 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
         g2.drawImage(backgroundImage, 0, 0, WINDOWX, WINDOWY, null);
         g2.drawImage(tellerLayoutImage, 0, 0, WINDOWX, 80, null);
 
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
+        synchronized(guis) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
         }
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
+    }
+
+    public void updatePosition() {
+    	synchronized(guis) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.updatePosition();
+	            }
+	        }
         }
     }
    
     public void addGui(BankCustomerGui gui) {
-        guis.add(gui);
+        guis.add(gui); //TODO Is this okay?
     }
  
     public void addGui(TellerGui gui) {

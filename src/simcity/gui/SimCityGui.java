@@ -14,6 +14,7 @@ import market.gui.MarketAnimationPanel;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import restaurant_bayou.gui.BayouAnimationPanel;
 import restaurant_bayou.gui.RestaurantBayou;
@@ -97,6 +98,8 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
 	private JButton panelB = new JButton("next panel");
 		
+	public static ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
+	
 	public SimCityGui(String name) {
 		
 //		int delay = 1000; //milliseconds
@@ -124,6 +127,22 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		cards.add(cafeAniPanel, "Cafe");
 		cards.add(hausAniPanel, "Haus");
 				
+		animationPanelsList.add(cafeAniPanel);
+		animationPanelsList.add(housAniPanel7);
+		animationPanelsList.add(housAniPanel1);
+		animationPanelsList.add(housAniPanel2);
+		animationPanelsList.add(housAniPanel3);
+		animationPanelsList.add(housAniPanel4);
+		animationPanelsList.add(housAniPanel5);
+		animationPanelsList.add(housAniPanel6);
+		animationPanelsList.add(markAniPanel);
+		animationPanelsList.add(bankAniPanel);
+		animationPanelsList.add(ranchoAniPanel);
+		animationPanelsList.add(bayouAniPanel);
+		animationPanelsList.add(pizzaAniPanel);
+		animationPanelsList.add(cafeAniPanel);
+		animationPanelsList.add(hausAniPanel);
+		
 		panelB.addActionListener(this);
 		panelB.setPreferredSize(new Dimension(0, 0));
 		currP = Panel.Apt1;

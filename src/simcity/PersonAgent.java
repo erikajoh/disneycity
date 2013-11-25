@@ -10,6 +10,7 @@ import housing.Housing;
 import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
+import transportation.Transportation;
 
 // Priority of coding classes: Person, Housing, Transportation, Bank, Restaurant, Market 
 
@@ -42,7 +43,7 @@ public class PersonAgent extends Agent {
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
 	
 	// Transportation
-	private Transportation_Douglass transportation;
+	private Transportation transportation;
 	
 	// Location
 	private enum LocationState {Home, Transit, Restaurant, Bank, Market};
@@ -81,7 +82,7 @@ public class PersonAgent extends Agent {
 	
 	// Constructor for CustomerAgent class
 	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference,
-			String relationWithHousing, Transportation_Douglass t) {
+			String relationWithHousing, Transportation t) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
@@ -541,7 +542,7 @@ public class PersonAgent extends Agent {
 	private void goToTransportation() {
 		print("Going from " + currentLocation + " to " + targetLocation);
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
-		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name());
+		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name(), "Edgar");
 	}
 	
 	private void goHome() {
