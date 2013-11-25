@@ -57,7 +57,6 @@ public class Market {
 	
 	private void MoveLine() {
 		for (CustomerAgent cust: customers) {
-			System.out.println("messaging cust");
 			cust.msgLineMoved();
 		}
 	}
