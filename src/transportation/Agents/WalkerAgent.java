@@ -68,7 +68,7 @@ public class WalkerAgent extends MobileAgent{
 			//Try and get lock for the next step.
 			int attempts    = 1;
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-
+			
 			//Did not get lock. Lets make n attempts.
 			while (!gotPermit && attempts < 3) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " got NO permit for " + tmpPath.toString() + " on attempt " + attempts);
@@ -90,15 +90,15 @@ public class WalkerAgent extends MobileAgent{
 
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
-			currentPosition.release(aStar.getGrid());
-			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
-			gui.setDestination(currentPosition.getX(), currentPosition.getY());
+			//currentPosition.release(aStar.getGrid());
+			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			try {
 				animSem.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
 		}
 		
 		arrived = true;

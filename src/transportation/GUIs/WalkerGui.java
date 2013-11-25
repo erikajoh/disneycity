@@ -27,7 +27,7 @@ public class WalkerGui implements Gui{
 		reachedHalfway = false;
 		reachedDestination = false;
 		
-		animModule = new AnimationModule("Edgar", "WalkDown");
+		animModule = new AnimationModule("Edgar", "WalkDown", 10);
 	}
 	
 	public void updatePosition() {
@@ -77,10 +77,12 @@ public class WalkerGui implements Gui{
 		yLast = yDestination;
 		this.xDestination = xDestination * 25;
 		this.yDestination = yDestination * 25;
+		reachedHalfway = false;
+		reachedDestination = false;
 	}
 	
 	public void doTauntAndLeave() {
-		animModule.changeAnimation("Taunt");
+		animModule.changeAnimation("Taunt", 60);
 	}
 	
 	public void setIgnore() {

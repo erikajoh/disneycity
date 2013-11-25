@@ -70,7 +70,7 @@ public class TransportationTraversal extends GraphTraversal {
 				continue;
 			}
 			//printCurrentList();
-			System.out.println("available"+next);
+			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
 			
 			
@@ -96,7 +96,7 @@ public class TransportationTraversal extends GraphTraversal {
 			//System.out.println("considering"+next);
 			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type != grid[x][y].type) continue;
 			//printCurrentList();
-			System.out.println("available"+next);
+			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
 
 			//update distance travelled
