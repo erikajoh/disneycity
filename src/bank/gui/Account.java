@@ -3,6 +3,7 @@ package bank.gui;
 public class Account {
 	public int number;
 	public double balance;
+	public double change;
 	public double loanAmount;
 	public int loanTime;
 	

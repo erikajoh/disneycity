@@ -209,6 +209,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public double getBalance(){
 		return balance;
 	}
+	
+	public double getChange(){
+		return change;
+	}
 
 	public String toString() {
 		return "customer " + getName();

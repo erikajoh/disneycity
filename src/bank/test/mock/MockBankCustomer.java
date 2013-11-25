@@ -153,7 +153,6 @@ public class MockBankCustomer extends Mock {
 			System.out.println("TELLER NULL");
 		}
 		teller.msgOpenAccount(this, requestAmt);
-		//change = -balance*.5;
 		state = State.idle;
 	}
 	private void depositCash(){
@@ -186,6 +185,10 @@ public class MockBankCustomer extends Mock {
 	
 	public double getBalance(){
 		return balance;
+	}
+	
+	public double getChange(){
+		return change;
 	}
 
 	public String toString() {

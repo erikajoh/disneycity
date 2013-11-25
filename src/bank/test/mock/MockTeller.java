@@ -148,8 +148,8 @@ public class MockTeller extends Mock {
 			Account newAccount = new Account(accounts.size(), customer.requestAmt);
 			accounts.add(newAccount);
 			customer.account = newAccount;
-			System.out.println(customer.requestAmt + " " + -customer.requestAmt);
-			customer.bankCustomer.msgAccountOpened(newAccount.number, -customer.requestAmt);
+			customer.account.change = -customer.requestAmt;
+			customer.bankCustomer.msgAccountOpened(newAccount.number, customer.account.change);
 			customer.state = State.deciding;
 		}
 

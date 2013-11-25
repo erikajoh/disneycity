@@ -159,7 +159,8 @@ public class TellerAgent extends Agent implements Teller {
 		Account newAccount = new Account(accounts.size(), customer.requestAmt);
 		accounts.add(newAccount);
 		customer.account = newAccount;
-		customer.bankCustomer.msgAccountOpened(newAccount.number, -customer.requestAmt);
+		customer.account.change = -customer.requestAmt;
+		customer.bankCustomer.msgAccountOpened(newAccount.number, customer.account.change);
 		customer.state = State.deciding;
 	}
 

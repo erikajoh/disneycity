@@ -24,7 +24,8 @@ public interface BankCustomer {
 	
 	public int getAccountNum();
 	public double getBalance();
-	
+	public double getChange();
+
 	public double getLoanAmount();
 	public int getLoanTime();
 

@@ -68,10 +68,9 @@ public class BankCustomerTest extends TestCase
     	
 	}	
 	/**
-	 * This tests the cashier under very simple terms: paying one market
+	 * This tests the cashier under very simple terms: opening an account and having the correct amount of cash at the end
 	 */
 	public void testBankOpenAccountScenario(){
-		//check preconditions
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(50.00);
 		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
@@ -100,32 +99,6 @@ public class BankCustomerTest extends TestCase
 		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
 		assertEquals(customer0.balance, 25.0);
 		assertEquals(customer0.accounts.size(), 1);
-
-
-
-
-
-		//assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-
-		/*
-		assertEquals("Make sure cashier doesn't have any bills", cashier.bills.size(), 0);		
-		assertTrue("Market's scheduler should have returned true (as it is biling the cashier)", market.pickAndExecuteAnAction());
-		assertFalse("Market's scheduler should have returned false (as it has already billed the cashier and is idle)", market.pickAndExecuteAnAction());
-
-		//test
-		assertEquals("Make sure cashier has a bill", cashier.bills.size(), 1);		
-		assertTrue("Cashier's scheduler should have returned true (as it is paying the markets' bill(s))", cashier.pickAndExecuteAnAction());
-		assertFalse("Cashier's scheduler should have returned true (as it has already paid the markets' bill(s) and is idle)", cashier.pickAndExecuteAnAction());
-		//market hasn't cleared the cashier yet
-		assertEquals("Make sure cashier removes bill since it is paid", cashier.bills.size(), 1);		
-		
-		assertTrue("Market is now making sure the cashier paid enough", market.pickAndExecuteAnAction());
-		assertFalse("Market doesn't have anything to do", market.pickAndExecuteAnAction());
-		assertTrue("Cashier is removing the bill now", cashier.pickAndExecuteAnAction());
-		assertFalse("Cashier doesn't have any bills left to remove", cashier.pickAndExecuteAnAction());
-		
-		//bill is officially cleared
-		assertEquals("Make sure cashier removes bill since it is paid", cashier.bills.size(), 0);	*/	
 	}
 	
 }
