@@ -11,7 +11,7 @@ public class MovementTile extends Semaphore{
 	};
 	
 	MovementType type;
-	boolean up, down, left, right;
+	public boolean up, down, left, right;
 	BusStop busStop;
 	
 	public MovementTile() {

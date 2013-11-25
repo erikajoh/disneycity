@@ -6,6 +6,7 @@ import java.util.List;
 
 import transportation.Transportation;
 import transportation.TransportationPanel;
+import transportation.GUIs.CarGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 import transportation.Objects.MovementTile.MovementType;
@@ -195,7 +196,7 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Pirate Bank", new Position(7, 2), new Position(7, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Rancho Del Zocalo", new Position(3, 2), new Position(4, 5), busStops.get(0));
+		tempBuilding = new Building("Rancho Del Zocalo", new Position(3, 2), new Position(4, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Carnation Cafe", new Position(12, 10), new Position(11, 8), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
@@ -266,14 +267,19 @@ public class TransportationController extends Agent implements Transportation{
 
 	private void spawnMover(Mover mover) {
 		//Try to spawn mover
+		TransportationTraversal aStar = new TransportationTraversal(grid);
 		switch(mover.method) {
 		case "Car":
-			//spawn car
+			mover.transportationState = TransportationState.MOVING;
+			CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
+			driver.startThread();
+			CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
+			master.addGui(carGui);
+			driver.setGui(carGui);
 			break;
 
 		case  "Walk":
 			mover.transportationState = TransportationState.MOVING;
-			TransportationTraversal aStar = new TransportationTraversal(grid);
 			WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
 			walker.startThread();
 			WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
