@@ -8,6 +8,7 @@ import housing.Housing;
 
 import javax.swing.*;
 
+import bank.gui.Bank;
 import market.Market;
 
 import java.awt.*;
@@ -36,15 +37,18 @@ public class SimCityPanel extends JPanel{
 		
 		Housing firstHousing = gui.hauntedMansion;
 		Market firstMarket = gui.mickeysMarket;
+		Bank firstBank = gui.pirateBank;
 		String foodPreferenceMexican = "Mexican";
 	 
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, foodPreferenceMexican, "OwnerResident", transportation);
+		firstHackedPerson.setMoney(500); // TODO
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
 		firstHackedPerson.addRestaurant(restRancho, "Customer");
 		firstHackedPerson.addMarket(firstMarket, "Customer");
+		firstHackedPerson.addBank(firstBank, "Customer");
 		people.add(firstHackedPerson);
 		
 		// Alternatively, you can call the next line as a hack (in place of the previous three lines)
@@ -117,16 +121,16 @@ public class SimCityPanel extends JPanel{
 	public long numTicks = 0;
 	
 	/* Time intervals */
-	private static final int TICK_DELAY = 125; // every quarter second = one clock tick
+	private static final int TICK_DELAY = 125; // every 1/8 second = one clock tick
 	
 	// these are start times for each of the day's phases
 	private static final long START_OF_DAY = 1;
 	private static final long MORNING = 30;
-	private static final long WORK_ONE = 120;
-	private static final long NOON = 150;
-	private static final long WORK_TWO = 220;
-	private static final long EVENING = 270;
-	private static final long END_OF_DAY = 390;
+	private static final long WORK_ONE = 150;
+	private static final long NOON = 180;
+	private static final long WORK_TWO = 260;
+	private static final long EVENING = 310;
+	private static final long END_OF_DAY = 600;
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 50;

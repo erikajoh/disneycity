@@ -135,7 +135,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		mainStApts5 = new Housing(housAniPanel5, "Main St Apartments #5");
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
 		mickeysMarket = new Market(this, "Mickey's Market");
-		pirateBank = new Bank(this);
+		pirateBank = new Bank(this, "Pirate Bank");
 		
 		simCityPanel = new SimCityPanel(this);
 		
