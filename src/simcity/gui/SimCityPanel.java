@@ -100,6 +100,9 @@ public class SimCityPanel extends JPanel{
 			final PersonAgent person = people.get(i);
 			
 			// hunger signals
+			// there are three day phases: morning, noon, and evening.
+			// Once each one passes, the person would eat.
+			// The exact delay between change in day phase and becoming hungry is randomized as demonstrated below.
 			if(currTicks == MORNING || currTicks == NOON || currTicks == EVENING) {
 				timer.schedule(new TimerTask() {
 					public void run() {
@@ -110,6 +113,7 @@ public class SimCityPanel extends JPanel{
 			}
 			
 			// body state signals
+			// waking up and sleeping
 			if(currTicks == START_OF_DAY) {
 				person.msgWakeUp();
 			}
@@ -117,17 +121,27 @@ public class SimCityPanel extends JPanel{
 				person.msgGoToSleep();
 			}
 			// person maintenance signal
+			// maintain house if it's Friday morning
 			if(currTicks == MORNING && getCurrentDay().equals("Friday")) {
 				person.msgNeedMaintenance();
 			}
 			
+			// job signals
+			// two constants, WORK_ONE and WORK_TWO, determine when to send the signals to go to work
+			if(currTicks == WORK_ONE) {
+				person.msgGoToWork(1);
+			}
+			if(currTicks == WORK_TWO) {
+				person.msgGoToWork(2);
+			}
 		}
 		
 		// handle ticks for housing
 		for(int i = 0; i < housings.size(); i++) {
 			Housing theHousing = housings.get(i);
 			// rent is due signal
-			if(currTicks == EVENING) {
+			// rent is due at the start of every Saturday
+			if(currTicks == START_OF_DAY && getCurrentDay().equals("Saturday")) {
 				theHousing.msgRentDue();
 			}
 		}
@@ -144,11 +158,11 @@ public class SimCityPanel extends JPanel{
 	// these are start times for each of the day's phases
 	private static final long START_OF_DAY = 1;
 	private static final long MORNING = 30;
-	private static final long WORK_ONE = 150;
-	private static final long NOON = 180;
-	private static final long WORK_TWO = 260;
-	private static final long EVENING = 310;
-	private static final long END_OF_DAY = 600;
+	private static final long WORK_ONE = 110;
+	private static final long NOON = 200;
+	private static final long WORK_TWO = 300;
+	private static final long EVENING = 400;
+	private static final long END_OF_DAY = 700;
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 50;

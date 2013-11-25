@@ -172,6 +172,12 @@ public class PersonAgent extends Agent {
 			stateChanged();
 		}
 	}
+
+	public void msgGoToWork(int i) {
+		print("Go to work: work period #" + i);
+		actionQueue.add(new Action(ActionString.goToWork, 2, i));
+		stateChanged();
+	}
 	
 	// from Housing
 	public void msgDoneEntering() {
@@ -225,6 +231,13 @@ public class PersonAgent extends Agent {
 		currentLocation = destination;
 		mapLocationToEnum(currentLocation);
 		updateCurrentMyObject(currentLocation);
+		event = PersonEvent.makingDecision;
+		stateChanged();
+	}
+	
+	public void msgPayFare(double fare) {
+		// TODO msgPayFare
+		
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
@@ -294,7 +307,7 @@ public class PersonAgent extends Agent {
 				case needMaintenance: 
 					doMaintenance(); break;
 				case goToWork:
-					break; // TODO: handle go to work
+					checkGoingToWork((int)theAction.amount); break; // TODO: handle go to work
 			}
 			event = PersonEvent.makingDecision;
 			return true;
@@ -417,7 +430,7 @@ public class PersonAgent extends Agent {
 				}
 				switch(marketState) {
 					case None:
-						goHome(); break; // TODO hopefully this rule order works
+						goHome(); break;
 					case WantToBuy:
 						enterMarket(); break;
 					case WantToWork:
@@ -437,6 +450,11 @@ public class PersonAgent extends Agent {
 
 	// ************************* ACTIONS ***********************************
 
+	private void checkGoingToWork(int workPeriod) {
+		
+		
+	}
+
 	// House actions
 	private void enterHouse() {
 		print("Entering house, adding items");
@@ -453,7 +471,6 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void prepareToCookAtHome() {
-		// TODO home action
 		print("I'm hungry and I want to cook at home");
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
 	}
@@ -468,7 +485,6 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void hungryToMarket() {
-		// TODO hungryToMarket
 		print("I'm hungry and I want to buy food at market and cook at home");
 		MyMarket targetMarket = chooseMarket();
 		double price = targetMarket.theMarket.getPrice(foodPreference);
