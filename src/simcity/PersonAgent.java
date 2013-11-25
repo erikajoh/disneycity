@@ -264,7 +264,8 @@ public class PersonAgent extends Agent {
 	
 	// from Market
 	public void msgHereIsOrder(String order, int quantity) {
-		
+		// TODO Market state update - assume order is fulfilled
+		marketState = MarketState.None;
 		stateChanged();
 	}
 	
@@ -369,17 +370,16 @@ public class PersonAgent extends Agent {
 			}
 			if(currentLocationState == LocationState.Market) {
 				
+				if(!isNourished && !preferEatAtHome) {
+					hungryToRestaurant();
+				}
 				switch(marketState) {
 					case None:
-						break;
+						goHome(); break; // TODO hopefully this rule order works
 					case WantToBuy:
 						enterMarket(); break;
 					case WantToWork:
 						break;
-				}
-				// TODO Person scheduler while in Market
-				if(!isNourished && !preferEatAtHome) {
-					hungryToRestaurant();
 				}
 				event = PersonEvent.onHold;
 				return true;
