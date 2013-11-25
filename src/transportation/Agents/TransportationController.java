@@ -4,13 +4,18 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import transportation.TransportationPanel;
+import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 import transportation.Objects.MovementTile.MovementType;
 import agent.Agent;
+import astar.astar.Position;
 import simcity.*;
 
 public class TransportationController extends Agent {
-
+	
+	TransportationPanel master;
+	
 	enum TransportationState {
 		REQUEST,
 		MOVING,
@@ -42,8 +47,8 @@ public class TransportationController extends Agent {
 
 	class Building {
 		String name;
-		MovementTile walkingTile;
-		MovementTile vehicleTile;
+		Position walkingTile;
+		Position vehicleTile;
 		BusStop closestBusStop;
 
 		public Building(String name) {
@@ -53,7 +58,7 @@ public class TransportationController extends Agent {
 			closestBusStop = null;
 		}
 
-		public Building(String name, MovementTile walkingTile, MovementTile vehicleTile, BusStop closestBusStop) {
+		public Building(String name, Position walkingTile, Position vehicleTile, BusStop closestBusStop) {
 			this.name  = name;
 			this.walkingTile = walkingTile;
 			this.vehicleTile = vehicleTile;
@@ -61,7 +66,7 @@ public class TransportationController extends Agent {
 		}
 
 
-		public void addEnteringTiles(MovementTile walkingTile, MovementTile vehicleTile) {
+		public void addEnteringTiles(Position walkingTile, Position vehicleTile) {
 			this.walkingTile = walkingTile;
 			this.vehicleTile = vehicleTile;
 		}
@@ -76,7 +81,8 @@ public class TransportationController extends Agent {
 	MovementTile[][] grid;
 	List<BusStop> busStops;
 
-	public TransportationController() {
+	public TransportationController(TransportationPanel panel) {
+		master = panel;
 		movingObjects = new ArrayList<Mover>();
 
 		//++++++++++++++++++++++BEGIN CREATION OF GRID++++++++++++++++++++++
@@ -164,33 +170,33 @@ public class TransportationController extends Agent {
 		//++++++++++++++++++++++BEGIN CREATION OF DIRECTORY++++++++++++++++++++++
 		directory = new HashMap<String, Building>();
 
-		Building tempBuilding = new Building("Apt1", grid[9][2], grid[9][4], busStops.get(0));
+		Building tempBuilding = new Building("Apt1", new Position(9, 2), new Position(9, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt2", grid[12][2], grid[12][4], busStops.get(1));
+		tempBuilding = new Building("Apt2", new Position(12, 2), new Position(12, 4), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt3", grid[2][3], grid[4][5], busStops.get(2));
+		tempBuilding = new Building("Apt3", new Position(2, 3), new Position(4, 5), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt4", grid[2][6], grid[4][6], busStops.get(0));
+		tempBuilding = new Building("Apt4", new Position(2, 6), new Position(4, 6), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt5", grid[3][10], grid[4][8], busStops.get(2));
+		tempBuilding = new Building("Apt5", new Position(3, 10), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt6", grid[13][9], grid[11][8], busStops.get(1));
+		tempBuilding = new Building("Apt6", new Position(13, 9), new Position(11, 8), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Mansion", grid[13][3], grid[11][4], busStops.get(1));
+		tempBuilding = new Building("Mansion", new Position(13, 3), new Position(11, 4), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Market", grid[8][10], grid[8][8], busStops.get(2));
+		tempBuilding = new Building("Market", new Position(8, 10), new Position(8, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Bank", grid[7][2], grid[7][4], busStops.get(0));
+		tempBuilding = new Building("Bank", new Position(7, 2), new Position(7, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Rancho", grid[2][2], grid[4][5], busStops.get(0));
+		tempBuilding = new Building("Rancho", new Position(2, 2), new Position(4, 5), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Cafe", grid[12][10], grid[11][8], busStops.get(1));
+		tempBuilding = new Building("Cafe", new Position(12, 10), new Position(11, 8), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Bayou", grid[13][5], grid[11][5], busStops.get(1));
+		tempBuilding = new Building("Bayou", new Position(13, 5), new Position(11, 5), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Pizza", grid[5][10], grid[4][8], busStops.get(2));
+		tempBuilding = new Building("Pizza", new Position(5, 10), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Haus", grid[2][9], grid[4][8], busStops.get(2));
+		tempBuilding = new Building("Haus", new Position(2, 9), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
 		//+++++++++++++++++++++++END CREATION OF DIRECTORY+++++++++++++++++++++++
 
@@ -255,7 +261,12 @@ public class TransportationController extends Agent {
 			break;
 
 		case  "Walk":
-			//spawn walker
+			TransportationTraversal aStar = new TransportationTraversal(grid);
+			WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
+			walker.startThread();
+			WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
+			master.addGui(walkerGui);
+			walker.setGui(walkerGui);
 			break;
 
 		case "Bus":
@@ -271,5 +282,9 @@ public class TransportationController extends Agent {
 
 	private void retrySpawn(Mover mover) {
 		mover.transportationState = TransportationState.REQUEST;
+	}
+	
+	public MovementTile[][] getGrid() {
+		return grid;
 	}
 }

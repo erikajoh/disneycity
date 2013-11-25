@@ -19,6 +19,7 @@ import javax.swing.*;
 
 import simcity.gui.Gui;
 import simcity.gui.SimCityGui;
+import transportation.Agents.TransportationController;
 
 public class TransportationPanel extends JPanel implements ActionListener, MouseListener {
 	private final int WINDOWX = 400;
@@ -62,7 +63,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
     	timer = new Timer(20, this );
     	timer.start();
     	
-    	controller = new TransportationController();
+    	controller = new TransportationController(this);
     	
     	addMouseListener(this);
     	

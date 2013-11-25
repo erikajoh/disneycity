@@ -151,4 +151,12 @@ public class AnimationModule {
 	public Image getImage(){
 		return img;
 	}
+	
+	public String getAnimation() {
+		return animation;
+	}
+	
+	public boolean getLastFrame() {
+		return (currentFrame == totalFrames);
+	}
 }

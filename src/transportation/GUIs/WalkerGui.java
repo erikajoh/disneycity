@@ -3,8 +3,9 @@ import java.awt.Graphics2D;
 
 import AnimationTools.AnimationModule;
 import simcity.gui.*;
+import transportation.Agents.WalkerAgent;
 
-public class WalkerGUI implements Gui{
+public class WalkerGui implements Gui{
 	
 	private float xPos, yPos, xDestination, yDestination, xLast, yLast, speed;
 	private AnimationModule animModule;
@@ -14,13 +15,13 @@ public class WalkerGUI implements Gui{
 	WalkerAgent agent;
 	boolean isPresent = true;
 	
-	public WalkerGUI(float xPos, float yPos, float xDestination, float yDestination, WalkerAgent agent) {
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.xDestination = xDestination;
-		this.yDestination = yDestination;
-		this.xLast = xPos;
-		this.yLast = yPos;
+	public WalkerGui(float xPos, float yPos, WalkerAgent agent) {
+		this.xPos = xPos * 25;
+		this.yPos = yPos * 25;
+		this.xDestination = xPos * 25;
+		this.yDestination = yPos * 25;
+		this.xLast = xPos * 25;
+		this.yLast = yPos * 25;
 		speed = 1.00f;
 		this.agent = agent;		
 		reachedHalfway = false;
@@ -61,6 +62,9 @@ public class WalkerGUI implements Gui{
 			reachedDestination = true;
 			agent.msgDestination();
 		}
+		
+		if(animModule.getAnimation().equals("Taunt") && animModule.getLastFrame())
+			agent.msgDestination();
 	}
 
 	public void draw(Graphics2D g) {
@@ -71,8 +75,12 @@ public class WalkerGUI implements Gui{
 	public void setDestination (float xDestination, float yDestination) {
 		xLast = xDestination;
 		yLast = yDestination;
-		this.xDestination = xDestination;
-		this.yDestination = yDestination;
+		this.xDestination = xDestination * 25;
+		this.yDestination = yDestination * 25;
+	}
+	
+	public void doTauntAndLeave() {
+		animModule.changeAnimation("Taunt");
 	}
 	
 	public void setIgnore() {
@@ -82,5 +90,4 @@ public class WalkerGUI implements Gui{
 	public boolean isPresent() {
 		return isPresent;
 	}
-	
 }
