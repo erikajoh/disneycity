@@ -6,12 +6,12 @@ import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.HostAgent;
 import restaurant_bayou.MarketAgent;
 import restaurant_bayou.WaiterAgent;
-import restaurant_bayou.interfaces.Market;
 import simcity.Restaurant;
 import simcity.PersonAgent;
 import simcity.RestMenu;
 import simcity.gui.SimCityGui;
 import bank.gui.Bank;
+import market.Market;
 
 import javax.swing.*;
 
@@ -48,6 +48,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     public RestMenu menu = new RestMenu();
     boolean isOpen;
     private Bank bank;
+    private Market market2;
 
     private SimCityGui gui; //reference to main gui
 
@@ -279,5 +280,12 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     public int howManyWaiters(){
     	return host.howManyWaiters();
     }
+
+	@Override
+	public void setMarket(market.Market m) {
+		market2 = m;
+		// T
+		
+	}
 	
 }
