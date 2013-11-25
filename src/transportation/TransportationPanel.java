@@ -68,7 +68,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
     	buildings.add(new BuildingFinder(50,100,2,52,"Rancho"));
     	buildings.add(new BuildingFinder(150,225,2,52,"Bank"));
     	buildings.add(new BuildingFinder(225,275,2,52,"Apt1"));
-    	buildings.add(new BuildingFinder(325,375,2,52,"Apt2"));
+    	buildings.add(new BuildingFinder(300,350,2,52,"Apt2"));
     	buildings.add(new BuildingFinder(0,50,52,102,"Apt3"));
     	buildings.add(new BuildingFinder(0,50,152,202,"Apt4"));
     	buildings.add(new BuildingFinder(350,400,102,152,"Bayou"));
@@ -78,6 +78,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
     	buildings.add(new BuildingFinder(100,150,277,327,"Pizza"));
     	buildings.add(new BuildingFinder(175,275,277,327,"Market"));
     	buildings.add(new BuildingFinder(300,350,277,327,"Cafe"));
+    	buildings.add(new BuildingFinder(305,400, 2, 102,"Mansion"));
     }
 	
 	@Override
