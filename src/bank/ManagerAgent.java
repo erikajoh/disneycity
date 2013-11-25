@@ -150,10 +150,7 @@ public class ManagerAgent extends Agent implements Manager {
 		}
 		  stateChanged();
 	}
-	
-	public void msgRequestLoan(int accountNumber, double amount, Person person){
-		
-	}
+
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
