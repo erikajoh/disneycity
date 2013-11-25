@@ -19,9 +19,7 @@ public interface Teller {
 	public void msgDepositCash(int accountNum, double cash);
 	
 	public void msgWithdrawCash(int accountNum, double cash);
-	
-	public void msgAskForLoan(int accountNum, double cash);
-	
+		
 	public void msgLeavingBank();
 	
 	public TellerGui getGui();

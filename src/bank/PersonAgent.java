@@ -1,5 +1,6 @@
 package bank;
 
+import bank.gui.Bank;
 import bank.gui.BankCustomerGui;
 import bank.gui.Account;
 import bank.interfaces.BankCustomer;
@@ -19,10 +20,13 @@ public class PersonAgent extends Agent implements Person {
 	private double balance = 25.00;
 	private Account originalAccount;
 	private int newAccountNum;
+	private double loanAmt;
+	private int loanTime;
+
 	private double newBalance;
 		
 	// agent correspondents
-	private Manager bank = null;
+	private Bank bank = null;
 
 	private enum State{arrive, leave, idle};
 	State state = State.idle;
@@ -52,9 +56,13 @@ public class PersonAgent extends Agent implements Person {
 		stateChanged();
 	}
 	
-	public void msgLeave(int accNum, double balance){
+	//double loanAmt
+	
+	public void msgLeave(int accNum, double balance, double la, int lt){
 		newAccountNum = accNum;
 	    newBalance = balance;
+	    loanAmt = la;
+	    loanTime = lt;
 		state = State.leave;
 		stateChanged();
 	}
@@ -80,27 +88,25 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void tellBankHere(){
 		state = State.idle;
-		bank.msgCustomerHere(this);
-		print("YO");
+		//bank.msgCustomerHere(this);
+		
+		
 		if(accounts.size() == 0){
-			print("YO REQ");
-			bank.msgRequestAccount(balance*.5, this);
+			bank.msgRequestAccount(this, balance*.5, true);
 		}
 		else if(decision == 0){
-			print("YO DEPOSIT");
 			originalAccount = accounts.get(0); //really a pick method for the index
-		    bank.msgRequestDeposit(originalAccount.getNumber(), 5.00, this, false);
+		    bank.msgRequestDeposit(this, originalAccount.getNumber(), 5.00, true);
 		}
 		else if(decision == 1){
-			print("YO WITHDRAW");
 			 originalAccount = accounts.get(0); //really a pick method for the index
-			 bank.msgRequestWithdrawal(originalAccount.getNumber(), 5.00, this);
+			 bank.msgRequestWithdrawal(this, originalAccount.getNumber(), 5.00, true);
 		}
 	
 	}
 	
 	private void leave(){
-		print("PERSON LEFT BANK "+ newAccountNum + " " + newBalance);
+		print("PERSON LEFT BANK "+ newAccountNum + " " + newBalance + " " + loanAmt + " " + loanTime);
 		if(originalAccount == null){
 			Account newAccount = new Account(newAccountNum);
 			newAccount.setBalance(newBalance);
@@ -130,11 +136,11 @@ public class PersonAgent extends Agent implements Person {
 		return "customer " + getName();
 	}
 	
-	public void setBank(Manager b) {
+	public void setBank(Bank b) {
 		bank = b;
 	}
 	
-	public Manager getBank() {
+	public Bank getBank() {
 		return bank;
 	}
 }

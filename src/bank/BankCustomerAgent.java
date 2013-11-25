@@ -21,15 +21,18 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private double balance = 25.00;
 	private double change;
 	
+	private double loanAmount;
+	private int loanTime;
+	
 	private SimCityGui simCityGui;
 	private BankCustomerGui personGui;
 	
 	// agent correspondents
-	private Manager bank = null;
+	private Manager manager = null;
 	private Teller teller = null;
-
+	
 	public enum State
-	{deciding, openingAccount, depositing, withdrawing, requestingLoan, leaving, left, idle};
+	{deciding, openingAccount, depositing, withdrawing, leaving, left, idle};
 	State state = State.idle;
 
 	public enum AnimState{go, walking, idle};
@@ -44,10 +47,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public BankCustomerAgent(String name, Manager b, SimCityGui bg){
+	public BankCustomerAgent(String name, Manager m, SimCityGui bg){
 		super();
 		this.name = name;
-		bank = b;
+		manager = m;
 		simCityGui = bg;
 		state = State.idle;
 	}
@@ -76,41 +79,37 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.withdrawing;
 		stateChanged();
 	}
-	public void	msgRequestLoan(double ra){
-		print("REQ LOAN");
-		requestAmt = ra;
-		state = State.requestingLoan;
-		stateChanged();
-	}
 
 	public void msgGoToTeller(Teller t){
 		teller = t;
 		animState = AnimState.go; 
 		stateChanged();
 	}
-	public void msgAccountOpened(int an){
+	public void msgAccountOpened(int an, double amountWithdrawn){
 		balance += change;
+		change = amountWithdrawn;
 		print("ACCOUNT OPENED "+balance);
 		accountNum = an;
 		state = State.leaving;
 		stateChanged();
 	}
-	public void msgMoneyDeposited(){
-		balance += change;
+	public void msgMoneyDeposited(double amountAdded, double loanAmt, int lt){
+		balance += amountAdded;
+		change = amountAdded;
 		print("MONEY DEPOSITED "+ balance);
 		state = State.leaving;
+		loanAmount = loanAmt;
+		loanTime = lt;
 		stateChanged();
 	}
-	public void msgMoneyWithdrawn(double amtWithdrawn){
+	public void msgMoneyWithdrawn(double amountWithdrawn, double loanAmt, int lt){
 		balance += change;
 		print("MONEY WITHDRAWN "+ balance);
 		state = State.leaving;
-		change = amtWithdrawn;
+		change = amountWithdrawn;
+		loanAmount = loanAmt;
+		loanTime = lt;
 		stateChanged();
-	}
-	public void msgLoanDecision(boolean status){
-		print("LOAN "+status);
-		
 	}
 	
 	public void msgAnimationFinishedGoToTeller(){
@@ -195,8 +194,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void leftBank(){
 		state = State.idle;
-		personGui.setInBank(false);
-	   // simCityGui.updateInfoPanel(this);
+		//personGui.setInBank(false);
 	}
 
 	// Accessors, etc.
@@ -218,17 +216,20 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	
-	public Person getPerson() {
-		Person person = bank.getPerson(this);
-		return person;
+	public void setManager(Manager m) {
+		manager = m;
 	}
 	
-	public void setBank(Manager b) {
-		bank = b;
+	public Manager getManager() {
+		return manager;
 	}
 	
-	public Manager getBank() {
-		return bank;
+	public double getLoanAmount(){
+		return loanAmount;
+	}
+	
+	public int getLoanTime(){
+		return loanTime;
 	}
 	
 	public int getAccountNum(){

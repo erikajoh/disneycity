@@ -14,16 +14,17 @@ import java.util.*;
  */
 
 public class TellerAgent extends Agent implements Teller {
-	Manager bank;
+	Manager manager;
 	List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
-	enum State {deciding, openingAccount, depositingCash, withdrawingCash, decidingOnLoan, givingLoan, leaving, idle};
+	enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
 
 	class Customer {
 	  BankCustomer bankCustomer;
 	  Account account;
 	  int creditRating;
 	  double requestAmt;
+	  
 	  State state;
 	  
 	  public Customer(BankCustomer p){
@@ -35,7 +36,7 @@ public class TellerAgent extends Agent implements Teller {
 		  }
 		  else{
 		      for(Account acc : accounts){
-			      if(acc.getNumber() == accountNumber){
+			      if(acc.number == accountNumber){
 			    	  account = acc; break;
 			      }
 		      }
@@ -104,21 +105,7 @@ public class TellerAgent extends Agent implements Teller {
 	public void	msgWithdrawCash(int accountNum, double cash){
 		print("DEPOSIT CASH ");
 		customer.requestAmt = cash;
-		customer.state = State.depositingCash; 
-		stateChanged();
-	}
-	
-
-	public void msgAskForLoan(int accountNum, double cash) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void	msgAskForLoan(Account account, double cash){
-		print("ASK FOR LOAN");
-		customer.requestAmt = cash;
-		customer.state = State.decidingOnLoan;
-		
+		customer.state = State.withdrawingCash; 
 		stateChanged();
 	}
 	
@@ -150,10 +137,6 @@ public class TellerAgent extends Agent implements Teller {
 			   withdrawCash();
 			   return true;
 		    }
-	      else if(customer.state == State.decidingOnLoan){
-			   decideOnLoan();
-			   return true;
-		   }
 		  else if(customer.state == State.leaving){
 			   customerLeaving();
 			   return true;
@@ -171,15 +154,26 @@ public class TellerAgent extends Agent implements Teller {
 		int accountNum = accounts.size();
 		customer.account = new Account(accountNum);
 		accounts.add(customer.account);
-		customer.bankCustomer.msgAccountOpened(accountNum);
+		customer.bankCustomer.msgAccountOpened(accountNum, customer.requestAmt);
 		customer.state = State.deciding;
 	}
 
 	private void depositCash(){
-		double newBalance = customer.account.getBalance()+customer.requestAmt;
-		customer.account.setBalance(newBalance);
-		customer.requestAmt = 0;
-		customer.bankCustomer.msgMoneyDeposited();
+		if(customer.account.loanAmount > 0){
+			if(customer.account.loanAmount > customer.requestAmt){
+			  customer.account.loanAmount -= customer.requestAmt;
+			}
+			else{
+				customer.requestAmt -= customer.account.loanAmount;
+				customer.account.loanAmount = 0.00;
+				customer.account.loanTime = 0;
+			}
+		}
+	    if(customer.requestAmt > 0){
+		  double newBalance = customer.account.getBalance()+customer.requestAmt;
+		  customer.account.setBalance(newBalance);
+	    }
+		customer.bankCustomer.msgMoneyDeposited(customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
 		customer.state = State.deciding;
 	}
 
@@ -187,17 +181,20 @@ public class TellerAgent extends Agent implements Teller {
 		double newBalance = customer.account.getBalance()-customer.requestAmt;
 		if(newBalance >= 0){
 		  customer.account.setBalance(newBalance);
+		  customer.account.loanAmount = 0.00;
+		  customer.account.loanTime = 0;
 		}
 		else{
 		  customer.account.setBalance(0);
 		  customer.requestAmt = customer.account.getBalance();
+		  customer.account.loanAmount = -customer.requestAmt;
+		  customer.account.loanTime = 0;
 		}
-		customer.bankCustomer.msgMoneyWithdrawn(customer.requestAmt);
-		customer.requestAmt = 0;
+		customer.bankCustomer.msgMoneyWithdrawn(customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
 		customer.state = State.deciding;
 	}
 
-	private void decideOnLoan(){
+	/*private void decideOnLoan(){
 		customer.state = State.deciding;
 		if(customer.creditRating > 75){
 		  customer.bankCustomer.msgLoanDecision(true);
@@ -210,10 +207,10 @@ public class TellerAgent extends Agent implements Teller {
 		}
 		  customer.requestAmt = 0;
 
-	}
+	}*/
 
 	private void customerLeaving(){
-		bank.msgTellerFree(this, customer.bankCustomer);
+		manager.msgTellerFree(this, customer.bankCustomer);
 		customer = null;
 	}
 	
@@ -223,8 +220,8 @@ public class TellerAgent extends Agent implements Teller {
 		tellerGui = gui;	
 	}
 		
-	public void setBank(Manager b) {
-		bank = b;
+	public void setManager(Manager m) {
+		manager = m;
 	}
 
 	public TellerGui getGui() {

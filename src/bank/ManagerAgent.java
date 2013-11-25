@@ -5,6 +5,7 @@ import bank.interfaces.Manager;
 import bank.interfaces.Teller;
 import bank.interfaces.Person;
 import bank.interfaces.BankCustomer;
+import bank.gui.Bank;
 import bank.gui.BankCustomerGui;
 import simcity.gui.SimCityGui;
 
@@ -20,14 +21,12 @@ import java.util.*;
 public class ManagerAgent extends Agent implements Manager {
 	   public class WaitingCustomer {
 		 BankCustomer bankCustomer;
-		 Person person;
 		 State state;
 		 Action action;
 		 private int accountNum;
 		 private double requestAmt;
-		 public WaitingCustomer(BankCustomer bc, Person p){
+		 public WaitingCustomer(BankCustomer bc){
 			 bankCustomer = bc;
-			 person = p;
 			 state = State.waiting;
 		 }
 		 
@@ -47,7 +46,7 @@ public class ManagerAgent extends Agent implements Manager {
 
 		List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
 		enum State{entered, waiting, leaving, busy, idle};
-		enum Action{newAccount, deposit, withdraw, loan};
+		enum Action{newAccount, deposit, withdraw};
 
 		class MyTeller {
 			Teller teller;
@@ -61,13 +60,16 @@ public class ManagerAgent extends Agent implements Manager {
 
 		public List<MyTeller> tellers = Collections.synchronizedList(new ArrayList<MyTeller>());
 		
+		private Bank bank;
+		
 		private SimCityGui simCityGui;
 
 		private String name;
 
 
-	public ManagerAgent(String name, SimCityGui bg) {
+	public ManagerAgent(String name, Bank b, SimCityGui bg) {
 		super();
+		bank = b;
 		simCityGui = bg;
 		this.name = name;
 	}
@@ -97,29 +99,23 @@ public class ManagerAgent extends Agent implements Manager {
 		stateChanged();
 	}
 	
-	public void msgCustomerHere(Person person){
+	public void msgCustomerHere(BankCustomer bca){
 		boolean found = false;
 		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.person == person){
+			if(wc.bankCustomer == bca){
 		       wc.state = State.entered;
 		       found = true; break;
 		    }
 		}
 		if(found == false){
-			  BankCustomerAgent bca = new BankCustomerAgent(person.getName(), this, simCityGui);
-		      BankCustomerGui g = new BankCustomerGui(bca, simCityGui, 400, 330);
-		      
-		      simCityGui.bankAniPanel.addGui(g);// dw
-		      bca.setGui(g);
-		      bca.startThread();
-		      waitingCustomers.add(new WaitingCustomer(bca, person));
+		    waitingCustomers.add(new WaitingCustomer(bca));
 		}
 	}
 
-	public void msgRequestAccount(double amount, Person person){
+	public void msgRequestAccount(BankCustomer bc, double amount){
 		//print(person.getName());
 		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.person == person){
+			if(wc.bankCustomer == bc){
 				wc.setAccountNum(-1);
 				wc.setRequestAmt(amount);
 				wc.action = Action.newAccount;
@@ -129,28 +125,23 @@ public class ManagerAgent extends Agent implements Manager {
 		stateChanged();
 	}
 	
-	public void msgRequestDeposit(int accountNumber, double amount, Person person, boolean forLoan){
+	public void msgRequestDeposit(BankCustomer bc, int accountNumber, double amount){
 		WaitingCustomer waitingCustomer = null;
 		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.person == person){
+			if(wc.bankCustomer == bc){
 				waitingCustomer = wc;
 				wc.setAccountNum(accountNumber);
 				wc.setRequestAmt(amount);
 				break;
 			}
 		}
-	   if(forLoan == false){
-			waitingCustomer.action = Action.deposit;
-	   }
-	   else {
-			waitingCustomer.action = Action.loan;
-	   }
+		waitingCustomer.action = Action.deposit;
 		stateChanged();
 	}
 	
-	public void msgRequestWithdrawal(int accountNumber, double amount, Person person){
+	public void msgRequestWithdrawal(BankCustomer bc, int accountNumber, double amount){
 		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.person == person){
+			if(wc.bankCustomer == bc){
 				wc.setAccountNum(accountNumber);
 				wc.setRequestAmt(amount);
 				wc.action = Action.withdraw;
@@ -224,9 +215,7 @@ public class ManagerAgent extends Agent implements Manager {
 			print("RA: "+wc.requestAmt);
 			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt);
 		}
-		else if(wc.action == Action.loan){
-			wc.bankCustomer.msgRequestLoan(wc.requestAmt);
-		}
+
 		//wc.person.msgGoToTeller(mt.teller);
 		wc.state = State.busy;
 		mt.teller.msgNewCustomer(wc.bankCustomer);
@@ -242,18 +231,9 @@ public class ManagerAgent extends Agent implements Manager {
 		BankCustomer bc = wc.bankCustomer;
 		print(bc.getAccountNum() + " $" + bc.getBalance());
 		wc.state = State.idle;
-		wc.person.msgLeave(bc.getAccountNum(), bc.getBalance());
+		bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getBalance(), bc.getLoanAmount(), bc.getLoanTime());
 	}
 	
-	public Person getPerson(BankCustomer bc){
-		Person person = null;
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.bankCustomer == bc){
-				person = wc.person; break;
-			}
-		}
-		return person;
-	}
 	
 	public void addTeller(TellerAgent t){
 		MyTeller mt = new MyTeller(t);

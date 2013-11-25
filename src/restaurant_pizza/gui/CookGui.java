@@ -24,11 +24,11 @@ public class CookGui implements Gui {
 	
     private int xPos = -mySize*2, yPos = -mySize*2; //default waiter position
     private int xDestination, yDestination; //default start position
-    private static final int xPlatingArea = 250, yPlatingArea = 100;
-    private static final int xFridge = 250, yFridge = 50;
-    private static final int xCookingArea = 400, yCookingArea = 100;
+    private static final int xPlatingArea = 280, yPlatingArea = 90;
+    private static final int xFridge = 290, yFridge = 50;
+    private static final int xCookingArea = 310, yCookingArea = 90;
     // TODO: Show the plates as text with a new area
-    private static final int xCookingAreaText = 400, yCookingAreaText = 100;
+    private static final int xCookingAreaText = 300, yCookingAreaText = 100;
 	public static final int mySize = 20;
 	
     public CookGui(CookAgent agent) {
@@ -37,7 +37,7 @@ public class CookGui implements Gui {
         yPos = yPlatingArea;
         xDestination = xPlatingArea;
         yDestination = yPlatingArea;
-        bi = Toolkit.getDefaultToolkit().getImage("res/customer.gif");
+        bi = Toolkit.getDefaultToolkit().getImage("res/cook.gif");
 
     }
 
@@ -62,11 +62,16 @@ public class CookGui implements Gui {
     public void draw(Graphics2D g) {
         g.drawImage(bi, xPos, yPos, mySize*2, mySize*2, null);
         g.setColor(Color.ORANGE);
-        g.setFont(new Font(null, Font.PLAIN, 18));
-        g.drawString(orderStatus, xPos, yPos);
+        g.setFont(new Font(null, Font.PLAIN, 12));
+        if (orderStatus == "") {
+        	g.drawString(orderStatus, xPos, yPos);
+        }
+        else {
+        	g.drawString(orderStatus.substring(0,3), xPos-40, yPos);
+        }
 
         g.setFont(new Font(null, Font.PLAIN, 12));
-        g.drawString(cookingOrders, xCookingAreaText, yCookingAreaText);
+        if (cookingOrders.length() >4) g.drawString(cookingOrders.substring(1,4), xCookingAreaText + 50, yCookingAreaText);
         //TODO Draw the plates on cooking area here
     }
 

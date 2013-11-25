@@ -1,13 +1,16 @@
 package bank.gui;
 
 public class Account {
-	private int number;
-	private double balance;
-	private double loanBalance;
-	private double loanTime;
+	public int number;
+	public double balance;
+	public double loanAmount;
+	public int loanTime;
 	
 	public Account(int num){
 		number = num;
+		balance = 0.00;
+		loanAmount = 0.00;
+		loanTime = 0;
 	}
 	public void setNumber(int num){
 		number = num;
@@ -21,13 +24,13 @@ public class Account {
 	public double getBalance(){
 		return balance;
 	}
-	public void setLoanBalance(double loanBal){
-		loanBalance = loanBal;
+	public void setLoanAmount(double loanAmt){
+		loanAmount = loanAmt;
 	}
-	public double getLoanBalance(){
-		return loanBalance;
+	public double getLoanAmount(){
+		return loanAmount;
 	}
-	public void setLoanTime(double lt){
+	public void setLoanTime(int lt){
 		loanTime = lt;
 	}
 	public double getLoanTime(){

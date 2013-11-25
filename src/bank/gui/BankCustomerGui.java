@@ -23,10 +23,11 @@ public class BankCustomerGui implements Gui{
 	private boolean isInBank = false;
 
 
-	public BankCustomerGui(BankCustomerAgent c, SimCityGui gui, int wx, int wy){ //HostAgent m) {
+	public BankCustomerGui(BankCustomerAgent c, SimCityGui gui, boolean present, int wx, int wy){ //HostAgent m) {
 		agent = c;
 		windowX = wx;
 		windowY = wy;
+		isPresent = present;
 		xPos = windowX/2-10;
 		yPos = windowY-25;
 		xDestination = xPos;

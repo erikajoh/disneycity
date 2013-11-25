@@ -304,13 +304,13 @@ public class CustomerAgent extends Agent implements Customer {
 		int randomOrderIndex = rand.nextInt(menu.menuList.size());
 		order = menu.menuList.get(randomOrderIndex);
 		
-		customerGui.DoDisplayOrder(order + '?');
+		customerGui.DoDisplayOrder(order.substring(0,3) + '?');
 		Do("I'M ORDERING " + order + "!!!");
 		waiter.msgGivingMyOrder(this, order);
 	}
 
 	private void EatFood() {
-		customerGui.DoDisplayOrder(order);
+		customerGui.DoDisplayOrder(order.substring(0,3));
 		Do("Eating Food");
 		timer.schedule(new TimerTask() {
 			public void run() {
