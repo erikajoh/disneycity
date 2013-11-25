@@ -2,57 +2,37 @@ package transportation.Objects;
 
 import java.util.*;
 
-import transportation.Agents.Bus;
 import simcity.PersonAgent;
 
 public class BusStop {
-	List<BusWaiter> busWaiters;
-	float fare;
-	Bus currentBus;
-	
-	class BusWaiter {
-		PersonAgent person;
-		boolean payedFare;
-		
-		public BusWaiter(PersonAgent person) {
-			this.person = person;
-			payedFare = false;
-		}
-	}
+	public List<BusRider> busWaiters;
+	List<String> nearbyBuildings;
+	MovementTile associatedTile;
 	
 	public BusStop() {
-		busWaiters = new ArrayList<BusWaiter>();
-		fare = 1.50f;
-		currentBus = null;
-	}
-	
-	public void personWaitingAtStop(PersonAgent person) {
-		busWaiters.add(new BusWaiter(person));
-	}
-	
-	public void busArrived(Bus bus) {
-		currentBus = bus;
-	}
-	
-	public void busLeaving() {
-		currentBus = null;
-	}
-	
-	public void messageRidersForFare() {
-		if(currentBus == null) {
-			System.out.println("NoBusFound. Find agent calling function.");
-			return;
-		}
-		synchronized(busWaiters) {
-			for(BusWaiter busWaiter : busWaiters) {
-				if(!busWaiter.payedFare) {
-					busWaiter.person.msgPayFare(fare, currentBus);
-				}
-			}
-		}
+		busWaiters = new ArrayList<BusRider>();
+		nearbyBuildings = new ArrayList<String>();
 	}
 	
 	public void clearRiders() {
-		busWaiters = new ArrayList<BusWaiter>();
+		busWaiters = new ArrayList<BusRider>();
+	}
+	
+	public void addRider(PersonAgent person, BusStop finalStop, MovementTile destination) {
+		busWaiters.add(new BusRider(person, finalStop, destination));
+	}
+	
+	public void addNearbyBuilding(String building) {
+		nearbyBuildings.add(building);
+	}
+	
+	public boolean isDestinationNear(String building) {
+		if(nearbyBuildings.contains(building))
+			return true;
+		return false;
+	}
+	
+	public void associateSpace(MovementTile tile) {
+		associatedTile = tile;
 	}
 }
