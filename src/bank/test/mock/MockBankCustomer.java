@@ -2,11 +2,8 @@ package bank.test.mock;
 
 import simcity.gui.SimCityGui;
 import bank.gui.BankCustomerGui;
-import bank.interfaces.BankCustomer;
-import bank.interfaces.Manager;
-import bank.interfaces.Teller;
 
-public class MockBankCustomer extends Mock implements BankCustomer {
+public class MockBankCustomer extends Mock {
 	
 	public EventLog log;
 	private String name;
@@ -20,8 +17,8 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 	private BankCustomerGui personGui;
 	
 	// agent correspondents
-	private Manager manager = null;
-	private Teller teller = null;
+	private MockManager manager = null;
+	public MockTeller teller = null;
 	
 	public enum State
 	{deciding, openingAccount, depositing, withdrawing, leaving, left, idle};
@@ -39,7 +36,7 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public MockBankCustomer(String name, Manager m, SimCityGui bg){
+	public MockBankCustomer(String name, MockManager m, SimCityGui bg){
 		super(name);
 		log = new EventLog();
 		this.name = name;
@@ -54,6 +51,7 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 	// Messages
 	
 	public void	msgRequestNewAccount(double ra){
+		log.add(new LoggedEvent("REQ NEW ACCOUNT"));
 		requestAmt = ra;
 		state = State.openingAccount;
 	}
@@ -68,11 +66,12 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 		state = State.withdrawing;
 	}
 
-	public void msgGoToTeller(Teller t){
+	public void msgGoToTeller(MockTeller t){
 		teller = t;
 		animState = AnimState.go; 
 	}
 	public void msgAccountOpened(int an, double amountWithdrawn){
+		System.out.println(""+amountWithdrawn);
 		balance += change;
 		change = amountWithdrawn;
 		log.add(new LoggedEvent("ACCOUNT OPENED "+balance));
@@ -83,17 +82,17 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 		balance += amountAdded;
 		change = amountAdded;
 		log.add(new LoggedEvent("MONEY DEPOSITED "+ balance));
-		state = State.leaving;
 		loanAmount = loanAmt;
 		loanTime = lt;
+		state = State.leaving;
 	}
 	public void msgMoneyWithdrawn(double amountWithdrawn, double loanAmt, int lt){
 		balance += change;
 		log.add(new LoggedEvent("MONEY WITHDRAWN "+ balance));
-		state = State.leaving;
 		change = amountWithdrawn;
 		loanAmount = loanAmt;
 		loanTime = lt;
+		state = State.leaving;
 	}
 	
 	public void msgAnimationFinishedGoToTeller(){
@@ -109,7 +108,7 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
 	    if(animState == AnimState.go){
 			goToTeller();
@@ -144,16 +143,17 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 	// Actions
 	
 	private void goToTeller(){
-		state = State.idle;
 		animState = AnimState.walking;
 	}
 	
 	private void openAccount(){
+		log.add(new LoggedEvent("OPEN ACCOUNT"));
 		if(teller == null){
 			log.add(new LoggedEvent("TELLER NULL"));
+			System.out.println("TELLER NULL");
 		}
-		teller.msgOpenAccount(this, balance*.5);
-		change = -balance*.5;
+		teller.msgOpenAccount(this, requestAmt);
+		//change = -balance*.5;
 		state = State.idle;
 	}
 	private void depositCash(){
@@ -168,7 +168,6 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 		teller.msgLeavingBank();
 		animState = AnimState.walking;
 		state = State.left;
-		personGui.DoLeaveBank();
 	}
 	
 	private void leftBank(){
@@ -194,11 +193,11 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 	}
 	
 	
-	public void setManager(Manager m) {
+	public void setManager(MockManager m) {
 		manager = m;
 	}
 	
-	public Manager getManager() {
+	public MockManager getManager() {
 		return manager;
 	}
 	
@@ -218,7 +217,7 @@ public class MockBankCustomer extends Mock implements BankCustomer {
 		accountNum = num;
 	}
 	
-	public void setTeller(Teller t) {
+	public void setTeller(MockTeller t) {
 		teller = t;
 	}
 	

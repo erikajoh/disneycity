@@ -11,16 +11,16 @@ import bank.interfaces.BankCustomer;
 import bank.interfaces.Manager;
 import bank.interfaces.Teller;
 
-public class MockManager extends Mock implements Manager {
+public class MockManager extends Mock {
 	
 	  public EventLog log;
 	  public class WaitingCustomer {
-			 BankCustomer bankCustomer;
+			 MockBankCustomer bankCustomer;
 			 State state;
 			 Action action;
 			 private int accountNum;
 			 private double requestAmt;
-			 public WaitingCustomer(BankCustomer bc){
+			 public WaitingCustomer(MockBankCustomer bc){
 				 bankCustomer = bc;
 				 state = State.waiting;
 			 }
@@ -44,9 +44,9 @@ public class MockManager extends Mock implements Manager {
 			enum Action{newAccount, deposit, withdraw};
 
 			class MyTeller {
-				Teller teller;
+				MockTeller teller;
 				TellerState state;
-				public MyTeller(Teller t){
+				public MyTeller(MockTeller t){
 					teller = t;
 					state = TellerState.idle;
 				}
@@ -81,7 +81,8 @@ public class MockManager extends Mock implements Manager {
 		
 		// Messages
 		
-		public void msgTellerFree(Teller teller, BankCustomer bankCustomer){
+		public void msgTellerFree(MockTeller teller, MockBankCustomer bankCustomer){
+			log.add(new LoggedEvent("TELLER FREE"));
 			for(MyTeller t : tellers){
 				if(t.teller == teller){
 					t.state = TellerState.idle; break;
@@ -94,7 +95,7 @@ public class MockManager extends Mock implements Manager {
 			}
 		}
 		
-		public void msgCustomerHere(BankCustomer bca){
+		public void msgCustomerHere(MockBankCustomer bca){
 			boolean found = false;
 			for(WaitingCustomer wc : waitingCustomers){
 				if(wc.bankCustomer == bca){
@@ -107,7 +108,8 @@ public class MockManager extends Mock implements Manager {
 			}
 		}
 
-		public void msgRequestAccount(BankCustomer bc, double amount){
+		public void msgRequestAccount(MockBankCustomer bc, double amount){
+			log.add(new LoggedEvent("New Bank Customer"));
 			for(WaitingCustomer wc : waitingCustomers){
 				if(wc.bankCustomer == bc){
 					wc.setAccountNum(-1);
@@ -118,7 +120,7 @@ public class MockManager extends Mock implements Manager {
 			}
 		}
 		
-		public void msgRequestDeposit(BankCustomer bc, int accountNumber, double amount){
+		public void msgRequestDeposit(MockBankCustomer bc, int accountNumber, double amount){
 			WaitingCustomer waitingCustomer = null;
 			for(WaitingCustomer wc : waitingCustomers){
 				if(wc.bankCustomer == bc){
@@ -131,7 +133,7 @@ public class MockManager extends Mock implements Manager {
 			waitingCustomer.action = Action.deposit;
 		}
 		
-		public void msgRequestWithdrawal(BankCustomer bc, int accountNumber, double amount){
+		public void msgRequestWithdrawal(MockBankCustomer bc, int accountNumber, double amount){
 			for(WaitingCustomer wc : waitingCustomers){
 				if(wc.bankCustomer == bc){
 					wc.setAccountNum(accountNumber);
@@ -146,7 +148,7 @@ public class MockManager extends Mock implements Manager {
 		/**
 		 * Scheduler.  Determine what action is called for, and do it.
 		 */
-		protected boolean pickAndExecuteAnAction() {
+		public boolean pickAndExecuteAnAction() {
 		
 			for(WaitingCustomer wc : waitingCustomers){
 				if(wc.state == State.waiting){
@@ -187,9 +189,9 @@ public class MockManager extends Mock implements Manager {
 		// Actions
 		private void assignTeller(MyTeller mt, WaitingCustomer wc){	
 			wc.bankCustomer.msgGoToTeller(mt.teller);
-			log.add(new LoggedEvent(wc.toString() + " " + wc.action));
 			
 			if(wc.action == Action.newAccount){
+				log.add(new LoggedEvent("ASSIGNING AND NEW ACCOUNT" + wc.toString() + " " + wc.action));
 				wc.bankCustomer.msgRequestNewAccount(wc.requestAmt);
 			}
 			else if(wc.action == Action.deposit){
@@ -210,9 +212,10 @@ public class MockManager extends Mock implements Manager {
 		}
 		
 		private void updatePersonInfo(WaitingCustomer wc){
-			BankCustomer bc = wc.bankCustomer;
+			MockBankCustomer bc = wc.bankCustomer;
 			log.add(new LoggedEvent(bc.getAccountNum() + " $" + bc.getBalance()));
 			wc.state = State.idle;
+			System.out.println("MANAGER CHANGE: "+bc.getBalance());
 			bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getBalance(), bc.getLoanAmount(), bc.getLoanTime());
 		}
 		

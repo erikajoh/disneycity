@@ -4,26 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import simcity.gui.SimCityGui;
 import bank.gui.Account;
-import bank.gui.Bank;
-import bank.gui.BankCustomerGui;
-import bank.interfaces.BankCustomer;
-import bank.interfaces.Manager;
 import bank.interfaces.Person;
-import bank.interfaces.Teller;
 
 public class MockPerson extends Mock implements Person {
 	
 	public EventLog log;
 	private String name;
-	private double balance = 25.00;
+	public double balance = 25.00;
 	private Account originalAccount;
-	private int newAccountNum;
+	public int newAccountNum;
 	private double loanAmt;
 	private int loanTime;
 
-	private double newBalance;
+	private double change;
 		
 	// agent correspondents
 	private MockBank bank = null;
@@ -32,8 +26,9 @@ public class MockPerson extends Mock implements Person {
 	State state = State.idle;
 	
 	int decision = 0;
+	double requestAmount = 0;
 	
-	List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());;
+	public List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());;
 	
 
 	/**
@@ -50,17 +45,19 @@ public class MockPerson extends Mock implements Person {
 	
 	// Messages
 
-	public void msgArrive(int num){
+	public void msgArrive(int num, double reqAmt){
 		log.add(new LoggedEvent("PERSON ARRIVE"));
 		decision = num;
+		requestAmount = reqAmt;
 		state = State.arrive;
 	}
 	
 	//double loanAmt
 	
-	public void msgLeave(int accNum, double balance, double la, int lt){
+	public void msgLeave(int accNum, double ch, double la, int lt){
+		log.add(new LoggedEvent("TRANSACTION COMPLETE"));
 		newAccountNum = accNum;
-	    newBalance = balance;
+	    change = ch;
 	    loanAmt = la;
 	    loanTime = lt;
 		state = State.leave;
@@ -70,7 +67,7 @@ public class MockPerson extends Mock implements Person {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
 		if(state == State.arrive){
 			tellBankHere();
@@ -86,33 +83,35 @@ public class MockPerson extends Mock implements Person {
 	// Actions
 	
 	private void tellBankHere(){
-		state = State.idle;
-		//bank.msgCustomerHere(this);
-		
+		log.add(new LoggedEvent("TELL BANK HERE"));
+		state = State.idle;		
 		
 		if(accounts.size() == 0){
-			bank.msgRequestAccount(this, balance*.5, true);
+			bank.msgRequestAccount(this, requestAmount, true);
 		}
 		else if(decision == 0){
 			originalAccount = accounts.get(0); //really a pick method for the index
-		    bank.msgRequestDeposit(this, originalAccount.getNumber(), 5.00, true);
+		    bank.msgRequestDeposit(this, originalAccount.getNumber(), requestAmount, true);
 		}
 		else if(decision == 1){
 			 originalAccount = accounts.get(0); //really a pick method for the index
-			 bank.msgRequestWithdrawal(this, originalAccount.getNumber(), 5.00, true);
+			 bank.msgRequestWithdrawal(this, originalAccount.getNumber(), requestAmount, true);
 		}
 	
 	}
 	
 	private void leave(){
-		log.add(new LoggedEvent("PERSON LEFT BANK "+ newAccountNum + " " + newBalance + " " + loanAmt + " " + loanTime));
+		log.add(new LoggedEvent("PERSON LEFT BANK "+ newAccountNum + " " + change + " " + loanAmt + " " + loanTime));
+		System.out.println("CHANGE: "+ change);
+		balance+=change;
+		System.out.println(balance);
 		if(originalAccount == null){
-			Account newAccount = new Account(newAccountNum);
-			newAccount.setBalance(newBalance);
+			Account newAccount = new Account(newAccountNum, balance);
+			newAccount.setBalance(balance);
 			accounts.add(newAccount);
 		}
 		else {
-			originalAccount.setBalance(newBalance);
+			originalAccount.setBalance(balance);
 		}
 		state = State.idle;
 	}
