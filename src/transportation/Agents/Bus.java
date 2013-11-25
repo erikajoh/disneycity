@@ -10,9 +10,11 @@ import transportation.Objects.BusStop;
 public class Bus extends MobileAgent{
 	
 	private final float fare = 1.50f;
-	private float collectedFare;
+	private float collectedFare = 0.00f;
 	private List<BusRider> busRiders;
 	BusStop currentBusStop;
+	
+	TransportationController master;
 	
 	public Bus() {
 		collectedFare = 0;
@@ -25,6 +27,7 @@ public class Bus extends MobileAgent{
 		for(BusRider busRider : busRiders) {
 			if(busRider.getPerson() == person) {
 				busRider.state = BusRider.RiderState.RIDING;
+				collectedFare += fare;
 				stateChanged();
 			}
 		}
