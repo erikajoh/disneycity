@@ -14,13 +14,21 @@ public class Housing {
 	
 	PersonAgent ownerPerson;
 	ArrayList<Renter> renters = new ArrayList<Renter>();
-	SimCityGui gui;
+	HousingAnimationPanel panel;
 		
-	public Housing(SimCityGui g, String n) {
-    	gui = g;
-    	name = n;
-    	if (name == "Haunted Mansion") type = "house";
-    	else if (name == "Main St Apartment") type = "apt";
+	public Housing(HousingAnimationPanel p, String n) {
+		panel = p;
+		name = n;
+    	if (name.contains("Haunted Mansion")) type = "house";
+    	else if (name.contains("Main St Apartments")) type = "apt";
+    	
+    	if (name == "Haunted Mansion") panel.setBackground("res/hauntedmansion.png");
+    	if (name == "Main St Apartments #1") panel.setBackground("res/mainstapts1.png");
+    	if (name == "Main St Apartments #2") panel.setBackground("res/mainstapts2.png");
+    	if (name == "Main St Apartments #3") panel.setBackground("res/mainstapts3.png");
+    	if (name == "Main St Apartments #4") panel.setBackground("res/mainstapts4.png");
+    	if (name == "Main St Apartments #5") panel.setBackground("res/mainstapts5.png");
+    	if (name == "Main St Apartments #6") panel.setBackground("res/mainstapts6.png");
     }
 	
 	public String getName() {
@@ -34,14 +42,14 @@ public class Housing {
 	public void addRenter() { //hack
 		ResidentAgent r = new ResidentAgent("r"+renters.size()+1, type);
 		r.setHousing(this);
-		gui.housAniPanel.addRenter(r);
+		panel.addRenter(r);
 	}
 	
 	public void addRenter(PersonAgent rp) {
 		ResidentAgent r = new ResidentAgent("r"+renters.size()+1, type);
 		r.setHousing(this);
 		renters.add(new Renter(r, rp));
-		gui.housAniPanel.addRenter(r);
+		panel.addRenter(r);
 	}
 	
 	class Renter {

@@ -39,7 +39,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	
 	JPanel cards;
 	
-	enum Panel {housing, rancho, bayou, market, bank, pizza};
+	enum Panel {Mansion, Apt1, Apt2, Apt3, Apt4, Apt5, Apt6, Rancho, Bayou, Market, Bank, Pizza};
 	Panel currP;
 			
 	public static RestaurantRancho restRancho;
@@ -51,8 +51,26 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	public static RestaurantPizza restPizza;
 	public PizzaAnimationPanel pizzaAniPanel = new PizzaAnimationPanel();
 	
+	public static Housing mainStApts1;
+	public HousingAnimationPanel housAniPanel1 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts2;
+	public HousingAnimationPanel housAniPanel2 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts3;
+	public HousingAnimationPanel housAniPanel3 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts4;
+	public HousingAnimationPanel housAniPanel4 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts5;
+	public HousingAnimationPanel housAniPanel5 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts6;
+	public HousingAnimationPanel housAniPanel6 = new HousingAnimationPanel();
+	
 	public static Housing hauntedMansion;
-	public HousingAnimationPanel housAniPanel = new HousingAnimationPanel();
+	public HousingAnimationPanel housAniPanel7 = new HousingAnimationPanel();	
 	
 	public static Market mickeysMarket;
 	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
@@ -82,7 +100,13 @@ public class SimCityGui extends JFrame implements ActionListener  {
 //		  new Timer(delay, taskPerformer).start();
 				
 		cards = new JPanel(new CardLayout());
-		cards.add(housAniPanel, "Housing");
+		cards.add(housAniPanel7, "Mansion");
+		cards.add(housAniPanel1, "Apt1");
+		cards.add(housAniPanel2, "Apt2");
+		cards.add(housAniPanel3, "Apt3");
+		cards.add(housAniPanel4, "Apt4");
+		cards.add(housAniPanel5, "Apt5");
+		cards.add(housAniPanel6, "Apt6");
 		cards.add(markAniPanel, "Market");
 		cards.add(bankAniPanel, "Bank");
 		cards.add(ranchoAniPanel, "Rancho");
@@ -91,13 +115,19 @@ public class SimCityGui extends JFrame implements ActionListener  {
 				
 		panelB.addActionListener(this);
 		panelB.setPreferredSize(new Dimension(0, 0));
-		currP = Panel.housing;
+		currP = Panel.Mansion;
 					
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
 		restBayou = new RestaurantBayou(this, "The Blue Bayou");
 		restPizza = new RestaurantPizza(this);
-		hauntedMansion = new Housing(this, "Haunted Mansion");
+		hauntedMansion = new Housing(housAniPanel7, "Haunted Mansion");
+		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");
+		mainStApts2 = new Housing(housAniPanel2, "Main St Apartments #2");
+		mainStApts3 = new Housing(housAniPanel3, "Main St Apartments #3");
+		mainStApts4 = new Housing(housAniPanel4, "Main St Apartments #4");
+		mainStApts5 = new Housing(housAniPanel5, "Main St Apartments #5");
+		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
 		mickeysMarket = new Market(this, "Mickey's Market");
 		pirateBank = new Bank(this);
 		
@@ -200,30 +230,54 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		// TODO Auto-generated method stub
 		if (e.getSource() == panelB) {
 			CardLayout cl = (CardLayout)(cards.getLayout());			
-			if (currP == Panel.bank) {
-				System.out.println("showing housing");
-				cl.show(cards, "Housing");
-				currP = Panel.housing;
-			} else if (currP == Panel.housing) {
+			if (currP == Panel.Bank) {
+				System.out.println("showing hauntedmansion");
+				cl.show(cards, "Mansion");
+				currP = Panel.Mansion;
+			} else if (currP == Panel.Mansion) {
+				System.out.println("showing apt1");
+				cl.show(cards, "Apt1");
+				currP = Panel.Apt1;
+			} else if (currP == Panel.Apt1) {
+				System.out.println("showing apt2");
+				cl.show(cards, "Apt2");
+				currP = Panel.Apt2;
+			} else if (currP == Panel.Apt2) {
+				System.out.println("showing apt3");
+				cl.show(cards, "Apt3");
+				currP = Panel.Apt3;
+			} else if (currP == Panel.Apt3) {
+				System.out.println("showing apt4");
+				cl.show(cards, "Apt4");
+				currP = Panel.Apt4;
+			} else if (currP == Panel.Apt4) {
+				System.out.println("showing apt5");
+				cl.show(cards, "Apt5");
+				currP = Panel.Apt5;
+			} else if (currP == Panel.Apt5) {
+				System.out.println("showing apt6");
+				cl.show(cards, "Apt6");
+				currP = Panel.Apt6;
+			} else if (currP == Panel.Apt6) {
 				System.out.println("showing market");
 				cl.show(cards, "Market");
-				currP = Panel.market;
-			} else if (currP == Panel.market) {
+				currP = Panel.Market;
+			} else if (currP == Panel.Market) {
 				System.out.println("showing rancho");
 				cl.show(cards, "Rancho");
-				currP = Panel.rancho;
-			} else if (currP == Panel.rancho) {
+				currP = Panel.Rancho;
+			} else if (currP == Panel.Rancho) {
 				System.out.println("showing bayou");
 				cl.show(cards, "Bayou");
-				currP = Panel.bayou;
-			} else if (currP == Panel.bayou) {
+				currP = Panel.Bayou;
+			} else if (currP == Panel.Bayou) {
 				System.out.println("showing pizza");
 				cl.show(cards,  "Pizza");
-				currP = Panel.pizza;
-			} else if (currP == Panel.pizza) {
+				currP = Panel.Pizza;
+			} else if (currP == Panel.Pizza) {
 				System.out.println("showing bank");
 				cl.show(cards,  "Bank");
-				currP = Panel.bank;
+				currP = Panel.Bank;
 			}
 		}
 	}

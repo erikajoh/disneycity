@@ -55,6 +55,13 @@ public class Bank extends JPanel implements ActionListener {
     		t.startThread();
         }
         
+        String name = "Dylan";
+		PersonAgent p = new PersonAgent(name);
+		p.setBank(bank);
+		p.msgArrive(-1);
+		customers.add(p);
+		p.startThread();
+        
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 2, 10, 10));
 
