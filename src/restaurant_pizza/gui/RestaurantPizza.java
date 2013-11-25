@@ -8,7 +8,7 @@ import restaurant_pizza.MarketAgent;
 import restaurant_pizza.WaiterAgent;
 import restaurant_pizza.interfaces.Customer;
 import restaurant_pizza.interfaces.Waiter;
-import restaurant_rancho.interfaces.Bank;
+import bank.gui.Bank;
 import simcity.PersonAgent;
 import agent_pizza.Agent;
 import simcity.gui.SimCityGui;
@@ -25,6 +25,7 @@ import java.io.FileReader;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URL;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -57,6 +58,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private CookGui cookGui;
     private CashierAgent cashier;
     
+    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
@@ -204,8 +206,14 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     public void addPerson(PersonAgent p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
+    		//if ((p!=null) && returningCusts.containsKey(p)) {
+    		//	returningCusts.get(p).getGui().setHungry();	
+    		//}
+    		//else {
     		CustomerAgent c = new CustomerAgent(name);	
     		c.setMoney(money);
+    		//returningCusts.put(p, c);
+    		if (p!=null) c.setPerson(p);
     		CustomerGui g = new CustomerGui(c, gui);
     		g.setOffsetWaitingArea(customerInd);
     		customerInd++;
@@ -217,12 +225,13 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		customers.add(c);
     		c.setPerson(p);
     		c.startThread();
+    		//}
     	}
     	else if (type.equals("Waiter")) {
     		WaiterAgent newWaiter = new WaiterAgent(name);	
     		WaiterGui newWaiterGui = new WaiterGui(newWaiter, WAITER_X_START, WAITER_Y_START);
     		WAITER_X_START += newWaiterGui.mySize;
-    		
+    		if (p!=null) newWaiter.setPerson(p);
     		newWaiter.setGui(newWaiterGui);
     		gui.pizzaAniPanel.addGui(newWaiterGui);
 
@@ -238,6 +247,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Host")) {
     		host = new HostAgent(name);
+    		if (p!=null) host.setPerson(p);
     		for (CustomerAgent c: customers) {
     			c.setHost(host);
     		}
@@ -251,6 +261,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	else if (type.equals("Cook")) {
     		cook = new CookAgent(name);
     		cookGui = new CookGui(cook);
+    		if (p!=null) cook.setPerson(p);
     		cook.setGui(cookGui);
     		gui.pizzaAniPanel.addGui(cookGui);
     		for (WaiterAgent w : waiters) {
@@ -262,6 +273,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Cashier")) {
     		cashier = new CashierAgent(name);
+    		if (p!=null) cashier.setPerson(p);
     		for (WaiterAgent w: waiters) {
     			w.setCashier(cashier);
     		}

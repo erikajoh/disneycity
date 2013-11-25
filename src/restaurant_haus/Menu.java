@@ -10,15 +10,15 @@ public class Menu {
 	Map<String, Double> prices = new HashMap<String, Double>();
 	
 	public Menu() {
-		choices.add("steak");
-		choices.add("chicken");
-		choices.add("pizza");
-		choices.add("salad");
+		choices.add("Pastrami Cheeseburger");
+		choices.add("Chicken Sausage Pretzel Roll");
+		choices.add("BLT Flatbread");
+		choices.add("Apple & Cheddar Salad");
 		
-		prices.put("steak", 15.99);
-		prices.put("chicken", 10.99);
-		prices.put("pizza", 8.99);
-		prices.put("salad", 5.99);
+		prices.put("Pastrami Cheeseburger", 11.49);
+	    prices.put("Chicken Sausage Pretzel Roll", 8.99);
+	    prices.put("BLT Flatbread", 8.79);
+	    prices.put("Apple & Cheddar Salad", 7.99);
 	}
 	
 	public String returnOrder(int n) {

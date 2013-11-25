@@ -8,7 +8,7 @@ import restaurant_cafe.MarketAgent;
 import restaurant_cafe.WaiterAgent;
 import restaurant_cafe.CookAgent.Order;
 import restaurant_cafe.interfaces.Market;
-import restaurant_rancho.interfaces.Bank;
+import bank.gui.Bank;
 import simcity.RestMenu;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
@@ -22,6 +22,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import simcity.PersonAgent;
@@ -40,7 +41,8 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     private CookAgent cook;
     private CashierAgent cashier;
     public Bank bank;
-
+    
+    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     
@@ -131,16 +133,23 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     public void addPerson(PersonAgent p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
+    		//if ((p!=null) && returningCusts.containsKey(p)) {
+    		//	returningCusts.get(p).getGui().setHungry();	
+    		//}
+    		//else {
     		CustomerAgent c = new CustomerAgent(name, customers.size());	
     		if (p!=null) c.setPerson(p);
+    		//returningCusts.put(p, c);
     		CustomerGui g = new CustomerGui(c, gui);
     		g.setHungry();
+    		c.setBalance(money);
     		gui.cafeAniPanel.addGui(g);// dw
     		if (host!=null) c.setHost(host);
     		if (cashier!=null) c.setCashier(cashier);
     		c.setGui(g);
     		customers.add(c);
     		c.startThread();
+    		//}
     	}
     	else if (type.equals("Waiter")) {
     		WaiterAgent w = new WaiterAgent(name, menu, waiters.size()+1);	
