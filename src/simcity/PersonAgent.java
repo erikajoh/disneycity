@@ -1,6 +1,7 @@
 package simcity;
 
 import agent.Agent;
+import bank.gui.Bank;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -9,7 +10,6 @@ import market.Market;
 import housing.Housing;
 import housing.interfaces.*;
 import restaurant_rancho.interfaces.Person;
-import simcity.interfaces.Bank_Douglass;
 import simcity.interfaces.Restaurant_Douglass;
 import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.EventLog;
@@ -127,7 +127,7 @@ public class PersonAgent extends Agent {
 		return tempMyHousing;
 	}
 	
-	public void	addBank(Bank_Douglass b, String personType) {
+	public void	addBank(Bank b, String personType) {
 		MyBank tempMyBank = new MyBank(b, b.getName(), personType);
 		myObjects.add(tempMyBank);
 	}
@@ -226,7 +226,10 @@ public class PersonAgent extends Agent {
 	}
 
 	// from Bank
-	// TODO: More parameters needed
+	public void msgLeftBank(int accountNumber, double change, double loanAmount, int loanTime) {
+		
+	}
+	
 	public void msgAccountOpened(int accountNumber) {
 		log.add(new LoggedEvent("Account created: accountNumber = " + accountNumber));
 		
@@ -349,9 +352,12 @@ public class PersonAgent extends Agent {
 					event = PersonEvent.onHold;
 				}
 			}
-			if(currentLocationState == LocationState.Bank) {
+			if(currentLocationState == LocationState.Bank) { // bank scheduler
 				// TODO Person scheduler while in Bank
 				// Stuff to do at bank
+				if(myPersonalBankAccount == null) {
+					requestNewAccount();
+				}
 				if(moneyWanted > 0) {
 					requestWithdrawal();
 				}
@@ -497,25 +503,27 @@ public class PersonAgent extends Agent {
 	}
 	
 	//Bank actions
-	private void createAccount() {
+	private void requestNewAccount() {
+		print("Request new account");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Creating account"));
-		// TODO: Hacking in account number
-		myBank.theBank.msgRequestAccount(moneyToDeposit, this);
+		myBank.bank.msgRequestAccount(this, moneyToDeposit, true); // pointer to myself, money, present
 	}
 	
 	private void requestWithdrawal() {
+		print("Request withdrawal");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Want to withdraw " + moneyWanted + " from " + myBank.name));
 		// TODO: Hacking in account number
-		myBank.theBank.msgRequestWithdrawal(1, moneyWanted, this);
+		myBank.bank.msgRequestWithdrawal(this, 0, moneyWanted, true);
 	}
 	
 	private void requestDeposit() {
+		print("Request deposit");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Want to deposit " + moneyToDeposit + " from " + myBank.name));
 		// TODO: Hacking in account number and forLoan
-		myBank.theBank.msgRequestDeposit(1, moneyWanted, this, false);
+		myBank.bank.msgRequestDeposit(this, 0, moneyToDeposit, true);
 	}
 	
 	//Market actions
@@ -614,14 +622,15 @@ public class PersonAgent extends Agent {
 	// TODO: Use and update stuff in this class
 	private class MyBankAccount extends MyObject {
 		MyBank theBank;
-		String accountType, bankName;
+		String accountType;
+		Bank bank;
 		int accountNumber;
 		double amount = 0, loanNeeded = 0;
 		
-		public MyBankAccount(String accountName, String accountType, String bankName, int accountNumber) {
+		public MyBankAccount(String accountName, String accountType, Bank bank, int accountNumber) {
 			this.name = accountName; 
 			this.accountType = accountType;
-			this.bankName = bankName;
+			this.bank = bank;
 			this.accountNumber = accountNumber;
 		}
 	}
@@ -643,10 +652,10 @@ public class PersonAgent extends Agent {
 	
 	private class MyBank extends MyObject {
 		
-		Bank_Douglass theBank;
+		Bank bank;
 		String personType;
-		public MyBank(Bank_Douglass b, String name, String type) {
-			theBank = b;
+		public MyBank(Bank b, String name, String type) {
+			bank = b;
 			this.name = name;
 			personType = type;
 		}
