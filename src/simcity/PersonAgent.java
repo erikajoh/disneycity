@@ -39,7 +39,8 @@ public class PersonAgent extends Agent {
 	private enum BodyState {Asleep, Active, Tired};
 	private BodyState bodyState;
 	
-	private enum ActionString { wakeUp, goToSleep, payRent, receiveRent, needMaintenance };
+	private enum ActionString { wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
+	// TODO: Use goToWork
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
 	
@@ -224,7 +225,11 @@ public class PersonAgent extends Agent {
 	}
 
 	// from Bank
+	// TODO: More parameters needed
 	public void msgAccountOpened(int accountNumber) {
+		log.add(new LoggedEvent("Account created: accountNumber = " + accountNumber));
+		
+		// TODO msgAccountOpened
 		stateChanged();
 	}
 	
@@ -285,6 +290,8 @@ public class PersonAgent extends Agent {
 					moneyOnHand += theAction.amount; break;
 				case needMaintenance: 
 					doMaintenance(); break;
+				case goToWork:
+					break; // TODO: handle go to work
 			}
 			event = PersonEvent.makingDecision;
 			return true;
@@ -294,7 +301,7 @@ public class PersonAgent extends Agent {
 		if(event == PersonEvent.makingDecision && bodyState != BodyState.Asleep) {
 			
 			if(currentLocationState == LocationState.Home) {
-				if(!insideHouse) {
+				if(!insideHouse) { // if not inside house (i.e., at the doorstep), enter it
 					print("Not inside my house");
 					if(currentLocation.equals(targetLocation)) {
 						enterHouse();
@@ -306,12 +313,17 @@ public class PersonAgent extends Agent {
 					event = PersonEvent.onHold;
 					return true;
 				}
-				if(!isNourished) {
-					if(currentLocation.equals(targetLocation)) {
+				if(!isNourished) { // if I'm hungry
+					if(currentLocation.equals(targetLocation)) { // decide to stay at home
 						print("Deciding to eat");
 						if(preferEatAtHome) {
-							prepareToCookAtHome();
-							event = PersonEvent.onHold;
+							if(marketState == MarketState.WantToBuy) { // not enough in fridge
+								hungryToMarket();
+							}
+							else {
+								prepareToCookAtHome();
+								event = PersonEvent.onHold;
+							}
 						}
 						else {
 							hungryToRestaurant();
@@ -334,17 +346,15 @@ public class PersonAgent extends Agent {
 				// Stuff to do at bank
 				if(moneyWanted > 0) {
 					requestWithdrawal();
-					return true;
 				}
 				if(moneyToDeposit > 0) {
 					requestDeposit();
-					return true;
 				}
 				// Done at bank, time to transition
 				if(!isNourished && !preferEatAtHome) {
 					hungryToRestaurant();
-					return true;
 				}
+				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) {
 				if(!isNourished) {
@@ -357,11 +367,21 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			if(currentLocationState == LocationState.Market) {
+				
+				switch(marketState) {
+					case None:
+						break;
+					case WantToBuy:
+						enterMarket(); break;
+					case WantToWork:
+						break;
+				}
 				// TODO Person scheduler while in Market
 				if(!isNourished && !preferEatAtHome) {
 					hungryToRestaurant();
-					return true;
 				}
+				event = PersonEvent.onHold;
+				return true;
 			}
 		}
 		print("Nothing to do for now: isNourished = " + isNourished
@@ -385,6 +405,22 @@ public class PersonAgent extends Agent {
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
 	}
 	
+	private void hungryToMarket() {
+		// TODO hungryToMarket
+		print("I'm hungry and I want to buy food at market and cook at home");
+		MyMarket targetMarket = chooseMarket();
+		double price = targetMarket.theMarket.getPrice(foodPreference);
+		if(moneyOnHand < price) {
+			log.add(new LoggedEvent("Want to buy food at market; not enough money"));
+			moneyWanted = price - moneyOnHand;
+			// TODO: bank name hacked; MyBank and finding banks must be implemented
+			targetLocation = "Mock Bank 1";
+			return;
+		}
+		print("I have enough money to buy food from market");
+		targetLocation = targetMarket.name;
+	}
+
 	private void doMaintenance() {
 		print("Performing maintenance");
 		myHome.housing.msgDoMaintenance();
@@ -419,7 +455,7 @@ public class PersonAgent extends Agent {
 			targetLocation = "Mock Bank 1";
 			return;
 		}
-		print("I have enough money");
+		print("I have enough money to buy from restaurant");
 		targetLocation = targetRestaurant.name;
 	}
 	
@@ -469,10 +505,11 @@ public class PersonAgent extends Agent {
 	
 	//Market actions
 	
-	private void buyFromMarket() {
-		// TODO Work with this
-		
+	private void enterMarket() {
+		MyMarket myMarket = (MyMarket)currentMyObject;
+		//TODO m.theMarket.personAs(this, "VirtualCustomer", this.name, moneyOnHand, foodPreference);
 	}
+	
 	
 	// ************************* UTILITIES ***********************************
 	
@@ -520,6 +557,15 @@ public class PersonAgent extends Agent {
 		for(int i = 0; i < myObjectsArray.length; i++)
 			if(myObjectsArray[i] instanceof MyRestaurant)
 				return (MyRestaurant)myObjectsArray[i];
+		return null;
+	}
+	
+	private MyMarket chooseMarket() {
+		// TODO: hack in choosing market - choose first available
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++)
+			if(myObjectsArray[i] instanceof MyMarket)
+				return (MyMarket)myObjectsArray[i];
 		return null;
 	}
 	

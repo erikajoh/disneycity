@@ -23,6 +23,8 @@ public class SimCityPanel extends JPanel{
 	 	 
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
 	ArrayList<Housing> housings = new ArrayList<Housing>();
+	ArrayList<Market> markets = new ArrayList<Market>();
+	
 	Transportation_Douglass transportation = new MockTransportation_Douglass("Mock Transportation");
 	
 	private JPanel group = new JPanel();
@@ -42,6 +44,7 @@ public class SimCityPanel extends JPanel{
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
 		firstHackedPerson.addRestaurant(restRancho, "Customer");
+		firstHackedPerson.addMarket(firstMarket, "Customer");
 		people.add(firstHackedPerson);
 		
 		// Alternatively, you can call the next line as a hack (in place of the previous three lines)
