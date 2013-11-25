@@ -27,7 +27,7 @@ public class PizzaAnimationPanel extends JPanel implements ActionListener {
     private final int PLATING_Y = 140;
     private final int PLATING_WIDTH = 130;
     private final int PLATING_HEIGHT = 5;
-    private final int FRIDGE_X = 245;
+    private final int FRIDGE_X = 260;
     private final int FRIDGE_Y = 0;
     private final int COOKING_X = 400;
     private final int COOKING_Y = 50;

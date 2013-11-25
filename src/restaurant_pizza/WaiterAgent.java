@@ -105,7 +105,6 @@ public class WaiterAgent extends Agent implements Waiter {
 			if(tempMC.table == tableNum) {
 				tempMC.state = CustomerState.ReadyToOrderAgain;
 				tempMC.setOrder(null);
-				print("yay " + tempMC.c.getCustomerName() + " " + tempMC.state);
 				break;
 			}
 		stateChanged();
@@ -180,12 +179,6 @@ public class WaiterAgent extends Agent implements Waiter {
 	// ***** SCHEDULER *****
 	
 	protected boolean pickAndExecuteAnAction() {
-		int i = 0;
-		for (MyCustomer m : myCustomers) {
-			print(" " + m.c.getCustomerName() + " " +  m.state + " " + i);
-			i++;
-		}
-		i = 0;
 		try {
 			if(state == AgentState.Working && event == AgentEvent.wantBreak) {
 				state = AgentState.WorkingAndWantBreak;

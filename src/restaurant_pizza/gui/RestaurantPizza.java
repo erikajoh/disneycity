@@ -8,11 +8,15 @@ import restaurant_pizza.MarketAgent;
 import restaurant_pizza.WaiterAgent;
 import restaurant_pizza.interfaces.Customer;
 import restaurant_pizza.interfaces.Waiter;
+import restaurant_rancho.interfaces.Bank;
 import simcity.PersonAgent;
 import agent_pizza.Agent;
 import simcity.gui.SimCityGui;
+
 import javax.swing.*;
+
 import simcity.RestMenu;
+import simcity.Restaurant;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -29,20 +33,21 @@ import java.util.Vector;
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class RestaurantPizza extends JPanel {
-
+public class RestaurantPizza extends JPanel implements Restaurant {
+	
+	public String name;
 	private JTabbedPane tabbedPane = new JTabbedPane();
-	private String name;
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customer");
     private ListPanel waiterPanel = new ListPanel(this, "Waiter");
     private JPanel group = new JPanel();
     public RestMenu menu = new RestMenu();
+    Bank bank;
     
     private static final int GAP_SIZE = 10;
     
-    private static int WAITER_X_START = 250;
-    private static int WAITER_Y_START = 250;
+    private static int WAITER_X_START = 140;
+    private static int WAITER_Y_START = 110;
     
     private int customerInd = 0;
 	
@@ -61,7 +66,6 @@ public class RestaurantPizza extends JPanel {
     public RestaurantPizza(SimCityGui gui) {
     	
     	name = "Pizza Port";
-        // hardcoding markets
     	menu.addItem("Marsinara with Meatballs", 9.49 );
     	menu.addItem("Chicken Fusilli", 9.49);
     	menu.addItem("Pepperoni Pizza",  6.99);
@@ -137,6 +141,18 @@ public class RestaurantPizza extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    public String getRestaurantName() {
+    	return name;
+    }
+    
+    public RestMenu getMenu() {
+    	return menu;
+    }
+    
+    public boolean isOpen() {
+    	return true;
     }
     
     public LinkedList<Agent> getAllAgents() {
@@ -249,4 +265,10 @@ public class RestaurantPizza extends JPanel {
     		cashier.startThread();
     	}
     }
+
+	@Override
+	public void setBank(Bank b) {
+		bank = b;
+		
+	}
 }

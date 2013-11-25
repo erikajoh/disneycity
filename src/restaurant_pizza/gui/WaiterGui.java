@@ -24,10 +24,16 @@ public class WaiterGui implements Gui {
 	
     private int xPos = -mySize*2, yPos = -mySize*2; //default waiter position
     private int xDestination, yDestination; //default start position
-    private static final int xCook = 250, yCook = 125;
-    private static final int xCashier = 400, yCashier = 600;
+    private static final int xCook = 210, yCook = 100;
+    private static final int xCashier = 175, yCashier = 20;
     private static final int xEntrance = 0, yEntrance = 0;
 	public static final int mySize = 20;
+	public static final int xtable1 = 75;
+	public static final int ytable1 = 230;
+	public static final int xtable2 = 175;
+	public static final int ytable2 = 230;
+	public static final int xtable3 = 275;
+	public static final int ytable3 = 230;
 	
 	public int xHomeDestination, yHomeDestination;
 	
@@ -64,8 +70,9 @@ public class WaiterGui implements Gui {
     public void draw(Graphics2D g) {
         g.drawImage(bi, xPos, yPos, mySize*2, mySize*2, null);
         g.setColor(Color.RED );
-        g.setFont(new Font(null, Font.PLAIN, 18));
-        g.drawString(orderStatus, xPos, yPos);
+        g.setFont(new Font(null, Font.PLAIN, 12));
+        if(orderStatus!="")
+        g.drawString(orderStatus.substring(0, 3), xPos, yPos);
     }
 
     public boolean isPresent() {
@@ -92,6 +99,7 @@ public class WaiterGui implements Gui {
     }
     
     public void DoGoToTable(int tableNumber) {
+    	
         xDestination = xTable + mySize + (tableSpacing*(tableNumber));
         yDestination = yTable - mySize;
         command = Command.goToTable;

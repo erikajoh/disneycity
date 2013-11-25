@@ -19,7 +19,7 @@ public class CustomerGui implements Gui{
 	private enum Command {noCommand, GoToWaitingArea, GoToSeat, LeaveRestaurant, GoToCashier};
 	private Command command=Command.noCommand;
 
-    private static final int xCashier = 400, yCashier = 600;
+    private static final int xCashier = 175, yCashier = 20;
     private static final int X_HOME_DESTINATION = -40;
     private static final int Y_HOME_DESTINATION = -40;
     
@@ -63,8 +63,10 @@ public class CustomerGui implements Gui{
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
 		g.fillRect(xPos, yPos, mySize, mySize);
-		g.setFont(new Font(null, Font.PLAIN, 18));
-		g.drawString(orderStatus, xPos, yPos);
+		g.setFont(new Font(null, Font.PLAIN, 12));
+		if (orderStatus!="") {
+			g.drawString(orderStatus, xPos, yPos+50);
+		}
 	}
 
 	public boolean isPresent() {
