@@ -45,7 +45,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     Bank bank;
     
     private static final int GAP_SIZE = 10;
-    
     private static int WAITER_X_START = 140;
     private static int WAITER_Y_START = 110;
     
