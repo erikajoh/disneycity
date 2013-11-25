@@ -42,6 +42,7 @@ public class Market {
     // Messages
     
 	public void msgLeaving(CustomerAgent c) {
+		c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
 		customers.remove(c);
 	}
     

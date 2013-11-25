@@ -265,7 +265,13 @@ public class PersonAgent extends Agent {
 	// from Market
 	public void msgHereIsOrder(String order, int quantity) {
 		// TODO Market state update - assume order is fulfilled
+		print("Received msgHereIsOrder from Market");
 		marketState = MarketState.None;
+		event = PersonEvent.makingDecision;
+		if(itemsOnHand.get(order) == null)
+			itemsOnHand.put(order, quantity);
+		else
+			itemsOnHand.put(order, itemsOnHand.get(order) + quantity);
 		stateChanged();
 	}
 	
@@ -330,12 +336,12 @@ public class PersonAgent extends Agent {
 						else {
 							hungryToRestaurant();
 						}
-						return true;
 					}
 					else {
 						leaveHouse();
 						event = PersonEvent.onHold;
 					}
+					return true;
 				}
 				if(bodyState == BodyState.Tired) {
 					goToSleep();
@@ -381,6 +387,7 @@ public class PersonAgent extends Agent {
 					case WantToWork:
 						break;
 				}
+				print("Market: event onHold set");
 				event = PersonEvent.onHold;
 				return true;
 			}
@@ -398,6 +405,13 @@ public class PersonAgent extends Agent {
 	private void enterHouse() {
 		print("Entering house");
 		myHome.housing.msgIAmHome(this);
+		Set<String> keySet = itemsOnHand.keySet();
+		String[] keyArray = keySet.toArray(new String[keySet.size()]);
+		for(int i = 0; i < keyArray.length; i++) {
+			if(itemsOnHand.get(keyArray[i]) > 0) {
+				// TODO myHome.housing.
+			}
+		}
 	}
 	
 	private void prepareToCookAtHome() {
@@ -527,8 +541,10 @@ public class PersonAgent extends Agent {
 					currentLocationState = LocationState.Bank;
 				else if(tempObject instanceof MyRestaurant)
 					currentLocationState = LocationState.Restaurant;
-				if(tempObject instanceof MyMarket)
+				else if(tempObject instanceof MyMarket)
 					currentLocationState = LocationState.Market;
+				else
+					currentLocationState = LocationState.Transit;
 				return;
 			}
 		}

@@ -105,22 +105,22 @@ public class CustomerAgent extends Agent {
 		if (state == State.entering){
 			print("Entering market");
 			EnterMarket();
-			state = State.idle;
-//			state = State.ordering; //hack
+			//state = State.idle;
+			state = State.ordering; //hack
 			return true;
 		}
 		else if (state == State.ordering){
 			print("Ordering items");
 			PlaceOrder();
-			state = State.idle;
-//			state = State.paying; //hack
+			//state = State.idle;
+			state = State.paying; //hack
 			return true;
 		}
 		else if (state == State.paying){
 			print("Paying");
 			cashier.msgHereIsMoney(this, wallet.getAmt());
-			state = State.idle;
-//			state = State.leaving; //hack
+			//state = State.idle;
+			state = State.leaving; //hack
 			return true;
 		}
 		else if (state == State.leaving){
@@ -165,6 +165,10 @@ public class CustomerAgent extends Agent {
 	
 	public String getChoice() {
 		return choice;
+	}
+	
+	public PersonAgent getPerson() {
+		return person;
 	}
 
 	public String toString() {
