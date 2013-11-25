@@ -2,7 +2,7 @@ package astar.astar;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class AStarTraversal extends GraphTraversal
+public abstract class AStarTraversal extends GraphTraversal
 {
     private Semaphore[][] grid;
 

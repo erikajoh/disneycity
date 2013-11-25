@@ -1,6 +1,7 @@
 package transportation.Agents;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import simcity.PersonAgent;
@@ -19,7 +20,7 @@ public class Bus extends MobileAgent{
 	public Bus() {
 		collectedFare = 0;
 		currentBusStop = null;
-		busRiders = new ArrayList<BusRider>();
+		busRiders = Collections.synchronizedList(new ArrayList<BusRider>());
 	}
 	
 	//+++++++++++++++++MESSAGES+++++++++++++++++

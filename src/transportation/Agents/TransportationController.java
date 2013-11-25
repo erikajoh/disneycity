@@ -84,7 +84,7 @@ public class TransportationController extends Agent implements Transportation{
 
 	public TransportationController(TransportationPanel panel) {
 		master = panel;
-		movingObjects = new ArrayList<Mover>();
+		movingObjects = Collections.synchronizedList(new ArrayList<Mover>());
 
 		//++++++++++++++++++++++BEGIN CREATION OF GRID++++++++++++++++++++++
 		grid = new MovementTile[16][13];
@@ -147,28 +147,28 @@ public class TransportationController extends Agent implements Transportation{
 		busStops = new ArrayList<BusStop>();
 
 		BusStop tempBusStop = new BusStop();//Top Left Bus Stop 0
-		tempBusStop.addNearbyBuilding("Bank");
-		tempBusStop.addNearbyBuilding("Rancho");
-		tempBusStop.addNearbyBuilding("Apt1");
-		tempBusStop.addNearbyBuilding("Apt4");
+		tempBusStop.addNearbyBuilding("Pirate Bank");
+		tempBusStop.addNearbyBuilding("Rancho Del Zocalo");
+		tempBusStop.addNearbyBuilding("Main St Apartments #1");
+		tempBusStop.addNearbyBuilding("Main St Apartments #4");
 		tempBusStop.associateWalkTile(grid[7][3]);
 		busStops.add(tempBusStop);
 
 		tempBusStop = new BusStop();//Right Bus Stop 1
-		tempBusStop.addNearbyBuilding("Apt2");
-		tempBusStop.addNearbyBuilding("Mansion");
-		tempBusStop.addNearbyBuilding("Bayou");
-		tempBusStop.addNearbyBuilding("Apt6");
-		tempBusStop.addNearbyBuilding("Cafe");
+		tempBusStop.addNearbyBuilding("Main St Apartments #2");
+		tempBusStop.addNearbyBuilding("Haunted Mansion");
+		tempBusStop.addNearbyBuilding("The Blue Bayou");
+		tempBusStop.addNearbyBuilding("Main St Apartments #6");
+		tempBusStop.addNearbyBuilding("Carnation Cafe");
 		tempBusStop.associateWalkTile(grid[12][6]);
 		busStops.add(tempBusStop);
 
 		tempBusStop = new BusStop();//Bottom Left Bus Stop 2
-		tempBusStop.addNearbyBuilding("Apt4");
-		tempBusStop.addNearbyBuilding("Apt5");
-		tempBusStop.addNearbyBuilding("Haus");
-		tempBusStop.addNearbyBuilding("Pizza");
-		tempBusStop.addNearbyBuilding("Market");
+		tempBusStop.addNearbyBuilding("Main St Apartments #4");
+		tempBusStop.addNearbyBuilding("Main St Apartments #5");
+		tempBusStop.addNearbyBuilding("Village Haus");
+		tempBusStop.addNearbyBuilding("Pizza Port");
+		tempBusStop.addNearbyBuilding("Mickey's Market");
 		tempBusStop.associateWalkTile(grid[5][8]);
 		busStops.add(tempBusStop);
 		//+++++++++++++++++++++++END CREATION OF BUS STOPS+++++++++++++++++++++++
@@ -177,33 +177,33 @@ public class TransportationController extends Agent implements Transportation{
 		//++++++++++++++++++++++BEGIN CREATION OF DIRECTORY++++++++++++++++++++++
 		directory = new HashMap<String, Building>();
 
-		Building tempBuilding = new Building("Apt1", new Position(9, 2), new Position(9, 4), busStops.get(0));
+		Building tempBuilding = new Building("Main St Apartments #1", new Position(9, 2), new Position(9, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt2", new Position(12, 2), new Position(12, 4), busStops.get(1));
+		tempBuilding = new Building("Main St Apartments #2", new Position(12, 2), new Position(12, 4), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt3", new Position(2, 3), new Position(4, 5), busStops.get(2));
+		tempBuilding = new Building("Main St Apartments #3", new Position(2, 3), new Position(4, 5), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt4", new Position(2, 6), new Position(4, 6), busStops.get(0));
+		tempBuilding = new Building("Main St Apartments #4", new Position(2, 6), new Position(4, 6), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt5", new Position(3, 10), new Position(4, 8), busStops.get(2));
+		tempBuilding = new Building("Main St Apartments #5", new Position(3, 10), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Apt6", new Position(13, 9), new Position(11, 8), busStops.get(1));
+		tempBuilding = new Building("Main St Apartments #6", new Position(13, 9), new Position(11, 8), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Mansion", new Position(13, 3), new Position(11, 4), busStops.get(1));
+		tempBuilding = new Building("Haunted Mansion", new Position(13, 3), new Position(11, 4), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Market", new Position(8, 10), new Position(8, 8), busStops.get(2));
+		tempBuilding = new Building("Mickey's Market", new Position(8, 10), new Position(8, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Bank", new Position(7, 2), new Position(7, 4), busStops.get(0));
+		tempBuilding = new Building("Pirate Bank", new Position(7, 2), new Position(7, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Rancho", new Position(2, 2), new Position(4, 5), busStops.get(0));
+		tempBuilding = new Building("Rancho Del Zocalo", new Position(2, 2), new Position(4, 5), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Cafe", new Position(12, 10), new Position(11, 8), busStops.get(1));
+		tempBuilding = new Building("Carnation Cafe", new Position(12, 10), new Position(11, 8), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Bayou", new Position(13, 5), new Position(11, 5), busStops.get(1));
+		tempBuilding = new Building("The Blue Bayou", new Position(13, 5), new Position(11, 5), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Pizza", new Position(5, 10), new Position(4, 8), busStops.get(2));
+		tempBuilding = new Building("Pizza Port", new Position(5, 10), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Haus", new Position(2, 9), new Position(4, 8), busStops.get(2));
+		tempBuilding = new Building("Village Haus", new Position(2, 9), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
 		//+++++++++++++++++++++++END CREATION OF DIRECTORY+++++++++++++++++++++++
 
@@ -268,7 +268,9 @@ public class TransportationController extends Agent implements Transportation{
 			break;
 
 		case  "Walk":
+			mover.transportationState = TransportationState.MOVING;
 			TransportationTraversal aStar = new TransportationTraversal(grid);
+			System.out.println(mover.startingLocation);
 			WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
 			walker.startThread();
 			WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);

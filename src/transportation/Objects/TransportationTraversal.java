@@ -9,14 +9,15 @@ import java.util.concurrent.Semaphore;
 
 import astar.astar.AStarNode;
 import astar.astar.AStarTraversal;
+import astar.astar.GraphTraversal;
 import astar.astar.Node;
 import astar.astar.Position;
 
-public class TransportationTraversal extends AStarTraversal {
+public class TransportationTraversal extends GraphTraversal {
 	private MovementTile[][] grid;
 
 	public TransportationTraversal(MovementTile[][] grid){
-		super(grid);
+		super();
 		this.grid = grid; 
 		//grid = new Object[1000][2000];
 		System.out.println("grid rows="+grid.length+",grid cols="+grid[0].length);
@@ -65,19 +66,20 @@ public class TransportationTraversal extends AStarTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type != grid[x][y].type) continue;
+			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type != grid[x][y].type) {
+				continue;
+			}
 			//printCurrentList();
-			//System.out.println("available"+next);
+			System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
-
+			
+			
 			//update distance travelled
-			nodeTemp.setDistTravelled(
-					node.getDistTravelled()+pos.distance(next));
+			nodeTemp.setDistTravelled(node.getDistTravelled()+pos.distance(next));
 			//update approximate total distance to destination
 			//note that we are computing the straight-line
 			//heuristic on the fly right here from next to endingState
-			nodeTemp.setApproxTotalDist(
-					nodeTemp.getDistTravelled() + next.distance((Position)endingState));	
+			nodeTemp.setApproxTotalDist(nodeTemp.getDistTravelled() + next.distance((Position)endingState));	
 			//update internal path
 			nodeTemp.updatePath(path);
 			expandedNodes.add(nodeTemp);//could have just added
@@ -94,7 +96,7 @@ public class TransportationTraversal extends AStarTraversal {
 			//System.out.println("considering"+next);
 			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type != grid[x][y].type) continue;
 			//printCurrentList();
-			//System.out.println("available"+next);
+			System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
 
 			//update distance travelled
@@ -110,6 +112,7 @@ public class TransportationTraversal extends AStarTraversal {
 			expandedNodes.add(nodeTemp);//could have just added
 			//them directly to nodelist 
 		}
+		
 		return expandedNodes;
 	}//end expandFunc
 	private boolean inPath (Position pos, List<Position> path){
