@@ -2,25 +2,19 @@ package bank.gui;
 
 import bank.BankCustomerAgent;
 import bank.ManagerAgent;
-import bank.PersonAgent;
+import simcity.PersonAgent;
 import bank.TellerAgent;
 import bank.interfaces.BankCustomer;
-import bank.interfaces.Manager;
-import bank.interfaces.Person;
+
 
 import javax.swing.*;
 
 import simcity.gui.SimCityGui;
-import agent.Agent;
 
-import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -56,13 +50,13 @@ public class Bank extends JPanel implements ActionListener {
     		manager.addTeller(t);
     		t.startThread();
         }
-        
+        /*
         String name = "Dylan";
 		PersonAgent p = new PersonAgent(name);
 		p.setBank(this);
 		p.msgArrive(-1);
 		customers.add(p);
-		p.startThread();
+		p.startThread();*/
     }
     
     public void msgRequestAccount(PersonAgent person, double balance, boolean present){
@@ -111,17 +105,10 @@ public class Bank extends JPanel implements ActionListener {
     public void addPerson(String type, String name) {
 
     	if (type.equals("Customers")) {
-    		PersonAgent p = new PersonAgent(name);
-    		//p.setManager(manager);
+    		/*PersonAgent p = new PersonAgent(name);
     		p.msgArrive(-1);
-    		//BankCustomerAgent c = new BankCustomerAgent(name, gui);	
-    		//BankCustomerGui g = new BankCustomerGui(c, gui, gui.getAnimWindowX(), gui.getAnimWindowY());
-    		//c.setBalance(25.00);
-    		//c.setBank(bank);
-    		//gui.animationPanel.addGui(g);// dw
-    		//c.setGui(g);
     		customers.add(p);
-    		p.startThread();
+    		p.startThread();*/
     	}
     	else if (type.equals("Tellers")) {
     		TellerAgent t = new TellerAgent(name);	
@@ -136,21 +123,7 @@ public class Bank extends JPanel implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-      /*  if(e.getSource() == pauseButton){
-        	if(pauseButton.getText().equals("Pause Agents")){
-        		pauseButton.setText("Resume Agents");
-        		Agent.pause = true;
-        	}
-        	else {
-        		pauseButton.setText("Pause Agents");
-        		Agent.pause = false;
-        	}
-        }*/
     }
-    
-    /*public String getNameFieldText(){
-    	return gui.getNameFieldText();
-    }*/
   
 }
 
