@@ -33,7 +33,9 @@ public class WalkerAgent extends MobileAgent{
 	}
 
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
-		master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
 
 	public void msgDestination() {

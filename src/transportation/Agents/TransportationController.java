@@ -212,6 +212,10 @@ public class TransportationController extends Agent implements Transportation{
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
 	public void msgWantToGo(String startLocation, String endLocation, PersonAgent person, String mover, String character) {
+		for(Mover m : movingObjects) {
+			if(m.person == person)
+				return;
+		}
 		movingObjects.add(new Mover(person, startLocation, endLocation, mover, character));
 		stateChanged();
 	}

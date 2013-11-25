@@ -59,6 +59,8 @@ public class WalkerGui implements Gui{
 		}
 		
 		if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
+			xLast = xDestination;
+			yLast = yDestination;
 			reachedDestination = true;
 			agent.msgDestination();
 		}
@@ -73,10 +75,8 @@ public class WalkerGui implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
-		xLast = xDestination;
-		yLast = yDestination;
 		this.xDestination = xDestination * 25;
-		this.yDestination = yDestination * 25;
+		this.yDestination = yDestination * 25+2;
 		reachedHalfway = false;
 		reachedDestination = false;
 	}

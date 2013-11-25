@@ -86,7 +86,7 @@ public class PersonAgent extends Agent {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
-		isNourished = false;
+		isNourished = true;
 		currentLocation = h.getName();
 		moneyOnHand = startMoney;
 		targetLocation = currentLocation;
@@ -95,7 +95,7 @@ public class PersonAgent extends Agent {
 		preferredCommute = PreferredCommute.Walk;
 		
 		this.foodPreference = foodPreference;
-		preferEatAtHome = false;
+		preferEatAtHome = true;
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
