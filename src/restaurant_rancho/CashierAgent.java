@@ -11,12 +11,13 @@ import agent_rancho.Agent;
 import restaurant_rancho.Check;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
-import restaurant_rancho.interfaces.Market;
 import restaurant_rancho.interfaces.Waiter;
 import simcity.PersonAgent;
 import restaurant_rancho.test.mock.EventLog;
 import restaurant_rancho.test.mock.LoggedEvent;
 import simcity.RestMenu;
+import bank.gui.Bank;
+import market.Market;
 
 
 public class CashierAgent extends Agent implements Cashier{
@@ -26,6 +27,8 @@ public class CashierAgent extends Agent implements Cashier{
 	public List<Check> checks;
 	public List<MarketBill> bills;
 	public double money;
+	private int accountNum;
+	private boolean endOfDay;
 	//public RestMenu menu= new RestMenu();
 	public enum checkState {nothing, pending, readyForCust, waitingForCust, paid, complete, notComplete, completing};
 	public CashierAgent(String name) {
@@ -34,9 +37,23 @@ public class CashierAgent extends Agent implements Cashier{
 		checks = Collections.synchronizedList(new ArrayList<Check>());
 		bills = Collections.synchronizedList(new ArrayList<MarketBill>());
 		money = 100;
+		accountNum = -1;
+		endOfDay = false;
 	}
 	PersonAgent person;
 	Timer checkTimer = new Timer();
+	private Bank bank;
+	private Market market;
+	
+	public void setMarket(Market m) {
+		market = m;
+	}
+	public void setBank(Bank b){
+		bank = b;
+	}
+	public void setEndOfDay(Boolean b) {
+		endOfDay = b;
+	}
 
 	public String getMaitreDName() {
 		return name;
@@ -49,10 +66,8 @@ public class CashierAgent extends Agent implements Cashier{
 		person = p;
 	}
 
-
 	// Messages
-	
-	
+
 	public void msgComputeCheck(Waiter w, Customer c, String choice, RestMenu menu) {
 		log.add(new LoggedEvent("Received Compute Check"));
 		print( "Choice is " + choice);
@@ -86,6 +101,11 @@ public class CashierAgent extends Agent implements Cashier{
 		stateChanged();
 	}
 	
+	public void msgLeftBank(int aNum, double change, double loanAmount, int loan) {
+		if(accountNum==-1) accountNum = aNum;
+		money+=change;
+	}
+	
 
 
 	/**
@@ -96,10 +116,31 @@ public class CashierAgent extends Agent implements Cashier{
 	
 		//rules 
 		try{
+		if (money>400 || endOfDay) {
+			if (accountNum==-1) {
+				bank.msgRequestAccount(person, money-100, false);
+				return true;
+			}
+			else {
+				bank.msgRequestDeposit(person, accountNum, money-100, false);
+				return true;
+			}
+		}
+		if (money<20) {
+			if (accountNum==-1) {
+				bank.msgRequestAccount(person,  0, false);
+				return true;
+			}
+			else {
+				bank.msgRequestWithdrawal(person,  accountNum,  100,  false);
+				return true;
+			}
+		}
+		
 		if (!bills.isEmpty()) {
 			synchronized(bills) {
 				for (MarketBill bill : bills) {
-					payBill(bill);
+					//payBill(bill);
 					return true;
 				}
 			}
@@ -155,13 +196,14 @@ public class CashierAgent extends Agent implements Cashier{
 		500);
 	}
 	
-	private void payBill(MarketBill bill) {
+	/*private void payBill(MarketBill bill) {
 		bill.market.msgHereIsPayment(bill.amount, bill.orderNum);
 		money -= bill.amount;
 		print ("Paid market, I have " + money + " dollars now");
 		bills.remove(bill);
 		stateChanged();
 	}
+	*/
 	
 	private void notifyWaiter(Check check) { 
 		check.waiter.msgCheckReady(check.cust, check.amount);

@@ -5,7 +5,6 @@ import restaurant_rancho.CashierAgent;
 import restaurant_rancho.CookAgent;
 import restaurant_rancho.CustomerAgent;
 import restaurant_rancho.HostAgent;
-import restaurant_rancho.MarketAgent;
 import restaurant_rancho.WaiterAgent;
 import bank.gui.Bank;
 import simcity.PersonAgent;
@@ -14,6 +13,8 @@ import simcity.RestMenu;
 import simcity.Restaurant;
 
 import javax.swing.*;
+
+import market.Market;
 
 import java.awt.*;
 import java.util.List;
@@ -32,13 +33,13 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	String name;
 	String type;
 	Bank bank;
+	Market market;
 	private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private HostAgent host;
     private CookAgent cook;
     private CashierAgent cashier;    
     private List<WaiterAgent> waiters = new ArrayList<WaiterAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
-    private List<MarketAgent> markets = new ArrayList<MarketAgent>();
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private ListPanel waiterPanel = new ListPanel (this, "Waiters");
@@ -71,6 +72,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     
     public void setBank(Bank b) {
     	bank = b;
+    	if (cashier!=null) setBank(b);
     }
     
     public boolean isOpen() {
@@ -98,9 +100,6 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	}
     	cook.pauseOrRestart();
     	host.pauseOrRestart(); 	
-    	for (MarketAgent m : markets) {
-    		m.pauseOrRestart();
-    	}
     	cashier.pauseOrRestart();
     }
     
@@ -219,47 +218,48 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Cook")) {
     		if (cook == null) {
-    			cook = new CookAgent(name, this);
+    			cook = new CookAgent(name, this, market);
+    			//if (market!=null) { cook.setMarket(market); System.out.println("heyo");}
     			cookgui = new CookGui(cook);
     			if (p!=null) cook.setPerson(p);
     			cook.setGui(cookgui);
-    			cookgui.updatePosition();
-    			cook.startThread();
+    			//cookgui.updatePosition();
     			for (WaiterAgent w : waiters) {
     				w.setCook(cook);	
     			}
-    			for (MarketAgent m : markets) {
-    				cook.addMarket(m);
-    			}
     			gui.ranchoAniPanel.addGui(cookgui);
+    			cook.startThread();
     		}
     	}
     	else if (type.equals("Cashier")) {
     		if (cashier == null) {
     			cashier = new CashierAgent(name);
     			if (p!=null) cashier.setPerson(p);
-    			cashier.startThread();
+    			if (bank!=null) cashier.setBank(bank);
+    			if (market!=null) cashier.setMarket(market);
     			for (WaiterAgent w : waiters) {
     				w.setCashier(cashier);
     			}
-    			for (MarketAgent m : markets) {
-    				m.setCashier(cashier);
-    			}
+
+    			cashier.startThread();
     		}
     	}
-    	else if (type.equals("Market")) {
-    		MarketAgent market = new MarketAgent(name, 10, 10, 10, 10, 10);
-    		markets.add(market);
-    		if (cashier!=null) market.setCashier(cashier);
-    		if (cook!= null) cook.addMarket(market);
-    		market.startThread();
-    		
-    	}
-    			
-    			
     		
     		
     }
+	@Override
+	public void setMarket(Market m) {
+		market = m;
+		System.out.println("heyo" + "market is " + market.getName());
+		if (cashier!=null) {
+			cashier.setMarket(m);
+		}
+		if (cook!=null) {
+			cook.setMarket(m);
+			
+		}
+		
+	}
     
 
 }

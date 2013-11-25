@@ -8,6 +8,7 @@ import market.gui.CustomerGui;
 import market.gui.WorkerGui;
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
+import restaurant_rancho.CookAgent;
 
 import javax.swing.*;
 
@@ -42,7 +43,12 @@ public class Market {
     // Messages
     
 	public void msgLeaving(CustomerAgent c) {
-		c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
+		if (c.getPerson()!=null){
+			c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
+		}
+		else {
+			c.getCook().msgHereIsOrder(c.getChoice(), c.quantity);
+		}
 		customers.remove(c);
 	}
     
@@ -58,22 +64,22 @@ public class Market {
     public Market(SimCityGui g, String n) {
     	name = n;
         this.gui = g;
-        inventory.put("Mexican", 5);
-        prices.put("Mexican", 10.0);
+        inventory.put("Mexican", 50);
+        prices.put("Mexican", 5.0);
         locations.put("Mexican", 1);
-		inventory.put("Southern", 5);
+		inventory.put("Southern", 50);
 		prices.put("Southern", 10.0);
 		locations.put("Southern", 1);
-		inventory.put("Italian", 5);
-		prices.put("Italian", 10.0);
+		inventory.put("Italian", 50);
+		prices.put("Italian", 5.0);
 		locations.put("Italian", 2);
-		inventory.put("German", 5);
-		prices.put("German", 10.0);
+		inventory.put("German", 50);
+		prices.put("German", 5.0);
 		locations.put("German", 2);
-		inventory.put("American", 5);
-		prices.put("American", 10.0);
+		inventory.put("American", 50);
+		prices.put("American", 5.0);
 		locations.put("American", 2);
-		inventory.put("Car", 5);
+		inventory.put("Car", 20);
 		prices.put("Car", 10.0);
 		locations.put("Car", 3);
     }
@@ -91,9 +97,22 @@ public class Market {
     public void personAs(PersonAgent p, String type, String name, double money, String choice, int quantity){
     	addPerson(p, type, name, money, choice, quantity);
     }
+    public void personAs(CookAgent c, String choice, int quantity) {
+    	addPerson(c, c.getName(), choice, quantity);
+    }
     
     public void personAs(PersonAgent p, String type, String name){
     	addPerson(p, type, name);
+    }
+    
+    public void addPerson(CookAgent c, String name, String choice, int quantity) {
+    	CustomerAgent cust = new CustomerAgent(name, 100, choice, quantity);
+    	if (manager!=null) cust.setManager(manager);
+    	if(cashier!=null) cust.setCashier(cashier);
+    	cust.setCook(c);
+    	cust.setMarket(this);
+    	customers.add(cust);
+    	cust.startThread();
     }
     
     public void addPerson(PersonAgent p, String type, String name, double money, String choice, int quantity) {
@@ -120,7 +139,9 @@ public class Market {
     		customers.add(c);
     		c.startThread();
     	}
+    
     }
+  
     
     public void addPerson(PersonAgent p, String type, String name) {
 
