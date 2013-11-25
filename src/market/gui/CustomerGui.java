@@ -27,8 +27,8 @@ public class CustomerGui implements Gui{
 	public CustomerGui(CustomerAgent c){
 		agent = c;
 		agent.setGui(this);
-		xPos = -mWidth/20;
-		yPos = 0;
+		xPos = (int)(mWidth*0.18);
+		yPos = mHeight;
 	}
 
 	public void updatePosition() {
@@ -67,8 +67,8 @@ public class CustomerGui implements Gui{
 
 	public void DoEnterMarket() {//later you will map seatnumber to table coordinates.
 		System.out.println("enter");
-		xDestination = (int)(mWidth*0.08);
-		yDestination = (int)(mHeight*0.42);
+		xDestination = (int)(mWidth*0.18);
+		yDestination = (int)(mHeight*0.35);
 		command = Command.EnterMarket;
 	}
 
