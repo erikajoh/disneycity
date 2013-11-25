@@ -195,7 +195,7 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Pirate Bank", new Position(7, 2), new Position(7, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Rancho Del Zocalo", new Position(2, 2), new Position(4, 5), busStops.get(0));
+		tempBuilding = new Building("Rancho Del Zocalo", new Position(3, 2), new Position(4, 5), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Carnation Cafe", new Position(12, 10), new Position(11, 8), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
