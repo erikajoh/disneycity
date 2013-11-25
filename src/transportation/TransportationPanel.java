@@ -30,6 +30,21 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	private List<Gui> guis = new ArrayList<Gui>();
 	Timer timer;
 	
+	class BuildingFinder {
+		int xLeft, xRight, yTop, yBottom;
+		String name;
+		
+		BuildingFinder(int xLeft, int xRight, int yTop, int yBottom, String name) {
+			this.xLeft = xLeft;
+			this.xRight = xRight;
+			this.yTop = yTop;
+			this.yBottom = yBottom;
+			this.name = name;
+		}
+	}
+	
+	List<BuildingFinder> buildings;
+	
 	public TransportationPanel(SimCityGui gui) {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
@@ -47,6 +62,22 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
     	timer.start();
     	
     	addMouseListener(this);
+    	
+    	buildings = new ArrayList<BuildingFinder>();
+    	
+    	buildings.add(new BuildingFinder(50,100,2,52,"Rancho"));
+    	buildings.add(new BuildingFinder(150,225,2,52,"Bank"));
+    	buildings.add(new BuildingFinder(225,275,2,52,"Apt1"));
+    	buildings.add(new BuildingFinder(325,375,2,52,"Apt2"));
+    	buildings.add(new BuildingFinder(0,50,52,102,"Apt3"));
+    	buildings.add(new BuildingFinder(0,50,152,202,"Apt4"));
+    	buildings.add(new BuildingFinder(350,400,102,152,"Bayou"));
+    	buildings.add(new BuildingFinder(0,50,227,277,"Haus"));
+    	buildings.add(new BuildingFinder(350,400,227,277,"Apt6"));
+    	buildings.add(new BuildingFinder(50,100,277,327,"Apt5"));
+    	buildings.add(new BuildingFinder(100,150,277,327,"Pizza"));
+    	buildings.add(new BuildingFinder(175,275,277,327,"Market"));
+    	buildings.add(new BuildingFinder(300,350,277,327,"Cafe"));
     }
 	
 	@Override
@@ -86,9 +117,17 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
-		gui.showPanel("Rancho");
-		// TODO Auto-generated method stub
-		
+		String name = findBuilding(me.getX(), me.getY());
+		if(name != null)
+			gui.showPanel(name);
+	}
+	
+	private String findBuilding(int x, int y) {
+		for(BuildingFinder b : buildings) {
+			if(x >= b.xLeft && x < b.xRight && y >= b.yTop && y < b.yBottom)
+				return b.name;
+		}
+		return null;
 	}
 
 	@Override
