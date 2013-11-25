@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import AnimationTools.AnimationModule;
 import simcity.gui.*;
 
-public class CarGUI implements Gui{
+public class WalkerGUI implements Gui{
 	
 	private float xPos, yPos, xDestination, yDestination, xLast, yLast, speed;
 	private AnimationModule animModule;
@@ -12,17 +12,19 @@ public class CarGUI implements Gui{
 	
 	boolean isPresent = true;
 	
-	public CarGUI(float xPos, float yPos, float xDestination, float yDestination) {
+	public WalkerGUI(float xPos, float yPos, float xDestination, float yDestination) {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.xDestination = xDestination;
 		this.yDestination = yDestination;
-		speed = 1.25f;
+		this.xLast = xPos;
+		this.yLast = yPos;
+		speed = 1.00f;
 		
 		reachedHalfway = false;
 		reachedDestination = false;
 		
-		animModule = new AnimationModule("Car", "Down");
+		animModule = new AnimationModule("Edgar", "Down");
 	}
 	
 	public void updatePosition() {
@@ -57,7 +59,6 @@ public class CarGUI implements Gui{
 			reachedDestination = true;
 			agent.msgDestination();
 		}
-		
 	}
 
 	public void draw(Graphics2D g) {
