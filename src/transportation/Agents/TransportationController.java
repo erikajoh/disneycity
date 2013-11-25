@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import transportation.Transportation;
 import transportation.TransportationPanel;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
@@ -12,7 +13,7 @@ import agent.Agent;
 import astar.astar.Position;
 import simcity.*;
 
-public class TransportationController extends Agent {
+public class TransportationController extends Agent implements Transportation{
 	
 	TransportationPanel master;
 	
