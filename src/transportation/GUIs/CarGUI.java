@@ -3,6 +3,7 @@ import java.awt.Graphics2D;
 
 import AnimationTools.AnimationModule;
 import simcity.gui.*;
+import transportation.Agents.CarAgent;
 
 public class CarGUI implements Gui{
 	
@@ -10,14 +11,19 @@ public class CarGUI implements Gui{
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	
+	CarAgent agent;
 	boolean isPresent = true;
 	
-	public CarGUI(float xPos, float yPos, float xDestination, float yDestination) {
+	public CarGUI(float xPos, float yPos, float xDestination, float yDestination, CarAgent agent) {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.xDestination = xDestination;
 		this.yDestination = yDestination;
+		this.xLast = xPos;
+		this.yLast = yPos;
+		this.agent = agent;
 		speed = 1.25f;
+		
 		
 		reachedHalfway = false;
 		reachedDestination = false;

@@ -1,20 +1,19 @@
 package transportation.Agents;
 
 import simcity.PersonAgent;
-import transportation.GUIs.CarGUI;
 import transportation.Objects.*;
 
-public class CarAgent extends MobileAgent{
+public class WalkerAgent extends MobileAgent{
 	
-	PersonAgent driver;
+	PersonAgent walker;
 	MovementTile currentPosition;
 	MovementTile endPosititon;
 	TransportationController master;
 	boolean arrived;
-	CarGUI gui = null;
+	//CarGUI gui;
 	
-	public CarAgent(PersonAgent driver, MovementTile currentPosition, MovementTile endPosition, TransportationController master) {
-		this.driver = driver;
+	public WalkerAgent(PersonAgent walker, MovementTile currentPosition, MovementTile endPosition, TransportationController master) {
+		this.walker = walker;
 		this.currentPosition = currentPosition;
 		this.endPosititon = endPosition;
 		this.master = master;
@@ -23,7 +22,12 @@ public class CarAgent extends MobileAgent{
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {
-		
+		if(!arrived) {
+			goToEndPosition();
+		}
+		if(arrived) {
+			
+		}
 		return false;
 	}
 
@@ -32,8 +36,5 @@ public class CarAgent extends MobileAgent{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public void setGUI(CarGUI gui) {
-		this.gui = gui;
-	}
+
 }

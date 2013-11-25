@@ -36,7 +36,7 @@ public class BusStop {
 		return false;
 	}
 	
-	public void associateSpace(MovementTile tile) {
+	public void associateWalkTile(MovementTile tile) {
 		associatedTile = tile;
 	}
 }

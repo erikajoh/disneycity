@@ -10,9 +10,11 @@ public class WalkerGUI implements Gui{
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	
+	
+	WalkerAgent agent;
 	boolean isPresent = true;
 	
-	public WalkerGUI(float xPos, float yPos, float xDestination, float yDestination) {
+	public WalkerGUI(float xPos, float yPos, float xDestination, float yDestination, WalkerAgent agent) {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.xDestination = xDestination;
@@ -20,7 +22,7 @@ public class WalkerGUI implements Gui{
 		this.xLast = xPos;
 		this.yLast = yPos;
 		speed = 1.00f;
-		
+		this.agent = agent;		
 		reachedHalfway = false;
 		reachedDestination = false;
 		
