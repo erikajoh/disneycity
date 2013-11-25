@@ -65,7 +65,7 @@ public class ResidentGui implements Gui{
 		
 		// special animation states
 		standing = xPos == xDestination && yPos == yDestination;
-		sleeping = Math.abs(xPos - (int)(hWidth*0.8)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
+		sleeping = Math.abs(xPos - (int)(hWidth*0.7)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
 		
 		// animation rules
 		if(sleeping) {
@@ -166,7 +166,7 @@ public class ResidentGui implements Gui{
 			yDestination = (int)(hHeight*0.15);
 			command = Command.GoToBed;
 		} else {
-			xDestination = (int)(hWidth*0.8);
+			xDestination = (int)(hWidth*0.7);
 			yDestination = (int)(hHeight*0.15);
 			command = Command.AtBed;
 		}
