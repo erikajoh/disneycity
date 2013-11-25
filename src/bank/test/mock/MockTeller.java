@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+import bank.TellerAgent.State;
 import bank.gui.Account;
 import bank.gui.TellerGui;
 import bank.interfaces.BankCustomer;
@@ -153,6 +153,7 @@ public class MockTeller extends Mock implements Teller {
 			if(customer.account.loanAmount > 0){
 				if(customer.account.loanAmount > customer.requestAmt){
 				  customer.account.loanAmount -= customer.requestAmt;
+				  customer.account.loanTime--;
 				}
 				else{
 					customer.requestAmt -= customer.account.loanAmount;
@@ -164,7 +165,7 @@ public class MockTeller extends Mock implements Teller {
 			  double newBalance = customer.account.getBalance()+customer.requestAmt;
 			  customer.account.setBalance(newBalance);
 		    }
-			customer.bankCustomer.msgMoneyDeposited(customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
+			customer.bankCustomer.msgMoneyDeposited(-customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
 			customer.state = State.deciding;
 		}
 

@@ -77,7 +77,7 @@ public class Bank extends JPanel implements ActionListener {
 	public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime){
 		PersonAgent person = (PersonAgent)spawns.get(bc);
 		System.out.println(bc.toString());
-		person.msgLeave(accountNum, change, loanAmt, loanTime);
+		person.msgLeftBank(accountNum, change, loanAmt, loanTime);
 	}
     
     public BankCustomer createBankCustomer(PersonAgent person, boolean present){

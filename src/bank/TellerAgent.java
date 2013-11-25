@@ -162,6 +162,7 @@ public class TellerAgent extends Agent implements Teller {
 		if(customer.account.loanAmount > 0){
 			if(customer.account.loanAmount > customer.requestAmt){
 			  customer.account.loanAmount -= customer.requestAmt;
+			  customer.account.loanTime--;
 			}
 			else{
 				customer.requestAmt -= customer.account.loanAmount;
@@ -173,7 +174,7 @@ public class TellerAgent extends Agent implements Teller {
 		  double newBalance = customer.account.getBalance()+customer.requestAmt;
 		  customer.account.setBalance(newBalance);
 	    }
-		customer.bankCustomer.msgMoneyDeposited(customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
+		customer.bankCustomer.msgMoneyDeposited(-customer.requestAmt, customer.account.loanAmount, customer.account.loanTime);
 		customer.state = State.deciding;
 	}
 
