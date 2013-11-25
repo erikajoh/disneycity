@@ -305,6 +305,12 @@ public class TransportationController extends Agent implements Transportation{
 
 		case "Bus":
 			//find bus stop and spawn walker to go to bus stop
+			mover.transportationState = TransportationState.MOVING;
+			WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, mover.endingLocation);
+			busWalker.startThread();
+			WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
+			master.addGui(busWalkerGui);
+			busWalker.setGui(busWalkerGui);
 			break;
 		}
 	}
