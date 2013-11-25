@@ -63,7 +63,7 @@ public class RestaurantRanchoGui extends JFrame implements ActionListener {
         animationPanel.setMinimumSize(leftPanDim);
         animationPanel.setMaximumSize(leftPanDim);
 
-        leftPanel.add(restPanel);
+       // leftPanel.add(restPanel);
    
         infoPanel = new JPanel();
        /* Dimension infoPanDim = new Dimension(WINDOWX/4, (int) WINDOWY/6);

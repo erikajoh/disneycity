@@ -55,11 +55,20 @@ public class CookAgent extends Agent {
     	for (int i = 0; i< menu.menuList.size(); i++) {
     		inventory.put(menu.menuList.get(i), startAmount);
     	}
+    	recipeTimes.put("Marsinara with Meatballs", 30);
+    	recipeTimes.put("Chicken Fusilli", 30);
+    	recipeTimes.put("Pepperoni Pizza", 40);
+    	recipeTimes.put("Celestial Caesar Chicken Salad", 20);
+    	recipeTimes.put("Bread Sticks",  20);
 	}
 	
 	public void setMarkets(List<MarketAgent> marketAgents) {
 		for(MarketAgent ma : marketAgents)
 			myMarkets.add(new MyMarket(ma));
+	}
+	
+	public RestMenu getMenu() {
+		return menu;
 	}
 	
 	public void initializeMaps() throws Exception {
@@ -112,6 +121,7 @@ public class CookAgent extends Agent {
 		else {
 			Order incomingOrder = new Order(w, tableNum, order, timeFinish);
 			incomingOrder.state = OrderState.UnableToBeSupplied;
+			menu.menuList.remove(order);
 			orders.add(incomingOrder);
 		}
 		stateChanged();
@@ -126,6 +136,9 @@ public class CookAgent extends Agent {
 		if(mo.amount == 0) {
 			int indObsoleteMarket = designatedMarkets.get(mo.foodType);
 			designatedMarkets.put(mo.foodType, indObsoleteMarket+1);
+		}
+		if (!menu.menuList.contains(mo.foodType)) {
+			menu.menuList.add(mo.foodType);
 		}
 		int oldInvAmt = inventory.get(mo.foodType);
 		inventory.put(mo.foodType, oldInvAmt + mo.amount);
