@@ -19,6 +19,7 @@ public class ResidentAgent extends Agent implements Resident {
 	// agent correspondents
 	private Housing housing;
 	private double amt;
+	private int roomNo;
 	private String type, foodPreference;
 	private ResidentGui renterGui;
 	private Semaphore moving = new Semaphore(0, true);
@@ -38,12 +39,13 @@ public class ResidentAgent extends Agent implements Resident {
 	 *
 	 * @param name name of the customer
 	 */
-	public ResidentAgent(String name, String type){
+	public ResidentAgent(String name, String type, int roomNo){
 		super();
 		this.name = name;
 		this.type = type;
+		this.roomNo = roomNo;
 		building = new Building(type);
-		state = State.idle;
+		state = State.enteringHouse;
 	}
 
 	public String getCustomerName() {

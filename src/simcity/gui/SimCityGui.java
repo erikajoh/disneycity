@@ -246,6 +246,8 @@ public class SimCityGui extends JFrame  {
 		mickeysMarket.addPerson(null, "Manager", "MRAWP");
 		mickeysMarket.addPerson(null, "Cashier", "Kapow");
 		mickeysMarket.addPerson(null, "Worker", "Bleep");
+		
+		mainStApts1.addRenter();
 //		mickeysMarket.addPerson(null, "Customer", "Beebop", 100, "American", 1);
 
 	}
