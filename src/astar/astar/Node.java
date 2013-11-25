@@ -1,4 +1,4 @@
-package astar;
+package astar.astar;
 import java.util.*;
 
 public interface Node {
