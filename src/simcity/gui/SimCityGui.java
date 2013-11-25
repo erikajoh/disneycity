@@ -4,7 +4,6 @@ import housing.Housing;
 import housing.ResidentAgent.State;
 import housing.gui.HousingAnimationPanel;
 import housing.test.mock.LoggedEvent;
-
 import bank.gui.Bank;
 import bank.gui.BankAnimationPanel;
 
@@ -27,6 +26,7 @@ import restaurant_pizza.gui.PizzaAnimationPanel;
 import restaurant_haus.gui.HausAnimationPanel;
 import restaurant_haus.gui.RestaurantHaus;
 import simcity.PersonAgent;
+import transportation.TransportationPanel;
 import restaurant_cafe.gui.CafeAnimationPanel;
 import restaurant_cafe.gui.RestaurantCafe;
 
@@ -86,7 +86,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	public static RestaurantHaus restHaus; 
 	public HausAnimationPanel hausAniPanel = new HausAnimationPanel();
 	
-	CityAnimationPanel cityAniPanel = new CityAnimationPanel();
+	TransportationPanel cityAniPanel = new TransportationPanel();
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
 	private JPanel cityAnimation = new JPanel();
