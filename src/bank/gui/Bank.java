@@ -80,10 +80,10 @@ public class Bank extends JPanel implements ActionListener {
     	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
     }
 	
-	public void msgLeave(BankCustomer bc, int accountNum, double balance, double loanAmt, int loanTime){
+	public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime){
 		PersonAgent person = (PersonAgent)spawns.get(bc);
 		System.out.println(bc.toString());
-		person.msgLeave(accountNum, balance, loanAmt, loanTime);
+		person.msgLeave(accountNum, change, loanAmt, loanTime);
 	}
     
     public BankCustomer createBankCustomer(PersonAgent person, boolean present){
