@@ -45,7 +45,7 @@ public class ResidentAgent extends Agent implements Resident {
 		this.type = type;
 		this.roomNo = roomNo;
 		building = new Building(type);
-		state = State.enteringHouse;
+		state = State.idle;
 	}
 
 	public String getCustomerName() {
