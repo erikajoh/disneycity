@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,19 +18,23 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import simcity.gui.Gui;
+import simcity.gui.SimCityGui;
 
-public class TransportationPanel extends JPanel implements ActionListener{
+public class TransportationPanel extends JPanel implements ActionListener, MouseListener {
 	private final int WINDOWX = 400;
 	private final int WINDOWY = 330;
 	
 	private BufferedImage img;
+	SimCityGui gui;
 	
 	private List<Gui> guis = new ArrayList<Gui>();
 	Timer timer;
 	
-	public TransportationPanel() {
+	public TransportationPanel(SimCityGui gui) {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
+        
+        this.gui = gui;
         
         try {
 			img =  ImageIO.read(new File("src" + File.separator + "res" + File.separator + "Background.png"));
@@ -39,6 +45,8 @@ public class TransportationPanel extends JPanel implements ActionListener{
  
     	timer = new Timer(20, this );
     	timer.start();
+    	
+    	addMouseListener(this);
     }
 	
 	@Override
@@ -75,4 +83,35 @@ public class TransportationPanel extends JPanel implements ActionListener{
     public void unpauseAnim() {
     	timer.start();
     }
+
+	@Override
+	public void mouseClicked(MouseEvent me) {
+		gui.showPanel("Rancho");
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent me) {
+		// TODO Auto-generated method stub
+		
+	}
 }
