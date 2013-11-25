@@ -49,19 +49,19 @@ public class AnimationModule {
 	public AnimationModule(String character, String firstAnimation){//Defaults the frame delay to 60. Which should work for most sprites. 
 		this.character = character;
 		animation = firstAnimation;
-		this.frameDelay = 60;
+		this.frameDelay = 30;
 	}
 	
 	public AnimationModule(String character){//Defaults the animation to walking downward (the sprite looks into your soul).
 		this.character = character;
 		animation = "WalkDown";
-		this.frameDelay = 60;
+		this.frameDelay = 30;
 	}
 	
 	public AnimationModule() {//This is where you don't care at all and you get the Edgar sprite
 		this.character = "Edgar";
 		animation = "WalkDown";
-		this.frameDelay = 60;
+		this.frameDelay = 30;
 	}
 
 	public void updateAnimation() {
@@ -113,6 +113,16 @@ public class AnimationModule {
 
 	public void changeAnimation(String animation) {
 		this.animation = animation;
+	}
+	
+	public boolean changeFrame(int frame) {
+		if(frame > totalFrames) {
+			System.out.print("Called frame that doesn't exist in animation");
+			return false;
+		}
+		currentFrame = frame;
+		frameDelayCounter = 0;
+		return true;
 	}
 	
 	public void changeAnimation(String animation, int frameDelay) {//if an individual animation has a different frame delay
