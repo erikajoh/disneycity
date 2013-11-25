@@ -85,8 +85,8 @@ public class WorkerGui implements Gui{
     }
     
     public void DoGoToHome() {
-    	xDestination = (int)(mWidth*0.6) - agent.getNum()*mWidth/15;
-		yDestination = (int)(mHeight*0.08);
+    	xDestination = (int)(mWidth*0.57) - agent.getNum()*mWidth/15;
+		yDestination = (int)(mHeight*0.15);
     	command = Command.goHome;
     }
 
