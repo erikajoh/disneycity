@@ -4,11 +4,13 @@ import restaurant_cafe.gui.Check;
 import restaurant_cafe.gui.CustomerGui;
 import restaurant_cafe.gui.Menu;
 import restaurant_cafe.gui.MenuItem;
-import restaurant_cafe.gui.RestaurantGui;
+import restaurant_cafe.gui.RestaurantCafeGui;
 import restaurant_cafe.interfaces.Cashier;
 import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Waiter;
 import agent_cafe.Agent;
+import simcity.gui.SimCityGui;
+import simcity.PersonAgent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,11 +25,13 @@ public class CustomerAgent extends Agent implements Customer {
 	private double balance = 25.00;
 	private int number;
 	Timer timer = new Timer();
-	private RestaurantGui restaurantGui;
-	private CustomerGui customerGui = new CustomerGui(this, restaurantGui);
+	private SimCityGui gui;
+	private CustomerGui customerGui;
 	Menu menu;
 	String choice;
 	Check check;
+	PersonAgent person;
+
 	
 	// agent correspondents
 	private HostAgent host;
@@ -61,6 +65,10 @@ public class CustomerAgent extends Agent implements Customer {
 	 */
 	public void setHost(HostAgent host) {
 		this.host = host;
+	}
+
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 
 	public String getCustomerName() {
@@ -228,6 +236,7 @@ public class CustomerAgent extends Agent implements Customer {
 
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
+			person.msgFoodDone(true);
 			//no action
 			return true;
 		}

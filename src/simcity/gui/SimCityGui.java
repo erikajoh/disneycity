@@ -25,8 +25,8 @@ import restaurant_rancho.gui.RestaurantRancho;
 import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_pizza.gui.PizzaAnimationPanel;
 import simcity.PersonAgent;
-
-
+import restaurant_cafe.gui.CafeAnimationPanel;
+import restaurant_cafe.gui.RestaurantCafe;
 
 public class SimCityGui extends JFrame implements ActionListener  {
 
@@ -39,7 +39,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	
 	JPanel cards;
 	
-	enum Panel {Mansion, Apt1, Apt2, Apt3, Apt4, Apt5, Apt6, Rancho, Bayou, Market, Bank, Pizza};
+	enum Panel {Mansion, Apt1, Apt2, Apt3, Apt4, Apt5, Apt6, Rancho, Bayou, Market, Bank, Pizza, Cafe};
 	Panel currP;
 			
 	public static RestaurantRancho restRancho;
@@ -78,6 +78,9 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	public static Bank pirateBank;
 	public BankAnimationPanel bankAniPanel = new BankAnimationPanel();
 	
+	public static RestaurantCafe restCafe;
+	public CafeAnimationPanel cafeAniPanel = new CafeAnimationPanel();
+	
 	CityAnimationPanel cityAniPanel = new CityAnimationPanel();
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
@@ -100,6 +103,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 //		  new Timer(delay, taskPerformer).start();
 				
 		cards = new JPanel(new CardLayout());
+		cards.add(cafeAniPanel, "Cafe");
 		cards.add(housAniPanel7, "Mansion");
 		cards.add(housAniPanel1, "Apt1");
 		cards.add(housAniPanel2, "Apt2");
@@ -112,15 +116,17 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		cards.add(ranchoAniPanel, "Rancho");
 		cards.add(bayouAniPanel, "Bayou");
 		cards.add(pizzaAniPanel, "Pizza");
+		cards.add(cafeAniPanel, "Cafe");
 				
 		panelB.addActionListener(this);
 		panelB.setPreferredSize(new Dimension(0, 0));
-		currP = Panel.Mansion;
+		currP = Panel.Cafe;
 					
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
 		restBayou = new RestaurantBayou(this, "The Blue Bayou");
 		restPizza = new RestaurantPizza(this);
+		restCafe = new RestaurantCafe(this, "Carnation Cafe");
 		hauntedMansion = new Housing(housAniPanel7, "Haunted Mansion");
 		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");
 		mainStApts2 = new Housing(housAniPanel2, "Main St Apartments #2");
@@ -207,17 +213,22 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		gui.setVisible(true);
 		gui.setResizable(false);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		restRancho.addPerson(null, "Cook", "cook", 50);
-        restRancho.addPerson(null, "Waiter", "w", 50);
-        restRancho.addPerson(null, "Cashier", "cash", 50);
-        restRancho.addPerson(null, "Market", "Trader Joes", 50);
-        restRancho.addPerson(null, "Host", "Host", 50);
-		restRancho.addPerson(null, "Customer", "Sally", 50);
-		restPizza.addPerson(null, "Cook", "cook", 50);
-        restPizza.addPerson(null, "Waiter", "w", 50);
-        restPizza.addPerson(null, "Cashier", "cash", 50);
-        restPizza.addPerson(null, "Host", "Host", 50);
-		restPizza.addPerson(null, "Customer", "Sally", 50);
+		//restRancho.addPerson(null, "Cook", "cook", 50);
+        //restRancho.addPerson(null, "Waiter", "w", 50);
+        //restRancho.addPerson(null, "Cashier", "cash", 50);
+        //restRancho.addPerson(null, "Market", "Trader Joes", 50);
+        //restRancho.addPerson(null, "Host", "Host", 50);
+		//restRancho.addPerson(null, "Customer", "Sally", 50);
+		//restPizza.addPerson(null, "Cook", "cook", 50);
+        //restPizza.addPerson(null, "Waiter", "w", 50);
+        //restPizza.addPerson(null, "Cashier", "cash", 50);
+        //restPizza.addPerson(null, "Host", "Host", 50);
+		//restPizza.addPerson(null, "Customer", "Sally", 50);
+		restCafe.addPerson(null, "Cook", "cook", 50);
+        restCafe.addPerson(null, "Waiter", "w", 50);
+        restCafe.addPerson(null, "Cashier", "cash", 50);
+        restCafe.addPerson(null, "Host", "Host", 50);
+		restCafe.addPerson(null, "Customer", "Sally", 50);
 		
 		mickeysMarket.addPerson(null, "Manager", "MRAWP");
 		mickeysMarket.addPerson(null, "Cashier", "Kapow");
@@ -229,8 +240,12 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == panelB) {
-			CardLayout cl = (CardLayout)(cards.getLayout());			
-			if (currP == Panel.Bank) {
+			CardLayout cl = (CardLayout)(cards.getLayout());	
+			if (currP == Panel.Cafe) {
+				cl.show(cards, "Bank");
+				currP = Panel.Bank;
+			}
+			else if (currP == Panel.Bank) {
 				System.out.println("showing hauntedmansion");
 				cl.show(cards, "Mansion");
 				currP = Panel.Mansion;
@@ -275,9 +290,9 @@ public class SimCityGui extends JFrame implements ActionListener  {
 				cl.show(cards,  "Pizza");
 				currP = Panel.Pizza;
 			} else if (currP == Panel.Pizza) {
-				System.out.println("showing bank");
-				cl.show(cards,  "Bank");
-				currP = Panel.Bank;
+				System.out.println("showing cafe");
+				cl.show(cards,  "Cafe");
+				currP = Panel.Cafe;
 			}
 		}
 	}

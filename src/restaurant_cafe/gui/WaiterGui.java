@@ -3,6 +3,7 @@ package restaurant_cafe.gui;
 
 import restaurant_cafe.CustomerAgent;
 import restaurant_cafe.WaiterAgent;
+import simcity.gui.SimCityGui;
 
 import java.awt.*;
 
@@ -17,9 +18,9 @@ public class WaiterGui implements Gui {
     int tableDestination;
 	private enum Command {noCommand, walkToHost, walkToTable, walkToCook, walkToCashier};
 	private Command command = Command.noCommand;
-	RestaurantGui gui;
+	SimCityGui gui;
 
-    public WaiterGui(WaiterAgent agent, RestaurantGui gui) {
+    public WaiterGui(WaiterAgent agent, SimCityGui gui) {
         this.agent = agent;
         if(agent.getName() != null){
 		initial = agent.getName().substring(0, 1);
@@ -88,15 +89,15 @@ public class WaiterGui implements Gui {
     }
     
     public void DoGoToCook(){
-    	xDestination = gui.getAnimWindowX()-80;
-		yDestination = gui.getAnimWindowY()-80;
+    	xDestination = 400-80;
+		yDestination = 330-80;
 		command = Command.walkToCook;
     }
 
     public void DoLeaveCustomer(int num) {
     	System.out.println("Leave customer");
         xDestination = 20*(num/4);
-        yDestination = gui.getAnimWindowY()-20*(num%4);
+        yDestination = 330-20*(num%4);
         command = Command.walkToHost;
     }
     public void DoGoToHost(int num) {
@@ -137,7 +138,7 @@ public class WaiterGui implements Gui {
 	}
 	public void endBreak() {
 		onBreak = false;
-		gui.setOffBreak(agent);
+		//gui.setOffBreak(agent);
 		agent.msgEndBreak();
 	}
 	

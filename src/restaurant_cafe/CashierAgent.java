@@ -14,6 +14,7 @@ import restaurant_cafe.interfaces.Cashier;
 import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Market;
 import restaurant_cafe.interfaces.Waiter;
+import simcity.PersonAgent;
 
 import java.awt.Point;
 import java.math.RoundingMode;
@@ -43,7 +44,7 @@ public class CashierAgent extends Agent implements Cashier {
 		}
 	}
 	enum CustomerState{idle, producingCheck, checkReady, giveCheck, paying, makeChange, giveChange, noMoney};
-	
+	PersonAgent person;
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	public Collection<Food> foods;
 	
@@ -77,6 +78,10 @@ public class CashierAgent extends Agent implements Cashier {
 
 		this.name = name;
 		menu = m;
+	}
+
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 
 	public String getMaitreDName() {

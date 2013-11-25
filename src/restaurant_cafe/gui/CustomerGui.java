@@ -1,6 +1,7 @@
 package restaurant_cafe.gui;
 
 import restaurant_cafe.CustomerAgent;
+import simcity.gui.SimCityGui;
 
 import java.awt.*;
 
@@ -10,7 +11,7 @@ public class CustomerGui implements Gui{
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
-	RestaurantGui gui;
+	SimCityGui gui;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -26,7 +27,7 @@ public class CustomerGui implements Gui{
 	public static final int xTable3 = 360;
 	public static final int yTable3 = 300;
 
-	public CustomerGui(CustomerAgent c, RestaurantGui gui){ //HostAgent m) {
+	public CustomerGui(CustomerAgent c, SimCityGui gui){ //HostAgent m) {
 		agent = c;
 		xPos = -40;
 		yPos = -40;
@@ -61,7 +62,7 @@ public class CustomerGui implements Gui{
 			else if (command==Command.LeaveRestaurant) {
 				agent.msgAnimationFinishedLeaveRestaurant();
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
+				//gui.setCustomerEnabled(agent);
 			}
 			command=Command.noCommand;
 		}

@@ -12,9 +12,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import restaurant_pizza.gui.CookGui;
-import restaurant_pizza.gui.WaiterGui;
-import restaurant_pizza.interfaces.Market;
-import restaurant_pizza.interfaces.Waiter;
+import simcity.PersonAgent;
 import simcity.RestMenu;
 
 public class CookAgent extends Agent {
@@ -27,6 +25,7 @@ public class CookAgent extends Agent {
 	private Map<String, Integer> designatedMarkets = Collections.synchronizedMap(new HashMap<String, Integer>()); // food type, index of market in myMarkets
 	public List<MyMarket> myMarkets = Collections.synchronizedList(new LinkedList<MyMarket>());
 	private List<Order> orders = Collections.synchronizedList(new LinkedList<Order>());
+	PersonAgent person;
 	
 	private final static int startAmount = 20; // amount of each food cook starts with
 	private final static int minimumStock = 2; // cook needs to order again when inventory of any food is below this value
@@ -69,6 +68,10 @@ public class CookAgent extends Agent {
 	
 	public RestMenu getMenu() {
 		return menu;
+	}
+	
+	public void setPerson(PersonAgent p) {
+		person = p;
 	}
 	
 	public void initializeMaps() throws Exception {

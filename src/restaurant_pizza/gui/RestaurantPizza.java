@@ -215,6 +215,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		c.setGui(g);
     		c.getGui().setHungry();
     		customers.add(c);
+    		c.setPerson(p);
     		c.startThread();
     	}
     	else if (type.equals("Waiter")) {
@@ -232,6 +233,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		waiterGuis.add(newWaiterGui);
     		waiters.add(newWaiter);
     		if (host!=null) host.msgAddWaiter(newWaiter);
+    		newWaiter.setPerson(p);
     		newWaiter.startThread();
     	}
     	else if (type.equals("Host")) {
@@ -243,6 +245,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     			w.setHost(host);
     			host.msgAddWaiter(w);
     		}
+    		host.setPerson(p);
     		host.startThread();
     	}
     	else if (type.equals("Cook")) {
@@ -254,6 +257,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     			w.setCook(cook);
     		}
     		cook.setMarkets(markets);
+    		cook.setPerson(p);
     		cook.startThread();
     	}
     	else if (type.equals("Cashier")) {
@@ -261,6 +265,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		for (WaiterAgent w: waiters) {
     			w.setCashier(cashier);
     		}
+    		cashier.setPerson(p);
     		cashier.startThread();
     	}
     }
