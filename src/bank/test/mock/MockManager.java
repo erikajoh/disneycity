@@ -217,7 +217,7 @@ public class MockManager extends Mock implements Manager {
 		}
 		
 		
-		public void addTeller(TellerAgent t){
+		public void addTeller(MockTeller t){
 			MyTeller mt = new MyTeller(t);
 			tellers.add(mt);
 		}

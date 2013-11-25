@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import bank.TellerAgent.State;
 import bank.gui.Account;
 import bank.gui.TellerGui;
 import bank.interfaces.BankCustomer;
