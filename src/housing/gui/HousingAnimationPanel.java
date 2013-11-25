@@ -27,6 +27,8 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
     Timer timer = new Timer(5, this);
     Graphics2D g2;
     
+    String pictureFile;
+    
     private JButton kitchen = new JButton(" ");
 
     public HousingAnimationPanel() {
@@ -37,6 +39,10 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
                 
     	timer.start();	
     	
+    }
+    
+    public void setBackground(String f) {
+    	pictureFile = f;
     }
 
 	public void actionPerformed(ActionEvent e) {
@@ -57,7 +63,7 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
     	//Clear the screen by painting a rectangle the size of the frame
         g2.setColor(getBackground());
         g2.fillRect(0, 0, this.getWidth(), this.getHeight());
-        Image backgroundImage = Toolkit.getDefaultToolkit().getImage("res/hauntedmansion.png");
+        Image backgroundImage = Toolkit.getDefaultToolkit().getImage(pictureFile);
         g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
 
 //        g2.setColor(Color.GRAY);
