@@ -3,6 +3,7 @@ package housing;
 import housing.gui.HousingAnimationPanel;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
@@ -60,9 +61,9 @@ public class Housing {
 	
 	//Messages
 	
-	public void msgIAmHome(PersonAgent rp) { // from person
+	public void msgIAmHome(PersonAgent rp, Map<String, Integer> items) { // from person
 		for (Renter r: renters) {
-			if (r.person == rp) r.agent.msgHome();
+			if (r.person == rp) r.agent.msgHome(items);
 		}
 	}
 	

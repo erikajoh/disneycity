@@ -1,6 +1,7 @@
 package housing.interfaces;
 
 import java.util.List;
+import java.util.Map;
 
 import housing.ResidentAgent;
 import housing.ResidentAgent.State;
@@ -17,7 +18,7 @@ public interface Resident {
 
 	public void msgCookFood(String choice);
 
-	public void msgHome();
+	public void msgHome(Map<String, Integer> items);
 
 	public void msgToBed();
 	

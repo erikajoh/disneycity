@@ -138,7 +138,7 @@ public class AnimationModule {
 		this.character = character;
 	}
 	
-	public Image getImage(){
+	public Image getImage() {
 		return img;
 	}
 }

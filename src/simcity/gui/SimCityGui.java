@@ -213,12 +213,12 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		gui.setVisible(true);
 		gui.setResizable(false);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//restRancho.addPerson(null, "Cook", "cook", 50);
-        //restRancho.addPerson(null, "Waiter", "w", 50);
-        //restRancho.addPerson(null, "Cashier", "cash", 50);
-        //restRancho.addPerson(null, "Market", "Trader Joes", 50);
-        //restRancho.addPerson(null, "Host", "Host", 50);
-		//restRancho.addPerson(null, "Customer", "Sally", 50);
+		restRancho.addPerson(null, "Cook", "cook", 50);
+        restRancho.addPerson(null, "Waiter", "w", 50);
+        restRancho.addPerson(null, "Cashier", "cash", 50);
+        restRancho.addPerson(null, "Market", "Trader Joes", 50);
+        restRancho.addPerson(null, "Host", "Host", 50);
+        restRancho.addPerson(null, "Customer", "Sally", 50);
 		//restPizza.addPerson(null, "Cook", "cook", 50);
         //restPizza.addPerson(null, "Waiter", "w", 50);
         //restPizza.addPerson(null, "Cashier", "cash", 50);

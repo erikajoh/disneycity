@@ -88,6 +88,17 @@ public class ResidentAgent extends Agent implements Resident {
 				stateChanged();
 			}
 		}
+
+		public void addItems(Map<String, Integer> items) {
+			Set<String> keySet = items.keySet();
+			String[] keyArray = keySet.toArray(new String[keySet.size()]);
+			for(int i = 0; i < keyArray.length; i++) {
+				if(inventory.get(keyArray[i]) != null) {
+					Integer aQuantity = items.get(keyArray[i]);
+					inventory.put(keyArray[i], aQuantity + inventory.get(keyArray[i]));
+				}
+			}
+		}
 	}
 	
 	// Messages
@@ -122,7 +133,8 @@ public class ResidentAgent extends Agent implements Resident {
 		stateChanged();
 	}
 
-	public void msgHome() { //from Housing class
+	public void msgHome(Map<String, Integer> items) { //from Housing class
+		building.addItems(items);
 		state = State.enteringHouse;
 		stateChanged();
 	}

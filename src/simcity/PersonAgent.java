@@ -4,13 +4,9 @@ import agent.Agent;
 import bank.gui.Bank;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 import market.Market;
 import housing.Housing;
-import housing.interfaces.*;
-import restaurant_rancho.interfaces.Person;
-import simcity.interfaces.Restaurant_Douglass;
 import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
@@ -409,15 +405,17 @@ public class PersonAgent extends Agent {
 
 	// House actions
 	private void enterHouse() {
-		print("Entering house");
-		myHome.housing.msgIAmHome(this);
+		print("Entering house, adding items");
+		Map<String, Integer> copyOfItems = new HashMap<String, Integer>();
 		Set<String> keySet = itemsOnHand.keySet();
 		String[] keyArray = keySet.toArray(new String[keySet.size()]);
 		for(int i = 0; i < keyArray.length; i++) {
-			if(itemsOnHand.get(keyArray[i]) > 0) {
-				// TODO myHome.housing.
-			}
+			Integer aQuantity = itemsOnHand.get(keyArray[i]);
+			if(aQuantity > 0)
+				copyOfItems.put(keyArray[i], aQuantity);
+			itemsOnHand.put(keyArray[i], 0);
 		}
+		myHome.housing.msgIAmHome(this, copyOfItems);
 	}
 	
 	private void prepareToCookAtHome() {
