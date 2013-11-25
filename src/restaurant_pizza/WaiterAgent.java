@@ -81,8 +81,8 @@ public class WaiterAgent extends Agent implements Waiter {
 		stateChanged();
 	}
 	
-	public void updateMenu(RestMenu m) {
-		menu = m;
+	public void updateMenu() {
+		menu = cook.getMenu();
 	}
 	public void msgIAmReadyToOrder(CustomerAgent c) {
 		print("msgIAmReadyToOrder() received from Customer " + c.getName());
@@ -329,6 +329,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		updateMenu();
 		customer.msgSitAtTable(this, tableNumber, menu);
 		DoGoToTable(tableNumber);
 		try {
