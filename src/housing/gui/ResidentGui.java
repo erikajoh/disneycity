@@ -44,6 +44,8 @@ public class ResidentGui implements Gui{
 	}
 
 	public void updatePosition() {
+		
+		// general animation states
 		if (xPos < xDestination) {
 			xPos++;
 			currDir = Direction.RIGHT;
@@ -61,20 +63,11 @@ public class ResidentGui implements Gui{
 			currDir = Direction.UP;
 		}
 		
-		standing = yPos == yDestination && xPos == xDestination;
-		sleeping = xPos == (int)(hWidth*0.53) && yDestination == (int)(hHeight*0.15);
+		// special animation states
+		standing = xPos == xDestination && yPos == yDestination;
+		sleeping = Math.abs(xPos - (int)(hWidth*0.8)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
 		
-		switch(currDir) {
-			case UP:
-				animModule.changeAnimation("WalkUp"); break;			
-			case DOWN:
-				animModule.changeAnimation("WalkDown"); break;
-			case LEFT:
-				animModule.changeAnimation("WalkLeft"); break;
-			case RIGHT:
-				animModule.changeAnimation("WalkRight"); break;
-		}
-		
+		// animation rules
 		if(sleeping) {
 			animModule.changeAnimation("Sleep");
 			animModule.changeFrame(1);
@@ -82,6 +75,18 @@ public class ResidentGui implements Gui{
 		else if(standing) {
 			animModule.changeAnimation("Stand");
 			animModule.changeFrame(1);
+		}
+		else {
+			switch(currDir) {
+				case UP:
+					animModule.changeAnimation("WalkUp"); break;			
+				case DOWN:
+					animModule.changeAnimation("WalkDown"); break;
+				case LEFT:
+					animModule.changeAnimation("WalkLeft"); break;
+				case RIGHT:
+					animModule.changeAnimation("WalkRight"); break;
+			}
 		}
 		
 		if (xPos == xDestination && yPos == yDestination) {

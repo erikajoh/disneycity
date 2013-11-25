@@ -126,7 +126,7 @@ public class SimCityPanel extends JPanel{
 	private static final long NOON = 150;
 	private static final long WORK_TWO = 220;
 	private static final long EVENING = 270;
-	private static final long END_OF_DAY = 500;
+	private static final long END_OF_DAY = 10;
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 50;
@@ -160,7 +160,7 @@ public class SimCityPanel extends JPanel{
 	
 	public void incrementNumTicks() {
 		numTicks++;
-		if(numTicks > END_OF_DAY && allPeopleSleeping()) {
+		if(numTicks > END_OF_DAY) {
 			numTicks = 0;
 			setNextDay();
 			timer.cancel(); // TODO test that this stops entire simulation
