@@ -25,4 +25,12 @@ public class BusRider {
 	public PersonAgent getPerson() {
 		return person;
 	}
+	
+	public BusStop getFinalStop() {
+		return finalStop;
+	}
+	
+	public MovementTile getDestination() {
+		return destination;
+	}
 }

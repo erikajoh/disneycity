@@ -14,6 +14,10 @@ public class BusStop {
 		nearbyBuildings = new ArrayList<String>();
 	}
 	
+	public List<BusRider> getBusWaiters() {
+		return busWaiters;
+	}
+	
 	public void clearRiders() {
 		busWaiters = new ArrayList<BusRider>();
 	}
