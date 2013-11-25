@@ -78,12 +78,14 @@ public class PersonAgent extends Agent {
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
-	public PersonAgent(String aName, Housing h, String foodPreference, String relationWithHousing, Transportation_Douglass t) {
+	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference,
+			String relationWithHousing, Transportation_Douglass t) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
-		isNourished = true;
+		isNourished = false;
 		currentLocation = h.getName();
+		moneyOnHand = startMoney;
 		targetLocation = currentLocation;
 		
 		currentLocationState = LocationState.Home;
@@ -223,33 +225,7 @@ public class PersonAgent extends Agent {
 
 	// from Bank
 	public void msgLeftBank(int accountNumber, double change, double loanAmount, int loanTime) {
-		
-		stateChanged();
-	}
-	
-	public void msgAccountOpened(int accountNumber) {
-		log.add(new LoggedEvent("Account created: accountNumber = " + accountNumber));
-		
-		// TODO msgAccountOpened
-		stateChanged();
-	}
-	
-	public void msgMoneyWithdrawn(double amount) {
-		log.add(new LoggedEvent("Received msgMoneyWithdrawn: amount = " + amount));
-		moneyOnHand += amount;
-		moneyWanted -= amount;
-		stateChanged();
-	}
-	
-	public void msgMoneyDeposited() {
-		log.add(new LoggedEvent("Received msgMoneyDeposited"));
-		moneyOnHand -= moneyToDeposit;
-		moneyToDeposit = 0;
-		stateChanged();
-	}
-	
-	public void msgLoanDecision(boolean status) {
-		// TODO bank message
+		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 	
@@ -365,12 +341,15 @@ public class PersonAgent extends Agent {
 				// Stuff to do at bank
 				if(myPersonalBankAccount == null) {
 					requestNewAccount();
+					event = PersonEvent.onHold;
 				}
 				if(moneyWanted > 0) {
 					requestWithdrawal();
+					event = PersonEvent.onHold;
 				}
 				if(moneyToDeposit > 0) {
 					requestDeposit();
+					event = PersonEvent.onHold;
 				}
 				// Done at bank, time to transition
 				if(!isNourished && !preferEatAtHome) {

@@ -107,7 +107,7 @@ public class AnimationModule {
 				count++;
 			}
 		}
-		System.out.println("Found frames: " + String.valueOf(count));
+		// System.out.println("Found frames: " + String.valueOf(count));
 		return count;
 	}
 
