@@ -165,8 +165,10 @@ public class PersonAgent extends Agent {
 	
 	public void msgSetHungry() {
 		print("I'm hungry now");
-		actionQueue.add(new Action(ActionString.becomeHungry, 2, 1));
-		stateChanged();
+		if(isNourished) {
+			actionQueue.add(new Action(ActionString.becomeHungry, 2, 1));
+			stateChanged();
+		}
 	}
 	
 	// from Housing
@@ -226,10 +228,17 @@ public class PersonAgent extends Agent {
 	}
 
 	// from Bank
-	public void msgLeftBank(int accountNumber, double change, double loanAmount, int loanTime) {
+	public void msgLeftBank(Bank theBank, int accountNumber, double change, double loanAmount, int loanTime) {
+		print("Leaving bank");
 		if(myPersonalBankAccount == null) {
-			myPersonalBankAccount = new MyBankAccount(accountName, accountType, bank, accountNumber)
+			myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
 		}
+		else {
+			myPersonalBankAccount.amount -= change;
+			myPersonalBankAccount.loanNeeded += loanAmount;
+			myPersonalBankAccount.loanTime = loanTime;
+		}
+		moneyOnHand += change;
 		event = PersonEvent.makingDecision;
 		bankState = BankState.None;
 		stateChanged();
@@ -262,7 +271,7 @@ public class PersonAgent extends Agent {
 	public boolean pickAndExecuteAnAction() {
 		if(printCount > 0) {
 			printCount--;
-			print("Calling PersonAgent's scheduler");
+			print("Calling PersonAgent's scheduler: currentStateLocation = " + currentLocationState);
 		}
 		
 		// action queue for urgent actions
@@ -370,6 +379,10 @@ public class PersonAgent extends Agent {
 						else {
 							if(!isNourished && !preferEatAtHome) {
 								hungryToRestaurant();
+							}
+							else if(preferEatAtHome) {
+								goHome();
+								event = PersonEvent.onHold;
 							}
 						}
 						break;
@@ -652,12 +665,16 @@ public class PersonAgent extends Agent {
 		Bank bank;
 		int accountNumber;
 		double amount = 0, loanNeeded = 0;
+		int loanTime;
 		
-		public MyBankAccount(int accountNumber, String accountType, Bank bank) {
+		public MyBankAccount(int accountNumber, String accountType, Bank bank, double amount, double loanNeeded, int loanTime) {
 			this.name = "Account " + accountNumber;
 			this.accountType = accountType;
 			this.bank = bank;
 			this.accountNumber = accountNumber;
+			this.amount = amount;
+			this.loanNeeded = loanNeeded;
+			this.loanTime = loanTime;
 		}
 	}
 	// Customers, Waiters, Host, Cook, Cashier
