@@ -274,7 +274,6 @@ public class TransportationController extends Agent implements Transportation{
 		case  "Walk":
 			mover.transportationState = TransportationState.MOVING;
 			TransportationTraversal aStar = new TransportationTraversal(grid);
-			System.out.println(mover.startingLocation);
 			WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
 			walker.startThread();
 			WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
