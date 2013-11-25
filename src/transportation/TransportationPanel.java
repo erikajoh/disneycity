@@ -27,7 +27,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	
 	private BufferedImage img;
 	SimCityGui gui;
-	TransportationController controller;
+	Transportation controller;
 	
 	private List<Gui> guis = new ArrayList<Gui>();
 	Timer timer;
@@ -157,5 +157,9 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	public void mouseReleased(MouseEvent me) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public Transportation getTransportation() {
+		return controller;
 	}
 }
