@@ -16,7 +16,7 @@ public class WorkerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, getItem, goHome};
+	private enum Command {noCommand, getItem, bringItem, goHome};
 	private Command command=Command.noCommand;
 	
 //	private Semaphore moving = new Semaphore(0, true);
@@ -32,7 +32,7 @@ public class WorkerGui implements Gui{
 	}
 
 	public void updatePosition() {
-		if (command == Command.goHome) {
+		if (command == Command.goHome || command == Command.bringItem) {
 			if (yPos < yDestination)
 				yPos++;
 			else if (yPos > yDestination)
@@ -51,11 +51,10 @@ public class WorkerGui implements Gui{
 			else if (yPos > yDestination)
 				yPos--;
 		}
-		
-		
-		
+			
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command != Command.noCommand) agent.msgAnimationFinished();
+			if (command == Command.bringItem) agent.msgAtFront();
+			else if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
 	}
@@ -79,9 +78,16 @@ public class WorkerGui implements Gui{
 	}
     
     public void DoGoGetItem(int shelf) {
-    	xDestination = 200;
-    	yDestination = 200;
+    	double xModifier = 0.3 + (0.2*shelf);
+    	xDestination = (int)(mWidth*xModifier);
+    	yDestination = (int)(mHeight*0.6);
     	command = Command.getItem;
+    }
+    
+    public void DoBringItemToFront() {
+    	xDestination = (int)(mWidth*0.25);
+    	yDestination = (int)(mHeight*0.2);
+    	command = Command.bringItem;
     }
     
     public void DoGoToHome() {
