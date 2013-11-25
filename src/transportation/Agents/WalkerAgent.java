@@ -20,6 +20,8 @@ public class WalkerAgent extends MobileAgent{
 	TransportationTraversal aStar;
 	
 	Semaphore animSem;
+	BusStop busStop;
+	String building;
 
 	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
 		this.walker = walker;
@@ -30,8 +32,23 @@ public class WalkerAgent extends MobileAgent{
 		this.aStar = aStar;
 		
 		animSem = new Semaphore(0, true);
+		busStop = null;
+		building = null;
 	}
-
+	
+	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop busStop, String building) {
+		this.walker = walker;
+		this.currentPosition = currentPosition;
+		this.endPosition = endPosition;
+		this.master = master;
+		arrived = false;
+		this.aStar = aStar;
+		
+		animSem = new Semaphore(0, true);
+		this.busStop= busStop;
+		this.building = building;
+	}
+	
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
@@ -114,7 +131,12 @@ public class WalkerAgent extends MobileAgent{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		master.msgArrivedAtDestination(walker);
+		if(busStop == null) {
+			master.msgArrivedAtDestination(walker);
+			System.out.println(String.valueOf(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits()));
+		}
+		else
+			master.grid[currentPosition.getX()][currentPosition.getY()].getBusStop().addRider(walker, busStop, building);
 		gui.setIgnore();
 		stopThread();
 	}

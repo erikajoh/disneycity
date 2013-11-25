@@ -2,16 +2,19 @@ package transportation.Objects;
 
 import java.util.*;
 
+import astar.astar.Position;
 import simcity.PersonAgent;
 
 public class BusStop {
 	public List<BusRider> busWaiters;
+	String name;
 	List<String> nearbyBuildings;
-	MovementTile associatedTile;
+	Position associatedTile;
 	
-	public BusStop() {
+	public BusStop(String name) {
 		busWaiters = new ArrayList<BusRider>();
 		nearbyBuildings = new ArrayList<String>();
+		this.name = name;
 	}
 	
 	public List<BusRider> getBusWaiters() {
@@ -22,7 +25,7 @@ public class BusStop {
 		busWaiters = new ArrayList<BusRider>();
 	}
 	
-	public void addRider(PersonAgent person, BusStop finalStop, MovementTile destination) {
+	public void addRider(PersonAgent person, BusStop finalStop, String destination) {
 		busWaiters.add(new BusRider(person, finalStop, destination));
 	}
 	
@@ -36,7 +39,15 @@ public class BusStop {
 		return false;
 	}
 	
-	public void associateWalkTile(MovementTile tile) {
+	public void associateWalkTile(Position tile) {
 		associatedTile = tile;
+	}
+	
+	public Position getAssociatedTile() {
+		return associatedTile;
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

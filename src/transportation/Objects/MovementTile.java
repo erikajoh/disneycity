@@ -38,4 +38,8 @@ public class MovementTile extends Semaphore{
 	public void setBusStop(BusStop busStop) {
 		this.busStop = busStop;
 	}
+	
+	public BusStop getBusStop() {
+		return busStop;
+	}
 }
