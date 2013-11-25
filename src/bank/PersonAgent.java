@@ -92,15 +92,15 @@ public class PersonAgent extends Agent implements Person {
 		
 		
 		if(accounts.size() == 0){
-			bank.msgRequestAccount(this, balance*.5);
+			bank.msgRequestAccount(this, balance*.5, true);
 		}
 		else if(decision == 0){
 			originalAccount = accounts.get(0); //really a pick method for the index
-		    bank.msgRequestDeposit(this, originalAccount.getNumber(), 5.00);
+		    bank.msgRequestDeposit(this, originalAccount.getNumber(), 5.00, true);
 		}
 		else if(decision == 1){
 			 originalAccount = accounts.get(0); //really a pick method for the index
-			 bank.msgRequestWithdrawal(this, originalAccount.getNumber(), 5.00);
+			 bank.msgRequestWithdrawal(this, originalAccount.getNumber(), 5.00, true);
 		}
 	
 	}

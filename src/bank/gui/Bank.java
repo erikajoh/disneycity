@@ -65,37 +65,31 @@ public class Bank extends JPanel implements ActionListener {
 		p.startThread();
     }
     
-    public void msgRequestAccount(PersonAgent person, double balance){
-    	BankCustomer bca = createBankCustomer(person);
+    public void msgRequestAccount(PersonAgent person, double balance, boolean present){
+    	BankCustomer bca = createBankCustomer(person, present);
     	manager.msgRequestAccount(bca, balance);
     }
     
-    public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt){
-    	BankCustomer bca = createBankCustomer(person);
+    public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt, boolean present){
+    	BankCustomer bca = createBankCustomer(person, present);
     	manager.msgRequestDeposit(bca, accountNum, reqAmt);
     }
     
-    public void msgRequestWithdrawal(PersonAgent person, int accountNum, double reqAmt){
-    	BankCustomer bca = createBankCustomer(person);
+    public void msgRequestWithdrawal(PersonAgent person, int accountNum, double reqAmt, boolean present){
+    	BankCustomer bca = createBankCustomer(person, present);
     	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
     }
 	
 	public void msgLeave(BankCustomer bc, int accountNum, double balance, double loanAmt, int loanTime){
-	/*	Set<PersonAgent> keySet = spawns.keySet();
-		PersonAgent[] thePersonAgents = (PersonAgent[])keySet.toArray(new PersonAgent[keySet.size()]);
-		PersonAgent person = null;
-		for(int i = 0; i < thePersonAgents.length; i++) {
-			
-		}*/
 		PersonAgent person = (PersonAgent)spawns.get(bc);
 		System.out.println(bc.toString());
 		person.msgLeave(accountNum, balance, loanAmt, loanTime);
 	}
     
-    public BankCustomer createBankCustomer(PersonAgent person){
+    public BankCustomer createBankCustomer(PersonAgent person, boolean present){
     	 customers.add(person);
    	  	 BankCustomerAgent bca = new BankCustomerAgent(person.getName(), manager, gui);
-	     BankCustomerGui g = new BankCustomerGui(bca, gui, 400, 330);
+	     BankCustomerGui g = new BankCustomerGui(bca, gui, present, 400, 330);
 	     gui.bankAniPanel.addGui(g);// dw
 	     bca.setGui(g);
 	     bca.startThread();
