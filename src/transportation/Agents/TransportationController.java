@@ -87,6 +87,12 @@ public class TransportationController extends Agent {
 
 		//++++++++++++++++++++++BEGIN CREATION OF GRID++++++++++++++++++++++
 		grid = new MovementTile[16][13];
+
+		for(int i = 0; i < grid.length; i++) {
+			for(int j = 0; j< grid[0].length; j++) {
+				grid[i][j] = new MovementTile();
+			}
+		}
 		//Walkways
 		for(int i = 2; i <= 13; i++) {
 			grid[i][2].setMovement(true, true, true, true, MovementTile.MovementType.WALKWAY);
