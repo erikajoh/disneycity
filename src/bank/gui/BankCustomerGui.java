@@ -84,17 +84,6 @@ public class BankCustomerGui implements Gui{
 	}
 
 	public void draw(Graphics2D g) {
-		/*g.setColor(Color.CYAN);
-		g.fillRect(xPos, yPos, 20, 20);
-		g.setColor(Color.BLACK);
-		g.drawString(initial, xPos+5, yPos+15);
-		
-		if(!drawString.equals("")){
-			g.setColor(Color.WHITE);
-			g.fillRect(xPos+20, yPos, 20, 20);
-			g.setColor(Color.BLACK);
-			g.drawString(drawString, xPos+20, yPos+15);
-		}*/
 		animModule.updateAnimation();//updates the frame and animation 
 		g.drawImage(animModule.getImage(), xPos, yPos, null);
 	}
