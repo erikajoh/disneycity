@@ -21,7 +21,7 @@ public class BankCustomerGui implements Gui{
 	private String initial;
 	private enum Command {noCommand, GoToTeller, LeaveBank}; //shortened to noCommand and walking?
 	private enum Direction{left, right, up, down};
-	private Direction direction;
+	private Direction direction = Direction.up;
 	private Command command=Command.noCommand;
 	private boolean isInBank = false;
 	private AnimationModule animModule = new AnimationModule();

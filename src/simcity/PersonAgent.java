@@ -35,7 +35,7 @@ public class PersonAgent extends Agent {
 	private enum BodyState {Asleep, Active, Tired};
 	private BodyState bodyState;
 	
-	private enum ActionString { wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
+	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
 	// TODO: Use goToWork
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
@@ -54,9 +54,10 @@ public class PersonAgent extends Agent {
 	private double moneyWanted = 0.0;
 	private double moneyToDeposit = 0.0;
 	private String targetLocation;
-	private enum RestaurantState { None, JustArrived,  };
 	private enum MarketState { None, WantToBuy, WantToWork };
 	private MarketState marketState;
+	private enum BankState { None, NeedTransaction };
+	private BankState bankState;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -83,7 +84,7 @@ public class PersonAgent extends Agent {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
-		isNourished = false;
+		isNourished = true;
 		currentLocation = h.getName();
 		moneyOnHand = startMoney;
 		targetLocation = currentLocation;
@@ -96,7 +97,7 @@ public class PersonAgent extends Agent {
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
-		bodyState = BodyState.Active;
+		bodyState = BodyState.Asleep;
 		itemsOnHand = new HashMap<String, Integer>();
 	}
 
@@ -162,8 +163,9 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgSetHunger(boolean full) {
-		isNourished = full;
+	public void msgSetHungry() {
+		print("I'm hungry now");
+		actionQueue.add(new Action(ActionString.becomeHungry, 2, 1));
 		stateChanged();
 	}
 	
@@ -225,7 +227,11 @@ public class PersonAgent extends Agent {
 
 	// from Bank
 	public void msgLeftBank(int accountNumber, double change, double loanAmount, int loanTime) {
+		if(myPersonalBankAccount == null) {
+			myPersonalBankAccount = new MyBankAccount(accountName, accountType, bank, accountNumber)
+		}
 		event = PersonEvent.makingDecision;
+		bankState = BankState.None;
 		stateChanged();
 	}
 	
@@ -264,6 +270,8 @@ public class PersonAgent extends Agent {
 			Action theAction = actionQueue.poll();
 			// TODO: what to do with action...
 			switch(theAction.action) {
+				case becomeHungry:
+					isNourished = false; break;
 				case wakeUp:
 					bodyState = BodyState.Active; break;
 				case goToSleep:
@@ -284,7 +292,7 @@ public class PersonAgent extends Agent {
 		// if no emergenices, proceed with normal decision rules
 		if(event == PersonEvent.makingDecision && bodyState != BodyState.Asleep) {
 			
-			if(currentLocationState == LocationState.Home) {
+			if(currentLocationState == LocationState.Home) { // at home
 				if(!insideHouse) { // if not inside house (i.e., at the doorstep), enter it
 					print("Not inside my house");
 					if(currentLocation.equals(targetLocation)) {
@@ -336,28 +344,39 @@ public class PersonAgent extends Agent {
 					event = PersonEvent.onHold;
 				}
 			}
-			if(currentLocationState == LocationState.Bank) { // bank scheduler
-				// TODO Person scheduler while in Bank
-				// Stuff to do at bank
-				if(myPersonalBankAccount == null) {
-					requestNewAccount();
-					event = PersonEvent.onHold;
-				}
-				if(moneyWanted > 0) {
-					requestWithdrawal();
-					event = PersonEvent.onHold;
-				}
-				if(moneyToDeposit > 0) {
-					requestDeposit();
-					event = PersonEvent.onHold;
-				}
-				// Done at bank, time to transition
-				if(!isNourished && !preferEatAtHome) {
-					hungryToRestaurant();
+			if(currentLocationState == LocationState.Bank) { // at bank
+				
+				switch(bankState) {
+					case NeedTransaction:
+						if(myPersonalBankAccount == null) {
+							requestNewAccount();
+							event = PersonEvent.onHold;
+						}
+						else if(moneyWanted > 0) {
+							requestWithdrawal();
+							event = PersonEvent.onHold;
+						}
+						else if(moneyToDeposit > 0) {
+							requestDeposit();
+							event = PersonEvent.onHold;
+						}
+						break;
+					case None:
+						// Done at bank, time to transition
+						if(!currentLocation.equals(targetLocation)) {
+							goToTransportation();
+							event = PersonEvent.onHold;
+						}
+						else {
+							if(!isNourished && !preferEatAtHome) {
+								hungryToRestaurant();
+							}
+						}
+						break;
 				}
 				return true;
 			}
-			if(currentLocationState == LocationState.Restaurant) {
+			if(currentLocationState == LocationState.Restaurant) { // at restaurant
 				if(!isNourished) {
 					enterRestaurant();
 				}
@@ -367,7 +386,7 @@ public class PersonAgent extends Agent {
 				event = PersonEvent.onHold;
 				return true;
 			}
-			if(currentLocationState == LocationState.Market) {
+			if(currentLocationState == LocationState.Market) { // at market
 				
 				if(!isNourished && !preferEatAtHome) {
 					hungryToRestaurant();
@@ -423,6 +442,7 @@ public class PersonAgent extends Agent {
 		if(moneyOnHand < price) {
 			log.add(new LoggedEvent("Want to buy food at market; not enough money"));
 			moneyWanted = price - moneyOnHand;
+			bankState = BankState.NeedTransaction;
 			MyBank targetBank = chooseBank();
 			targetLocation = targetBank.name;
 			return;
@@ -434,6 +454,7 @@ public class PersonAgent extends Agent {
 	private void haveMoneyToDeposit() {
 		print("I have excess money to deposit");
 		moneyToDeposit = moneyOnHand - MONEY_ON_HAND_LIMIT;
+		bankState = BankState.NeedTransaction;
 		MyBank targetBank = chooseBank();
 		targetLocation = targetBank.name;
 	}
@@ -468,6 +489,7 @@ public class PersonAgent extends Agent {
 		if(moneyOnHand < lowestPrice) {
 			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
 			moneyWanted = lowestPrice - moneyOnHand;
+			bankState = BankState.NeedTransaction;
 			MyBank targetBank = chooseBank();
 			targetLocation = targetBank.name;
 			return;
@@ -631,8 +653,8 @@ public class PersonAgent extends Agent {
 		int accountNumber;
 		double amount = 0, loanNeeded = 0;
 		
-		public MyBankAccount(String accountName, String accountType, Bank bank, int accountNumber) {
-			this.name = accountName; 
+		public MyBankAccount(int accountNumber, String accountType, Bank bank) {
+			this.name = "Account " + accountNumber;
 			this.accountType = accountType;
 			this.bank = bank;
 			this.accountNumber = accountNumber;

@@ -85,7 +85,7 @@ public class SimCityPanel extends JPanel{
 				timer.schedule(new TimerTask() {
 					public void run() {
 						System.out.println("Setting person to be hungry");
-						person.msgSetHunger(false);
+						person.msgSetHungry();
 					}
 				}, (int)(Math.random() * EAT_DELAY_MAX * TICK_DELAY));
 			}
