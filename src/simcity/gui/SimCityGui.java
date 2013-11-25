@@ -126,7 +126,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 				
 		panelB.addActionListener(this);
 		panelB.setPreferredSize(new Dimension(0, 0));
-		currP = Panel.Cafe;
+		currP = Panel.Apt1;
 					
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");

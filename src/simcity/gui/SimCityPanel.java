@@ -39,6 +39,8 @@ public class SimCityPanel extends JPanel{
 		Market firstMarket = gui.mickeysMarket;
 		Bank firstBank = gui.pirateBank;
 		String foodPreferenceMexican = "Mexican";
+		
+		Housing secondHousing = gui.mainStApts1;
 	 
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
@@ -50,10 +52,19 @@ public class SimCityPanel extends JPanel{
 		firstHackedPerson.addBank(firstBank, "Customer");
 		people.add(firstHackedPerson);
 		
+		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", secondHousing, 60, foodPreferenceMexican, "Renter", transportation);
+		firstHousing.setOwner(firstHackedPerson);
+		firstHousing.addRenter(secondHackedPerson);
+		secondHackedPerson.addRestaurant(restRancho, "Customer");
+		secondHackedPerson.addMarket(firstMarket, "Customer");
+		secondHackedPerson.addBank(firstBank, "Customer");
+		people.add(secondHackedPerson);
+		
 		// Alternatively, you can call the next line as a hack (in place of the previous three lines)
 		//		 firstHousing.setOwner();
 		 
 		firstHackedPerson.startThread();
+		secondHackedPerson.startThread();
 
 	    setLayout(new GridLayout());
 	
