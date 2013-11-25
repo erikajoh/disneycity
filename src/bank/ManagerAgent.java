@@ -46,7 +46,7 @@ public class ManagerAgent extends Agent implements Manager {
 
 		List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
 		enum State{entered, waiting, leaving, busy, idle};
-		enum Action{newAccount, deposit, withdraw, loan};
+		enum Action{newAccount, deposit, withdraw};
 
 		class MyTeller {
 			Teller teller;
@@ -215,9 +215,7 @@ public class ManagerAgent extends Agent implements Manager {
 			print("RA: "+wc.requestAmt);
 			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt);
 		}
-		else if(wc.action == Action.loan){
-			wc.bankCustomer.msgRequestLoan(wc.requestAmt);
-		}
+
 		//wc.person.msgGoToTeller(mt.teller);
 		wc.state = State.busy;
 		mt.teller.msgNewCustomer(wc.bankCustomer);
@@ -233,7 +231,7 @@ public class ManagerAgent extends Agent implements Manager {
 		BankCustomer bc = wc.bankCustomer;
 		print(bc.getAccountNum() + " $" + bc.getBalance());
 		wc.state = State.idle;
-		bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getBalance(), bc.isForLoan(), bc.getLoanTime());
+		bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getBalance(), bc.getLoanAmount(), bc.getLoanTime());
 	}
 	
 	

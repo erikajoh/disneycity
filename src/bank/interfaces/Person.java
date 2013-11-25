@@ -3,7 +3,7 @@ package bank.interfaces;
 public interface Person {
 	
 	public void msgArrive(int num);
-	public void msgLeave(int num, double balance, boolean forLoan, int loanTime);
+	public void msgLeave(int num, double balance, double loanAmt, int loanTime);
 	
 	public String getName();
 

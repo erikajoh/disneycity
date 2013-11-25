@@ -20,7 +20,7 @@ public class PersonAgent extends Agent implements Person {
 	private double balance = 25.00;
 	private Account originalAccount;
 	private int newAccountNum;
-	private boolean forLoan;
+	private double loanAmt;
 	private int loanTime;
 
 	private double newBalance;
@@ -56,10 +56,12 @@ public class PersonAgent extends Agent implements Person {
 		stateChanged();
 	}
 	
-	public void msgLeave(int accNum, double balance, boolean fl, int lt){
+	//double loanAmt
+	
+	public void msgLeave(int accNum, double balance, double la, int lt){
 		newAccountNum = accNum;
 	    newBalance = balance;
-	    forLoan = fl;
+	    loanAmt = la;
 	    loanTime = lt;
 		state = State.leave;
 		stateChanged();
@@ -104,7 +106,7 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	private void leave(){
-		print("PERSON LEFT BANK "+ newAccountNum + " " + newBalance + " " + forLoan + " " + loanTime);
+		print("PERSON LEFT BANK "+ newAccountNum + " " + newBalance + " " + loanAmt + " " + loanTime);
 		if(originalAccount == null){
 			Account newAccount = new Account(newAccountNum);
 			newAccount.setBalance(newBalance);

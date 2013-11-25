@@ -80,7 +80,7 @@ public class Bank extends JPanel implements ActionListener {
     	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
     }
 	
-	public void msgLeave(BankCustomer bc, int accountNum, double balance, boolean forLoan, int loanTime){
+	public void msgLeave(BankCustomer bc, int accountNum, double balance, double loanAmt, int loanTime){
 	/*	Set<PersonAgent> keySet = spawns.keySet();
 		PersonAgent[] thePersonAgents = (PersonAgent[])keySet.toArray(new PersonAgent[keySet.size()]);
 		PersonAgent person = null;
@@ -89,7 +89,7 @@ public class Bank extends JPanel implements ActionListener {
 		}*/
 		PersonAgent person = (PersonAgent)spawns.get(bc);
 		System.out.println(bc.toString());
-		person.msgLeave(accountNum, balance, forLoan, loanTime);
+		person.msgLeave(accountNum, balance, loanAmt, loanTime);
 	}
     
     public BankCustomer createBankCustomer(PersonAgent person){

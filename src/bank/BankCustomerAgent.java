@@ -21,7 +21,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private double balance = 25.00;
 	private double change;
 	
-	private boolean forLoan = false;
+	private double loanAmount;
 	private int loanTime;
 	
 	private SimCityGui simCityGui;
@@ -32,7 +32,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private Teller teller = null;
 	
 	public enum State
-	{deciding, openingAccount, depositing, withdrawing, requestingLoan, leaving, left, idle};
+	{deciding, openingAccount, depositing, withdrawing, leaving, left, idle};
 	State state = State.idle;
 
 	public enum AnimState{go, walking, idle};
@@ -79,41 +79,37 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.withdrawing;
 		stateChanged();
 	}
-	public void	msgRequestLoan(double ra){
-		print("REQ LOAN");
-		requestAmt = ra;
-		state = State.requestingLoan;
-		stateChanged();
-	}
 
 	public void msgGoToTeller(Teller t){
 		teller = t;
 		animState = AnimState.go; 
 		stateChanged();
 	}
-	public void msgAccountOpened(int an){
+	public void msgAccountOpened(int an, double amountWithdrawn){
 		balance += change;
+		change = amountWithdrawn;
 		print("ACCOUNT OPENED "+balance);
 		accountNum = an;
 		state = State.leaving;
 		stateChanged();
 	}
-	public void msgMoneyDeposited(){
-		balance += change;
+	public void msgMoneyDeposited(double amountAdded, double loanAmt, int lt){
+		balance += amountAdded;
+		change = amountAdded;
 		print("MONEY DEPOSITED "+ balance);
 		state = State.leaving;
+		loanAmount = loanAmt;
+		loanTime = lt;
 		stateChanged();
 	}
-	public void msgMoneyWithdrawn(double amtWithdrawn){
+	public void msgMoneyWithdrawn(double amountWithdrawn, double loanAmt, int lt){
 		balance += change;
 		print("MONEY WITHDRAWN "+ balance);
 		state = State.leaving;
-		change = amtWithdrawn;
+		change = amountWithdrawn;
+		loanAmount = loanAmt;
+		loanTime = lt;
 		stateChanged();
-	}
-	public void msgLoanDecision(boolean status){
-		print("LOAN "+status);
-		
 	}
 	
 	public void msgAnimationFinishedGoToTeller(){
@@ -228,8 +224,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		return manager;
 	}
 	
-	public boolean isForLoan(){
-		return forLoan;
+	public double getLoanAmount(){
+		return loanAmount;
 	}
 	
 	public int getLoanTime(){
