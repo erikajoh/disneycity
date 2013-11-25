@@ -161,7 +161,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	// Actions
 	
 	private void goToTeller(){
-		state = State.idle;
 		animState = AnimState.walking;
 		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
 	    //simCityGui.updateInfoPanel(this);
@@ -171,8 +170,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		if(teller == null){
 			print("TELLER NULL");
 		}
-		teller.msgOpenAccount(this, balance*.5);
-		change = -balance*.5;
+		teller.msgOpenAccount(this, requestAmt);
+		//change = -balance*.5;
 		state = State.idle;
 	}
 	private void depositCash(){

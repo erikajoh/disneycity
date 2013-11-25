@@ -48,7 +48,7 @@ public class TellerAgent extends Agent implements Teller {
 	
 	Customer customer;
 	List<Customer> customers = Collections.synchronizedList(new ArrayList<Customer>());
-
+	
 	private String name;
 	TellerGui tellerGui;
 	
@@ -84,14 +84,19 @@ public class TellerAgent extends Agent implements Teller {
 
 	public void	msgOpenAccount(BankCustomer bankCustomer, double cash){ //open account w/ initial amt of cash
 		print("OPEN ACCOUNT");
-		Account account = new Account(accounts.size());
+		boolean found = false;
 		for(Customer cust : customers){
 			if(cust.bankCustomer == bankCustomer){
 				customer = cust;
 				customer.state = State.openingAccount;
+				found = true; break;
 			}
 		}
-		accounts.add(account);
+		if(found == false){
+			customer = new Customer(bankCustomer);
+			customers.add(customer);
+		}
+		customer.requestAmt = cash;
 		stateChanged();
 	}
 
@@ -151,10 +156,10 @@ public class TellerAgent extends Agent implements Teller {
 
 	// Actions
 	private void openAccount(){
-		int accountNum = accounts.size();
-		customer.account = new Account(accountNum);
-		accounts.add(customer.account);
-		customer.bankCustomer.msgAccountOpened(accountNum, customer.requestAmt);
+		Account newAccount = new Account(accounts.size(), customer.requestAmt);
+		accounts.add(newAccount);
+		customer.account = newAccount;
+		customer.bankCustomer.msgAccountOpened(newAccount.number, -customer.requestAmt);
 		customer.state = State.deciding;
 	}
 

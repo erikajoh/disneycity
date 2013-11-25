@@ -6,9 +6,9 @@ public class Account {
 	public double loanAmount;
 	public int loanTime;
 	
-	public Account(int num){
+	public Account(int num, double bal){
 		number = num;
-		balance = 0.00;
+		balance = bal;
 		loanAmount = 0.00;
 		loanTime = 0;
 	}

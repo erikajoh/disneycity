@@ -59,9 +59,9 @@ public class Bank extends JPanel implements ActionListener {
 		p.startThread();*/
     }
     
-    public void msgRequestAccount(PersonAgent person, double balance, boolean present){
+    public void msgRequestAccount(PersonAgent person, double reqAmt, boolean present){
     	BankCustomer bca = createBankCustomer(person, present);
-    	manager.msgRequestAccount(bca, balance);
+    	manager.msgRequestAccount(bca, reqAmt);
     }
     
     public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt, boolean present){
