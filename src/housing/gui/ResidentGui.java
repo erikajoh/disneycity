@@ -28,7 +28,7 @@ public class ResidentGui implements Gui{
 	public ResidentGui(ResidentAgent r){
 		agent = r;
 		agent.setGui(this);
-		xPos = (int)(hWidth*0.27);
+		xPos = (int)(hWidth*0.23);
 		yPos = (int)(hHeight*0.92);
 	}
 
@@ -74,7 +74,7 @@ public class ResidentGui implements Gui{
 	public void DoEnterHouse() {
 		System.out.println("Entering house");
 		setPresent(true);
-		xDestination = (int)(hWidth*0.27);
+		xDestination = (int)(hWidth*0.23);
 		yDestination = (int)(hHeight*0.65);
 		command = Command.EnterHouse;
 	}
@@ -142,7 +142,7 @@ public class ResidentGui implements Gui{
 				e.printStackTrace();
 			}
 		}
-		xDestination = (int)(hWidth*0.27);
+		xDestination = (int)(hWidth*0.23);
 		yDestination = (int)(hHeight*0.65);
 		command = Command.GoToTable;
 	}
@@ -190,7 +190,7 @@ public class ResidentGui implements Gui{
 			yDestination = (int)(hHeight*0.65);
 			command = Command.DoMaintenance;
 		} else {
-			xDestination = (int)(hWidth*0.27);
+			xDestination = (int)(hWidth*0.23);
 			yDestination = (int)(hHeight*0.65);
 			command = Command.DoneMaintenance;
 		}		
@@ -221,7 +221,7 @@ public class ResidentGui implements Gui{
 				e.printStackTrace();
 			}
 		}
-		xDestination = (int)(hWidth*0.27);
+		xDestination = (int)(hWidth*0.23);
         yDestination = (int)(hHeight*0.92);
 		command = Command.LeaveHouse;
 	}

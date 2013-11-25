@@ -106,7 +106,7 @@ public class CustomerAgent extends Agent {
 			print("Entering market");
 			EnterMarket();
 			state = State.idle;
-			state = State.ordering; //hack
+//			state = State.ordering; //hack
 			return true;
 		}
 		else if (state == State.ordering){

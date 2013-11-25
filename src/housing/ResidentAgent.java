@@ -55,37 +55,38 @@ public class ResidentAgent extends Agent implements Resident {
 		Building(String t) {
 			type = t;
 			// TODO: This be hacked
-			inventory.put("Mexican", 0);
-			inventory.put("Southern", 0);
-			inventory.put("Italian", 0);
-			inventory.put("German", 0);
-			inventory.put("American", 0);
+			inventory.put("Mexican", 1);
+			inventory.put("Southern", 1);
+			inventory.put("Italian", 1);
+			inventory.put("German", 1);
+			inventory.put("American", 1);
 		}
 		private boolean getFood(String f) {
 			if (inventory.get(f) != 0) {
 				inventory.put(f, inventory.get(f)-1);
+				state = State.idle;
 				return true;
 			} else {
 				return false;
 			}
 		}
 		public void cookFood() {
-			timer.schedule(new TimerTask() {
-				public void run() {
-					if (getFood(foodPreference)) {
+			if (getFood(foodPreference)) {
+				timer.schedule(new TimerTask() {
+					public void run() {
 						print("food done");
 						log.add(new LoggedEvent("Food is done"));
 						state = State.foodDone;
 						stateChanged();
-					} else {
-						print("no food");
-						log.add(new LoggedEvent("Food is done"));
-						state = State.noFood;
-						stateChanged();
 					}
-				}
-			},
-			5000);
+				},
+				5000);
+			} else {
+				print("no food");
+				log.add(new LoggedEvent("No food"));
+				state = State.noFood;
+				stateChanged();
+			}
 		}
 	}
 	
@@ -143,35 +144,41 @@ public class ResidentAgent extends Agent implements Resident {
 			return true;
 		}
 		else if(state == State.readyToCook){
+			Do("Ready to cook");
 			CookFood();
-			state = State.idle;
 			return true;
 		}
 		else if(state == State.noFood){
+			Do("No food");
+//			GoToTable();
 			housing.msgFoodDone(this, false);
 			state = State.idle;
 //			state = State.wantsMaintenance; //hack
 			return true;
 		}
 		else if(state == State.foodDone){
+			Do("Food done");
+			GoToTable();
 			housing.msgFoodDone(this, true);
-			EatFood();
 			state = State.idle;
 //			state = State.wantsMaintenance; //hack
 			return true;
 		}
 		else if(state == State.wantsMaintenance){
+			Do("Want maintenance");
 			DoMaintenance();
 			state = State.idle;
 			return true;
 		}
 		else if(state == State.maintenanceDone){
+			Do("Maintenance done");
 			housing.msgFinishedMaintenance(this);
 			state = State.idle;
 //			state = State.leavingHouse; //hack
 			return true;
 		}
 		else if(state == State.goingToBed){
+			Do("Going to bed");
 			GoToBed();
 			state = State.idle;
 			return true;
@@ -209,7 +216,7 @@ public class ResidentAgent extends Agent implements Resident {
 		building.cookFood();
 	}
 	
-	private void EatFood(){
+	private void GoToTable(){
 		renterGui.DoGoToTable();
 		try {
 			moving.acquire();
