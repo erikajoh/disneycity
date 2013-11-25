@@ -27,7 +27,7 @@ public class WalkerGui implements Gui{
 		reachedHalfway = false;
 		reachedDestination = false;
 		
-		animModule = new AnimationModule("Edgar", "Down");
+		animModule = new AnimationModule("Edgar", "WalkDown", 10);
 	}
 	
 	public void updatePosition() {
@@ -35,22 +35,22 @@ public class WalkerGui implements Gui{
 			xPos = xDestination;
 		else if(xPos < xDestination) {
 			xPos += speed;
-			animModule.changeAnimation("Right");
+			animModule.changeAnimation("WalkRight");
 		}
 		else if(xPos > xDestination) {
 			xPos -= speed;
-			animModule.changeAnimation("Left");
+			animModule.changeAnimation("WalkLeft");
 		}
 		
 		if(Math.abs(yDestination - yPos) <= speed)
 			yPos = yDestination;
 		if(yPos < yDestination) {
 			yPos += speed;
-			animModule.changeAnimation("Down");
+			animModule.changeAnimation("WalkDown");
 		}
 		else if(yPos > yDestination) {
 			yPos -= speed;
-			animModule.changeAnimation("Up");
+			animModule.changeAnimation("WalkUp");
 		}
 		
 		if(Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed && !reachedHalfway) {
@@ -77,10 +77,12 @@ public class WalkerGui implements Gui{
 		yLast = yDestination;
 		this.xDestination = xDestination * 25;
 		this.yDestination = yDestination * 25;
+		reachedHalfway = false;
+		reachedDestination = false;
 	}
 	
 	public void doTauntAndLeave() {
-		animModule.changeAnimation("Taunt");
+		animModule.changeAnimation("Taunt", 60);
 	}
 	
 	public void setIgnore() {

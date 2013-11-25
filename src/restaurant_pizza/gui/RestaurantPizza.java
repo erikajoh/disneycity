@@ -15,6 +15,7 @@ import simcity.gui.SimCityGui;
 
 import javax.swing.*;
 
+import market.Market;
 import simcity.RestMenu;
 import simcity.Restaurant;
 
@@ -44,6 +45,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private JPanel group = new JPanel();
     public RestMenu menu = new RestMenu();
     Bank bank;
+    Market market;
     
     private static final int GAP_SIZE = 10;
     private static int WAITER_X_START = 140;
@@ -285,6 +287,12 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	@Override
 	public void setBank(Bank b) {
 		bank = b;
+		
+	}
+
+	@Override
+	public void setMarket(Market m) {
+		market = m;
 		
 	}
 }

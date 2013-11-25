@@ -9,6 +9,7 @@ import restaurant_rancho.Order;
 import restaurant_rancho.gui.CookGui;
 import simcity.PersonAgent;
 import restaurant_rancho.gui.RestaurantRancho;
+import market.Market;
 
 public class CookAgent extends Agent {
 	
@@ -17,21 +18,21 @@ public class CookAgent extends Agent {
 	private String name;
 	Hashtable<String, Integer> cookTimes;
 	List<Food> foods;
-	List<MyMarket> markets;
-	List<MarketOrder> marketOrders;
-	List<WaiterAgent> waiters;
+	List<MarketOrder> marketOrders = new ArrayList<MarketOrder> ();
+ 	List<WaiterAgent> waiters;
 	CookGui gui;
 	private Semaphore cooking = new Semaphore(0,true);
 	int cookNum = 0;
 	PersonAgent person;
 	RestaurantRancho restaurant;
+	Market market;
+	public boolean inMarket;
 	
 
-	public CookAgent(String name, RestaurantRancho rest) {
+	public CookAgent(String name, RestaurantRancho rest, Market m) {
 		super();
 		this.name = name;
-		markets = Collections.synchronizedList(new ArrayList<MyMarket>());
-		marketOrders = Collections.synchronizedList(new ArrayList<MarketOrder>());
+		market = m;
 		orders = Collections.synchronizedList(new ArrayList<Order>());
 		cookTimes = new Hashtable<String, Integer>();
 		foods = Collections.synchronizedList(new ArrayList<Food>());
@@ -47,20 +48,16 @@ public class CookAgent extends Agent {
 		cookTimes.put("Burrito Sonora", 5000);
 		cookTimes.put("Chicken Tortilla Soup", 3500);
 		restaurant = rest;
-		
-		print("Initial inventory check");
-		synchronized(foods) {
-			for (Food f : foods) {
-				if(f.amount <= f.low) {
-					f.ordered = true;
-					marketOrders.add(new MarketOrder(f.capacity-f.amount, f.choice));
-				}
-			}
-		}
+		inMarket = false;
+	
 	}
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setMarket(Market m) {
+		market = m;
 	}
 	
 	public void setPerson(PersonAgent p) {
@@ -74,9 +71,6 @@ public class CookAgent extends Agent {
 		return orders;
 	}
 	
-	public void addMarket(MarketAgent m) {
-		markets.add(new MyMarket(m));
-	}
 
 	// Messages
 	
@@ -91,29 +85,9 @@ public class CookAgent extends Agent {
 		stateChanged();	
 	}
 	
-	public void msgHereIsFood(MarketAgent m, String choice, int amount) {
-		MarketOrder mo = findMarketOrder(choice, m);
-		Food f = findFood(choice);
-		f.setOrdered(false);
-		f.amount += amount;
-		if (amount < mo.amount) {
-			mo.market.removeFood(mo.choice);
-			if (amount <= f.low) {
-				marketOrders.add(new MarketOrder(f.capacity-f.amount, choice));
-				f.setOrdered(true);
-			}
-		}
-		if (amount != 0) {
-			restaurant.getMenu().add(choice);
-			synchronized(waiters) {
-				for (WaiterAgent w : waiters) {
-					w.msgUpdateMenu();
-				}
-			}
-			
-		}
-		marketOrders.remove(mo);
-		stateChanged();
+	public void msgHereIsOrder(String choice, int amount) {
+		
+	
 	}
 	
 
@@ -122,7 +96,7 @@ public class CookAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 	
-			if (!orders.isEmpty() || !marketOrders.isEmpty()) {
+			if (!orders.isEmpty()) {
 				synchronized(orders) {
 					for (Order order :orders ) {
 						if (order.os == orderState.done) {
@@ -139,15 +113,16 @@ public class CookAgent extends Agent {
 						}
 					}
 				}
-				synchronized(marketOrders) {
+				/*synchronized(marketOrders) {
 					for (MarketOrder mo : marketOrders){ 
 						if (mo.os == moState.pending) {
 							mo.os = moState.ordered;
-							orderFromMarket(mo);
+							//orderFromMarket(mo);
 							return true;
 						}
 					}
 				}
+				*/
 				return true;
 			}
 		return false;
@@ -188,14 +163,15 @@ public class CookAgent extends Agent {
 		Food f = findFood(o.choice);
 		f.amount--;
 		if (f.amount <= f.low ) {
-			marketOrders.add(new MarketOrder(f.capacity-f.amount, f.choice));
+			//marketOrders.add(new MarketOrder(f.capacity-f.amount, f.choice));
 			f.ordered =true;
 		}
 		
 		stateChanged();
 		
 	}
-	
+
+
 	private void plateIt(Order o) {
 		DoGoToFood(o.cookingNum);
 		gui.setText(o.choice.substring(0, 3), 1, o.cookingNum);
@@ -205,18 +181,6 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
-	private void orderFromMarket(MarketOrder mo) {
-		synchronized(markets) {
-			for (MyMarket m : markets) {
-				if (m.foodAvailable(mo.choice)) {
-					mo.setMarket(m);
-					print("Ordering " + mo.amount + " " + mo.choice + " from " + m.market.getName());
-					m.market.msgNeedFood(this, mo.choice, mo.amount);
-					return;
-				}
-			}
-		}
-	}
 	
 	//gui actions
 	
@@ -250,56 +214,8 @@ public class CookAgent extends Agent {
 	
 	
 	enum moState {pending, ordered};
-	private class MarketOrder {
-		int amount; 
-		String choice;
-		MyMarket market;
-		boolean fulfilled;
-		moState os;
-		
-		MarketOrder(int am, String c) {
-			amount = am;
-			choice = c;
-			os = moState.pending;
-			fulfilled = false;	
-		}
-		
-		public void setMarket(MyMarket m) {
-			market = m;
-		}
-		
-	}
-	
-	private class MyMarket {
-		List<String> foodsAvailable;
-		MarketAgent market;
-		
-		MyMarket(MarketAgent m) {
-			foodsAvailable = new ArrayList<String>();
-			foodsAvailable.add("Pizza");
-			foodsAvailable.add("Steak");
-			foodsAvailable.add("Chicken");
-			foodsAvailable.add("Salad");
-			foodsAvailable.add("Latte");
-			market = m;
-		}
-		
-		public void removeFood(String food) {
-			foodsAvailable.remove(food);
-		}
-		public boolean foodAvailable(String food) {
-			synchronized(foodsAvailable) {
-				for (String f : foodsAvailable) {
-					if (f == food) {
-						return true;
-					}
-				}
-				return false;
-			}
-		}
-	}
-	
-	private class Food {
+
+	 class Food {
 		String choice;
 		int cookingTime;
 		int amount; 
@@ -319,9 +235,20 @@ public class CookAgent extends Agent {
 		public void setOrdered(boolean ord) {
 			ordered = ord;
 		}
+	 }
+
+	
+	class MarketOrder {
+		String food;
+		int amount;
+		MarketOrder(String f, int a) {
+			amount = a;
+			food = f;
+			
+		}
+		
+		
 	}
-	
-	
 	//utilities
 	public Food findFood(String ch) {
 		synchronized(foods) {
@@ -334,25 +261,12 @@ public class CookAgent extends Agent {
 		return null;
 	}
 	
-	public MarketOrder findMarketOrder(String food, MarketAgent m) {
-		synchronized(marketOrders) {
-			for (MarketOrder mo : marketOrders) {
-				if (mo.market.market == m && mo.choice == food) {
-					return mo;
-				}
-			}
-		}
-		return null;
+	/*public MarketOrder findMarketOrder(String food) {
+		
 	}
 	
-	public MyMarket findMarket(MarketAgent m) {
-		synchronized(markets) {
-			for (MyMarket market : markets) {
-				if (market.market == m)
-					return market;
-			}
-		}
-		return null;
-	}
-
+	*/
 }
+
+
+

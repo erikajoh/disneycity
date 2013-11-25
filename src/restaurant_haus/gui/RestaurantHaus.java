@@ -11,6 +11,7 @@ import simcity.PersonAgent;
 import simcity.RestMenu;
 import simcity.gui.SimCityGui;
 import simcity.Restaurant;
+import market.Market;
 
 import javax.swing.*;
 
@@ -21,6 +22,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.JTabbedPane;
+
+import market.Market;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -51,12 +54,15 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private JLabel pictureLabel;
     private ImageIcon personalPicture; 
     private RestMenu menu = new RestMenu();
+    String name;
+    Market market;
+    Bank bank;
     
     private JTabbedPane restruantPane = new JTabbedPane();
 
-    public RestaurantHaus(SimCityGui gui) {
+    public RestaurantHaus(SimCityGui gui, String name) {
         this.gui = gui;
-        
+        this.name = name;
         MarketAgent tempMarket;
         tempMarket = new MarketAgent("Best Market", 5000, 10, 0, 6, 10);
         tempMarket.startThread();
@@ -249,19 +255,17 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 
 	@Override
 	public RestMenu getMenu() {
-		return null;
+		return menu;
 	}
 
 	@Override
 	public String getRestaurantName() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 	@Override
 	public void setBank(Bank b) {
-		// TODO Auto-generated method stub
-		
+		bank = b;		
 	}
 
 	@Override
@@ -272,7 +276,13 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 
 	@Override
 	public void personAs(PersonAgent p, String type, String name, double money) {
-		// TODO Auto-generated method stub
+		addPerson(p, type, name, money);
+		
+	}
+
+	@Override
+	public void setMarket(Market m) {
+		market = m;
 		
 	}
 }

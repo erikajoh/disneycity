@@ -7,11 +7,11 @@ import restaurant_cafe.HostAgent;
 import restaurant_cafe.MarketAgent;
 import restaurant_cafe.WaiterAgent;
 import restaurant_cafe.CookAgent.Order;
-import restaurant_cafe.interfaces.Market;
 import bank.gui.Bank;
 import simcity.RestMenu;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
+import market.Market;
 
 import javax.swing.*;
 
@@ -41,6 +41,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     private CookAgent cook;
     private CashierAgent cashier;
     public Bank bank;
+    public Market market;
     
     private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
@@ -247,6 +248,14 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	@Override
 	public void personAs(PersonAgent p, String type, String name, double money) {
 		addPerson(p, type, name, money);
+	}
+
+
+
+	@Override
+	public void setMarket(Market m) {
+		market = m;
+		
 	}
 
 }

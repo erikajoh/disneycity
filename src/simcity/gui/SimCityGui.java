@@ -151,7 +151,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
 		restBayou = new RestaurantBayou(this, "The Blue Bayou");
 		restPizza = new RestaurantPizza(this);
-		restHaus = new RestaurantHaus(this);
+		restHaus = new RestaurantHaus(this, "Village Haus");
 		restCafe = new RestaurantCafe(this, "Carnation Cafe");
 		hauntedMansion = new Housing(housAniPanel7, "Haunted Mansion");
 		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");

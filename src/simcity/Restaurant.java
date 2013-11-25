@@ -2,6 +2,7 @@ package simcity;
 
 import simcity.RestMenu;
 import bank.gui.Bank;
+import market.Market;
 
 
 public interface Restaurant {
@@ -11,6 +12,8 @@ public interface Restaurant {
 	public String getRestaurantName();
 	
 	public void setBank(Bank b);
+	
+	public void setMarket(Market m);
 	
 	public boolean isOpen();
 
