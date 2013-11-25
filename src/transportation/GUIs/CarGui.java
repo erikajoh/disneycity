@@ -5,30 +5,29 @@ import AnimationTools.AnimationModule;
 import simcity.gui.*;
 import transportation.Agents.CarAgent;
 
-public class CarGUI implements Gui{
+public class CarGui implements Gui{
 	
 	private float xPos, yPos, xDestination, yDestination, xLast, yLast, speed;
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	
+	
 	CarAgent agent;
 	boolean isPresent = true;
 	
-	public CarGUI(float xPos, float yPos, float xDestination, float yDestination, CarAgent agent) {
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.xDestination = xDestination;
-		this.yDestination = yDestination;
-		this.xLast = xPos;
-		this.yLast = yPos;
-		this.agent = agent;
+	public CarGui(float xPos, float yPos, CarAgent agent) {
+		this.xPos = xPos * 25;
+		this.yPos = yPos * 25;
+		this.xDestination = xPos * 25;
+		this.yDestination = yPos * 25;
+		this.xLast = xPos * 25;
+		this.yLast = yPos * 25;
 		speed = 1.25f;
-		
-		
+		this.agent = agent;		
 		reachedHalfway = false;
 		reachedDestination = false;
 		
-		animModule = new AnimationModule("Car", "Down");
+		animModule = new AnimationModule("Car", "Down", 10);
 	}
 	
 	public void updatePosition() {
@@ -60,10 +59,11 @@ public class CarGUI implements Gui{
 		}
 		
 		if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
+			xLast = xDestination;
+			yLast = yDestination;
 			reachedDestination = true;
 			agent.msgDestination();
 		}
-		
 	}
 
 	public void draw(Graphics2D g) {
@@ -72,10 +72,10 @@ public class CarGUI implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
-		xLast = xDestination;
-		yLast = yDestination;
-		this.xDestination = xDestination;
-		this.yDestination = yDestination;
+		this.xDestination = xDestination * 25;
+		this.yDestination = yDestination * 25+2;
+		reachedHalfway = false;
+		reachedDestination = false;
 	}
 	
 	public void setIgnore() {
@@ -85,5 +85,4 @@ public class CarGUI implements Gui{
 	public boolean isPresent() {
 		return isPresent;
 	}
-	
 }

@@ -74,7 +74,7 @@ public class SimCityPanel extends JPanel{
 		//		 firstHousing.setOwner();
 		 
 		firstHackedPerson.startThread();
-		secondHackedPerson.startThread();
+		//secondHackedPerson.startThread();
 
 	    setLayout(new GridLayout());
 	
