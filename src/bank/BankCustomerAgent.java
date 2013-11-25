@@ -21,13 +21,16 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private double balance = 25.00;
 	private double change;
 	
+	private boolean forLoan = false;
+	private int loanTime;
+	
 	private SimCityGui simCityGui;
 	private BankCustomerGui personGui;
 	
 	// agent correspondents
-	private Manager bank = null;
+	private Manager manager = null;
 	private Teller teller = null;
-
+	
 	public enum State
 	{deciding, openingAccount, depositing, withdrawing, requestingLoan, leaving, left, idle};
 	State state = State.idle;
@@ -44,10 +47,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public BankCustomerAgent(String name, Manager b, SimCityGui bg){
+	public BankCustomerAgent(String name, Manager m, SimCityGui bg){
 		super();
 		this.name = name;
-		bank = b;
+		manager = m;
 		simCityGui = bg;
 		state = State.idle;
 	}
@@ -195,8 +198,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void leftBank(){
 		state = State.idle;
-		personGui.setInBank(false);
-	   // simCityGui.updateInfoPanel(this);
+		//personGui.setInBank(false);
 	}
 
 	// Accessors, etc.
@@ -218,17 +220,20 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	
-	public Person getPerson() {
-		Person person = bank.getPerson(this);
-		return person;
+	public void setManager(Manager m) {
+		manager = m;
 	}
 	
-	public void setBank(Manager b) {
-		bank = b;
+	public Manager getManager() {
+		return manager;
 	}
 	
-	public Manager getBank() {
-		return bank;
+	public boolean isForLoan(){
+		return forLoan;
+	}
+	
+	public int getLoanTime(){
+		return loanTime;
 	}
 	
 	public int getAccountNum(){

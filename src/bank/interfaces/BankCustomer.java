@@ -25,7 +25,9 @@ public interface BankCustomer {
 	public void msgLoanDecision(boolean status);
 	
 	public int getAccountNum();
-	public Person getPerson();
 	public double getBalance();
+	
+	public boolean isForLoan();
+	public int getLoanTime();
 
 }

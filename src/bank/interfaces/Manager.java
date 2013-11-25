@@ -7,12 +7,10 @@ import simcity.gui.SimCityGui;
 public interface Manager {
 	public void msgTellerFree(Teller teller, BankCustomer bc);
 	
-	public void msgCustomerHere(Person person);
-	public void msgRequestAccount(double amount, Person person);
-	public void msgRequestDeposit(int accountNumber, double amount, Person person, boolean forLoan);
-	public void msgRequestWithdrawal(int accountNumber, double amount, Person person);
-	public void msgRequestLoan(int accountNumber, double amount, Person person);
+	public void msgCustomerHere(BankCustomer bc);
+	public void msgRequestAccount(BankCustomer bc, double amount);
+	public void msgRequestDeposit(BankCustomer bc, int accountNumber, double amount);
+	public void msgRequestWithdrawal(BankCustomer bc, int accountNumber, double amount);
 	
 	public SimCityGui getGui();
-	public Person getPerson(BankCustomer bc);
 }

@@ -4,6 +4,9 @@ import bank.BankCustomerAgent;
 import bank.ManagerAgent;
 import bank.PersonAgent;
 import bank.TellerAgent;
+import bank.interfaces.BankCustomer;
+import bank.interfaces.Manager;
+import bank.interfaces.Person;
 
 import javax.swing.*;
 
@@ -15,6 +18,9 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -27,95 +33,80 @@ public class Bank extends JPanel implements ActionListener {
 
     private Vector<PersonAgent> customers = new Vector<PersonAgent>();
     private Vector<TellerAgent> tellers = new Vector<TellerAgent>();
-    
+	private Map<BankCustomer, PersonAgent> spawns = new HashMap<BankCustomer, PersonAgent>();
 
-    private JPanel restLabel = new JPanel();
-    private JButton  pauseButton = new JButton("Pause Agents");
-    private JPanel pauseGroup = new JPanel();
-    private JPanel group = new JPanel();
 
     private SimCityGui gui; //reference to main gui
     
-    private ManagerAgent bank;
+    private ManagerAgent manager;
 
     public Bank(SimCityGui gui) {
         this.gui = gui;
-        bank = new ManagerAgent("Bank", gui);
-        bank.startThread();
+        manager = new ManagerAgent("Bank", this, gui);
+        manager.startThread();
         
         for(int i = 0; i<4; i++){
         	String name = "Teller"+i;
         	TellerAgent t = new TellerAgent(name);	
     		TellerGui g = new TellerGui(t, gui, tellers.size());
     		gui.bankAniPanel.addGui(g);
-    		t.setBank(bank);
+    		t.setManager(manager);
     		tellers.add(t);
     		t.setGui(g);
-    		bank.addTeller(t);
+    		manager.addTeller(t);
     		t.startThread();
         }
         
         String name = "Dylan";
 		PersonAgent p = new PersonAgent(name);
-		p.setBank(bank);
+		p.setBank(this);
 		p.msgArrive(-1);
 		customers.add(p);
 		p.startThread();
-        
-        setLayout(new GridLayout(1, 2, 20, 20));
-        group.setLayout(new GridLayout(1, 2, 10, 10));
-
-        initRestLabel();
-        pauseGroup.setLayout(new BorderLayout());
-        pauseButton.addActionListener(this);
-        pauseGroup.add(pauseButton, BorderLayout.NORTH);
-        pauseGroup.add(restLabel, BorderLayout.CENTER);
-        add(pauseGroup);
-        add(group);
+    }
+    
+    public void msgRequestAccount(PersonAgent person, double balance){
+    	BankCustomer bca = createBankCustomer(person);
+    	manager.msgRequestAccount(bca, balance);
+    }
+    
+    public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt){
+    	BankCustomer bca = createBankCustomer(person);
+    	manager.msgRequestDeposit(bca, accountNum, reqAmt);
+    }
+    
+    public void msgRequestWithdrawal(PersonAgent person, int accountNum, double reqAmt){
+    	BankCustomer bca = createBankCustomer(person);
+    	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
+    }
+	
+	public void msgLeave(BankCustomer bc, int accountNum, double balance, boolean forLoan, int loanTime){
+	/*	Set<PersonAgent> keySet = spawns.keySet();
+		PersonAgent[] thePersonAgents = (PersonAgent[])keySet.toArray(new PersonAgent[keySet.size()]);
+		PersonAgent person = null;
+		for(int i = 0; i < thePersonAgents.length; i++) {
+			
+		}*/
+		PersonAgent person = (PersonAgent)spawns.get(bc);
+		System.out.println(bc.toString());
+		person.msgLeave(accountNum, balance, forLoan, loanTime);
+	}
+    
+    public BankCustomer createBankCustomer(PersonAgent person){
+    	 customers.add(person);
+   	  	 BankCustomerAgent bca = new BankCustomerAgent(person.getName(), manager, gui);
+	     BankCustomerGui g = new BankCustomerGui(bca, gui, 400, 330);
+	     gui.bankAniPanel.addGui(g);// dw
+	     bca.setGui(g);
+	     bca.startThread();
+    	 manager.msgCustomerHere(bca);
+    	 spawns.put(bca, person);
+    	 return bca;
     }
 
-    /**
-     * Sets up the bank label that includes the menu,
-     * and host and cook information
-     */
-    private void initRestLabel() {
-        JLabel label = new JLabel();
-        //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
-        restLabel.setLayout(new BorderLayout());
-        label.setText(
-                "<html><h3><u>The Bank</u></h3></html>");
-        label.setFont(new Font("Sans-Serif", Font.PLAIN, 12));
-        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-        restLabel.add(label, BorderLayout.CENTER);
-        restLabel.add(new JLabel("               "), BorderLayout.EAST);
-        restLabel.add(new JLabel("               "), BorderLayout.WEST);
-    }
 
-/*   //
-     * When a customer or waiter is clicked, this function calls
-     * updatedInfoPanel() from the main gui so that person's information
-     * will be shown
-     *
-     * @param type indicates whether the person is a customer or waiter
-     * @param name name of person
-     //
-    public void showInfo(String type, String name) {
+ 
 
-        if (type.equals("Customers")) {
-            for (int i = 0; i < customers.size(); i++) {
-                PersonAgent temp = customers.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-        else  if (type.equals("Tellers")) {
-        	 for (TellerAgent teller : tellers) {
-                 if (teller.getName() == name){
-                     gui.updateInfoPanel(teller);
-                 }
-             }	
-        }
-    }*/
 
     /**
      * Adds a customer or waiter to the appropriate list
@@ -127,7 +118,7 @@ public class Bank extends JPanel implements ActionListener {
 
     	if (type.equals("Customers")) {
     		PersonAgent p = new PersonAgent(name);
-    		p.setBank(bank);
+    		//p.setManager(manager);
     		p.msgArrive(-1);
     		//BankCustomerAgent c = new BankCustomerAgent(name, gui);	
     		//BankCustomerGui g = new BankCustomerGui(c, gui, gui.getAnimWindowX(), gui.getAnimWindowY());
@@ -142,10 +133,10 @@ public class Bank extends JPanel implements ActionListener {
     		TellerAgent t = new TellerAgent(name);	
     		TellerGui g = new TellerGui(t, gui, tellers.size());
     		gui.bankAniPanel.addGui(g);
-    		t.setBank(bank);
+    		t.setManager(manager);
     		tellers.add(t);
     		t.setGui(g);
-    		bank.addTeller(t);
+    		manager.addTeller(t);
     		t.startThread();
     	}
     }
