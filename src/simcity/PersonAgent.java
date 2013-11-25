@@ -53,6 +53,7 @@ public class PersonAgent extends Agent {
 	// Variables with intention to update
 	private double moneyWanted = 0.0;
 	private double moneyToDeposit = 0.0;
+	private double rentToPay = 0.0;
 	private String targetLocation;
 	private enum MarketState { None, WantToBuy, WantToWork };
 	private MarketState marketState;
@@ -286,7 +287,7 @@ public class PersonAgent extends Agent {
 				case goToSleep:
 					bodyState = BodyState.Tired; break;
 				case payRent:
-					payRent(theAction.amount); break;
+					rentToPay += theAction.amount; break;
 				case receiveRent:
 					moneyOnHand += theAction.amount; break;
 				case needMaintenance: 
@@ -312,6 +313,15 @@ public class PersonAgent extends Agent {
 						goToTransportation();
 					}
 					event = PersonEvent.onHold;
+					return true;
+				}
+				if(rentToPay > 0) {
+					if(moneyOnHand >= rentToPay) {
+						payRent(rentToPay);
+					}
+					else {
+						getRentMoneyFromBank();
+					}
 					return true;
 				}
 				if(!isNourished) { // if I'm hungry
@@ -447,6 +457,15 @@ public class PersonAgent extends Agent {
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
 	}
 	
+	private void getRentMoneyFromBank() {
+		print("I need rent money");
+		log.add(new LoggedEvent("Need to pay rent; not enough money"));
+		moneyWanted += rentToPay;
+		bankState = BankState.NeedTransaction;
+		MyBank targetBank = chooseBank();
+		targetLocation = targetBank.name;
+	}
+	
 	private void hungryToMarket() {
 		// TODO hungryToMarket
 		print("I'm hungry and I want to buy food at market and cook at home");
@@ -479,6 +498,7 @@ public class PersonAgent extends Agent {
 	
 	private void payRent(double amount) {
 		print("Paying rent");
+		moneyOnHand -= amount;
 		myHome.housing.msgHereIsRent(this, amount);
 	}
 	
@@ -515,7 +535,6 @@ public class PersonAgent extends Agent {
 		print("Entering restaurant");
 		MyRestaurant myRest = (MyRestaurant)currentMyObject;
 		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand);
-		// TODO: blocking
 	}
 	
 	// Transportation actions
@@ -523,7 +542,6 @@ public class PersonAgent extends Agent {
 		print("Going from " + currentLocation + " to " + targetLocation);
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
 		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name());
-		// TODO blocking?
 	}
 	
 	private void goHome() {
@@ -545,25 +563,21 @@ public class PersonAgent extends Agent {
 		print("Request withdrawal");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Want to withdraw " + moneyWanted + " from " + myBank.name));
-		// TODO: Hacking in account number
-		myBank.bank.msgRequestWithdrawal(this, 0, moneyWanted, true);
+		myBank.bank.msgRequestWithdrawal(this, myPersonalBankAccount.accountNumber, moneyWanted, true);
 	}
 	
 	private void requestDeposit() {
 		print("Request deposit");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Want to deposit " + moneyToDeposit + " from " + myBank.name));
-		// TODO: Hacking in account number and forLoan
-		myBank.bank.msgRequestDeposit(this, 0, moneyToDeposit, true);
+		myBank.bank.msgRequestDeposit(this, myPersonalBankAccount.accountNumber, moneyToDeposit, true);
 	}
 	
 	//Market actions
-	
 	private void enterMarket() {
 		print("Entering market");
 		MyMarket myMarket = (MyMarket)currentMyObject;
 		myMarket.theMarket.personAs(this, "Customer", name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
-		//TODO m.theMarket.personAs(this, "VirtualCustomer", this.name, moneyOnHand, foodPreference);
 	}
 	
 	
@@ -609,12 +623,14 @@ public class PersonAgent extends Agent {
 	}
 	
 	private MyRestaurant chooseRestaurant() {
-		// TODO: hack in choosing restaurants - choose first available
 		// TODO: refine criteria for choosing restaurant
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)
-			if(myObjectsArray[i] instanceof MyRestaurant)
-				return (MyRestaurant)myObjectsArray[i];
+			if(myObjectsArray[i] instanceof MyRestaurant) {
+				MyRestaurant tempRest = (MyRestaurant)myObjectsArray[i];
+				//if(tempRest.restaurantType.equals(foodPreference))
+					return tempRest;
+			}
 		return null;
 	}
 	

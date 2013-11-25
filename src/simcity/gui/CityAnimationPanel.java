@@ -28,6 +28,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e) {
 		repaint();
+		
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -41,7 +42,4 @@ public class CityAnimationPanel extends JPanel implements ActionListener{
 		
 	}
 	
-	
-	
-
 }

@@ -93,7 +93,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	private JPanel zoomAnimation = new JPanel();
 	private JPanel cityPanel = new JPanel();
 	private JPanel zoomPanel = new JPanel();
-	private JLabel cityLabel = new JLabel("Disney City View");
+	private JLabel cityLabel = new JLabel("Disney City View                                                   ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
 	private JButton panelB = new JButton("next panel");
 		
@@ -157,6 +157,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		c1.gridy = 0; 
 		c1.gridwidth = 3;
 		cityBanner.setBorder(BorderFactory.createTitledBorder("City Banner"));
+		cityBanner.add(cityLabel);
 		add(cityBanner, c1);
 		GridBagConstraints c3 = new GridBagConstraints();
 		c3.fill = GridBagConstraints.BOTH;
@@ -165,6 +166,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		c3.gridy = 0;
 		c3.gridwidth = 5;
 		zoomBanner.setBorder(BorderFactory.createTitledBorder("Zoom Banner"));
+		zoomBanner.add(zoomLabel);
 		add(zoomBanner, c3);
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.fill = GridBagConstraints.BOTH;
