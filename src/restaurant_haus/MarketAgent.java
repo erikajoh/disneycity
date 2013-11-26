@@ -105,18 +105,26 @@ public class MarketAgent extends Agent implements Market {
 	
 	public void msgOrderPayment(double money, boolean paidFull) {
 		this.money += money;
+		if(paidFull) {
+			
+		}
+		else {
+			
+		}
+		/*
 		if(paidFull)
 			print("Thank you for your business!");
 		else
 			print("What? You can't pay!? $10 late fee!");
+		*/
 	}
 	
 	public void msgFinalPayment() {
-		print("Thank you for fulfilling your debt.");
+		//print("Thank you for fulfilling your debt.");
 	}
 	
 	public void msgIncrementalPayment(double money) {
-		print("Keep up the good work paying off the debt.");
+		//print("Keep up the good work paying off the debt.");
 	}
 	
 	/**
@@ -194,7 +202,7 @@ public class MarketAgent extends Agent implements Market {
 		if (currentOrder.inventory >= o.quantity) {//If the market has more than enough food to fill order
 			timer.schedule(new MarketTask(o, this), deliveryTime);
 
-			print("Delivering order of " + String.valueOf(o.quantity) + " " + o.choice + ". It'll be there in " + String.valueOf(deliveryTime/1000) + " seconds.");
+			//print("Delivering order of " + String.valueOf(o.quantity) + " " + o.choice + ". It'll be there in " + String.valueOf(deliveryTime/1000) + " seconds.");
 			o.s = OrderState.Delivering;
 
 			currentOrder.inventory -= o.quantity;
@@ -205,7 +213,7 @@ public class MarketAgent extends Agent implements Market {
 			o.quantity = currentOrder.inventory;
 			timer.schedule(new MarketTask(o, this), deliveryTime);
 
-			print("I only have " + String.valueOf(o.quantity) + " " + o.choice + ". It'll be there in " + String.valueOf(deliveryTime/1000) + "seconds.");
+			//print("I only have " + String.valueOf(o.quantity) + " " + o.choice + ". It'll be there in " + String.valueOf(deliveryTime/1000) + "seconds.");
 			cook.msgOrderFromAnother(o.choice, this);
 			o.s = OrderState.Delivering;
 			currentOrder.inventory = 0;
@@ -218,7 +226,7 @@ public class MarketAgent extends Agent implements Market {
 
 	private void sendOrder(Order o) {
 		cook.msgOrderDelivered(o.choice, o.quantity);
-		print("Here's your delivery of " + o.choice + ".");
+		//print("Here's your delivery of " + o.choice + ".");
 		o.cashier.msgYourBillIs(this, marketInventory.get(o.choice).price * o.quantity);
 		orders.remove(o);
 		/*o.w.msgFoodReady(o.choice,o.table)
@@ -228,11 +236,11 @@ public class MarketAgent extends Agent implements Market {
 
 	private void sendConfirmation(String order) {
 		if(marketInventory.get(order).inventory > 0) {
-			print("Yes, we do.");
+			//print("Yes, we do.");
 			cook.msgCanFill(order, true, this);
 		}
 		else {
-			print("No, we don't.");
+			//print("No, we don't.");
 			cook.msgCanFill(order, false, this);
 		}
 		orderConfirmation.remove(order);

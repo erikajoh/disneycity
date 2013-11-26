@@ -16,6 +16,7 @@ public class PersonAgent extends Agent {
 	
 	// ************************* DATA ***********************************
 	
+	// Console message handling
 	int printCount = 100;
 	
 	// Unit testing
@@ -24,8 +25,7 @@ public class PersonAgent extends Agent {
 	// Inherent data - simple variables
 	private String name;
 	private boolean isNourished;
-	private boolean needToWork;
-	private double moneyOnHand = 20;
+	private double moneyOnHand;
 	private Map<String, Integer> itemsOnHand;
 	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
 	private PersonType myPersonality;
@@ -35,7 +35,6 @@ public class PersonAgent extends Agent {
 	private BodyState bodyState;
 	
 	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
-	// TODO: Use goToWork
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
@@ -53,15 +52,19 @@ public class PersonAgent extends Agent {
 	private double moneyWanted = 0.0;
 	private double moneyToDeposit = 0.0;
 	private double rentToPay = 0.0;
+	private double fareToPay = 0.0;
+	private boolean needToWork = false;
 	private String targetLocation;
-	private enum MarketState { None, WantToBuy, WantToWork };
+	private enum RestaurantState		{ None, WantToEat, WantToWork }
+	private enum MarketState			{ None, WantToBuy, WantToWork };
+	private enum BankState				{ None, NeedTransaction };
+	private enum TransportationState	{ None, NeedToPayFare };
 	private MarketState marketState;
-	private enum BankState { None, NeedTransaction };
 	private BankState bankState;
+	private TransportationState transportationState;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
-	
 	private MyObject currentMyObject = null; // denotes actual location that person is at
 	private MyHousing myHome = null;
 	private MyBankAccount myPersonalBankAccount = null;
@@ -72,9 +75,8 @@ public class PersonAgent extends Agent {
 	
 	// Synchronization
 	private PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
-	public enum PersonEvent {makingDecision, onHold, onHoldAtRestaurant, onHoldInMarket, onHoldInBank};
+	public enum PersonEvent {makingDecision, onHold, onHoldInTransportation, onHoldAtRestaurant, onHoldInMarket, onHoldInBank};
 	public PersonEvent event = PersonEvent.makingDecision;
-	// TODO Generic eventFired event instead of specific ones?
 	
 	// ************************* SETUP ***********************************
 	
@@ -90,7 +92,7 @@ public class PersonAgent extends Agent {
 		targetLocation = currentLocation;
 		
 		currentLocationState = LocationState.Home;
-		preferredCommute = PreferredCommute.Walk;
+		preferredCommute = PreferredCommute.Bus;
 		
 		this.foodPreference = foodPreference;
 		preferEatAtHome = false;
@@ -234,8 +236,8 @@ public class PersonAgent extends Agent {
 	}
 	
 	public void msgPayFare(double fare) {
-		// TODO msgPayFare
-		
+		fareToPay += fare;
+		transportationState = TransportationState.NeedToPayFare;
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
@@ -313,6 +315,12 @@ public class PersonAgent extends Agent {
 			return true;
 		}
 		
+		// TODO Should this go somewhere else? Also not paying fare is non-normative
+		if(transportationState == TransportationState.NeedToPayFare) {
+			payFare();
+			transportationState = TransportationState.None;
+			return true;
+		}
 		// if no emergenices, proceed with normal decision rules
 		if(event == PersonEvent.makingDecision && bodyState != BodyState.Asleep) {
 			
@@ -322,11 +330,12 @@ public class PersonAgent extends Agent {
 					if(currentLocation.equals(targetLocation)) {
 						enterHouse();
 						insideHouse = true;
+						event = PersonEvent.onHold;
 					}
 					else {
 						goToTransportation();
+						event = PersonEvent.onHoldInTransportation;
 					}
-					event = PersonEvent.onHold;
 					print("returning true because !insideHouse");
 					return true;
 				}
@@ -403,7 +412,7 @@ public class PersonAgent extends Agent {
 						// Done at bank, time to transition
 						if(!currentLocation.equals(targetLocation)) {
 							goToTransportation();
-							event = PersonEvent.onHold;
+							event = PersonEvent.onHoldInTransportation;
 						}
 						else {
 							if(!isNourished && !preferEatAtHome) {
@@ -411,7 +420,7 @@ public class PersonAgent extends Agent {
 							}
 							else if(preferEatAtHome) {
 								goHome();
-								event = PersonEvent.onHold;
+								event = PersonEvent.onHoldInTransportation;
 							}
 						}
 						break;
@@ -425,7 +434,7 @@ public class PersonAgent extends Agent {
 				}
 				else {
 					goHome();
-					event = PersonEvent.onHold;
+					event = PersonEvent.onHoldInTransportation;
 				}
 				print("Restaurant: setting on hold");
 				return true;
@@ -438,7 +447,7 @@ public class PersonAgent extends Agent {
 				switch(marketState) {
 					case None:
 						goHome();
-						event = PersonEvent.onHold;
+						event = PersonEvent.onHoldInTransportation;
 						break;
 					case WantToBuy:
 						enterMarket();
@@ -577,6 +586,12 @@ public class PersonAgent extends Agent {
 		log.add(new LoggedEvent("Going home"));
 		targetLocation = myHome.name;
 		goToTransportation();
+	}
+	
+	private void payFare() {
+		print("Paying fare");
+		// TODO transportation paying fare message
+		//transportation.msg();
 	}
 	
 	//Bank actions
