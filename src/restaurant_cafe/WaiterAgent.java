@@ -114,6 +114,7 @@ public class WaiterAgent extends Agent implements Waiter {
 
 	public void msgPleaseSeatCustomer(Customer cust, int tableNum) {
 		//print("Adding cust "+cust.getName() + " to list");
+		print("Cafe seat customer");
 		customers.add(new MyCustomer(cust, tableNum, CustomerState.waiting));
 		stateChanged();
 	}

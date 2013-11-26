@@ -22,12 +22,14 @@ public class CustomerGui implements Gui{
 	private enum Command {noCommand, GoToRestaurant, GoToSeat, GoToCashier, GoToCook, LeaveRestaurant}; //shortened to noCommand and walking?
 	private Command command=Command.noCommand;
 
-	public static final int xTable1 = 160;
-	public static final int yTable1 = 250;
-	public static final int xTable2 = 360;
-	public static final int yTable2 = 100;
-	public static final int xTable3 = 360;
-	public static final int yTable3 = 300;
+	public static final int xTable1 = 178;
+	public static final int yTable1 = 64;
+	public static final int xTable2 = 92;
+	public static final int yTable2 = 218;
+	public static final int xTable3 = 174;
+	public static final int yTable3 = 218;
+	public static final int xTable4 = 244;
+	public static final int yTable4 = 218;
 
 	public CustomerGui(CustomerAgent c, SimCityGui gui){ //HostAgent m) {
 		agent = c;
@@ -73,7 +75,6 @@ public class CustomerGui implements Gui{
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.CYAN);
-		//g.fillRect(xPos, yPos, 20, 20);
 		animModule.updateAnimation();//updates the frame and animation 
 		g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 		g.setColor(Color.BLACK);
