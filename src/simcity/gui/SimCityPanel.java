@@ -94,7 +94,7 @@ public class SimCityPanel extends JPanel{
 	
 	public void handleTick() {
 		long currTicks = getNumTicks();
-		if(currTicks % 100 == 0)
+		if(currTicks % 50 == 0)
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
 		
 		// handle ticks for people
@@ -130,12 +130,12 @@ public class SimCityPanel extends JPanel{
 			
 			// job signals
 			// two constants, WORK_ONE and WORK_TWO, determine when to send the signals to go to work
-//			if(currTicks == WORK_ONE) {
-//				person.msgGoToWork(1);
-//			}
-//			if(currTicks == WORK_TWO) {
-//				person.msgGoToWork(2);
-//			}
+			if(currTicks == WORK_ONE) {
+				person.msgGoToWork(1);
+			}
+			if(currTicks == WORK_TWO) {
+				person.msgGoToWork(2);
+			}
 		}
 		
 		// handle ticks for housing
@@ -160,11 +160,11 @@ public class SimCityPanel extends JPanel{
 	// these are start times for each of the day's phases
 	private static final long START_OF_DAY = 1;
 	private static final long MORNING = 30;
-	private static final long WORK_ONE = 110;
+	private static final long WORK_ONE = 150;
 	private static final long NOON = 200;
-	private static final long WORK_TWO = 300;
+	private static final long WORK_TWO = 310;
 	private static final long EVENING = 400;
-	private static final long END_OF_DAY = 700;
+	private static final long END_OF_DAY = 600;
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 50;

@@ -72,7 +72,7 @@ public class PersonAgent extends Agent {
 	
 	// Synchronization
 	private PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
-	public enum PersonEvent {makingDecision, onHold};
+	public enum PersonEvent {makingDecision, onHold, onHoldAtRestaurant, onHoldInMarket, onHoldInBank};
 	public PersonEvent event = PersonEvent.makingDecision;
 	// TODO Generic eventFired event instead of specific ones?
 	
@@ -93,7 +93,7 @@ public class PersonAgent extends Agent {
 		preferredCommute = PreferredCommute.Walk;
 		
 		this.foodPreference = foodPreference;
-		preferEatAtHome = true;
+		preferEatAtHome = false;
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
@@ -421,12 +421,13 @@ public class PersonAgent extends Agent {
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
 				if(!isNourished) {
 					enterRestaurant();
+					event = PersonEvent.onHoldAtRestaurant;
 				}
 				else {
 					goHome();
+					event = PersonEvent.onHold;
 				}
 				print("Restaurant: setting on hold");
-				event = PersonEvent.onHold;
 				return true;
 			}
 			if(currentLocationState == LocationState.Market) { // at market
@@ -436,14 +437,19 @@ public class PersonAgent extends Agent {
 				}
 				switch(marketState) {
 					case None:
-						goHome(); break;
+						goHome();
+						event = PersonEvent.onHold;
+						break;
 					case WantToBuy:
-						enterMarket(); break;
+						enterMarket();
+						event = PersonEvent.onHoldInMarket;
+						break;
 					case WantToWork:
+						// TODO go to work
+						event = PersonEvent.onHold;
 						break;
 				}
 				print("Market: event onHold set");
-				event = PersonEvent.onHold;
 				return true;
 			}
 		}
