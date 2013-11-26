@@ -3,10 +3,9 @@ package bank;
 import agent.Agent;
 import bank.interfaces.Manager;
 import bank.interfaces.Teller;
-import bank.interfaces.Person;
 import bank.interfaces.BankCustomer;
+import bank.gui.Account;
 import bank.gui.Bank;
-import bank.gui.BankCustomerGui;
 import simcity.gui.SimCityGui;
 
 import java.util.*;
@@ -47,6 +46,8 @@ public class ManagerAgent extends Agent implements Manager {
 		List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
 		enum State{entered, waiting, leaving, busy, idle};
 		enum Action{newAccount, deposit, withdraw};
+		
+		List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
 		class MyTeller {
 			Teller teller;
@@ -229,6 +230,14 @@ public class ManagerAgent extends Agent implements Manager {
 		print(bc.getAccountNum() + " $" + bc.getBalance());
 		wc.state = State.idle;
 		bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getChange(), bc.getLoanAmount(), bc.getLoanTime());
+	}
+	
+	public void addAccount(Account acc){
+		accounts.add(acc);
+	}
+	
+	public List<Account> getAccounts(){
+		return accounts;
 	}
 	
 	

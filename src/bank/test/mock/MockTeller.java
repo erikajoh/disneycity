@@ -6,15 +6,12 @@ import java.util.List;
 
 import bank.gui.Account;
 import bank.gui.TellerGui;
-import bank.interfaces.BankCustomer;
-import bank.interfaces.Manager;
+
 
 public class MockTeller extends Mock {
 	
 	  public EventLog log;
 	  MockManager manager;
-	  List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
-
 		public enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
 
 		class Customer {
@@ -33,6 +30,7 @@ public class MockTeller extends Mock {
 				  account = null;
 			  }
 			  else{
+				List<Account> accounts = manager.getAccounts();
 			      for(Account acc : accounts){
 				      if(acc.number == accountNumber){
 				    	  account = acc; break;
@@ -100,6 +98,7 @@ public class MockTeller extends Mock {
 		public void	msgDepositCash(int accountNum, double cash){
 			log.add(new LoggedEvent("DEPOSIT CASH"));
 			customer.requestAmt = cash;
+			List<Account> accounts = manager.getAccounts();
 			for(Account acc : accounts){
 				if(acc.number == accountNum){
 					customer.account = acc; break;
@@ -111,6 +110,7 @@ public class MockTeller extends Mock {
 		public void	msgWithdrawCash(int accountNum, double cash){
 			log.add(new LoggedEvent("WITHDRAW CASH"));
 			customer.requestAmt = cash;
+			List<Account> accounts = manager.getAccounts();
 			for(Account acc : accounts){
 				if(acc.number == accountNum){
 					customer.account = acc; break;
@@ -155,8 +155,8 @@ public class MockTeller extends Mock {
 
 		// Actions
 		private void openAccount(){
-			Account newAccount = new Account(accounts.size(), customer.requestAmt);
-			accounts.add(newAccount);
+			Account newAccount = new Account(manager.getAccounts().size(), customer.requestAmt);
+			manager.addAccount(newAccount);
 			customer.account = newAccount;
 			customer.account.change = -customer.requestAmt;
 			customer.bankCustomer.msgAccountOpened(newAccount.number, customer.account.change);
