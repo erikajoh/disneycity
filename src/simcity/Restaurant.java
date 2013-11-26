@@ -4,7 +4,6 @@ import simcity.RestMenu;
 import bank.gui.Bank;
 import market.Market;
 
-
 public interface Restaurant {
 	
 	public RestMenu getMenu();
@@ -22,4 +21,6 @@ public interface Restaurant {
 	public void addPerson(PersonAgent p, String type, String name, double money);
 	
 	public String getType();
+
+	public void msgHereIsOrder(String food, int quantity, int ID);
 }

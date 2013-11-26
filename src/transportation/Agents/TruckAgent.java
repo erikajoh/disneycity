@@ -36,25 +36,28 @@ public class TruckAgent extends MobileAgent{
 		Restaurant restaurant;
 		PersonAgent person;
 		Market market;
-		
+		int ID;
+		String location;
 		Status status;
 		
 		
-		deliveryOrder(Restaurant restaurant, String food, int quantity, Market market) {
+		deliveryOrder(Restaurant restaurant, String food, int quantity, Market market, int ID) {
 			this.restaurant = restaurant;
 			this.food = food;
 			this.quantity = quantity;
 			person = null;
 			this.market = market;
+			this.ID = ID;
 			status = Status.WAITING;
 		}
 		
-		deliveryOrder(PersonAgent person, String food, int quantity, Market market) {
+		deliveryOrder(PersonAgent person, String food, int quantity, Market market, String location) {
 			this.restaurant = null;
 			this.food = food;
 			this.quantity = quantity;
 			this.person = person;
 			this.market = market;
+			this.location = location;
 			status = Status.WAITING;
 		}
 		
@@ -80,8 +83,13 @@ public class TruckAgent extends MobileAgent{
 		orders = Collections.synchronizedList(new ArrayList<deliveryOrder>());
 	}
 	
-	public void msgDeliverOrder(Restaurant restaurant, Market market, String food, int quantity) {
-		orders.add(new deliveryOrder(restaurant, food, quantity, market));
+	public void msgDeliverOrder(Restaurant restaurant, Market market, String food, int quantity, int ID) {
+		orders.add(new deliveryOrder(restaurant, food, quantity, market, ID));
+		stateChanged();
+	}
+	
+	public void msgDeliverOrder(PersonAgent person, Market market, String food, int quantity, String location) {
+		orders.add(new deliveryOrder(person, food, quantity, market, location));
 		stateChanged();
 	}
 	
@@ -121,6 +129,8 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERED) {
+					if (order.person != null) order.person.msgHereIsOrder(order.food, order.quantity);
+					else if (order.restaurant != null) order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
 					deleteOrder(order);
 					return true;
 				}
@@ -183,7 +193,7 @@ public class TruckAgent extends MobileAgent{
 
 	private void deliverOrder(deliveryOrder order) {
 		if(order.returnType()) {//person order
-			//goToPosition(order.person.)
+			goToPosition(master.directory.get(order.location).vehicleTile);
 		}
 		if(!order.returnType()) {//Market order
 			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile);

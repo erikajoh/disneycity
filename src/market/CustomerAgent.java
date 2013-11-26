@@ -13,13 +13,12 @@ import restaurant_rancho.CookAgent;
  * Restaurant customer agent.
  */
 public class CustomerAgent extends Agent {
-	private String name, choice;
+	private String name, choice, location;
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
 	private Wallet wallet;
 	double amtDue;
-	int quantity, numInLine;
-	int orderID;
+	int quantity, numInLine, orderID;
 	boolean virtual;
 
 	private ManagerAgent manager;
@@ -41,13 +40,26 @@ public class CustomerAgent extends Agent {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name, double amt, String choice, int quantity, int num, boolean virtual){
+	public CustomerAgent(String name, double amt, String choice, int quantity, int num){
 		super();
 		this.name = name;
 		this.choice = choice;
 		this.quantity = quantity;
 		this.numInLine = num;
-		this.virtual = virtual;
+		this.virtual = false;
+		wallet = new Wallet(amt);
+		state = State.entering;
+		print("created customer");
+	}
+	
+	public CustomerAgent(String name, double amt, String choice, int quantity, int num, String location){
+		super();
+		this.name = name;
+		this.choice = choice;
+		this.quantity = quantity;
+		this.numInLine = num;
+		this.virtual = true;
+		this.location = location;
 		wallet = new Wallet(amt);
 		state = State.entering;
 		print("created customer");
@@ -72,6 +84,10 @@ public class CustomerAgent extends Agent {
 	
 	public int getNum() {
 		return numInLine;
+	}
+	
+	public String getLocation() {
+		return location;
 	}
 	
 	public void setPerson(PersonAgent person) {

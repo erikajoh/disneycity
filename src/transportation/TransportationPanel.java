@@ -28,7 +28,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	
 	private BufferedImage img;
 	SimCityGui gui;
-	Transportation controller;
+	private Transportation controller;
 	
 	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	Timer timer;

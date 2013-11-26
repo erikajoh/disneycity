@@ -262,5 +262,13 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	public String getType() {
 		return type;
 	}
+
+
+
+	@Override
+	public void msgHereIsOrder(String food, int quantity, int ID) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

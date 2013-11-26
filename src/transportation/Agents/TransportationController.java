@@ -273,9 +273,12 @@ public class TransportationController extends Agent implements Transportation{
 		stateChanged();
 	}
 	
-	@Override
-	public void msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity) {
-		truck.msgDeliverOrder(restaurant, market, food, quantity);
+	public void msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity, int id) {
+		truck.msgDeliverOrder(restaurant, market, food, quantity, id);
+	}
+	
+	public void msgSendDelivery(PersonAgent person, Market market, String food, int quantity, String location) {
+		truck.msgDeliverOrder(person, market, food, quantity, location);
 	}
 
 	//+++++++++++++++++SCHEDULER+++++++++++++++++

@@ -9,7 +9,7 @@ import market.gui.WorkerGui;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
-import transportation.Agents.TruckAgent;
+import transportation.Transportation;
 import restaurant_rancho.CookAgent;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ public class Market {
 	String name;
     private ManagerAgent manager;
     private CashierAgent cashier;  
-    private TruckAgent truck;
+    private Transportation transport;
     private List<WorkerAgent> workers = new ArrayList<WorkerAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     private List<CustomerAgent> virtualCustomers = new ArrayList<CustomerAgent>();
@@ -48,13 +48,12 @@ public class Market {
     
 	public void msgLeaving(CustomerAgent c) {
 		if (c.getPerson()!=null){
-			truck.msgDeliverOrder(null, this, c.getChoice(), c.quantity);
-//			c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
+			if (c.virtual) transport.msgSendDelivery(c.getPerson(), this, c.getChoice(), c.quantity, c.getLocation());
+			else c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
 			customers.remove(c);
 		}
 		else if (c.getRest()!=null) {
-			truck.msgDeliverOrder(c.getRest(), this, c.getChoice(), c.quantity);
-//			c.getCook().msgHereIsOrder(c.getChoice(), c.quantity, c.orderID);
+			transport.msgSendDelivery(c.getRest(), this, c.getChoice(), c.quantity, c.orderID);
 			virtualCustomers.remove(c);
 		}
 		MoveLine();
@@ -65,19 +64,13 @@ public class Market {
 			cust.msgLineMoved();
 		}
 	}
-	    
-     /* msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity);
-     * msgRestaurantDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
-     * msgHomeDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
-     * msgFulfillOrder(String order, int quantity); // to worker from manager
-     * msgDoneAtMarket(boolean fulfilled);
-     */
 
     private SimCityGui gui;
 
-    public Market(SimCityGui g, String n) {
-    	name = n;
+    public Market(SimCityGui g, String n, Transportation t) {
+    	this.name = n;
         this.gui = g;
+        this.transport = t;
         inventory.put("Mexican", 50);
         prices.put("Mexican", 5.0);
         locations.put("Mexican", 1);
@@ -106,21 +99,17 @@ public class Market {
     	return isOpen;
     }
     
-    public void setTransportation(TruckAgent t) {
-    	
-    }
-    
     public String getName() { return name; }
     
     public void personAs(Restaurant r, double money, String choice, int quantity, int id) {
     	System.out.println("The restaurant wants to order food!");
     	addPerson(r, r.getRestaurantName(), money, choice, quantity, id);
     }
-    public void personAs(PersonAgent p, String type, String name, double money, String choice, int quantity){
-    	addPerson(p, type, name, money, choice, quantity);
+    public void personAs(PersonAgent p, String name, double money, String choice, int quantity, String location){
+    	addPerson(p, name, money, choice, quantity, location);
     }
-    public void personAs(PersonAgent p, String type, String name){
-    	addPerson(p, type, name);
+    public void personAs(PersonAgent p, String name, double money, String choice, int quantity){
+    	addPerson(p, name, money, choice, quantity);
     }
     
     public void addPerson(Restaurant r, String name, double money, String choice, int quantity, int id) {
@@ -133,31 +122,28 @@ public class Market {
 		cust.startThread();
     }
     
-    public void addPerson(PersonAgent p, String type, String name, double money, String choice, int quantity) {
-
-    	if (type.equals("Customer")) {
-    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size(), false);	
-    		CustomerGui g = new CustomerGui(c);
-    		gui.markAniPanel.addGui(g);
-    		if (manager!=null) c.setManager(manager);
-    		c.setGui(g);
-    		if (cashier!=null) c.setCashier(cashier);
-    		c.setPerson(p);
-    		c.setMarket(this);
-    		customers.add(c);
-    		c.startThread();
-    		g.updatePosition();
-    	}
-    	else if (type.equals("VirtualCustomer")) {
-    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), true);	
-    		if (manager!=null) c.setManager(manager);
-    		if (cashier!=null) c.setCashier(cashier);
-    		c.setPerson(p);
-    		c.setMarket(this);
-    		virtualCustomers.add(c);
-    		c.startThread();
-    	}
+    public void addPerson(PersonAgent p, String name, double money, String choice, int quantity) {
+		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
+		CustomerGui g = new CustomerGui(c);
+		gui.markAniPanel.addGui(g);
+		if (manager!=null) c.setManager(manager);
+		c.setGui(g);
+		if (cashier!=null) c.setCashier(cashier);
+		c.setPerson(p);
+		c.setMarket(this);
+		customers.add(c);
+		c.startThread();
+		g.updatePosition();
+    }
     
+    public void addPerson(PersonAgent p, String name, double money, String choice, int quantity, String location) {
+		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), location);	
+		if (manager!=null) c.setManager(manager);
+		if (cashier!=null) c.setCashier(cashier);
+		c.setPerson(p);
+		c.setMarket(this);
+		virtualCustomers.add(c);
+		c.startThread();    
     }
    
     public void addPerson(PersonAgent p, String type, String name) {
