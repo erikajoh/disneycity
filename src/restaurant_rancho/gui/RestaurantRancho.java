@@ -73,6 +73,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     
     public void setBank(Bank b) {
     	bank = b;
+    	System.out.println("hi");
+    	System.out.println(b.getName());
     	if (cashier!=null) setBank(b);
     }
     
