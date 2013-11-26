@@ -30,6 +30,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 
     //Host, cook, waiters and customers
 	String name;
+	String type;
     private HostAgent host; 
     private CashierAgent cashier;
     private CashierGui cashierGui; 
@@ -55,7 +56,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     public RestaurantBayou(SimCityGui gui, String name) {
         this.gui = gui;
         this.name = name;
-
+        type = "Southern";
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 2, 10, 10));
         
@@ -284,10 +285,13 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     }
 
 	@Override
-	public void setMarket(market.Market m) {
+	public void setMarket(Market m) {
 		market2 = m;
 		// T
-		
+	}
+	
+	public String getType() {
+		return type;
 	}
 	
 }

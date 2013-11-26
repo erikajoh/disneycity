@@ -39,6 +39,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+    String type;
     
     private boolean isPaused = false;
     
@@ -63,6 +64,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     public RestaurantHaus(SimCityGui gui, String name) {
         this.gui = gui;
         this.name = name;
+        type = "German";
         MarketAgent tempMarket;
         tempMarket = new MarketAgent("Best Market", 5000, 10, 0, 6, 10);
         tempMarket.startThread();
@@ -284,5 +286,9 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	public void setMarket(Market m) {
 		market = m;
 		
+	}
+
+	public String getType() {
+		return type;
 	}
 }

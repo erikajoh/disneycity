@@ -133,8 +133,8 @@ public class SimCityGui extends JFrame  {
 		
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
-		restBayou = new RestaurantBayou(this, "The Blue Bayou");
-		restPizza = new RestaurantPizza(this);
+		restBayou = new RestaurantBayou(this, "Blue Bayou");
+		restPizza = new RestaurantPizza(this, "Pizza Port");
 		restHaus = new RestaurantHaus(this, "Village Haus");
 		restCafe = new RestaurantCafe(this, "Carnation Cafe");
 		hauntedMansion = new Housing(housAniPanel7, "Haunted Mansion");

@@ -42,6 +42,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     private CashierAgent cashier;
     public Bank bank;
     public Market market;
+    String type;
     
     private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
@@ -62,6 +63,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     public RestaurantCafe(SimCityGui gui, String name) {
         this.gui = gui;
         this.name = name;
+        type = "American";
                 
         Food food = new Food("Apple-Granola Pancakes", 3000, 5, 4, 8, 10.49);
         foods.add(food);
@@ -255,8 +257,10 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	@Override
 	public void setMarket(Market m) {
 		market = m;
-		
 	}
-
+	
+	public String getType() {
+		return type;
+	}
 }
 
