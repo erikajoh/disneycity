@@ -59,10 +59,6 @@ public class ManagerAgent extends Agent {
 		myOrders.add(new Order(c, choice, quantity));
     	stateChanged();
     }
-	
-	public void TransportationReady() { // from transportation
-    	
-    }
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.

@@ -21,7 +21,6 @@ public class CustomerAgent extends Agent {
 
 	private ManagerAgent manager;
 	private CashierAgent cashier;
-	private WorkerAgent worker;
 	private PersonAgent person;
 	private Market market;
 	private CookAgent cook;
@@ -80,11 +79,6 @@ public class CustomerAgent extends Agent {
 	public void setMarket(Market market) {
 		this.market = market;
 	}
-	
-//	public void msgWhatWouldYouLike() { // from manager
-//		state = State.ordering;
-//		stateChanged();
-//	}
 	
 	public void msgLineMoved() {
 		numInLine--;
