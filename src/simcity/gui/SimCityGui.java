@@ -145,7 +145,7 @@ public class SimCityGui extends JFrame  {
 		mainStApts4 = new Housing(housAniPanel4, "Main St Apartments #4");
 		mainStApts5 = new Housing(housAniPanel5, "Main St Apartments #5");
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
-		mickeysMarket = new Market(this, "Mickey's Market");
+		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
 		pirateBank = new Bank(this, "Pirate Bank");
 		ManagerAgent manager = new ManagerAgent("Manager", pirateBank, this);
 		pirateBank.setManager(manager);		
