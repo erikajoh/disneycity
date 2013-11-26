@@ -81,7 +81,7 @@ public class PersonAgent extends Agent {
 	
 	// Constructor for CustomerAgent class
 	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference,
-			String relationWithHousing, Transportation t, String commute) {
+			String relationWithHousing, Transportation t, char commute) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
@@ -92,8 +92,8 @@ public class PersonAgent extends Agent {
 		
 		currentLocationState = LocationState.Home;
 		switch(commute) {
-			case "Walk": preferredCommute = PreferredCommute.Walk; break;
-			case "Bus": preferredCommute = PreferredCommute.Bus; break;
+			case 'W': preferredCommute = PreferredCommute.Walk; break;
+			case 'B': preferredCommute = PreferredCommute.Bus; break;
 		}
 		
 		this.foodPreference = foodPreference;
@@ -484,7 +484,8 @@ public class PersonAgent extends Agent {
 	// ************************* ACTIONS ***********************************
 
 	private void checkGoingToWork(int workPeriod) {
-		// TODO checkGoingToWork
+		print("Is it time for me to work? Time period: " + workPeriod);
+		
 	}
 
 	//House actions

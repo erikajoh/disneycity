@@ -53,9 +53,9 @@ public class SimCityPanel extends JPanel{
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 10, foodPreferenceItalian,
-				"OwnerResident", transportation, "Walk");
+				"OwnerResident", transportation, 'W');
 		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secundus", secondHousing, 60, foodPreferenceMexican,
-				"OwnerResident", transportation, "Bus");
+				"OwnerResident", transportation, 'C');
 		
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
