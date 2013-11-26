@@ -106,6 +106,7 @@ public class MockPerson extends Mock implements Person {
 					originalAccount = acc; break;
 				}
 			}
+
 			bank.msgRequestWithdrawal(this, originalAccount.getNumber(), requestAmount, true);
 			requestAmount *= -1;
 		}

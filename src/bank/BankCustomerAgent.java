@@ -187,7 +187,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.idle;
 	}
 	private void leaveBank(){
-		teller.msgLeavingBank();
 		animState = AnimState.walking;
 		state = State.left;
 		personGui.DoLeaveBank();
@@ -195,6 +194,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void leftBank(){
 		state = State.idle;
+		teller.msgLeavingBank();
 		//personGui.setInBank(false);
 	}
 

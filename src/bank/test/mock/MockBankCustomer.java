@@ -169,12 +169,12 @@ public class MockBankCustomer extends Mock {
 		state = State.idle;
 	}
 	private void leaveBank(){
-		teller.msgLeavingBank();
 		animState = AnimState.walking;
 		state = State.left;
 	}
 	
 	private void leftBank(){
+		teller.msgLeavingBank();
 		state = State.idle;
 	}
 
