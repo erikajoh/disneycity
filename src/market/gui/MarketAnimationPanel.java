@@ -37,6 +37,7 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
     }
 
 	public void actionPerformed(ActionEvent e) {
+		updatePosition();
 		repaint();  //Will have paintComponent called
 	}	
 
@@ -51,13 +52,15 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
 
         for(Gui gui : guis) {
             if (gui.isPresent()) {
-                gui.updatePosition();
+                gui.draw(g2);
             }
         }
-
+    }
+    
+    public void updatePosition() {
         for(Gui gui : guis) {
             if (gui.isPresent()) {
-                gui.draw(g2);
+                gui.updatePosition();
             }
         }
     }

@@ -54,7 +54,16 @@ public class PizzaAnimationPanel extends JPanel implements ActionListener {
     }
 
 	public void actionPerformed(ActionEvent e) {
+		updatePosition();
 		repaint();  //Will have paintComponent called
+	}
+	
+	public void updatePosition() {
+		for(Gui gui : guis) {
+            if (gui.isPresent()) {
+                gui.updatePosition();
+            }
+        }
 	}
 
     public void paintComponent(Graphics g) {
@@ -64,21 +73,12 @@ public class PizzaAnimationPanel extends JPanel implements ActionListener {
         g2.setColor(getBackground());
         //g2.fillRect(PERSON_INITX, PERSON_INITY, WINDOWX, WINDOWY );
         g2.drawImage(bi, 0, 0, 400, 330, null);
-        
-       
-        
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
-        }
 
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
             }
         }
-        
     }
 
     public void addGui(Gui gui) {
