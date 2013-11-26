@@ -49,7 +49,7 @@ public class Market {
 			c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
 		}
 		else if (c.getCook()!=null) {
-			c.getCook().msgHereIsOrder(c.getChoice(), c.quantity);
+			c.getCook().msgHereIsOrder(c.getChoice(), c.quantity, c.orderID);
 		}
 		System.out.println(customers.size());
 		customers.remove(c);
