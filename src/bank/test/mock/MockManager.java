@@ -175,6 +175,7 @@ public class MockManager extends Mock {
 			
 			for(WaitingCustomer wc : waitingCustomers){
 				if(wc.state == State.leaving){
+					log.add(new LoggedEvent("LEAVING"));
 					updatePersonInfo(wc);
 					return true;
 				}
