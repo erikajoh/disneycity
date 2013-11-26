@@ -47,13 +47,14 @@ public class SimCityPanel extends JPanel{
 		String foodPreferenceItalian = "Italian";
 		
 		Housing secondHousing = gui.mainStApts1;
+		double startMoney = 70;
 		
 		animationPanelsList = gui.animationPanelsList;
 		transportation = gui.cityAniPanel.getTransportation();
 		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
-		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 70, foodPreferenceItalian, "OwnerResident", transportation);
+		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, startMoney, foodPreferenceItalian, "OwnerResident", transportation);
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
 		firstHackedPerson.addRestaurant(restRancho, "Customer");
@@ -95,7 +96,7 @@ public class SimCityPanel extends JPanel{
 	
 	public void handleTick() {
 		long currTicks = getNumTicks();
-		if(currTicks % 50 == 0)
+		if(currTicks % 10 == 0)
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
 		
 		// handle ticks for people
@@ -158,7 +159,7 @@ public class SimCityPanel extends JPanel{
 	/* Time intervals */
 	private static final int TICK_DELAY = 125; // every 1/8 second = one clock tick
 	
-	// these are start times for each of the day's phases
+	// these are start times for each of the day phases
 	private static final long START_OF_DAY = 1;
 	private static final long MORNING = 30;
 	private static final long WORK_ONE = 150;

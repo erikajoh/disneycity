@@ -114,8 +114,8 @@ public class AnimationModule {
 	}
 
 	public void changeAnimation(String animation) {
-		setMoving();
 		this.animation = animation;
+		setMoving();
 	}
 	
 	public boolean changeFrame(int frame) {
@@ -131,6 +131,7 @@ public class AnimationModule {
 	public void changeAnimation(String animation, int frameDelay) {//if an individual animation has a different frame delay
 		this.animation = animation;
 		this.frameDelay = frameDelay;
+		setMoving();
 	}
 	
 	public void setDelay(int delay) {

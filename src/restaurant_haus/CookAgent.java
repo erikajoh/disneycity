@@ -389,7 +389,7 @@ public class CookAgent extends Agent {
 		synchronized(markets) {
 			for(MyMarket market : markets) {
 				if(market.stock.contains(food.choice)) {
-					print("Market " + market.market.getName() + " do you have " + food.choice + "?");
+					//print("Market " + market.market.getName() + " do you have " + food.choice + "?");
 					market.market.msgDoYouHave(food.choice);
 					food.s = InventoryState.marketQueried;
 					return;

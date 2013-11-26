@@ -173,17 +173,15 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			print("TELLER NULL");
 		}
 		teller.msgOpenAccount(this, requestAmt);
-		//change = -balance*.5;
 		state = State.idle;
 	}
+	
 	private void depositCash(){
 		teller.msgDepositCash(accountNum, requestAmt);
-		//change = -5.00;
 		state = State.idle;
 	}
 	private void withdrawCash(){
 		teller.msgWithdrawCash(accountNum, requestAmt);
-		//change = 5.00;
 		state = State.idle;
 	}
 	private void leaveBank(){
@@ -195,7 +193,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void leftBank(){
 		state = State.idle;
 		teller.msgLeavingBank();
-		//personGui.setInBank(false);
 	}
 
 	// Accessors, etc.

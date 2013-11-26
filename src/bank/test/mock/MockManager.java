@@ -227,6 +227,26 @@ public class MockManager extends Mock {
 			return accounts;
 		}
 		
+		public void getCustomerState(MockBankCustomer bc){
+			WaitingCustomer waitingCustomer = null;
+			for(WaitingCustomer wc : waitingCustomers){
+				if(wc.bankCustomer == bc){
+					waitingCustomer = wc; break;
+				}
+			}
+			log.add(new LoggedEvent("CUSTOMER STATE: "+waitingCustomer.state));
+		}
+		
+		public void getTellerState(MockTeller t){
+			MyTeller myTeller = null;
+			for(MyTeller mt : tellers){
+				if(mt.teller == t){
+					myTeller = mt; break;
+				}
+			}
+			log.add(new LoggedEvent("TELLER STATE: "+myTeller.state));
+		}
+		
 		public void addTeller(MockTeller t){
 			MyTeller mt = new MyTeller(t);
 			tellers.add(mt);
