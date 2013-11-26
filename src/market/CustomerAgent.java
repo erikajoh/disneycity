@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
+import simcity.Restaurant;
 import market.gui.CustomerGui;
 import restaurant_rancho.CookAgent;
 /**
@@ -25,7 +26,7 @@ public class CustomerAgent extends Agent {
 	private CashierAgent cashier;
 	private PersonAgent person;
 	private Market market;
-	private CookAgent cook;
+	private Restaurant rest;
 	
 	private Semaphore moving = new Semaphore(0, true);
 	
@@ -77,12 +78,12 @@ public class CustomerAgent extends Agent {
 		this.person = person;
 	}
 	
-	public void setCook(CookAgent cook) {
-		this.cook = cook;
+	public void setRest(Restaurant rest) {
+		this.rest = rest;
 	}
 	
-	public CookAgent getCook() {
-		return cook;
+	public Restaurant getRest() {
+		return rest;
 	}
 	
 	public void setManager(ManagerAgent manager) {

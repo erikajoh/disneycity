@@ -9,6 +9,7 @@ import market.gui.WorkerGui;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
+import transportation.Agents.TruckAgent;
 import restaurant_rancho.CookAgent;
 
 import javax.swing.*;
@@ -32,7 +33,8 @@ public class Market {
 	//Host, cook, waiters and customers
 	String name;
     private ManagerAgent manager;
-    private CashierAgent cashier;    
+    private CashierAgent cashier;  
+    private TruckAgent truck;
     private List<WorkerAgent> workers = new ArrayList<WorkerAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     private List<CustomerAgent> virtualCustomers = new ArrayList<CustomerAgent>();
@@ -46,11 +48,13 @@ public class Market {
     
 	public void msgLeaving(CustomerAgent c) {
 		if (c.getPerson()!=null){
-			c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
+			truck.msgDeliverOrder(null, this, c.getChoice(), c.quantity);
+//			c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
 			customers.remove(c);
 		}
-		else if (c.getCook()!=null) {
-			c.getCook().msgHereIsOrder(c.getChoice(), c.quantity, c.orderID);
+		else if (c.getRest()!=null) {
+			truck.msgDeliverOrder(c.getRest(), this, c.getChoice(), c.quantity);
+//			c.getCook().msgHereIsOrder(c.getChoice(), c.quantity, c.orderID);
 			virtualCustomers.remove(c);
 		}
 		MoveLine();
@@ -102,11 +106,15 @@ public class Market {
     	return isOpen;
     }
     
+    public void setTransportation(TruckAgent t) {
+    	
+    }
+    
     public String getName() { return name; }
     
-    public void personAs(CookAgent c, double money, String choice, int quantity, int id) {
+    public void personAs(Restaurant r, double money, String choice, int quantity, int id) {
     	System.out.println("The restaurant wants to order food!");
-    	addPerson(c, c.getName(), money, choice, quantity, id);
+    	addPerson(r, r.getRestaurantName(), money, choice, quantity, id);
     }
     public void personAs(PersonAgent p, String type, String name, double money, String choice, int quantity){
     	addPerson(p, type, name, money, choice, quantity);
@@ -115,11 +123,11 @@ public class Market {
     	addPerson(p, type, name);
     }
     
-    public void addPerson(CookAgent c, String name, double money, String choice, int quantity, int id) {
+    public void addPerson(Restaurant r, String name, double money, String choice, int quantity, int id) {
     	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), id);	
 		if (manager!=null) cust.setManager(manager);
 		if (cashier!=null) cust.setCashier(cashier);
-		cust.setCook(c);
+		cust.setRest(r);
 		cust.setMarket(this);
 		virtualCustomers.add(cust);
 		cust.startThread();
@@ -151,8 +159,7 @@ public class Market {
     	}
     
     }
-  
-    
+   
     public void addPerson(PersonAgent p, String type, String name) {
 
     	if (type.equals("Worker")) {
