@@ -102,11 +102,13 @@ public class CookAgent extends Agent {
 	}
 	
 	public void msgHereIsOrder(String choice, int amount, int id) {
-		print("Received a delivery from the market!");
-		for (MarketOrder mo : marketOrders){
+		print("Received a delivery of "+amount+" "+choice+"'s from the market!");
+		for (int i=0; i<marketOrders.size(); i++){
+			MarketOrder mo = marketOrders.get(i);
 			if (mo.id == id && mo.amount == amount) {
 				Food f = findFood(mo.food);
 				f.amount = amount;
+				print("removing a market order whee");
 				marketOrders.remove(mo);
 			} else if (mo.food == choice && mo.amount != 0) {
 				Food f = findFood(mo.food);
@@ -142,9 +144,9 @@ public class CookAgent extends Agent {
 				synchronized(marketOrders) {
 					for (MarketOrder mo : marketOrders){ 
 						if (mo.os == moState.pending) {
-							print("ordering " + mo.food );
+							print("Ordering "+mo.amount+" "+mo.food+"'s");
 							mo.os = moState.ordered;
-							market.personAs(restaurant, 100, "Mexican", mo.amount, mo.id);
+							market.personAs(restaurant, "Mexican", mo.amount, mo.id);
 							return true;
 						}
 					}

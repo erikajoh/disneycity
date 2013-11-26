@@ -316,4 +316,10 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 		
 	}
 	
+	@Override
+	public void msgHereIsBill(Market m, double amt) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
