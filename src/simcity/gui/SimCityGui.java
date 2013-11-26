@@ -100,23 +100,21 @@ public class SimCityGui extends JFrame  {
 	public SimCityGui(String name) {
 				
 		cards = new JPanel(new CardLayout());
-		cards.add(cafeAniPanel, "Cafe");
-		cards.add(housAniPanel7, "Mansion");
-		cards.add(housAniPanel1, "Apt1");
-		cards.add(housAniPanel2, "Apt2");
-		cards.add(housAniPanel3, "Apt3");
-		cards.add(housAniPanel4, "Apt4");
-		cards.add(housAniPanel5, "Apt5");
-		cards.add(housAniPanel6, "Apt6");
-		cards.add(markAniPanel, "Market");
-		cards.add(bankAniPanel, "Bank");
-		cards.add(ranchoAniPanel, "Rancho");
-		cards.add(bayouAniPanel, "Bayou");
-		cards.add(pizzaAniPanel, "Pizza");
-		cards.add(cafeAniPanel, "Cafe");
-		cards.add(hausAniPanel, "Haus");
+		cards.add(housAniPanel7, "Haunted Mansion");
+		cards.add(housAniPanel1, "Main St Apartments #1");
+		cards.add(housAniPanel2, "Main St Apartments #2");
+		cards.add(housAniPanel3, "Main St Apartments #3");
+		cards.add(housAniPanel4, "Main St Apartments #4");
+		cards.add(housAniPanel5, "Main St Apartments #5");
+		cards.add(housAniPanel6, "Main St Apartments #6");
+		cards.add(markAniPanel, "Mickey's Market");
+		cards.add(bankAniPanel, "Pirate Bank");
+		cards.add(ranchoAniPanel, "Rancho Del Zocalo");
+		cards.add(cafeAniPanel, "Carnation Cafe");
+		cards.add(bayouAniPanel, "Blue Bayou");
+		cards.add(pizzaAniPanel, "Pizza Port");
+		cards.add(hausAniPanel, "Village Haus");
 				
-		animationPanelsList.add(cafeAniPanel);
 		animationPanelsList.add(housAniPanel7);
 		animationPanelsList.add(housAniPanel1);
 		animationPanelsList.add(housAniPanel2);
@@ -127,9 +125,9 @@ public class SimCityGui extends JFrame  {
 		animationPanelsList.add(markAniPanel);
 		animationPanelsList.add(bankAniPanel);
 		animationPanelsList.add(ranchoAniPanel);
+		animationPanelsList.add(cafeAniPanel);
 		animationPanelsList.add(bayouAniPanel);
 		animationPanelsList.add(pizzaAniPanel);
-		animationPanelsList.add(cafeAniPanel);
 		animationPanelsList.add(hausAniPanel);
 		
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
