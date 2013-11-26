@@ -228,14 +228,12 @@ public class ManagerAgent extends Agent implements Manager {
 			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
 		}
 
-		//wc.person.msgGoToTeller(mt.teller);
 		wc.state = State.busy;
 		mt.teller.msgNewCustomer(wc.bankCustomer);
 		mt.state = TellerState.busy;
 	}
 	
 	private void tellerBusy(WaitingCustomer wc){
-		//wc.person.msgWait();
 		wc.state = State.waiting;
 	}
 	

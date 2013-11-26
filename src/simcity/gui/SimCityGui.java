@@ -150,6 +150,7 @@ public class SimCityGui extends JFrame  {
 		ManagerAgent manager = new ManagerAgent("Manager", pirateBank, this);
 		pirateBank.setManager(manager);		
 		simCityPanel = new SimCityPanel(this);
+		manager.startThread();
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
