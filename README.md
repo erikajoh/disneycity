@@ -30,3 +30,6 @@ Kelsey Rose <br>
 
 ###Issues/problems
 + Currently we only have one restaurant that has full job functionality. Over time we believe we can do the same for the other restaurants.
+
+####Transportation
++ A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
