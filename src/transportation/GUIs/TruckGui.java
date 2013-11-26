@@ -53,19 +53,14 @@ public class TruckGui implements Gui{
 			animModule.changeAnimation("Up");
 		}
 		
-		if(Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed && !reachedHalfway) {
+		if(Math.abs(xLast - xPos) >= 15 || Math.abs(yLast - yPos) >= 15 && !reachedHalfway) {
 			agent.msgHalfway();
 			reachedHalfway = true;
 		}
 		
 		if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
-			xLast = xDestination;
-			yLast = yDestination;
-			
-			System.out.println(String.valueOf(xPos) + " " + String.valueOf(xDestination) + " " + String.valueOf(yPos) + " " + String.valueOf(yDestination));
-			System.out.println(String.valueOf(reachedDestination));
-			//System.exit(0);
 			reachedDestination = true;
+			System.out.println("Reached Destination");
 			agent.msgDestination();
 		}
 		
@@ -87,11 +82,12 @@ public class TruckGui implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
-		this.xLast = this.xDestination;
-		this.yLast = this.yDestination;
+		xLast = xPos;
+		yLast = yPos;
 		this.xDestination = xDestination * 25 - 3;
 		this.yDestination = yDestination * 25;
 		reachedHalfway = false;
+		System.out.println("resetting Destination");
 		reachedDestination = false;
 	}
 	

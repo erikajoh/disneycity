@@ -82,8 +82,9 @@ public class TruckAgent extends MobileAgent{
 	}
 	
 	public void msgDestination() {
-		if(animSem.availablePermits() == 0)
+		if(animSem.availablePermits() == 0) {
 			animSem.release();
+		}
 	}
 
 	//Remember to release semaphores to tiles when despawning
@@ -217,12 +218,6 @@ public class TruckAgent extends MobileAgent{
 	
 	private void idle() {
 		goToPosition(new Position (11, 11));
-		try {
-			animSem.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		gui.doIdle();
 	}
 	

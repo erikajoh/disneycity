@@ -73,7 +73,7 @@ public class TransportationTraversal extends GraphTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type != grid[x][y].type) {
+			if (inPath(next,path) || grid[nextX][nextY].type != grid[x][y].type) {
 				continue;
 			}
 			//printCurrentList();

@@ -24,8 +24,8 @@ public class WalkerGui implements Gui{
 		this.yLast = yPos * 25;
 		speed = 1.00f;
 		this.agent = agent;		
-		reachedHalfway = false;
-		reachedDestination = false;
+		reachedHalfway = true;
+		reachedDestination = true;
 		
 		animModule = new AnimationModule("Edgar", "WalkDown", 10);
 	}
@@ -53,7 +53,7 @@ public class WalkerGui implements Gui{
 			animModule.changeAnimation("WalkUp");
 		}
 		
-		if(Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed && !reachedHalfway) {
+		if((Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed) && !reachedHalfway) {
 			agent.msgHalfway();
 			reachedHalfway = true;
 		}
@@ -75,6 +75,8 @@ public class WalkerGui implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
+		xLast = xPos;
+		yLast = yPos;
 		this.xDestination = xDestination * 25;
 		this.yDestination = yDestination * 25+2;
 		reachedHalfway = false;

@@ -22,10 +22,10 @@ public class BusGui implements Gui{
 		this.yDestination = yPos * 25 + 2;
 		this.xLast = xPos * 25;
 		this.yLast = yPos * 25 + 2;
-		speed = 12.00f;
+		speed = 1.50f;
 		this.agent = agent;		
-		reachedHalfway = false;
-		reachedDestination = false;
+		reachedHalfway = true;
+		reachedDestination = true;
 		
 		animModule = new AnimationModule("Chocobus", "Down", 7);
 	}
@@ -72,6 +72,8 @@ public class BusGui implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
+		xLast = xPos;
+		yLast = yPos;
 		this.xDestination = xDestination * 25;
 		this.yDestination = yDestination * 25 + 2;
 		reachedHalfway = false;

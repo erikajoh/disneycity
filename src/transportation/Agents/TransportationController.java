@@ -114,22 +114,22 @@ public class TransportationController extends Agent implements Transportation{
 		}
 
 		//Roads
-		grid[5][7].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[5][7].setMovement(true, false, true, false, MovementTile.MovementType.ROAD);
 		grid[11][5].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[11][7].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[11][8].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 
 		grid[4][4].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
+		grid[4][5].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[4][7].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[4][8].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[10][5].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
+		grid[10][5].setMovement(false, true, false, true, MovementTile.MovementType.ROAD);
 
 		grid[5][4].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[10][4].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[11][4].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
-		grid[10][7].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
+		grid[10][7].setMovement(false, true, true, false, MovementTile.MovementType.ROAD);
 
-		grid[5][5].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
+		grid[5][5].setMovement(true, false, false, true, MovementTile.MovementType.ROAD);
 		grid[4][8].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[5][8].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[10][8].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
@@ -149,9 +149,9 @@ public class TransportationController extends Agent implements Transportation{
 
 		grid[11][11].setMovement(true, false, false, false, MovementTile.MovementType.FLYING);
 
-		grid[7][4].setMovement(false, true, true, false, MovementTile.MovementType.CROSSWALK);
-		grid[11][6].setMovement(true, false, true, false, MovementTile.MovementType.CROSSWALK);
-		grid[5][8].setMovement(false, false, false, true, MovementTile.MovementType.CROSSWALK);
+		//grid[7][4].setMovement(false, true, true, false, MovementTile.MovementType.CROSSWALK);
+		//grid[11][6].setMovement(true, false, true, false, MovementTile.MovementType.CROSSWALK);
+		//grid[5][8].setMovement(false, false, false, true, MovementTile.MovementType.CROSSWALK);
 		//+++++++++++++++++++++++END CREATION OF GRID+++++++++++++++++++++++
 
 		//++++++++++++++++++++++BEGIN CREATION OF BUS STOPS++++++++++++++++++++++
@@ -232,31 +232,31 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Spawning Bus
 		bus = new BusAgent(this);
-		BusGui busGui = new BusGui(4, 10, bus);
+		BusGui busGui = new BusGui(4, 4, bus);
 		master.addGui(busGui);
 		bus.setGui(busGui);
 		bus.startThread();
-		
+
 		//Spawning Delivery Truck
-		truck = new TruckAgent(new Position(10, 10), this, new FlyingTraversal(grid));
+		truck = new TruckAgent(new Position(11, 10), this, new FlyingTraversal(grid));
 		TruckGui truckGui = new TruckGui(11, 10, truck);
 		master.addGui(truckGui);
 		truck.setGui(truckGui);
 		truck.startThread();
-		
+
 		super.startThread();
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
 	public void msgWantToGo(String startLocation, String endLocation, PersonAgent person, String mover, String character) {
-		
+
 		for(Mover m : movingObjects) {
 			if(m.person == person && !m.method.equals("Bus"))
 				return;
 		}
-		
+
 		System.out.println("RECEIVED REQUEST TO TRANSPORT");
-		
+
 		movingObjects.add(new Mover(person, startLocation, endLocation, mover, character));
 		stateChanged();
 	}
@@ -310,21 +310,29 @@ public class TransportationController extends Agent implements Transportation{
 		TransportationTraversal aStar = new TransportationTraversal(grid);
 		switch(mover.method) {
 		case "Car":
-			mover.transportationState = TransportationState.MOVING;
-			CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
-			CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
-			master.addGui(carGui);
-			driver.setGui(carGui);
-			driver.startThread();
+			if(grid[directory.get(mover.startingLocation).vehicleTile.getX()][directory.get(mover.startingLocation).vehicleTile.getY()].tryAcquire()) {
+				mover.transportationState = TransportationState.MOVING;
+				CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
+				CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
+				master.addGui(carGui);
+				driver.setGui(carGui);
+				driver.startThread();
+			}
+			else
+				mover.transportationState = TransportationState.WAITINGTOSPAWN;
 			break;
 
 		case  "Walk":
-			mover.transportationState = TransportationState.MOVING;
-			WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
-			WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
-			master.addGui(walkerGui);
-			walker.setGui(walkerGui);
-			walker.startThread();
+			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
+				mover.transportationState = TransportationState.MOVING;
+				WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
+				WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
+				master.addGui(walkerGui);
+				walker.setGui(walkerGui);
+				walker.startThread();
+			}
+			else
+				mover.transportationState = TransportationState.WAITINGTOSPAWN;
 			break;
 
 		case "Bus":
@@ -335,11 +343,15 @@ public class TransportationController extends Agent implements Transportation{
 				spawnMover(mover);
 				break;
 			}
-			WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
-			WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
-			master.addGui(busWalkerGui);
-			busWalker.setGui(busWalkerGui);
-			busWalker.startThread();
+			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
+				WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
+				WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
+				master.addGui(busWalkerGui);
+				busWalker.setGui(busWalkerGui);
+				busWalker.startThread();
+			}
+			else
+				mover.transportationState = TransportationState.WAITINGTOSPAWN;
 			break;
 		}
 	}

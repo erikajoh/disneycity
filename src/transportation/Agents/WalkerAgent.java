@@ -52,8 +52,11 @@ public class WalkerAgent extends MobileAgent{
 	}
 	
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
-		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+			
+		}
+		//System.out.println("Releasing " + currentPosition.toString());
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
 
@@ -116,6 +119,7 @@ public class WalkerAgent extends MobileAgent{
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
 			//currentPosition.release(aStar.getGrid());
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
+			//System.out.println("DESTINATION: " + tmpPath.toString());
 			try {
 				animSem.acquire();
 			} catch (InterruptedException e) {
@@ -141,8 +145,10 @@ public class WalkerAgent extends MobileAgent{
 		}
 		else
 			beginBusStop.addRider(walker, endBusStop, building);
-		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
+			//System.out.println("Releasing " + currentPosition.toString());
+		}
 		gui.setIgnore();
 		stopThread();
 	}
