@@ -84,6 +84,7 @@ public class TellerAgent extends Agent implements Teller {
 			customer = new Customer(bankCustomer);
 			customers.add(customer);
 		}
+		stateChanged();
 	}
 
 	public void	msgOpenAccount(BankCustomer bankCustomer, double cash){ //open account w/ initial amt of cash

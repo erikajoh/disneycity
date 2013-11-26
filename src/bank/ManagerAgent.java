@@ -175,9 +175,13 @@ public class ManagerAgent extends Agent implements Manager {
 				   synchronized(tellers){
 				      for(MyTeller mt : tellers){
 					      if(mt.state == TellerState.idle){
-					       	assignTeller(mt, wc);
-						    return true;
+					    	  print("assigning teller");
+					       	  assignTeller(mt, wc);
+					    	  wc.state = State.busy;
+					    	  mt.state = TellerState.busy;
+					    	  break;
 					       }
+					      return true;
 				      }
 				   }
 				}
@@ -218,18 +222,18 @@ public class ManagerAgent extends Agent implements Manager {
 	private void assignTeller(MyTeller mt, WaitingCustomer wc){	
 		wc.bankCustomer.msgGoToTeller(mt.teller);
 		print(wc.toString() + " " + wc.action);
-		if(wc.action == Action.newAccount){
-			wc.bankCustomer.msgRequestNewAccount(wc.requestAmt);
-		}
-		else if(wc.action == Action.deposit){
-			wc.bankCustomer.msgRequestDeposit(wc.requestAmt, wc.accountNum);
-		}
-		else if(wc.action == Action.withdraw){
-			print("RA: "+wc.requestAmt);
-			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
-		}
+//		if(wc.action == Action.newAccount){
+//			wc.bankCustomer.msgRequestNewAccount(wc.requestAmt);
+//		}
+//		else if(wc.action == Action.deposit){
+//			wc.bankCustomer.msgRequestDeposit(wc.requestAmt, wc.accountNum);
+//		}
+//		else if(wc.action == Action.withdraw){
+//			print("RA: "+wc.requestAmt);
+//			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
+//		}
 
-		wc.state = State.busy;
+		wc.state = State.idle;
 		mt.teller.msgNewCustomer(wc.bankCustomer);
 		mt.state = TellerState.busy;
 		wc.action = Action.none;
