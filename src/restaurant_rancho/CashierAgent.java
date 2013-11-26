@@ -49,6 +49,7 @@ public class CashierAgent extends Agent implements Cashier{
 		market = m;
 	}
 	public void setBank(Bank b){
+		print("bank is " + bank.getName());
 		bank = b;
 	}
 	public void setEndOfDay(Boolean b) {

@@ -132,7 +132,7 @@ public class CookAgent extends Agent {
 						if (mo.os == moState.pending) {
 							print("ordering " + mo.food );
 							mo.os = moState.ordered;
-							market.personAs(this, 100, "Mexican", mo.amount, mo.id);
+							market.personAs(restaurant, 100, "Mexican", mo.amount, mo.id);
 							return true;
 						}
 					}
