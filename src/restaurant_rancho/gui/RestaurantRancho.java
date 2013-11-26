@@ -11,8 +11,10 @@ import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
 import simcity.RestMenu;
 import simcity.Restaurant;
-
+import restaurant_rancho.ProducerConsumerMonitor;
+import restaurant_rancho.WaiterAgentPC;
 import javax.swing.*;
+import restaurant_rancho.WaiterAgentNorm;
 
 import market.Market;
 
@@ -46,6 +48,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private JPanel group = new JPanel();
     private RestMenu menu = new RestMenu();
     boolean isOpen;
+    public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
 
 
     private SimCityGui gui;
@@ -191,7 +194,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		
     	//}
     	else if (type.equals("Waiter")) {
-    		WaiterAgent w = new WaiterAgent(name, this);
+    		WaiterAgentNorm w = new WaiterAgentNorm(name, this);
     		WaiterGui g = new WaiterGui(w, waiters.size());
     		if (p!=null) w.setPerson(p);
     		gui.ranchoAniPanel.addGui(g);
@@ -204,6 +207,20 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		w.startThread();
     		g.updatePosition();
     		
+    	}
+    	else if (type.equals("WaiterPC")) {
+    		WaiterAgentPC w = new WaiterAgentPC(name, this);
+    		WaiterGui g = new WaiterGui(w, waiters.size());
+    		if (p!=null) w.setPerson(p);
+    		gui.ranchoAniPanel.addGui(g);
+    		if (host!=null) w.setHost(host);
+    		if (cook!= null) w.setCook(cook);
+    		if (cashier!=null)w.setCashier(cashier);
+    		if (host!=null) host.addWaiter(w);
+    		w.setGui(g);
+    		waiters.add(w);
+    		w.startThread();
+    		g.updatePosition();
     	}
     	else if (type.equals("Host")) {
     		if (host == null) {

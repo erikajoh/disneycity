@@ -18,12 +18,12 @@ import java.util.concurrent.Semaphore;
 	 * Restaurant Host Agent
 	 */
 	
-		public class WaiterAgent extends Agent implements Waiter{
+	public abstract class WaiterAgent extends Agent implements Waiter{
 		public List<MyCustomer> customers;
-		private String name;
-		private Semaphore atTable = new Semaphore(0,true);
-		private HostAgent host;
-		private CookAgent cook;
+		protected String name;
+		protected Semaphore atTable = new Semaphore(0,true);
+		protected HostAgent host;
+		protected CookAgent cook;
 		public boolean isOnBreak = false;
 		public RestMenu menu = new RestMenu();
 		public WaiterGui waiterGui = null;
@@ -174,7 +174,7 @@ import java.util.concurrent.Semaphore;
 			}
 			for (MyCustomer c : customers) {
 				if (c.cs == customerState.ordered) {
-					talkToCook(c);
+					dealWithOrder(c);
 					return true;
 				}
 			}
@@ -214,7 +214,7 @@ import java.util.concurrent.Semaphore;
 
 		// Actions
 
-		private void seatCustomer(Customer c, int table, int loc) {
+		protected void seatCustomer(Customer c, int table, int loc) {
 			c.msgSitAtTable(this, menu);
 			DoGoToCustomer(loc);
 			DoSeatCustomer(c, table, loc);
@@ -227,7 +227,7 @@ import java.util.concurrent.Semaphore;
 		}
 		
 		
-		private void takeOrder(Customer c) {
+		protected void takeOrder(Customer c) {
 			MyCustomer mc = findCustomer(c);
 			waiterGui.DoBringToTable(mc.table);
 			try {
@@ -243,7 +243,7 @@ import java.util.concurrent.Semaphore;
 			stateChanged();
 		}
 		
-		private void reTakeOrder(Customer c) {
+		protected void reTakeOrder(Customer c) {
 			MyCustomer mc = findCustomer(c);
 			waiterGui.DoBringToTable(mc.table);;
 			try {
@@ -259,21 +259,9 @@ import java.util.concurrent.Semaphore;
 			stateChanged();
 		}
 		
-		private void talkToCook(MyCustomer c) {
-			c.cs = customerState.waitingForFood;
-			waiterGui.DoGoToCook();
-			try{ 
-				atTable.acquire();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			print("Telling cook to make " + c.choice + " for " + c.c.getName());
-			cook.msgAddOrder(c.order);
-			DoLeaveCustomer();
-			stateChanged();
-		}
+		protected abstract void dealWithOrder(MyCustomer c); 
 		
-		private void bringOrder(Customer c) {
+		protected void bringOrder(Customer c) {
 			print("Bringing order to " + c);
 			MyCustomer mc = findCustomer(c);
 			waiterGui.DoPickUpFood(mc.order.cookingNum);
@@ -298,7 +286,7 @@ import java.util.concurrent.Semaphore;
 		
 		}
 		
-		private void giveChecktoCust(MyCustomer c, double amount) {
+		protected void giveChecktoCust(MyCustomer c, double amount) {
 			c.cs = customerState.paying;
 			print("Giving Check to Customer");
 			c.c.msgHereIsCheck(amount);
@@ -306,18 +294,18 @@ import java.util.concurrent.Semaphore;
 		}
 		
 		
-		private void tellCashierMakeCheck(MyCustomer c) {
+		protected void tellCashierMakeCheck(MyCustomer c) {
 			print("Telling cashier to compute check");
 			cashier.msgComputeCheck(this, c.c, c.choice, menu);
 		}
 		
-		private void notifyHostFreeTable(MyCustomer c) {
+		protected void notifyHostFreeTable(MyCustomer c) {
 			print("Notifying host of free table");
 			host.msgTableIsFree(c.table);
 			customers.remove(c);
 		}
 
-		private void DoSeatCustomer(Customer customer, int table, int loc) {
+		protected void DoSeatCustomer(Customer customer, int table, int loc) {
 			print("Seating " + customer + " at " + table);
 			DoGoToCustomer(loc);
 			waiterGui.DoBringToTable(table); 
@@ -329,7 +317,7 @@ import java.util.concurrent.Semaphore;
 			} 
 		}
 		
-		private void DoGoToCustomer(int loc) {
+		protected void DoGoToCustomer(int loc) {
 			waiterGui.DoWalkToCust(loc);
 			try {
 				atTable.acquire();
@@ -339,7 +327,7 @@ import java.util.concurrent.Semaphore;
 			}
 		}
 		
-		private void DoLeaveCustomer() {
+		protected void DoLeaveCustomer() {
 			waiterGui.DoLeaveTable();
 			try{
 				atTable.acquire();
@@ -353,7 +341,7 @@ import java.util.concurrent.Semaphore;
 		}
 		
 		//utilities
-		private MyCustomer findCustomer(Customer cust) {
+		protected MyCustomer findCustomer(Customer cust) {
 				for (MyCustomer mc : customers) {
 					if (mc.c == cust) {
 						return mc;
@@ -362,7 +350,7 @@ import java.util.concurrent.Semaphore;
 				return null;
 		}
 		
-		private MyCustomer findCustomer(Order o) {
+		protected MyCustomer findCustomer(Order o) {
 			for (MyCustomer mc: customers) {
 				if (mc.order == o) {
 					return mc;
