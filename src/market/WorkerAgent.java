@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
+import simcity.Restaurant;
 import market.gui.WorkerGui;
 
 /**

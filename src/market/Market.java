@@ -46,17 +46,28 @@ public class Market {
     
     // Messages
     
-	public void msgLeaving(CustomerAgent c) {
+	public void msgLeaving(CustomerAgent c) { // from CustomerAgent
 		if (c.getPerson()!=null){
 			if (c.virtual) transport.msgSendDelivery(c.getPerson(), this, c.getChoice(), c.quantity, c.getLocation());
 			else c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
 			customers.remove(c);
+			MoveLine();
 		}
 		else if (c.getRest()!=null) {
 			transport.msgSendDelivery(c.getRest(), this, c.getChoice(), c.quantity, c.orderID);
+			System.out.println("removing order whee");
+			System.out.println("before removing size is "+virtualCustomers.size());
 			virtualCustomers.remove(c);
 		}
-		MoveLine();
+	}
+	
+	public void msgHereIsPayment(Restaurant rest, double amt) { // from Restaurant
+		for (CustomerAgent c: virtualCustomers) {
+			if (c.getRest() == rest) {
+				c.msgHereIsMoney(amt);
+				return;
+			}
+		}
 	}
 	
 	private void MoveLine() {
@@ -101,9 +112,9 @@ public class Market {
     
     public String getName() { return name; }
     
-    public void personAs(Restaurant r, double money, String choice, int quantity, int id) {
+    public void personAs(Restaurant r, String choice, int quantity, int id) {
     	System.out.println("The restaurant wants to order food!");
-    	addPerson(r, r.getRestaurantName(), money, choice, quantity, id);
+    	addPerson(r, r.getRestaurantName(), choice, quantity, id);
     }
     public void personAs(PersonAgent p, String name, double money, String choice, int quantity, String location){
     	addPerson(p, name, money, choice, quantity, location);
@@ -112,8 +123,8 @@ public class Market {
     	addPerson(p, name, money, choice, quantity);
     }
     
-    public void addPerson(Restaurant r, String name, double money, String choice, int quantity, int id) {
-    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), id);	
+    public void addPerson(Restaurant r, String name, String choice, int quantity, int id) {
+    	CustomerAgent cust = new CustomerAgent(name, choice, quantity, virtualCustomers.size(), id);	
 		if (manager!=null) cust.setManager(manager);
 		if (cashier!=null) cust.setCashier(cashier);
 		cust.setRest(r);
