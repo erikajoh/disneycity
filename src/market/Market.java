@@ -115,13 +115,13 @@ public class Market {
     }
     
     public void addPerson(CookAgent c, String name, double money, String choice, int quantity) {
-    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, customers.size());	
-		if (manager!=null) cust.setManager(manager);
-		if (cashier!=null) cust.setCashier(cashier);
-		cust.setCook(c);
-		c.setMarket(this);
-		customers.add(cust);
-		c.startThread();
+//    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, customers.size());	
+//		if (manager!=null) cust.setManager(manager);
+//		if (cashier!=null) cust.setCashier(cashier);
+//		cust.setCook(c);
+//		c.setMarket(this);
+//		customers.add(cust);
+//		c.startThread();
     }
     
     public void addPerson(PersonAgent p, String type, String name, double money, String choice, int quantity) {
@@ -137,16 +137,17 @@ public class Market {
     		c.setMarket(this);
     		customers.add(c);
     		c.startThread();
+        	System.out.println("adding person to size: "+customers.size());
     		g.updatePosition();
     	}
     	else if (type.equals("VirtualCustomer")) {
-    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
-    		if (manager!=null) c.setManager(manager);
-    		if (cashier!=null) c.setCashier(cashier);
-    		c.setPerson(p);
-    		c.setMarket(this);
-    		customers.add(c);
-    		c.startThread();
+//    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
+//    		if (manager!=null) c.setManager(manager);
+//    		if (cashier!=null) c.setCashier(cashier);
+//    		c.setPerson(p);
+//    		c.setMarket(this);
+//    		customers.add(c);
+//    		c.startThread();
     	}
     
     }

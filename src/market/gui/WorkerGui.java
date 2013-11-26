@@ -27,8 +27,10 @@ public class WorkerGui implements Gui{
 	public WorkerGui(WorkerAgent w){
 		agent = w;
 		agent.setGui(this);
-		xPos = (int)(mWidth*0.6) - agent.getNum()*mWidth/15;
-		yPos = (int)(mHeight*0.1);
+		xPos = (int)(mWidth*0.57) - agent.getNum()*mWidth/15;
+		yPos = (int)(mHeight*0.15);
+		xDestination = (int)(mWidth*0.57) - agent.getNum()*mWidth/15;
+		yDestination = (int)(mHeight*0.15);
 	}
 
 	public void updatePosition() {

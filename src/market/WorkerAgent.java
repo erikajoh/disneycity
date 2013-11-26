@@ -68,7 +68,6 @@ public class WorkerAgent extends Agent {
 	
 	public void msgAtFront() {
 		//from animation
-		print("at front, working released");
 		moving.release();
 		working.release();
 		stateChanged();
@@ -91,11 +90,9 @@ public class WorkerAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		for (MyOrder o: orders) {
-			print("in scheduler");
 			int numItems = GetItem(o.item, o.quantity);
 			try {
 				working.acquire();
-				print("working acquired!");
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -106,14 +103,14 @@ public class WorkerAgent extends Agent {
 				cashier.msgHereIsBill(o.c, market.getPrice(o.item)*numItems);
 			}
 			orders.remove(o);
+			workerGui.DoGoToHome();
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return true;
-		}
-		workerGui.DoGoToHome();
-		try {
-			moving.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return false;
 	}
