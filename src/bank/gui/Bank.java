@@ -127,6 +127,10 @@ public class Bank extends JPanel implements ActionListener {
     	}
     }
     
+    public void setManager(ManagerAgent m){
+    	manager = m;
+    }
+    
     public void actionPerformed(ActionEvent e) {
     }
   

@@ -22,7 +22,6 @@ public class TellerAgent extends Agent implements Teller {
 	class Customer {
 	  BankCustomer bankCustomer;
 	  Account account;
-	  int creditRating;
 	  double requestAmt;
 	  
 	  State state;

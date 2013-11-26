@@ -4,6 +4,7 @@ import housing.Housing;
 import housing.ResidentAgent.State;
 import housing.gui.HousingAnimationPanel;
 import housing.test.mock.LoggedEvent;
+import bank.ManagerAgent;
 import bank.gui.Bank;
 import bank.gui.BankAnimationPanel;
 
@@ -146,7 +147,8 @@ public class SimCityGui extends JFrame  {
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
 		mickeysMarket = new Market(this, "Mickey's Market");
 		pirateBank = new Bank(this, "Pirate Bank");
-		
+		ManagerAgent manager = new ManagerAgent("Manager", pirateBank, this);
+		pirateBank.setManager(manager);		
 		simCityPanel = new SimCityPanel(this);
 		
 		setLayout(new GridBagLayout());
@@ -252,11 +254,10 @@ public class SimCityGui extends JFrame  {
         restHaus.addPerson(null, "Host", "Host", 50);
 		//restHaus.addPerson(null, "Customer", "Sally", 50);
 		
-		mickeysMarket.addPerson(null, "Manager", "le manager"); //robot
-		mickeysMarket.addPerson(null, "Cashier", "le cashier"); //robot
-		mickeysMarket.addPerson(null, "Worker", "le worker un"); //will be a person
-		mickeysMarket.addPerson(null, "Worker", "le worker deux"); //will be a person
-		
+		mickeysMarket.addPerson(null, "Manager", "MRAWP");
+		mickeysMarket.addPerson(null, "Cashier", "Kapow");
+		mickeysMarket.addPerson(null, "Worker", "Bleep");
+
 	}
 	
 	public void showPanel(String panel) {
