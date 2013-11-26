@@ -114,6 +114,7 @@ public class AnimationModule {
 	}
 
 	public void changeAnimation(String animation) {
+		setMoving();
 		this.animation = animation;
 	}
 	

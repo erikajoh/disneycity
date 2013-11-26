@@ -174,7 +174,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Village Haus");
 		tempBusStop.addNearbyBuilding("Pizza Port");
 		tempBusStop.addNearbyBuilding("Mickey's Market");
-		tempBusStop.associateWalkTile(new Position(5, 8));
+		tempBusStop.associateWalkTile(new Position(5, 9));
 		busStops.add(tempBusStop);
 		//+++++++++++++++++++++++END CREATION OF BUS STOPS+++++++++++++++++++++++
 
@@ -313,6 +313,11 @@ public class TransportationController extends Agent implements Transportation{
 		case "Bus":
 			//find bus stop and spawn walker to go to bus stop
 			mover.transportationState = TransportationState.MOVING;
+			if(directory.get(mover.startingLocation).closestBusStop == directory.get(mover.endingLocation).closestBusStop) {
+				mover.method = "Walk";
+				spawnMover(mover);
+				break;
+			}
 			WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
 			busWalker.startThread();
 			WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
@@ -326,12 +331,16 @@ public class TransportationController extends Agent implements Transportation{
 		mover.person.msgReachedDestination(mover.endingLocation);
 		movingObjects.remove(mover);
 	}
-
+	
 	private void retrySpawn(Mover mover) {
 		mover.transportationState = TransportationState.REQUEST;
 	}
 	
 	public MovementTile[][] getGrid() {
 		return grid;
+	}
+	
+	public void msgPayFare(PersonAgent person, float fare) {
+		bus.msgPayFare(person, fare);
 	}
 }
