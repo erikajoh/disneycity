@@ -16,7 +16,7 @@ import transportation.Objects.MovementTile;
 
 public class BusAgent extends MobileAgent{
 
-	private final float fare = 1.50f;
+	private final float fare = 0.00f;
 	private float collectedFare = 0.00f;
 	private Position currentPosition;
 	private List<BusRider> busRiders;
@@ -82,8 +82,10 @@ public class BusAgent extends MobileAgent{
 
 		synchronized(busRiders) {
 			for(BusRider busRider : busRiders) {
-				if(busRider.state == BusRider.RiderState.HASTOPAY)
+				if(busRider.state == BusRider.RiderState.HASTOPAY) {
+					gui.setStill();
 					return false;
+				}
 			}
 		}
 
@@ -105,9 +107,11 @@ public class BusAgent extends MobileAgent{
 	private void pickUpRiders() {
 		List<BusRider> tempList = currentBusStop.getBusWaiters();
 		for(BusRider busRider : tempList) {
+			System.out.println("gotRider");
 			busRiders.add(busRider);
 			busRider.getPerson().msgPayFare(fare);
 			busRider.state = BusRider.RiderState.HASTOPAY;
+			//busRider.state = BusRider.RiderState.RIDING;
 		}
 	}
 
@@ -143,6 +147,7 @@ public class BusAgent extends MobileAgent{
 				currentBusStop = grid[nextPosition.getX()][nextPosition.getY()].getBusStop();
 				break;
 			}
+			currentBusStop = null;
 		}
 
 		//gui code to go to next bus stop

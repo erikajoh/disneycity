@@ -6,6 +6,7 @@ import bank.gui.Account;
 import bank.interfaces.Teller;
 import bank.interfaces.Manager;
 import bank.interfaces.BankCustomer;
+import bank.test.mock.MockTeller.State;
 
 import java.util.*;
 
@@ -15,8 +16,7 @@ import java.util.*;
 
 public class TellerAgent extends Agent implements Teller {
 	Manager manager;
-	List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
-
+	
 	enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
 
 	class Customer {
@@ -35,7 +35,8 @@ public class TellerAgent extends Agent implements Teller {
 			  account = null;
 		  }
 		  else{
-		      for(Account acc : accounts){
+			  List<Account> accounts = manager.getAccounts();
+		      for(Account acc :accounts){
 			      if(acc.number == accountNumber){
 			    	  account = acc; break;
 			      }
@@ -103,13 +104,24 @@ public class TellerAgent extends Agent implements Teller {
 	public void	msgDepositCash(int accountNum, double cash){
 		print("DEPOSIT CASH ");
 		customer.requestAmt = cash;
-		customer.state = State.depositingCash; 
+		List<Account> accounts = manager.getAccounts();
+		for(Account acc : accounts){
+			if(acc.number == accountNum){
+				customer.account = acc; break;
+			}
+		}
 		stateChanged();
 	}
 	
 	public void	msgWithdrawCash(int accountNum, double cash){
 		print("DEPOSIT CASH ");
 		customer.requestAmt = cash;
+		List<Account> accounts = manager.getAccounts();
+		for(Account acc : accounts){
+			if(acc.number == accountNum){
+				customer.account = acc; break;
+			}
+		}
 		customer.state = State.withdrawingCash; 
 		stateChanged();
 	}
@@ -156,8 +168,8 @@ public class TellerAgent extends Agent implements Teller {
 
 	// Actions
 	private void openAccount(){
-		Account newAccount = new Account(accounts.size(), customer.requestAmt);
-		accounts.add(newAccount);
+		Account newAccount = new Account(manager.getAccounts().size(), customer.requestAmt);
+		manager.addAccount(newAccount);
 		customer.account = newAccount;
 		customer.account.change = -customer.requestAmt;
 		customer.bankCustomer.msgAccountOpened(newAccount.number, customer.account.change);

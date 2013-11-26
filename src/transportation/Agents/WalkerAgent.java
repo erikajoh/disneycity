@@ -20,7 +20,7 @@ public class WalkerAgent extends MobileAgent{
 	TransportationTraversal aStar;
 	
 	Semaphore animSem;
-	BusStop busStop;
+	BusStop beginBusStop, endBusStop;
 	String building;
 
 	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
@@ -32,11 +32,12 @@ public class WalkerAgent extends MobileAgent{
 		this.aStar = aStar;
 		
 		animSem = new Semaphore(0, true);
-		busStop = null;
+		beginBusStop = null;
+		endBusStop = null;
 		building = null;
 	}
 	
-	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop busStop, String building) {
+	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
 		this.walker = walker;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
@@ -45,7 +46,8 @@ public class WalkerAgent extends MobileAgent{
 		this.aStar = aStar;
 		
 		animSem = new Semaphore(0, true);
-		this.busStop= busStop;
+		this.beginBusStop = beginBusStop;
+		this.endBusStop= endBusStop;
 		this.building = building;
 	}
 	
@@ -62,8 +64,11 @@ public class WalkerAgent extends MobileAgent{
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {
+		if(beginBusStop != null) {
+			goToPosition(beginBusStop.getAssociatedTile());
+		}
 		if(!arrived) {
-			goToEndPosition();
+			goToPosition(endPosition);
 		}
 		if(arrived) {
 			tauntAndLeave();
@@ -71,8 +76,8 @@ public class WalkerAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToEndPosition() {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, endPosition);
+	public void goToPosition(Position goal) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -103,7 +108,7 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToEndPosition();
+				goToPosition(goal);
 				break;
 			}
 
@@ -131,12 +136,12 @@ public class WalkerAgent extends MobileAgent{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(busStop == null) {
-			master.msgArrivedAtDestination(walker);
+		if(beginBusStop == null) {
 			System.out.println(String.valueOf(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 		}
 		else
-			master.grid[currentPosition.getX()][currentPosition.getY()].getBusStop().addRider(walker, busStop, building);
+			beginBusStop.addRider(walker, endBusStop, building);
+		master.msgArrivedAtDestination(walker);
 		gui.setIgnore();
 		stopThread();
 	}

@@ -59,6 +59,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private CookAgent cook;
     private CookGui cookGui;
     private CashierAgent cashier;
+    String type;
     
     private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
@@ -66,9 +67,10 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
     private SimCityGui gui; //reference to main gui
     
-    public RestaurantPizza(SimCityGui gui) {
+    public RestaurantPizza(SimCityGui gui, String name) {
     	
-    	name = "Pizza Port";
+    	this.name = name;
+    	type = "Italian";
     	menu.addItem("Marsinara with Meatballs", 9.49 );
     	menu.addItem("Chicken Fusilli", 9.49);
     	menu.addItem("Pepperoni Pizza",  6.99);
@@ -155,7 +157,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     }
     
     public boolean isOpen() {
-    	return true;
+    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
     }
     
     public LinkedList<Agent> getAllAgents() {
@@ -294,5 +296,9 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	public void setMarket(Market m) {
 		market = m;
 		
+	}
+	
+	public String getType() {
+		return type;
 	}
 }

@@ -26,20 +26,20 @@ import javax.imageio.ImageIO;
 public class AnimationModule {
 	//ALL SPRITES AS PNGS PLEASE
 
-	String character = "";//This is the name of the folder that the agent's sprites will be pulled from
-	String animation = "";//Each animation is split into its own folder for ease of use
+	public String character = "";//This is the name of the folder that the agent's sprites will be pulled from
+	public String animation = "";//Each animation is split into its own folder for ease of use
 	//YOU MUST SET A DEFAULT ANIMATION HERE OR THE PROGRAM MAY FREAK OUT AT NOT HAVING A CORRENT FILEPATHWAY
 
-	String previousAnimation = "";//Determines whether changing image is needed automatically so people don't slide sideways
-	int currentFrame = 1;//Frame counts start at 1. Make sure that the files are named with no whitespace
-	int totalFrames = 0;//Set by the class. Don't worry about it.
-	int frameDelay;//You might need to set this yourself based on how fast you want your animation to play. 60 is the default.
+	public String previousAnimation = "";//Determines whether changing image is needed automatically so people don't slide sideways
+	public int currentFrame = 1;//Frame counts start at 1. Make sure that the files are named with no whitespace
+	public int totalFrames = 0;//Set by the class. Don't worry about it.
+	public int frameDelay;//You might need to set this yourself based on how fast you want your animation to play. 60 is the default.
 	//makes it so that the animation doesn't play at ludicrous speeds. Depending on the character, you may have to find a way to change this for your implementation
 	//I would recommend using a map to map animation names to frameDelays and possibly totalFrames
-	int frameDelayCounter = 0;//Don't worry about this. Animation variable
-	String filePathway;//Stores the file pathway to the image
-	BufferedImage img = null;//This is the image that gets drawn
-	boolean moving = true;
+	public int frameDelayCounter = 0;//Don't worry about this. Animation variable
+	public String filePathway;//Stores the file pathway to the image
+	public BufferedImage img = null;//This is the image that gets drawn
+	public boolean moving = true;
 
 	public AnimationModule(String character, String firstAnimation, int frameDelay) {//Give it all the information you can
 		this.character = character;
@@ -114,12 +114,13 @@ public class AnimationModule {
 	}
 
 	public void changeAnimation(String animation) {
+		setMoving();
 		this.animation = animation;
 	}
 	
 	public boolean changeFrame(int frame) {
 		if(frame > totalFrames) {
-			System.out.print("Called frame that doesn't exist in animation");
+			System.out.println("Called frame that doesn't exist in animation, total frames is " +totalFrames);
 			return false;
 		}
 		currentFrame = frame;

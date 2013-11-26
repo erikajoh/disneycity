@@ -23,6 +23,7 @@ public class CustomerAgent extends Agent implements Customer{
 	Timer menuTimer = new Timer();
 	private CustomerGui customerGui;
 	int waitNum;
+	boolean eatingSuccess = false;
 
 	// agent correspondents
 	private Waiter waiter;
@@ -134,7 +135,7 @@ public class CustomerAgent extends Agent implements Customer{
 		customerGui.setText("$" + Double.toString(amount));
 		iOwe = 0;
 		cash = amount;
-		if (state == AgentState.Paying) event = AgentEvent.paid;
+		if (state == AgentState.Paying){ event = AgentEvent.paid; eatingSuccess = true; }
 		if (state == AgentState.PayingOldCheck) state = AgentState.BeingSeated;
 		print("Got change. I have " + cash + " dollars.");
 		stateChanged();
@@ -239,7 +240,7 @@ public class CustomerAgent extends Agent implements Customer{
 		}
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
-			person.msgDoneEating(true);
+			person.msgDoneEating(eatingSuccess, cash);
 			customerGui.setText("");
 			return true;
 		}
@@ -270,6 +271,7 @@ public class CustomerAgent extends Agent implements Customer{
 					print("Food too expensive, leaving");
 					event = AgentEvent.paid;
 					state = AgentState.Paying;
+					eatingSuccess = false;
 					stateChanged();
 				}
 			}
@@ -294,6 +296,7 @@ public class CustomerAgent extends Agent implements Customer{
 			customerGui.DoExitRestaurant();
 			state = AgentState.Paying;
 			event = AgentEvent.paid;
+			eatingSuccess = false;
 			stateChanged();
 		}
 	}
@@ -313,6 +316,7 @@ public class CustomerAgent extends Agent implements Customer{
 			if (canPay() == 0) {
 				print("Everything on menu is too expensive");
 			}
+			eatingSuccess = false;
 			state = AgentState.Paying;
 			event = AgentEvent.paid;
 			stateChanged();

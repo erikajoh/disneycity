@@ -78,6 +78,11 @@ public class BusGui implements Gui{
 		reachedDestination = false;
 	}
 	
+	public void setStill() {
+		animModule.setStill();
+		animModule.changeFrame(1);
+	}
+	
 	public void setIgnore() {
 		isPresent = false;
 	}

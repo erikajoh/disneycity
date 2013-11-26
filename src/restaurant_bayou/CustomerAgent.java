@@ -29,6 +29,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private int dishDoingTime = 0;
 	private Timer t = new Timer();
 	private PersonAgent person;
+	boolean eatingSuccess=false;
 
 	private HostAgent host;
 	private WaiterAgent waiter;
@@ -200,12 +201,13 @@ public class CustomerAgent extends Agent implements Customer {
 			}
 			if (state == AgentState.Paying && event == AgentEvent.donePaying){
 				state = AgentState.Leaving;
+				eatingSuccess = true;
 				LeaveRestaurant();
 				return true;
 			}
 			if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 				state = AgentState.DoingNothing;
-				person.msgDoneEating(true); 
+				person.msgDoneEating(eatingSuccess, wallet.getAmt()); 
 				waiter.msgDoneLeaving(this);
 				return true;
 			}
@@ -221,6 +223,7 @@ public class CustomerAgent extends Agent implements Customer {
 		while (!menu.menuList.contains(choice) || unavailableFood.contains(choice) || (menu.menuItems.get(choice) > wallet.getAmt() && !name.equalsIgnoreCase("bad"))) {
 			if (count == menu.menuList.size()) {
 				state = AgentState.Leaving;
+				eatingSuccess = false;
 				LeaveRestaurant();
 				return;
 			}

@@ -6,13 +6,13 @@ import java.util.List;
 
 import simcity.gui.SimCityGui;
 import bank.TellerAgent;
+import bank.gui.Account;
 import bank.gui.Bank;
 import bank.interfaces.BankCustomer;
 import bank.interfaces.Manager;
 import bank.interfaces.Teller;
 
 public class MockManager extends Mock {
-	
 	  public EventLog log;
 	  public class WaitingCustomer {
 			 MockBankCustomer bankCustomer;
@@ -54,7 +54,7 @@ public class MockManager extends Mock {
 			enum TellerState{idle, busy};
 
 			public List<MyTeller> tellers = Collections.synchronizedList(new ArrayList<MyTeller>());
-			
+			List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 			private MockBank bank;
 			
 			private SimCityGui simCityGui;
@@ -175,6 +175,7 @@ public class MockManager extends Mock {
 			
 			for(WaitingCustomer wc : waitingCustomers){
 				if(wc.state == State.leaving){
+					log.add(new LoggedEvent("LEAVING"));
 					updatePersonInfo(wc);
 					return true;
 				}
@@ -218,6 +219,13 @@ public class MockManager extends Mock {
 			bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getChange(), bc.getLoanAmount(), bc.getLoanTime());
 		}
 		
+		public void addAccount(Account acc){
+			accounts.add(acc);
+		}
+		
+		public List<Account> getAccounts(){
+			return accounts;
+		}
 		
 		public void addTeller(MockTeller t){
 			MyTeller mt = new MyTeller(t);
