@@ -86,7 +86,7 @@ public class HostAgent extends Agent implements Host {
 
 	public void msgIWantFood(Customer cust) {
 		customers.add(new MyCustomer(cust, CustomerState.waiting));
-		print(cust.toString() + " wants to get a table");
+		print(cust.toString() + " wants to get a table "+waiters.size());
 		stateChanged();
 	}
 	

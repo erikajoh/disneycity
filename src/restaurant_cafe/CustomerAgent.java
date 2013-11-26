@@ -77,7 +77,7 @@ public class CustomerAgent extends Agent implements Customer {
 	// Messages
 
 	public void msgGotHungry() {
-		print("I'm hungry");
+		print("Cafe I'm hungry ");
 		event = AgentEvent.gotHungry;
 		stateChanged();
 	}
@@ -89,6 +89,7 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	public void msgFollowMe(Waiter w, int tn, Menu m) {
+		print("Cafe Follow");
 		print("Received msgSitAtTable");
 		waiter = w;
 		tableNumber = tn;
@@ -174,7 +175,7 @@ public class CustomerAgent extends Agent implements Customer {
 	protected boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
 		if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry){
-			print("State is now waiting in restaurant");
+			print("Cafe state is now waiting in restaurant");
 			state = AgentState.WaitingInRestaurant;
 			goToRestaurant();
 			return true;

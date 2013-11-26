@@ -26,10 +26,10 @@ public class CashierGui implements Gui{
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(200, 0, 30, 30);
+		g.fillRect(125, 0, 30, 30);
 		g.setColor(Color.BLACK);
 		g.setFont(cashFont);
-		g.drawString("$", 210, 20);
+		g.drawString("$", 135, 20);
 		g.setFont(otherFont);
 	}
 	
