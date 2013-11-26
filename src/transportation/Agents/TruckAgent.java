@@ -113,7 +113,6 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERING) {
-					print("DELIVERING ORDER");
 					deliverOrder(order);
 					return true;
 				}
@@ -123,7 +122,6 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.WAITING) {
-					print("ORDER WAITING");
 					pickUpOrders();
 					return true;
 				}
@@ -133,7 +131,6 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERED) {
-					print("ORDER DELIVERED");
 					pickUpOrders();
 					deleteOrder(order);
 					return true;
@@ -146,7 +143,6 @@ public class TruckAgent extends MobileAgent{
 	}
 
 	public void goToPosition(Position goal) {
-		print("going to position? "+goal.getX()+" "+goal.getY());
 		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
@@ -223,16 +219,13 @@ public class TruckAgent extends MobileAgent{
 	
 	private void pickUpOrders() {
 		goToPosition(marketPosition);
-		print("went to market to pick up orders");
 //		try {
 //			animSem.acquire();
 //		} catch (InterruptedException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		print("about to deliver orders maybe");
 		for(deliveryOrder order : orders) {
-			print("found an order to deliver");
 			order.status = Status.DELIVERING;
 			stateChanged();
 		}
