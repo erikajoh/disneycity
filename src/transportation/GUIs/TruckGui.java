@@ -27,7 +27,7 @@ public class TruckGui implements Gui{
 		reachedHalfway = false;
 		reachedDestination = false;
 		
-		animModule = new AnimationModule("Pelipper", "IDLE", 20);
+		animModule = new AnimationModule("Pelipper", "IDLE", 10);
 	}
 	
 	public void updatePosition() {
@@ -64,8 +64,20 @@ public class TruckGui implements Gui{
 			reachedDestination = true;
 			agent.msgDestination();
 		}
+		
+		if(animModule.getAnimation().equals("Delivery") && animModule.getLastFrame())
+			agent.msgDestination();
 	}
-
+	
+	public void doIdle() {
+		animModule.changeAnimation("Idle", 30);
+		System.exit(0);
+	}
+	
+	public void doDeliveryDance() {
+		animModule.changeAnimation("Deliver", 10);
+	}
+	
 	public void draw(Graphics2D g) {
 		animModule.updateAnimation();
 		g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
