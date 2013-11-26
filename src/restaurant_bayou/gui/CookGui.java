@@ -24,8 +24,8 @@ public class CookGui implements Gui {
     public boolean atTable = false;
 
     public CookGui() {
-        xHome = xTable*13/2;
-        yHome = 11*yTable/12;
+        xHome = 320;
+        yHome = 150;
         xPos = xHome;
         yPos = yHome;
         xDestination = xHome;
@@ -48,13 +48,13 @@ public class CookGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination){
-        	if (getting && xDestination == xHome-10 && yDestination == yHome+xTable){
+        	if (getting && xDestination == xHome && yDestination == yHome-40){
         		getting = false;
         		agent.msgCookReady();
-        	} else if (cooking && xDestination == xHome-20 && yDestination == yHome-20){
+        	} else if (cooking && xDestination == xHome+10 && yDestination == yHome){
         		cooking = false;
         		agent.msgCookReady();
-        	} else if (plating && xDestination == xHome-10 && yDestination == yHome-2*xTable){
+        	} else if (plating && xDestination == xHome-20 && yDestination == yHome){
         		plating = false;
         		agent.msgCookReady();
         	} else if (goingHome && xDestination == xHome && yDestination == yHome){
@@ -67,9 +67,9 @@ public class CookGui implements Gui {
 
     public void draw(Graphics2D g) {
         g.setColor(Color.MAGENTA);
-        g.fillRect(xPos, yPos, xTable/4, yTable/12);
-//        Image img = Toolkit.getDefaultToolkit().getImage("host.jpg");
-//		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
+       // g.fillRect(xPos, yPos, xTable/4, yTable/12);
+        Image img = Toolkit.getDefaultToolkit().getImage("res/cook.gif");
+        g.drawImage(img, xPos, yPos, 30, 30, null);
         g.setColor(Color.GRAY);
 //		if (text == null) text = "";
 		g.drawString("cook", xPos, yPos);
@@ -81,21 +81,21 @@ public class CookGui implements Gui {
 
     public void DoGetIngredients() {
     	// go to fridge area
-    	xDestination = xHome-10;
-    	yDestination = yHome+xTable;
+    	xDestination = xHome;
+    	yDestination = yHome-40;
     	getting = true;
     }
     
     public void DoCookFood() {
     	// go to cooking area
-        xDestination = xHome-20;
-        yDestination = yHome-20;
+        xDestination = xHome+10;
+        yDestination = yHome;
         cooking = true;
     }
     
     public void DoPlateFood() {
-    	xDestination = xHome-10;
-    	yDestination = yHome-2*xTable;
+    	xDestination = xHome-20;
+    	yDestination = yHome;
     	plating = true;
     }
     

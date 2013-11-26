@@ -17,11 +17,11 @@ public class CookGui implements Gui{
 
 	
 	public static final int homeX = (RanchoAnimationPanel.WINDOWX*15)/20;
-	public static final int homeY = (RanchoAnimationPanel.WINDOWY*5)/20;
+	public static final int homeY = (RanchoAnimationPanel.WINDOWY*6)/20;
 	public static final int loc0X = (RanchoAnimationPanel.WINDOWX*15)/20;
-	public static final int loc0Y = (RanchoAnimationPanel.WINDOWY*3)/20;
+	public static final int loc0Y = (RanchoAnimationPanel.WINDOWY*4)/20;
 	public static final int loc2X = (RanchoAnimationPanel.WINDOWX*15)/20;
-	public static final int loc2Y = (RanchoAnimationPanel.WINDOWY*7)/20;
+	public static final int loc2Y = (RanchoAnimationPanel.WINDOWY*8)/20;
 	
 	List<kitchenLoc> platingLocations;
 	List<kitchenLoc> cookingLocations;
@@ -39,12 +39,12 @@ public class CookGui implements Gui{
 		//yDestination = (AnimationPanel.WINDOWY*6)/20;
 		platingLocations = Collections.synchronizedList(new ArrayList<kitchenLoc>());
 		cookingLocations = Collections.synchronizedList(new ArrayList<kitchenLoc>());
-		cookingLocations.add(new kitchenLoc(320, 90));
-		cookingLocations.add(new kitchenLoc(320, 140));
-		cookingLocations.add(new kitchenLoc(320, 190));
-		platingLocations.add(new kitchenLoc(260, 90));
-		platingLocations.add(new kitchenLoc(260, 140));
-		platingLocations.add(new kitchenLoc(260, 190));
+		cookingLocations.add(new kitchenLoc(340, 95));
+		cookingLocations.add(new kitchenLoc(340, 125));
+		cookingLocations.add(new kitchenLoc(340, 155));
+		platingLocations.add(new kitchenLoc(260, 95));
+		platingLocations.add(new kitchenLoc(260, 125));
+		platingLocations.add(new kitchenLoc(260, 155));
 	}
 
 
@@ -125,7 +125,7 @@ public class CookGui implements Gui{
 	
 	public void DoWalkToFridge() {
 		xDestination = loc0X;
-		yDestination = loc0Y - 70;
+		yDestination = loc0Y - 30;
 		actionInProgress = true;
 	}
 	public void DoWalkToFood(int loc) {
