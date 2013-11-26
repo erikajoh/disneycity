@@ -1,11 +1,5 @@
 package bank.test;
 
-
-
-//import bank.customerAgent.customerBillState;
-//import bank.WaiterAgent.Bill;
-
-
 import bank.test.mock.MockBank;
 import bank.test.mock.MockBankCustomer;
 import bank.test.mock.MockManager;
@@ -14,10 +8,15 @@ import bank.test.mock.MockPerson;
 import junit.framework.*;
 
 /**
- * 
- * This class is a JUnit test class to unit test the customerAgent's basic interaction
- * with waiters, customers, and the host.
- * It is provided as an example to students in CS201 for their unit testing lab.
+ *  PLEASE READ: 
+ *  I felt there were two necessary test case files
+ *  BankCustomerTest tests all scenarios of customers creating accounts, withdrawing and depositing.
+ *  It incorporates multiple customers, multiple accounts, and multiple loans in all varieties.
+ *  
+ *  ManagerTest tests all scenarios of assigning tellers to customers.
+ *  
+ *  TellerTest wasn't necessary as it was just an intermediate for BankCustomerTest and provided that all of those
+ *  test cases passed, it wouldn't prove anything.
  *
  * Assumptions:
  * 1) Person will never say they deposited more money than they actually did
