@@ -19,8 +19,6 @@ public class WorkerGui implements Gui{
 	private enum Command {noCommand, getItem, bringItem, goHome};
 	private Command command=Command.noCommand;
 	
-//	private Semaphore moving = new Semaphore(0, true);
-
 	public static final int mWidth = 400;
 	public static final int mHeight = 360;
 
