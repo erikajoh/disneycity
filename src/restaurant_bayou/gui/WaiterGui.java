@@ -27,8 +27,8 @@ public class WaiterGui implements Gui {
     public WaiterGui(WaiterAgent agent, SimCityGui gui, int numWaiters) {
         this.agent = agent;
         this.gui = gui;
-        xHome = xTable/20+(numWaiters*xTable/5);
-        yHome = yTable/7;
+        xHome = 110+(numWaiters*40);
+        yHome = 150;
         xPos = xHome;
         yPos = yHome;
         xDestination = xHome;
@@ -65,9 +65,9 @@ public class WaiterGui implements Gui {
 
     public void draw(Graphics2D g) {
         g.setColor(Color.GREEN);
-        g.fillRect(xPos, yPos, xTable/6, yTable/12);
-//        Image img = Toolkit.getDefaultToolkit().getImage("host.jpg");
-//		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
+        //g.fillRect(xPos, yPos, xTable/6, yTable/12);
+        Image image = Toolkit.getDefaultToolkit().getImage("res/host.png");
+		g.drawImage(image, xPos, yPos, 40, 40, null);
         g.setColor(Color.GRAY);
 		if (text == null) text = "";
 		g.drawString(text, xPos, yPos);
