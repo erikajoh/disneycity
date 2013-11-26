@@ -258,9 +258,11 @@ public class PersonAgent extends Agent {
 	}
 	
 	// from Restaurant
-	public void msgDoneEating(boolean success) {
-		if(success)
+	public void msgDoneEating(boolean success, double newMoneyOnHand) {
+		if(success) {
 			isNourished = true;
+			moneyOnHand = newMoneyOnHand;
+		}
 		preferEatAtHome = !preferEatAtHome;
 		event = PersonEvent.makingDecision;
 		stateChanged();
@@ -268,7 +270,6 @@ public class PersonAgent extends Agent {
 	
 	// from Market
 	public void msgHereIsOrder(String order, int quantity) {
-		// TODO Market state update - assume order is fulfilled
 		print("Received msgHereIsOrder from Market");
 		marketState = MarketState.None;
 		event = PersonEvent.makingDecision;
@@ -291,7 +292,6 @@ public class PersonAgent extends Agent {
 		if((event == PersonEvent.makingDecision || event == PersonEvent.onHold)
 				&& actionQueue.size() > 0) {
 			Action theAction = actionQueue.poll();
-			// TODO: what to do with action...
 			switch(theAction.action) {
 				case becomeHungry:
 					isNourished = false; break;
@@ -546,7 +546,6 @@ public class PersonAgent extends Agent {
 		print("I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
 		Map<String, Double> theMenu = targetRestaurant.menu;
-		// TODO do restaurant types as well
 		double lowestPrice = getLowestPrice(theMenu);
 		if(moneyOnHand < lowestPrice) {
 			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
