@@ -90,7 +90,7 @@ public class PersonAgent extends Agent {
 		targetLocation = currentLocation;
 		
 		currentLocationState = LocationState.Home;
-		preferredCommute = PreferredCommute.Walk;
+		preferredCommute = PreferredCommute.Bus;
 		
 		this.foodPreference = foodPreference;
 		preferEatAtHome = false;
@@ -235,7 +235,6 @@ public class PersonAgent extends Agent {
 	
 	public void msgPayFare(double fare) {
 		// TODO msgPayFare
-		
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}

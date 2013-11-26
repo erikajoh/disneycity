@@ -16,9 +16,9 @@ import astar.astar.Position;
 import simcity.*;
 
 public class TransportationController extends Agent implements Transportation{
-	
+
 	TransportationPanel master;
-	
+
 	enum TransportationState {
 		REQUEST,
 		MOVING,
@@ -144,8 +144,12 @@ public class TransportationController extends Agent implements Transportation{
 		grid[5][6].setMovement(true, false, true, false, MovementTile.MovementType.ROAD);
 		grid[10][6].setMovement(false, true, false, true, MovementTile.MovementType.ROAD);
 		grid[11][6].setMovement(true, false, true, false, MovementTile.MovementType.ROAD);
-		
+
 		grid[11][11].setMovement(true, false, false, false, MovementTile.MovementType.FLYING);
+
+		grid[7][4].setMovement(false, true, true, false, MovementTile.MovementType.CROSSWALK);
+		grid[11][6].setMovement(true, false, true, false, MovementTile.MovementType.CROSSWALK);
+		grid[5][8].setMovement(false, false, false, true, MovementTile.MovementType.CROSSWALK);
 		//+++++++++++++++++++++++END CREATION OF GRID+++++++++++++++++++++++
 
 		//++++++++++++++++++++++BEGIN CREATION OF BUS STOPS++++++++++++++++++++++
@@ -210,36 +214,40 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Village Haus", new Position(2, 9), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
-		
-		tempBuilding = new Building("Bus Stop NW", new Position(7, 4), new Position(7, 5), busStops.get(0));
+
+		tempBuilding = new Building("Bus Stop NW", new Position(7, 3), new Position(7, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Bus Stop E", new Position(12, 6), new Position(11, 6), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Bus Stop SW", new Position(5, 9), new Position(5, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
 		//+++++++++++++++++++++++END CREATION OF DIRECTORY+++++++++++++++++++++++
-		
+
 		//Connecting bus stops to tiles
 		grid[7][4].setBusStop(busStops.get(0));
 		grid[11][6].setBusStop(busStops.get(1));
 		grid[5][8].setBusStop(busStops.get(2));
-		
+
 		//Spawning Bus
 		bus = new BusAgent(this);
 		BusGui busGui = new BusGui(4, 4, bus);
 		master.addGui(busGui);
 		bus.setGui(busGui);
 		bus.startThread();
-		
+
 		super.startThread();
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
 	public void msgWantToGo(String startLocation, String endLocation, PersonAgent person, String mover, String character) {
+		
 		for(Mover m : movingObjects) {
-			if(m.person == person)
+			if(m.person == person && !m.method.equals("Bus"))
 				return;
 		}
+		
+		System.out.println("RECEIVED REQUEST TO TRANSPORT");
+		
 		movingObjects.add(new Mover(person, startLocation, endLocation, mover, character));
 		stateChanged();
 	}
@@ -328,18 +336,19 @@ public class TransportationController extends Agent implements Transportation{
 	}
 
 	private void despawnMover(Mover mover) {
-		mover.person.msgReachedDestination(mover.endingLocation);
+		if(!mover.method.equals("Bus"))
+			mover.person.msgReachedDestination(mover.endingLocation);
 		movingObjects.remove(mover);
 	}
-	
+
 	private void retrySpawn(Mover mover) {
 		mover.transportationState = TransportationState.REQUEST;
 	}
-	
+
 	public MovementTile[][] getGrid() {
 		return grid;
 	}
-	
+
 	public void msgPayFare(PersonAgent person, float fare) {
 		bus.msgPayFare(person, fare);
 	}
