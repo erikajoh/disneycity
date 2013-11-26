@@ -288,7 +288,8 @@ public class PersonAgent extends Agent {
 		}
 		
 		// action queue for urgent actions
-		if(actionQueue.size() > 0) {
+		if((event == PersonEvent.makingDecision || event == PersonEvent.onHold)
+				&& actionQueue.size() > 0) {
 			Action theAction = actionQueue.poll();
 			// TODO: what to do with action...
 			switch(theAction.action) {
@@ -424,6 +425,7 @@ public class PersonAgent extends Agent {
 				else {
 					goHome();
 				}
+				print("Restaurant: setting on hold");
 				event = PersonEvent.onHold;
 				return true;
 			}
@@ -455,14 +457,14 @@ public class PersonAgent extends Agent {
 	// ************************* ACTIONS ***********************************
 
 	private void checkGoingToWork(int workPeriod) {
-		
-		
+		// TODO checkGoingToWork
 	}
 
-	// House actions
+	//House actions
 	private void enterHouse() {
 		print("Entering house, adding items");
 		Map<String, Integer> copyOfItems = new HashMap<String, Integer>();
+		
 		Set<String> keySet = itemsOnHand.keySet();
 		String[] keyArray = keySet.toArray(new String[keySet.size()]);
 		for(int i = 0; i < keyArray.length; i++) {
@@ -533,7 +535,7 @@ public class PersonAgent extends Agent {
 		myHome.housing.msgGoToBed(this);
 	}
 	
-	// Restaurant actions
+	//Restaurant actions
 	private void hungryToRestaurant() {
 		print("I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
@@ -558,7 +560,7 @@ public class PersonAgent extends Agent {
 		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand);
 	}
 	
-	// Transportation actions
+	//Transportation actions
 	private void goToTransportation() {
 		print("Going from " + currentLocation + " to " + targetLocation);
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
@@ -600,7 +602,6 @@ public class PersonAgent extends Agent {
 		MyMarket myMarket = (MyMarket)currentMyObject;
 		myMarket.theMarket.personAs(this, "Customer", name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
 	}
-	
 	
 	// ************************* UTILITIES ***********************************
 	

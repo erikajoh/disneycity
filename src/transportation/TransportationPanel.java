@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -29,7 +30,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	SimCityGui gui;
 	Transportation controller;
 	
-	private List<Gui> guis = new ArrayList<Gui>();
+	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	Timer timer;
 	
 	class BuildingFinder {
@@ -95,16 +96,19 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
         g2.drawImage(img, 0, 0, null);
 
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
+        synchronized (guis) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.updatePosition();
+	            }
+	        }
         }
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
+        synchronized (guis) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
         }
 	}
 	
@@ -128,7 +132,9 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	}
 	
 	private String findBuilding(int x, int y) {
-		for(BuildingFinder b : buildings) {
+		//for(BuildingFinder b : buildings) {
+		for(int i = 0; i < buildings.size(); i++) {
+			BuildingFinder b = buildings.get(i);
 			if(x >= b.xLeft && x < b.xRight && y >= b.yTop && y < b.yBottom)
 				return b.name;
 		}

@@ -52,7 +52,7 @@ public class SimCityPanel extends JPanel{
 		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
-		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 50, foodPreferenceMexican, "OwnerResident", transportation);
+		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 70, foodPreferenceMexican, "OwnerResident", transportation);
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
 		firstHackedPerson.addRestaurant(restRancho, "Customer");
@@ -130,12 +130,12 @@ public class SimCityPanel extends JPanel{
 			
 			// job signals
 			// two constants, WORK_ONE and WORK_TWO, determine when to send the signals to go to work
-			if(currTicks == WORK_ONE) {
-				person.msgGoToWork(1);
-			}
-			if(currTicks == WORK_TWO) {
-				person.msgGoToWork(2);
-			}
+//			if(currTicks == WORK_ONE) {
+//				person.msgGoToWork(1);
+//			}
+//			if(currTicks == WORK_TWO) {
+//				person.msgGoToWork(2);
+//			}
 		}
 		
 		// handle ticks for housing
