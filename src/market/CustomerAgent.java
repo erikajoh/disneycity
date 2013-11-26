@@ -18,6 +18,7 @@ public class CustomerAgent extends Agent {
 	private Wallet wallet;
 	double amtDue;
 	int quantity, numInLine;
+	int orderID;
 
 	private ManagerAgent manager;
 	private CashierAgent cashier;
@@ -44,6 +45,17 @@ public class CustomerAgent extends Agent {
 		this.choice = choice;
 		this.quantity = quantity;
 		this.numInLine = num;
+		wallet = new Wallet(amt);
+		state = State.entering;
+	}
+	
+	public CustomerAgent(String name, double amt, String choice, int quantity, int num, int orderID){
+		super();
+		this.name = name;
+		this.choice = choice;
+		this.quantity = quantity;
+		this.numInLine = num;
+		this.orderID = orderID;
 		wallet = new Wallet(amt);
 		state = State.entering;
 	}
