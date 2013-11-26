@@ -19,7 +19,7 @@ import java.util.concurrent.Semaphore;
 
 public class HostAgent extends Agent {
 	
-	static final int NTABLES = 4;
+	static final int NTABLES = 3;
 	static final int NWAITERS = 0;
 	public List<CustomerAgent> customers =  Collections.synchronizedList(new ArrayList<CustomerAgent>());
 	public List<CustomerAgent> waitingCustomers =  Collections.synchronizedList(new ArrayList<CustomerAgent>());

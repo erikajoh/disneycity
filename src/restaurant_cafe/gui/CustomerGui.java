@@ -2,6 +2,8 @@ package restaurant_cafe.gui;
 
 import restaurant_cafe.CustomerAgent;
 import simcity.gui.SimCityGui;
+import AnimationTools.AnimationModule;
+
 
 import java.awt.*;
 
@@ -12,7 +14,7 @@ public class CustomerGui implements Gui{
 	private boolean isHungry = false;
 
 	SimCityGui gui;
-
+	AnimationModule animModule = new AnimationModule();
 	private int xPos, yPos;
 	private int xDestination, yDestination;
 	private String drawString = "";
@@ -64,13 +66,16 @@ public class CustomerGui implements Gui{
 				isHungry = false;
 				//gui.setCustomerEnabled(agent);
 			}
+			animModule.setStill();
 			command=Command.noCommand;
 		}
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.CYAN);
-		g.fillRect(xPos, yPos, 20, 20);
+		//g.fillRect(xPos, yPos, 20, 20);
+		animModule.updateAnimation();//updates the frame and animation 
+		g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 		g.setColor(Color.BLACK);
 		g.drawString(initial, xPos+5, yPos+15);
 		

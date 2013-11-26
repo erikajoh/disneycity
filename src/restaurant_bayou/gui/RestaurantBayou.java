@@ -59,11 +59,13 @@ public class RestaurantBayou extends JPanel implements Restaurant{
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 2, 10, 10));
         
+       
         menu.addItem("Filet Mignon", 42.99);
         menu.addItem("Pan-Seared Salmon", 33.99);
         menu.addItem("Portobello Mushroom and Couscous Macque Choux", 29.99);
         menu.addItem("Seafood Jambalaya", 31.99);
 
+        market = new MarketAgent("Market", menu);
        /* initRestLabel();
         add(restLabel);
         

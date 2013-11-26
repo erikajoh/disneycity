@@ -3,6 +3,8 @@ package restaurant_haus.gui;
 import restaurant_haus.CustomerAgent;
 import restaurant_haus.HostAgent;
 import simcity.gui.SimCityGui;
+import AnimationTools.AnimationModule;
+
 
 import java.awt.*;
 
@@ -18,6 +20,7 @@ public class CustomerGui implements Gui{
 	private int xDestination, yDestination;
 	private enum Command {noCommand, GoToSeat, LeaveRestaurant};
 	private Command command=Command.noCommand;
+	AnimationModule animModule = new AnimationModule();
 	
 	private enum FoodState {Waiting, Received, NoFood};
 	private FoodState foodState = FoodState.NoFood;
@@ -55,12 +58,15 @@ public class CustomerGui implements Gui{
 			//	gui.setCustomerEnabled(agent);
 			}
 			command=Command.noCommand;
+			animModule.setStill();
 		}
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(xPos, yPos, size, size);
+		//g.fillRect(xPos, yPos, size, size);
+		 animModule.updateAnimation();//updates the frame and animation 
+		 g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 		if(foodState == FoodState.Received) {
 			g.setColor(Color.MAGENTA);
 			g.fillRect(xPos + size, yPos, size, size);

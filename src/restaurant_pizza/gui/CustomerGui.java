@@ -2,6 +2,7 @@ package restaurant_pizza.gui;
 
 import restaurant_pizza.CustomerAgent;
 import simcity.gui.SimCityGui;
+import AnimationTools.AnimationModule;
 
 import java.awt.*;
 
@@ -24,6 +25,7 @@ public class CustomerGui implements Gui{
     private static final int Y_HOME_DESTINATION = -40;
     
     public static final int mySize = 25;
+    AnimationModule animModule = new AnimationModule();
     
     private int xWaitingArea = mySize;
     private int yWaitingArea = mySize;
@@ -39,15 +41,22 @@ public class CustomerGui implements Gui{
 	}
 
 	public void updatePosition() {
-		if (xPos < xDestination)
+		if (xPos < xDestination) {
+			animModule.setMoving();
 			xPos++;
-		else if (xPos > xDestination)
+		}
+		else if (xPos > xDestination){
+			animModule.setMoving();
 			xPos--;
-		if (yPos < yDestination)
+		}
+		if (yPos < yDestination) {
+			animModule.setMoving();
 			yPos++;
-		else if (yPos > yDestination)
+		}
+		else if (yPos > yDestination){
+			animModule.setMoving();
 			yPos--;
-
+		}
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToSeat) { agent.msgAnimationFinishedGoToSeat(); }
 			else if (command==Command.GoToCashier) { agent.msgAnimationFinishedGoToCashier(); }
@@ -56,13 +65,16 @@ public class CustomerGui implements Gui{
 				isHungry = false;
 				//gui.setEnabled(agent);
 			}
+			animModule.setStill();
 			command=Command.noCommand;
 		}
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(xPos, yPos, mySize, mySize);
+		//g.fillRect(xPos, yPos, mySize, mySize);
+		animModule.updateAnimation();//updates the frame and animation 
+		g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 		g.setFont(new Font(null, Font.PLAIN, 12));
 		if (orderStatus!="") {
 			g.drawString(orderStatus, xPos, yPos+50);
@@ -92,12 +104,14 @@ public class CustomerGui implements Gui{
 	}
 
 	public void DoGoToWaitingArea() {
+		animModule.setMoving();
 		xDestination = xWaitingArea;
         yDestination = yWaitingArea;
 		command = Command.GoToWaitingArea;
 	}
 	
 	public void DoGoToSeat(int tableNumber) {
+		animModule.setMoving();
 		xDestination = xTable + (tableSpacing*(tableNumber));
         yDestination = yTable;
 		command = Command.GoToSeat;
@@ -108,12 +122,14 @@ public class CustomerGui implements Gui{
 	}
 	
 	public void DoGoToCashier() {
+		animModule.setMoving();
 		xDestination = xCashier;
         yDestination = yCashier;
 		command = Command.GoToCashier;
 	}
 	
 	public void DoExitRestaurant() {
+		animModule.setMoving();
 		xDestination = X_HOME_DESTINATION;
 		yDestination = Y_HOME_DESTINATION;
 		command = Command.LeaveRestaurant;
