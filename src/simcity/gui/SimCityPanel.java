@@ -166,7 +166,7 @@ public class SimCityPanel extends JPanel{
 		}
 		
 		// handle ticks for restaurants
-		for(int i = 0; i < housings.size(); i++) {
+		for(int i = 0; i < restaurants.size(); i++) {
 			Restaurant theRestaurant = restaurants.get(i);
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents

@@ -93,12 +93,6 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	// ***** MESSAGES *****
 	
-	public void msgShiftDone() {
-		boolean shiftDone = true;
-		if(billsToPay.size() == 0)
-			shiftDone = true;
-	}
-	
 	@Override
 	public void msgCustomerNeedsCheck(Waiter w, String order, Customer customer, RestMenu menu) {
 		print("calling msgCustomerNeedsCheck()");

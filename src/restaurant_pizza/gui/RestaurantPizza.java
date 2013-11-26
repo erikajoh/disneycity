@@ -312,7 +312,8 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	@Override
 	public void msgEndOfShift() {
 		isOpen = false;
-		for (WaiterAgent w: waiters) {
+		for (int i = 0; i < waiters.size(); i++) {
+			WaiterAgent w = waiters.get(i);
 			w.msgShiftDone();
 			cashier.subtract(10);
 		}
