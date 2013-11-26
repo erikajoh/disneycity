@@ -244,7 +244,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	}
 
 	public boolean isOpen() {
-		return true;
+		return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
 	}
 
 	@Override

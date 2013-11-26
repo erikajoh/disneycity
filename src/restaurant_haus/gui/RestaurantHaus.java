@@ -272,8 +272,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 
 	@Override
 	public boolean isOpen() {
-		// TODO Auto-generated method stub
-		return false;
+		return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
 	}
 
 	@Override
