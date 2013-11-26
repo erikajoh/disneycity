@@ -27,7 +27,8 @@ public class ManagerAgent extends Agent {
 		CustomerAgent c;
 		String choice;
 		int quantity;
-		Order(CustomerAgent cust, String ch, int q) { c = cust; choice = ch; quantity = q; }
+		boolean virtual;
+		Order(CustomerAgent cust, String ch, int q, boolean v) { c = cust; choice = ch; quantity = q; virtual = v; }
 	}
 	
 	public ManagerAgent(String name) {
@@ -55,8 +56,8 @@ public class ManagerAgent extends Agent {
 		return name;
 	}
 	
-	public void msgWantToOrder(CustomerAgent c, String choice, int quantity) { // from customer
-		myOrders.add(new Order(c, choice, quantity));
+	public void msgWantToOrder(CustomerAgent c, String choice, int quantity, boolean virtual) { // from customer
+		myOrders.add(new Order(c, choice, quantity, virtual));
     	stateChanged();
     }
 
@@ -70,7 +71,7 @@ public class ManagerAgent extends Agent {
             If so, tell waiter to seat customer at table.
 		 */
 		for (Order o: myOrders) {
-	    	myWorkers.get(0).msgGoGetItem(o.c, o.choice, o.quantity);
+	    	myWorkers.get(0).msgGoGetItem(o.c, o.choice, o.quantity, o.virtual);
 	    	myWorkers.add(myWorkers.get(0));
 	    	myWorkers.remove(0);
 	    	myOrders.remove(o);

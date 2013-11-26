@@ -16,12 +16,12 @@ public class WorkerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, getItem, bringItem, goHome};
+	private enum Command {noCommand, getItem, bringItem, deliverItem, goHome};
 	private Command command=Command.noCommand;
 	
 	public static final int mWidth = 400;
 	public static final int mHeight = 360;
-
+	
 	public WorkerGui(WorkerAgent w){
 		agent = w;
 		agent.setGui(this);
@@ -32,7 +32,7 @@ public class WorkerGui implements Gui{
 	}
 
 	public void updatePosition() {
-		if (command == Command.goHome || command == Command.bringItem) {
+		if (command == Command.bringItem || command == Command.deliverItem) {
 			if (yPos < yDestination)
 				yPos++;
 			else if (yPos > yDestination)
@@ -53,7 +53,7 @@ public class WorkerGui implements Gui{
 		}
 			
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command == Command.bringItem) agent.msgAtFront();
+			if (command == Command.bringItem || command == Command.deliverItem) agent.msgAnimationDeliveredFinished();
 			else if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
@@ -90,6 +90,12 @@ public class WorkerGui implements Gui{
     	xDestination = (int)(mWidth*0.25);
     	yDestination = (int)(mHeight*0.2);
     	command = Command.bringItem;
+    }
+    
+    public void DoBringItemToTruck() {
+    	xDestination = (int)(mWidth*0.78);
+    	yDestination = (int)(mHeight*0.25);
+    	command = Command.deliverItem;
     }
     
     public void DoGoToHome() {

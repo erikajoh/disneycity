@@ -25,7 +25,8 @@ public class WorkerAgent extends Agent {
 		CustomerAgent c;
 		String item;
 		int quantity;
-		MyOrder(CustomerAgent cust, String i, int q) { c = cust; item = i; quantity = q; }
+		boolean virtual;
+		MyOrder(CustomerAgent cust, String i, int q, boolean v) { c = cust; item = i; quantity = q; virtual = v; }
 	}
 	
 	public WorkerGui workerGui = null;
@@ -66,7 +67,7 @@ public class WorkerAgent extends Agent {
 		this.cashier = cashier;
 	}
 	
-	public void msgAtFront() {
+	public void msgAnimationDeliveredFinished() {
 		//from animation
 		moving.release();
 		working.release();
@@ -79,9 +80,9 @@ public class WorkerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgGoGetItem(CustomerAgent cust, String c, int quantity) { // from customer
+	public void msgGoGetItem(CustomerAgent cust, String c, int quantity, boolean virtual) { // from customer
 		print("rcvd msgGoGetItem");
-		orders.add(new MyOrder(cust, c, quantity));
+		orders.add(new MyOrder(cust, c, quantity, virtual));
 		stateChanged();
 	}
 
@@ -90,7 +91,7 @@ public class WorkerAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		for (MyOrder o: orders) {
-			int numItems = GetItem(o.item, o.quantity);
+			int numItems = GetItem(o.item, o.quantity, o.virtual);
 			try {
 				working.acquire();
 			} catch (InterruptedException e) {
@@ -115,7 +116,7 @@ public class WorkerAgent extends Agent {
 		return false;
 	}
 	
-	public int GetItem(String item, int quantity) {
+	public int GetItem(String item, int quantity, boolean virtual) {
 		workerGui.DoGoGetItem(market.getLocation(item));
 		try {
 			moving.acquire();
@@ -123,7 +124,8 @@ public class WorkerAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		workerGui.DoBringItemToFront();
+		if (virtual) workerGui.DoBringItemToTruck();
+		else workerGui.DoBringItemToFront();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {

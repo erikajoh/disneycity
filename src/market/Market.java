@@ -47,13 +47,12 @@ public class Market {
 	public void msgLeaving(CustomerAgent c) {
 		if (c.getPerson()!=null){
 			c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
+			customers.remove(c);
 		}
 		else if (c.getCook()!=null) {
 			c.getCook().msgHereIsOrder(c.getChoice(), c.quantity, c.orderID);
+			virtualCustomers.remove(c);
 		}
-		System.out.println(customers.size());
-		customers.remove(c);
-		System.out.println(customers.size());
 		MoveLine();
 	}
 	
@@ -106,7 +105,7 @@ public class Market {
     public String getName() { return name; }
     
     public void personAs(CookAgent c, double money, String choice, int quantity, int id) {
-    	System.out.println("The market wants to order food!");
+    	System.out.println("The restaurant wants to order food!");
     	addPerson(c, c.getName(), money, choice, quantity, id);
     }
     public void personAs(PersonAgent p, String type, String name, double money, String choice, int quantity){
@@ -117,19 +116,19 @@ public class Market {
     }
     
     public void addPerson(CookAgent c, String name, double money, String choice, int quantity, int id) {
-    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, customers.size(), id);	
+    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), id);	
 		if (manager!=null) cust.setManager(manager);
 		if (cashier!=null) cust.setCashier(cashier);
 		cust.setCook(c);
-		c.setMarket(this);
+		cust.setMarket(this);
 		virtualCustomers.add(cust);
-		c.startThread();
+		cust.startThread();
     }
     
     public void addPerson(PersonAgent p, String type, String name, double money, String choice, int quantity) {
 
     	if (type.equals("Customer")) {
-    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
+    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size(), false);	
     		CustomerGui g = new CustomerGui(c);
     		gui.markAniPanel.addGui(g);
     		if (manager!=null) c.setManager(manager);
@@ -142,7 +141,7 @@ public class Market {
     		g.updatePosition();
     	}
     	else if (type.equals("VirtualCustomer")) {
-    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
+    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), true);	
     		if (manager!=null) c.setManager(manager);
     		if (cashier!=null) c.setCashier(cashier);
     		c.setPerson(p);

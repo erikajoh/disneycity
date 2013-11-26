@@ -19,6 +19,7 @@ public class CustomerAgent extends Agent {
 	double amtDue;
 	int quantity, numInLine;
 	int orderID;
+	boolean virtual;
 
 	private ManagerAgent manager;
 	private CashierAgent cashier;
@@ -39,14 +40,16 @@ public class CustomerAgent extends Agent {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name, double amt, String choice, int quantity, int num){
+	public CustomerAgent(String name, double amt, String choice, int quantity, int num, boolean virtual){
 		super();
 		this.name = name;
 		this.choice = choice;
 		this.quantity = quantity;
 		this.numInLine = num;
+		this.virtual = virtual;
 		wallet = new Wallet(amt);
 		state = State.entering;
+		print("created customer");
 	}
 	
 	public CustomerAgent(String name, double amt, String choice, int quantity, int num, int orderID){
@@ -56,8 +59,10 @@ public class CustomerAgent extends Agent {
 		this.quantity = quantity;
 		this.numInLine = num;
 		this.orderID = orderID;
+		this.virtual = true;
 		wallet = new Wallet(amt);
 		state = State.entering;
+		print("created customer");
 	}
 
 	/**
@@ -135,7 +140,7 @@ public class CustomerAgent extends Agent {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {	
+	protected boolean pickAndExecuteAnAction() {
 		if (state == State.entering){
 			print("Entering market");
 			EnterMarket();
@@ -162,7 +167,6 @@ public class CustomerAgent extends Agent {
 		else if (state == State.leaving){
 			print("Leaving");
 			LeaveMarket();
-//			person.msgDoneAtMarket(quantity);
 			market.msgLeaving(this);
 			return true;
 		}
@@ -170,34 +174,38 @@ public class CustomerAgent extends Agent {
 	}
 
 	private void EnterMarket() {
-		customerGui.setPresent(true);
-		customerGui.DoEnterMarket();
-		try {
-			moving.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (person != null) {
+			customerGui.setPresent(true);
+			customerGui.DoEnterMarket();
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		state = State.idle;
 	}
 	
 	private void PlaceOrder() {
-		manager.msgWantToOrder(this, choice, 1);
+		manager.msgWantToOrder(this, choice, quantity, virtual);
 		state = State.idle;
 	}
 	
 	private void MoveUp() {
-		customerGui.DoMoveUpInLine();
+		if (person != null) customerGui.DoMoveUpInLine();
 		state = State.idle;
 	}
 
 	private void LeaveMarket() {
-		customerGui.DoLeaveMarket();
-		try {
-			moving.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(person!=null){
+			customerGui.DoLeaveMarket();
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		state = State.idle;
 	}

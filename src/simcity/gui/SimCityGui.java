@@ -252,10 +252,11 @@ public class SimCityGui extends JFrame  {
         restHaus.addPerson(null, "Host", "Host", 50);
 		//restHaus.addPerson(null, "Customer", "Sally", 50);
 		
-		mickeysMarket.addPerson(null, "Manager", "MRAWP");
-		mickeysMarket.addPerson(null, "Cashier", "Kapow");
-		mickeysMarket.addPerson(null, "Worker", "Bleep");
-
+		mickeysMarket.addPerson(null, "Manager", "le manager"); //robot
+		mickeysMarket.addPerson(null, "Cashier", "le cashier"); //robot
+		mickeysMarket.addPerson(null, "Worker", "le worker un"); //will be a person
+		mickeysMarket.addPerson(null, "Worker", "le worker deux"); //will be a person
+		
 	}
 	
 	public void showPanel(String panel) {
