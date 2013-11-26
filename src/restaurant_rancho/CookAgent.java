@@ -6,10 +6,13 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import restaurant_rancho.Order;
+import restaurant_rancho.CustomerAgent.AgentEvent;
+import restaurant_rancho.CustomerAgent.AgentState;
 import restaurant_rancho.gui.CookGui;
 import simcity.PersonAgent;
 import restaurant_rancho.gui.RestaurantRancho;
 import market.Market;
+import restaurant_rancho.ProducerConsumerMonitor;
 
 public class CookAgent extends Agent {
 	
@@ -21,6 +24,7 @@ public class CookAgent extends Agent {
 	List<MarketOrder> marketOrders = new ArrayList<MarketOrder> ();
  	List<WaiterAgent> waiters;
 	CookGui gui;
+	Timer checkTimer = new Timer();
 	private Semaphore cooking = new Semaphore(0,true);
 	int cookNum = 0;
 	PersonAgent person;
@@ -139,6 +143,10 @@ public class CookAgent extends Agent {
 				}
 				return true;
 			}
+			print("checking order stand");
+			Order newO = restaurant.orderStand.remove();
+			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
+			else {waitTimer();}
 		return false;
 	
 	}
@@ -225,6 +233,15 @@ public class CookAgent extends Agent {
 		} catch (InterruptedException e) {
 			
 		}
+	}
+	
+	private void waitTimer() {
+		checkTimer.schedule(new TimerTask() {
+			public void run() {
+				stateChanged();
+			}
+		},
+		5000);
 	}
 	
 	 class Food {

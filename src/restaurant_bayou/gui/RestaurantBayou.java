@@ -87,7 +87,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     }
     
     public boolean isOpen() {
-    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
+    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
     }
     
     public RestMenu getMenu() {
@@ -297,6 +297,12 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndOfShift() {
+		isOpen = false;
 		
 	}
 	

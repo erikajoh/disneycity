@@ -43,6 +43,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     public Bank bank;
     public Market market;
     String type;
+    boolean isOpen = true;
     
     private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
@@ -244,7 +245,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	}
 
 	public boolean isOpen() {
-		return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
+		return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
 	}
 
 	@Override
@@ -268,6 +269,14 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void msgEndOfShift() {
+		isOpen = false;
 		
 	}
 }

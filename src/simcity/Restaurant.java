@@ -23,4 +23,6 @@ public interface Restaurant {
 	public String getType();
 
 	public void msgHereIsOrder(String food, int quantity, int ID);
+	
+	public void msgEndOfShift();
 }

@@ -11,8 +11,10 @@ import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
 import simcity.RestMenu;
 import simcity.Restaurant;
-
+import restaurant_rancho.ProducerConsumerMonitor;
+import restaurant_rancho.WaiterAgentPC;
 import javax.swing.*;
+import restaurant_rancho.WaiterAgentNorm;
 
 import market.Market;
 
@@ -34,6 +36,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	String type;
 	Bank bank;
 	Market market;
+
 	private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private HostAgent host;
     private CookAgent cook;
@@ -45,7 +48,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private ListPanel waiterPanel = new ListPanel (this, "Waiters");
     private JPanel group = new JPanel();
     private RestMenu menu = new RestMenu();
-    boolean isOpen;
+    boolean isOpen = true;
+    public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
 
 
     private SimCityGui gui;
@@ -77,7 +81,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public boolean isOpen() {
-    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
+    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
     }
     
     public RestMenu getMenu() {
@@ -191,7 +195,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		
     	//}
     	else if (type.equals("Waiter")) {
-    		WaiterAgent w = new WaiterAgent(name, this);
+    		WaiterAgentNorm w = new WaiterAgentNorm(name, this);
     		WaiterGui g = new WaiterGui(w, waiters.size());
     		if (p!=null) w.setPerson(p);
     		gui.ranchoAniPanel.addGui(g);
@@ -204,6 +208,20 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		w.startThread();
     		g.updatePosition();
     		
+    	}
+    	else if (type.equals("WaiterPC")) {
+    		WaiterAgentPC w = new WaiterAgentPC(name, this);
+    		WaiterGui g = new WaiterGui(w, waiters.size());
+    		if (p!=null) w.setPerson(p);
+    		gui.ranchoAniPanel.addGui(g);
+    		if (host!=null) w.setHost(host);
+    		if (cook!= null) w.setCook(cook);
+    		if (cashier!=null)w.setCashier(cashier);
+    		if (host!=null) host.addWaiter(w);
+    		w.setGui(g);
+    		waiters.add(w);
+    		w.startThread();
+    		g.updatePosition();
     	}
     	else if (type.equals("Host")) {
     		if (host == null) {
@@ -264,6 +282,11 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		cook.msgHereIsOrder(food, quantity, ID);
+	}
+	@Override
+	public void msgEndOfShift() {
+		isOpen = false;
+		
 	}
     
 
