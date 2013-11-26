@@ -61,7 +61,9 @@ public class WorkerGui implements Gui{
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(xPos, yPos, mWidth/20, mHeight/15);
+		Image custImage = Toolkit.getDefaultToolkit().getImage("res/worker.gif");
+		g.drawImage(custImage, xPos, yPos, mWidth/15, mHeight/15, null);
+//		g.fillRect(xPos, yPos, mWidth/20, mHeight/15);
 //		Image img = Toolkit.getDefaultToolkit().getImage("customer.jpg");
 //		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
 		g.setColor(Color.GRAY);
