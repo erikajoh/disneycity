@@ -230,7 +230,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Spawning Bus
 		bus = new BusAgent(this);
-		BusGui busGui = new BusGui(4, 4, bus);
+		BusGui busGui = new BusGui(4, 10, bus);
 		master.addGui(busGui);
 		bus.setGui(busGui);
 		bus.startThread();

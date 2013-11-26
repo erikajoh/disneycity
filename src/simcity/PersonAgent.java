@@ -75,7 +75,7 @@ public class PersonAgent extends Agent {
 	
 	// Synchronization
 	private PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
-	public enum PersonEvent {makingDecision, onHold, onHoldInTransportation, onHoldAtRestaurant, onHoldInMarket, onHoldInBank};
+	public enum PersonEvent {makingDecision, onHold, onHoldInTransportation, onHoldInTransportationPayFare, onHoldAtRestaurant, onHoldInMarket, onHoldInBank};
 	public PersonEvent event = PersonEvent.makingDecision;
 	
 	// ************************* SETUP ***********************************
@@ -238,7 +238,7 @@ public class PersonAgent extends Agent {
 	public void msgPayFare(double fare) {
 		fareToPay += fare;
 		transportationState = TransportationState.NeedToPayFare;
-		event = PersonEvent.makingDecision;
+		event = PersonEvent.onHoldInTransportationPayFare;
 		stateChanged();
 	}
 
@@ -287,7 +287,15 @@ public class PersonAgent extends Agent {
 	public boolean pickAndExecuteAnAction() {
 		if(printCount > 0) {
 			printCount--;
-			print("Calling PersonAgent's scheduler: currentStateLocation = " + currentLocationState);
+			print("Calling PersonAgent's scheduler: currentStateLocation = " + currentLocationState
+					+ "; event = " + event);
+		}
+		
+		// TODO Should this go somewhere else? Also not paying fare is non-normative
+		if(transportationState == TransportationState.NeedToPayFare) {
+			payFare();
+			transportationState = TransportationState.None;
+			return true;
 		}
 		
 		// action queue for urgent actions
@@ -315,12 +323,6 @@ public class PersonAgent extends Agent {
 			return true;
 		}
 		
-		// TODO Should this go somewhere else? Also not paying fare is non-normative
-		if(transportationState == TransportationState.NeedToPayFare) {
-			payFare();
-			transportationState = TransportationState.None;
-			return true;
-		}
 		// if no emergenices, proceed with normal decision rules
 		if(event == PersonEvent.makingDecision && bodyState != BodyState.Asleep) {
 			
@@ -428,7 +430,7 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
-				if(!isNourished) {
+				if(!isNourished && !preferEatAtHome) {
 					enterRestaurant();
 					event = PersonEvent.onHoldAtRestaurant;
 				}
@@ -591,7 +593,7 @@ public class PersonAgent extends Agent {
 	private void payFare() {
 		print("Paying fare");
 		// TODO transportation paying fare message
-		//transportation.msg();
+		transportation.msgPayFare(this, fareToPay);
 	}
 	
 	//Bank actions
