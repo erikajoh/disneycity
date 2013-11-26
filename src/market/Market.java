@@ -103,8 +103,9 @@ public class Market {
     
     public String getName() { return name; }
     
-    public void personAs(CookAgent c, String choice, int quantity) {
-    	addPerson(c, c.getName(), choice, quantity);
+    public void personAs(CookAgent c, double money, String choice, int quantity) {
+    	System.out.println("The market wants to order food!");
+    	addPerson(c, c.getName(), money, choice, quantity);
     }
     public void personAs(PersonAgent p, String type, String name, double money, String choice, int quantity){
     	addPerson(p, type, name, money, choice, quantity);
@@ -113,14 +114,14 @@ public class Market {
     	addPerson(p, type, name);
     }
     
-    public void addPerson(CookAgent c, String name, String choice, int quantity) {
-    	CustomerAgent cust = new CustomerAgent(name, 100, choice, quantity, customers.size());
-    	if (manager!=null) cust.setManager(manager);
-    	if(cashier!=null) cust.setCashier(cashier);
-    	cust.setCook(c);
-    	cust.setMarket(this);
-    	customers.add(cust);
-    	cust.startThread();
+    public void addPerson(CookAgent c, String name, double money, String choice, int quantity) {
+    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, customers.size());	
+		if (manager!=null) cust.setManager(manager);
+		if (cashier!=null) cust.setCashier(cashier);
+		cust.setCook(c);
+		c.setMarket(this);
+		customers.add(cust);
+		c.startThread();
     }
     
     public void addPerson(PersonAgent p, String type, String name, double money, String choice, int quantity) {
