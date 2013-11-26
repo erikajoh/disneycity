@@ -26,7 +26,7 @@ public class ResidentGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, GoToRoom, AtBed, GoToBath, GoToTable, GoToKitchen, LeaveBedroom, DoMaintenance, DoneMaintenance, LeaveHouse};
+	private enum Command {noCommand, EnterHouse, GoToCouch, GoToBed, GoToBath, GoToTable, GoToKitchen, HelperMove, DoneMaintenance, LeaveHouse};
 	private Command command=Command.noCommand;
 	
 	private Semaphore moving = new Semaphore(0, true);
@@ -48,7 +48,7 @@ public class ResidentGui implements Gui{
 			yPos = (int)(hHeight*0.92);
 		} else if(type == "apt"){
 			xPos = (int)(hWidth);
-			yPos = (int)(hHeight*0.57);
+			yPos = (int)(hHeight*0.56);
 		}
 	}
 
@@ -99,11 +99,18 @@ public class ResidentGui implements Gui{
 		}
 		
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command == Command.DoMaintenance || command == Command.DoneMaintenance || command == Command.GoToBed || command == Command.AtBed || command == Command.GoToRoom || command == Command.LeaveBedroom)
-				moving.release();
+//			if (command == Command.HelperMove)
+//				moving.release();
+//			else if (command == Command.DoneMaintenance || command == Command.GoToBed) {
+//				moving.release();
+//				agent.msgAnimationFinished();
+//			}
+			if (command != Command.noCommand) moving.release();
+			
 			if (command == Command.LeaveHouse) agent.msgAnimationLeavingFinished();
-			if (command == Command.DoneMaintenance) agent.msgMaintenanceAnimationFinished();
+			else if (command == Command.DoneMaintenance) agent.msgMaintenanceAnimationFinished();
 			else if (command != Command.noCommand) agent.msgAnimationFinished();
+			
 			command=Command.noCommand;
 		}
 	}
@@ -139,52 +146,70 @@ public class ResidentGui implements Gui{
 			yDestination = (int)(hHeight*0.57);
 			command = Command.EnterHouse;
 		}
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void DoLeaveBedroom() {
-		xDestination = (int)(hWidth*0.53);
-		yDestination = (int)(hHeight*0.65);
-		command = Command.LeaveBedroom;
-		inBedroom = false;
-	}
-	
-	public void DoGoToCouch() {
-		if (inBedroom) {
-			DoLeaveBedroom();
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (type == "house") {
+			xDestination = (int)(hWidth*0.53);
+			yDestination = (int)(hHeight*0.65);
+		} else if (type == "apt") {
+			if (roomNo == 0) {
+				xDestination = (int)(hWidth*0.22);
+				yDestination = (int)(hHeight*0.52);
+				command = Command.HelperMove;
+			} else if (roomNo == 1) {
+				xDestination = (int)(hWidth*0.54);
+				yDestination = (int)(hHeight*0.52);
+				command = Command.HelperMove;
+			} else if (roomNo == 2) {
+				xDestination = (int)(hWidth*0.85);
+				yDestination = (int)(hHeight*0.52);
+				command = Command.HelperMove;
+			} else if (roomNo == 3) {
+				xDestination = (int)(hWidth*0.3);
+				yDestination = (int)(hHeight*0.7);
+				command = Command.DoneMaintenance;
 			}
 		}
-		xDestination = (int)(hWidth*0.8);
-		yDestination = (int)(hHeight*0.15);
-		command = Command.GoToCouch;
+		command = Command.HelperMove;
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		inBedroom = false;
 	}
 		
 	public void DoGoToBed() {
 		if (type == "house") {
 			for (int i=0; i<2; i++) {
 				GoTowardBed(i);
-				try {
-					moving.acquire();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
+			inBedroom = true;
 		} else if (type == "apt") {
 			GoToAptRoom();
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(roomNo == 0){
+				xDestination = (int)(hWidth*0.16);
+				yDestination = (int)(hHeight*0.15);
+			}else if(roomNo == 1){
+				xDestination = (int)(hWidth*0.48);
+				yDestination = (int)(hHeight*0.15);
+			}else if(roomNo == 2){
+				xDestination = (int)(hWidth*0.79);
+				yDestination = (int)(hHeight*0.15);
+			}else if(roomNo == 3){
+				xDestination = (int)(hWidth*0.3);
+				yDestination = (int)(hHeight*0.7);
 			}
-			xDestination = (int)(hWidth*0.48);
-			yDestination = (int)(hHeight*0.15);
 			command = Command.GoToBed;
+			inBedroom = true;
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
@@ -192,50 +217,55 @@ public class ResidentGui implements Gui{
 				e.printStackTrace();
 			}
 		}
-		inBedroom = true;
 	}
 	
 	private void GoTowardBed(int i) {
 		if (i == 0) {
 			xDestination = (int)(hWidth*0.53);
 			yDestination = (int)(hHeight*0.15);
-			command = Command.GoToBed;
+			command = Command.HelperMove;
 		} else {
 			xDestination = (int)(hWidth*0.7);
 			yDestination = (int)(hHeight*0.15);
-			command = Command.AtBed;
+			command = Command.GoToBed;
 		}
-	}
-	
-	public void DoGoToBath() {
-		xDestination = -hWidth/5;
-		yDestination = -hHeight/6;
-		command = Command.GoToBath;
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void GoToAptRoom() {
 		if(roomNo == 0){
+			xDestination = (int)(hWidth*0.22);
+			yDestination = (int)(hHeight*0.4);
+			command = Command.HelperMove;
+		}else if(roomNo == 1){
 			xDestination = (int)(hWidth*0.54);
 			yDestination = (int)(hHeight*0.4);
-			command = Command.GoToRoom;
-		}else if(roomNo == 1){
-			
+			command = Command.HelperMove;
 		}else if(roomNo == 2){
-			
+			xDestination = (int)(hWidth*0.85);
+			yDestination = (int)(hHeight*0.4);
+			command = Command.HelperMove;
 		}else if(roomNo == 3){
-			
+			xDestination = (int)(hWidth*0.3);
+			yDestination = (int)(hHeight*0.7);
+			command = Command.HelperMove;
+		}
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
 	public void DoGoToTable() {
 		if (inBedroom) {
 			DoLeaveBedroom();
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		if (type == "house") {
 			xDestination = (int)(hWidth*0.23);
@@ -245,37 +275,25 @@ public class ResidentGui implements Gui{
 			yDestination = (int)(hHeight*0.59);
 		}
 		command = Command.GoToTable;
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void DoMaintenance() {
 		if (inBedroom) {
 			DoLeaveBedroom();
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		if (type == "house"){
 			for (int i=0; i<6; i++) {
 				MaintainArea(i);
-				try {
-					moving.acquire();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		} else if (type == "apt"){
 			for (int i=0; i<4; i++) {
 				MaintainApt(i);
-				try {
-					moving.acquire();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
 	}
@@ -284,19 +302,25 @@ public class ResidentGui implements Gui{
 		if (i == 0) {
 			xDestination = (int)(hWidth*0.85);
 			yDestination = (int)(hHeight*0.5);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else if (i == 1) {
 			xDestination = (int)(hWidth*0.58);
 			yDestination = (int)(hHeight*0.5);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else if (i == 2) {
 			xDestination = (int)(hWidth*0.58);
 			yDestination = (int)(hHeight*0.7);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else if (i == 3) {
 			xDestination = (int)(hWidth*0.85);
 			yDestination = (int)(hHeight*0.5);
 			command = Command.DoneMaintenance;
+		}
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -304,64 +328,108 @@ public class ResidentGui implements Gui{
 		if (i == 0) {
 			xDestination = (int)(hWidth*0.65);
 			yDestination = (int)(hHeight*0.47);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else if (i == 1) {
 			xDestination = (int)(hWidth*0.05);
 			yDestination = (int)(hHeight*0.47);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else if (i == 2) {
 			xDestination = (int)(hWidth*0.05);
 			yDestination = (int)(hHeight*0.05);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else if (i == 3) {
 			xDestination = (int)(hWidth*0.4);
 			yDestination = (int)(hHeight*0.05);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else if (i == 4) {
 			xDestination = (int)(hWidth*0.4);
 			yDestination = (int)(hHeight*0.65);
-			command = Command.DoMaintenance;
+			command = Command.HelperMove;
 		} else {
 			xDestination = (int)(hWidth*0.23);
 			yDestination = (int)(hHeight*0.65);
 			command = Command.DoneMaintenance;
 		}		
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void DoGoToKitchen() {
 		if (inBedroom) {
 			DoLeaveBedroom();
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		if (type == "house"){	
 			xDestination = (int)(hWidth*0.8);
 			yDestination = (int)(hHeight*0.7);
 		} else if (type == "apt"){
-			double xModifier = 0.06*roomNo;
-			xDestination = (int)(hWidth*0.59 + xModifier);
+			xDestination = (int)(hWidth*0.88);
 			yDestination = (int)(hHeight*0.7);
-		}
-		command = Command.GoToKitchen;
-	}
-
-	public void DoLeaveHouse() {
-		if (inBedroom) {
-			DoLeaveBedroom();
+			command = Command.HelperMove;
 			try {
 				moving.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(roomNo == 0){
+				xDestination = (int)(hWidth*0.59);
+				yDestination = (int)(hHeight*0.7);
+			}else if(roomNo == 1){
+				xDestination = (int)(hWidth*0.65);
+				yDestination = (int)(hHeight*0.7);
+			}else if(roomNo == 2){
+				xDestination = (int)(hWidth*0.71);
+				yDestination = (int)(hHeight*0.7);
+			}else if(roomNo == 3){
+				xDestination = (int)(hWidth*0.77);
+				yDestination = (int)(hHeight*0.7);
+			}
 		}
-		xDestination = (int)(hWidth*0.23);
-        yDestination = (int)(hHeight*0.92);
+		command = Command.GoToKitchen;
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void DoLeaveHouse() {
+		if (inBedroom) {
+			DoLeaveBedroom();
+		}
+		if (type == "house") {
+			xDestination = (int)(hWidth*0.23);
+			yDestination = (int)(hHeight*0.92);
+		} else if (type == "apt") {
+			if (roomNo == 2) {
+				yDestination = (int)(hHeight*0.56);
+			}
+			else {
+				xDestination = (int)(hWidth*0.78);
+				yDestination = (int)(hHeight*0.59);
+			}
+			command = Command.HelperMove;
+			try {
+				moving.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			xDestination = (int)(hWidth);
+			yDestination = (int)(hHeight*0.56);
+		}
 		command = Command.LeaveHouse;
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void setText(String t) {

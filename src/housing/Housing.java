@@ -51,6 +51,7 @@ public class Housing {
 		ResidentAgent r = new ResidentAgent("renter "+renters.size(), type, renters.size());
 		r.setHousing(this);
 		panel.addRenter(r, type, renters.size());
+		renters.add(new Renter(r, null, renters.size()));
 	}
 	
 	public void addRenter(PersonAgent rp) {
