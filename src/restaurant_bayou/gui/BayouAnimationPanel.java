@@ -46,6 +46,7 @@ public class BayouAnimationPanel extends JPanel implements ActionListener {
     }
 
 	public void actionPerformed(ActionEvent e) {
+		updatePosition();
 		repaint();  //Will have paintComponent called
 	}
 	
@@ -54,6 +55,15 @@ public class BayouAnimationPanel extends JPanel implements ActionListener {
 		else timer.start();
 	}
 	
+	public void updatePosition() {
+    	synchronized(guis) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.updatePosition();
+	            }
+	        }
+        }
+    }
 
     public void paintComponent(Graphics g) {
         g2 = (Graphics2D)g;
@@ -65,12 +75,11 @@ public class BayouAnimationPanel extends JPanel implements ActionListener {
         g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
       
         synchronized(guis) {
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-                gui.draw(g2);
-            }
-        }
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
         }
     }
 

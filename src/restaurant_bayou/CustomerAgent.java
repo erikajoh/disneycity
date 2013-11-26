@@ -234,7 +234,7 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	private void GoToRestaurant() {
-		Do("Going to restaurant");
+		Do("CustomerAgent: Going to restaurant");
 		host.msgIAmHere(this);
 	}
 

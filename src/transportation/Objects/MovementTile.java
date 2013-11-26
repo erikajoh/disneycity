@@ -11,7 +11,7 @@ public class MovementTile extends Semaphore{
 	};
 	
 	MovementType type;
-	boolean up, down, left, right;
+	public boolean up, down, left, right;
 	BusStop busStop;
 	
 	public MovementTile() {
@@ -37,5 +37,9 @@ public class MovementTile extends Semaphore{
 	
 	public void setBusStop(BusStop busStop) {
 		this.busStop = busStop;
+	}
+	
+	public BusStop getBusStop() {
+		return busStop;
 	}
 }

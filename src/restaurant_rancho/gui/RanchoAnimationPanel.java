@@ -45,7 +45,6 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
 	            }
 	        }
         }
-  
     }
     
     public void updatePosition() {

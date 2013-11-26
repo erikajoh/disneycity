@@ -12,8 +12,6 @@ import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
 import transportation.Transportation;
 
-// Priority of coding classes: Person, Housing, Transportation, Bank, Restaurant, Market 
-
 public class PersonAgent extends Agent {
 	
 	// ************************* DATA ***********************************
@@ -86,7 +84,7 @@ public class PersonAgent extends Agent {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
-		isNourished = false;
+		isNourished = true;
 		currentLocation = h.getName();
 		moneyOnHand = startMoney;
 		targetLocation = currentLocation;
@@ -95,11 +93,11 @@ public class PersonAgent extends Agent {
 		preferredCommute = PreferredCommute.Walk;
 		
 		this.foodPreference = foodPreference;
-		preferEatAtHome = false;
+		preferEatAtHome = true;
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
-		bodyState = BodyState.Asleep;
+		bodyState = BodyState.Active;
 		itemsOnHand = new HashMap<String, Integer>();
 	}
 
@@ -161,16 +159,22 @@ public class PersonAgent extends Agent {
 	
 	public void msgGoToSleep() {
 		print("Must go to sleep");
-		actionQueue.add(new Action(ActionString.goToSleep, 2, 0));
+		actionQueue.add(new Action(ActionString.goToSleep, 1, 0));
 		stateChanged();
 	}
 	
 	public void msgSetHungry() {
 		print("I'm hungry now");
 		if(isNourished) {
-			actionQueue.add(new Action(ActionString.becomeHungry, 2, 1));
+			actionQueue.add(new Action(ActionString.becomeHungry, 3, 1));
 			stateChanged();
 		}
+	}
+
+	public void msgGoToWork(int i) {
+		print("Go to work: work period #" + i);
+		actionQueue.add(new Action(ActionString.goToWork, 2, i));
+		stateChanged();
 	}
 	
 	// from Housing
@@ -228,6 +232,13 @@ public class PersonAgent extends Agent {
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
+	
+	public void msgPayFare(double fare) {
+		// TODO msgPayFare
+		
+		event = PersonEvent.makingDecision;
+		stateChanged();
+	}
 
 	// from Bank
 	public void msgLeftBank(Bank theBank, int accountNumber, double change, double loanAmount, int loanTime) {
@@ -277,7 +288,8 @@ public class PersonAgent extends Agent {
 		}
 		
 		// action queue for urgent actions
-		if(actionQueue.size() > 0) {
+		if((event == PersonEvent.makingDecision || event == PersonEvent.onHold)
+				&& actionQueue.size() > 0) {
 			Action theAction = actionQueue.poll();
 			// TODO: what to do with action...
 			switch(theAction.action) {
@@ -294,9 +306,10 @@ public class PersonAgent extends Agent {
 				case needMaintenance: 
 					doMaintenance(); break;
 				case goToWork:
-					break; // TODO: handle go to work
+					checkGoingToWork((int)theAction.amount); break; // TODO: handle go to work
 			}
 			event = PersonEvent.makingDecision;
+			print("returning true from action queue; popped: " + theAction.action + "; size: " + actionQueue.size());
 			return true;
 		}
 		
@@ -314,6 +327,7 @@ public class PersonAgent extends Agent {
 						goToTransportation();
 					}
 					event = PersonEvent.onHold;
+					print("returning true because !insideHouse");
 					return true;
 				}
 				if(rentToPay > 0) {
@@ -323,6 +337,7 @@ public class PersonAgent extends Agent {
 					else {
 						getRentMoneyFromBank();
 					}
+					print("returning true because rentToPay > 0");
 					return true;
 				}
 				if(!isNourished) { // if I'm hungry
@@ -345,17 +360,20 @@ public class PersonAgent extends Agent {
 						leaveHouse();
 						event = PersonEvent.onHold;
 					}
+					print("returning true because !isNourished");
 					return true;
 				}
 				if(currentLocation.equals(targetLocation)) {
 					if(moneyOnHand > MONEY_ON_HAND_LIMIT) {
-						haveMoneyToDeposit(); 
+						haveMoneyToDeposit();
+						print("returning true because haveMoneyToDeposit()");
 						return true;
 					}
 				}
 				else {
 					leaveHouse();
 					event = PersonEvent.onHold;
+					print("returning true because isNourished");
 					return true;
 				}
 				if(bodyState == BodyState.Tired) {
@@ -407,6 +425,7 @@ public class PersonAgent extends Agent {
 				else {
 					goHome();
 				}
+				print("Restaurant: setting on hold");
 				event = PersonEvent.onHold;
 				return true;
 			}
@@ -417,7 +436,7 @@ public class PersonAgent extends Agent {
 				}
 				switch(marketState) {
 					case None:
-						goHome(); break; // TODO hopefully this rule order works
+						goHome(); break;
 					case WantToBuy:
 						enterMarket(); break;
 					case WantToWork:
@@ -437,10 +456,15 @@ public class PersonAgent extends Agent {
 
 	// ************************* ACTIONS ***********************************
 
-	// House actions
+	private void checkGoingToWork(int workPeriod) {
+		// TODO checkGoingToWork
+	}
+
+	//House actions
 	private void enterHouse() {
 		print("Entering house, adding items");
 		Map<String, Integer> copyOfItems = new HashMap<String, Integer>();
+		
 		Set<String> keySet = itemsOnHand.keySet();
 		String[] keyArray = keySet.toArray(new String[keySet.size()]);
 		for(int i = 0; i < keyArray.length; i++) {
@@ -453,7 +477,6 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void prepareToCookAtHome() {
-		// TODO home action
 		print("I'm hungry and I want to cook at home");
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
 	}
@@ -468,7 +491,6 @@ public class PersonAgent extends Agent {
 	}
 	
 	private void hungryToMarket() {
-		// TODO hungryToMarket
 		print("I'm hungry and I want to buy food at market and cook at home");
 		MyMarket targetMarket = chooseMarket();
 		double price = targetMarket.theMarket.getPrice(foodPreference);
@@ -513,7 +535,7 @@ public class PersonAgent extends Agent {
 		myHome.housing.msgGoToBed(this);
 	}
 	
-	// Restaurant actions
+	//Restaurant actions
 	private void hungryToRestaurant() {
 		print("I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
@@ -538,7 +560,7 @@ public class PersonAgent extends Agent {
 		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand);
 	}
 	
-	// Transportation actions
+	//Transportation actions
 	private void goToTransportation() {
 		print("Going from " + currentLocation + " to " + targetLocation);
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
@@ -580,7 +602,6 @@ public class PersonAgent extends Agent {
 		MyMarket myMarket = (MyMarket)currentMyObject;
 		myMarket.theMarket.personAs(this, "Customer", name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
 	}
-	
 	
 	// ************************* UTILITIES ***********************************
 	

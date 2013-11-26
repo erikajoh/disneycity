@@ -66,15 +66,17 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.openingAccount;
 		stateChanged();
 	}
-	public void	msgRequestDeposit(double ra){
+	public void	msgRequestDeposit(double ra, int accNum){
 		print("REQ DEPOSIT");
 		requestAmt = ra;
+		accountNum = accNum;
 		state = State.depositing;
 		stateChanged();	
 	}
-	public void	msgRequestWithdraw(double ra){
+	public void	msgRequestWithdraw(double ra, int accNum){
 		print("REQ WITHDRAW");
 		requestAmt = ra;
+		accountNum = accNum;
 		print("RA: "+requestAmt);
 		state = State.withdrawing;
 		stateChanged();
@@ -185,7 +187,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.idle;
 	}
 	private void leaveBank(){
-		teller.msgLeavingBank();
 		animState = AnimState.walking;
 		state = State.left;
 		personGui.DoLeaveBank();
@@ -193,6 +194,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void leftBank(){
 		state = State.idle;
+		teller.msgLeavingBank();
 		//personGui.setInBank(false);
 	}
 

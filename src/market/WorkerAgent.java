@@ -18,8 +18,9 @@ public class WorkerAgent extends Agent {
 	private ManagerAgent manager;
 	private List<MyOrder> orders = new ArrayList<MyOrder>();
 	private Semaphore moving = new Semaphore(0, true);
+	private Semaphore working = new Semaphore(0, true);
 	int num;
-	
+		
 	class MyOrder {
 		CustomerAgent c;
 		String item;
@@ -38,7 +39,6 @@ public class WorkerAgent extends Agent {
 		this.name = name;
 		this.manager = manager;
 		this.num = num;
-		print(""+num);
 
 	}
 	
@@ -66,6 +66,14 @@ public class WorkerAgent extends Agent {
 		this.cashier = cashier;
 	}
 	
+	public void msgAtFront() {
+		//from animation
+		print("at front, working released");
+		moving.release();
+		working.release();
+		stateChanged();
+	}
+	
 	public void msgAnimationFinished() {
 		//from animation
 		moving.release();
@@ -85,6 +93,13 @@ public class WorkerAgent extends Agent {
 		for (MyOrder o: orders) {
 			print("in scheduler");
 			int numItems = GetItem(o.item, o.quantity);
+			try {
+				working.acquire();
+				print("working acquired!");
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (numItems == 0) o.c.msgOutOfItem();
 			else {
 				o.c.msgHereIsItemAndBill(numItems, market.getPrice(o.item)*numItems);
@@ -105,6 +120,13 @@ public class WorkerAgent extends Agent {
 	
 	public int GetItem(String item, int quantity) {
 		workerGui.DoGoGetItem(market.getLocation(item));
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		workerGui.DoBringItemToFront();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {

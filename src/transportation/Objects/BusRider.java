@@ -1,11 +1,12 @@
 package transportation.Objects;
 
+import astar.astar.Position;
 import simcity.PersonAgent;
 
 public class BusRider {
 	PersonAgent person;
 	BusStop finalStop;
-	MovementTile destination;
+	String destination;
 	public RiderState state;
 	
 	public enum RiderState {
@@ -15,7 +16,7 @@ public class BusRider {
 		GOTOFF
 	}
 	
-	public BusRider(PersonAgent person, BusStop finalStop, MovementTile destination) {
+	public BusRider(PersonAgent person, BusStop finalStop, String destination) {
 		this.person = person;
 		this.finalStop = finalStop;
 		this.destination = destination;
@@ -30,7 +31,7 @@ public class BusRider {
 		return finalStop;
 	}
 	
-	public MovementTile getDestination() {
+	public String getDestination() {
 		return destination;
 	}
 }

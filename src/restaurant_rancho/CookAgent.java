@@ -26,6 +26,7 @@ public class CookAgent extends Agent {
 	PersonAgent person;
 	RestaurantRancho restaurant;
 	Market market;
+	private enum moState {pending, ordered};
 	public boolean inMarket;
 	
 
@@ -37,11 +38,11 @@ public class CookAgent extends Agent {
 		cookTimes = new Hashtable<String, Integer>();
 		foods = Collections.synchronizedList(new ArrayList<Food>());
 		waiters = Collections.synchronizedList(new ArrayList<WaiterAgent>());
-		foods.add(new Food("Citrus Fire-Grilled Chicken", 7, 0, 7, 7000));
-		foods.add(new Food("Red Chile Enchilada Platter", 7, 0, 7, 6000));
-		foods.add(new Food("Soft Tacos Monterrey", 7, 0, 7, 4000));
-		foods.add(new Food("Burrito Sonora", 7, 0, 7, 7000));
-		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 7, 2500));
+		foods.add(new Food("Citrus Fire-Grilled Chicken", 7, 0, 6, 7000));
+		foods.add(new Food("Red Chile Enchilada Platter", 7, 0, 6, 6000));
+		foods.add(new Food("Soft Tacos Monterrey", 7, 0, 6, 4000));
+		foods.add(new Food("Burrito Sonora", 7, 0, 6, 7000));
+		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 6, 2500));
 		cookTimes.put("Citrus Fire-Grilled Chicken", 7000);
 		cookTimes.put("Red Chile Enchilada Platter", 6000);
 		cookTimes.put("Soft Tacos Monterrey", 5000);
@@ -86,8 +87,18 @@ public class CookAgent extends Agent {
 	}
 	
 	public void msgHereIsOrder(String choice, int amount) {
-		
-	
+		print("Received a delivery from the market!");
+		for (MarketOrder mo : marketOrders){
+			if (mo.food == choice && mo.amount == amount) {
+				Food f = findFood(mo.food);
+				f.amount = amount;
+				marketOrders.remove(mo);
+			} else if (mo.food == choice && mo.amount != 0) {
+				Food f = findFood(mo.food);
+				f.amount = amount - mo.amount;
+				mo.amount -= amount;
+			}
+		}
 	}
 	
 
@@ -113,16 +124,15 @@ public class CookAgent extends Agent {
 						}
 					}
 				}
-				/*synchronized(marketOrders) {
+				synchronized(marketOrders) {
 					for (MarketOrder mo : marketOrders){ 
 						if (mo.os == moState.pending) {
 							mo.os = moState.ordered;
-							//orderFromMarket(mo);
+							market.personAs(this, 100, mo.food, mo.amount);
 							return true;
 						}
 					}
 				}
-				*/
 				return true;
 			}
 		return false;
@@ -163,8 +173,8 @@ public class CookAgent extends Agent {
 		Food f = findFood(o.choice);
 		f.amount--;
 		if (f.amount <= f.low ) {
-			//marketOrders.add(new MarketOrder(f.capacity-f.amount, f.choice));
-			f.ordered =true;
+			marketOrders.add(new MarketOrder(f.choice, f.capacity-f.amount));
+			f.ordered = true;
 		}
 		
 		stateChanged();
@@ -212,9 +222,6 @@ public class CookAgent extends Agent {
 		}
 	}
 	
-	
-	enum moState {pending, ordered};
-
 	 class Food {
 		String choice;
 		int cookingTime;
@@ -241,10 +248,11 @@ public class CookAgent extends Agent {
 	class MarketOrder {
 		String food;
 		int amount;
+		moState os;
 		MarketOrder(String f, int a) {
 			amount = a;
 			food = f;
-			
+			os = moState.pending;
 		}
 		
 		

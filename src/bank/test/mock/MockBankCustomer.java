@@ -55,13 +55,16 @@ public class MockBankCustomer extends Mock {
 		requestAmt = ra;
 		state = State.openingAccount;
 	}
-	public void	msgRequestDeposit(double ra){
+	public void	msgRequestDeposit(double ra, int accNum){
+		log.add(new LoggedEvent("REQ DEPOSIT"));
 		requestAmt = ra;
+		accountNum = accNum;
 		state = State.depositing;
 	}
-	public void	msgRequestWithdraw(double ra){
+	public void	msgRequestWithdraw(double ra, int accNum){
 		log.add(new LoggedEvent("REQ WITHDRAW"));
 		requestAmt = ra;
+		accountNum = accNum;
 		log.add(new LoggedEvent("RA: "+requestAmt));
 		state = State.withdrawing;
 	}
@@ -166,12 +169,12 @@ public class MockBankCustomer extends Mock {
 		state = State.idle;
 	}
 	private void leaveBank(){
-		teller.msgLeavingBank();
 		animState = AnimState.walking;
 		state = State.left;
 	}
 	
 	private void leftBank(){
+		teller.msgLeavingBank();
 		state = State.idle;
 	}
 

@@ -20,6 +20,8 @@ public class WalkerAgent extends MobileAgent{
 	TransportationTraversal aStar;
 	
 	Semaphore animSem;
+	BusStop busStop;
+	String building;
 
 	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
 		this.walker = walker;
@@ -30,10 +32,27 @@ public class WalkerAgent extends MobileAgent{
 		this.aStar = aStar;
 		
 		animSem = new Semaphore(0, true);
+		busStop = null;
+		building = null;
 	}
-
+	
+	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop busStop, String building) {
+		this.walker = walker;
+		this.currentPosition = currentPosition;
+		this.endPosition = endPosition;
+		this.master = master;
+		arrived = false;
+		this.aStar = aStar;
+		
+		animSem = new Semaphore(0, true);
+		this.busStop= busStop;
+		this.building = building;
+	}
+	
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
-		master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
 
 	public void msgDestination() {
@@ -68,7 +87,7 @@ public class WalkerAgent extends MobileAgent{
 			//Try and get lock for the next step.
 			int attempts    = 1;
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-
+			
 			//Did not get lock. Lets make n attempts.
 			while (!gotPermit && attempts < 3) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " got NO permit for " + tmpPath.toString() + " on attempt " + attempts);
@@ -90,15 +109,15 @@ public class WalkerAgent extends MobileAgent{
 
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
-			currentPosition.release(aStar.getGrid());
-			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
-			gui.setDestination(currentPosition.getX(), currentPosition.getY());
+			//currentPosition.release(aStar.getGrid());
+			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			try {
 				animSem.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
 		}
 		
 		arrived = true;
@@ -112,7 +131,12 @@ public class WalkerAgent extends MobileAgent{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		master.msgArrivedAtDestination(walker);
+		if(busStop == null) {
+			master.msgArrivedAtDestination(walker);
+			System.out.println(String.valueOf(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits()));
+		}
+		else
+			master.grid[currentPosition.getX()][currentPosition.getY()].getBusStop().addRider(walker, busStop, building);
 		gui.setIgnore();
 		stopThread();
 	}

@@ -15,7 +15,7 @@ public class MockTeller extends Mock {
 	  MockManager manager;
 	  List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
-		enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
+		public enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
 
 		class Customer {
 		  MockBankCustomer bankCustomer;
@@ -100,13 +100,22 @@ public class MockTeller extends Mock {
 		public void	msgDepositCash(int accountNum, double cash){
 			log.add(new LoggedEvent("DEPOSIT CASH"));
 			customer.requestAmt = cash;
+			for(Account acc : accounts){
+				if(acc.number == accountNum){
+					customer.account = acc; break;
+				}
+			}
 			customer.state = State.depositingCash; 
 		}
 		
 		public void	msgWithdrawCash(int accountNum, double cash){
 			log.add(new LoggedEvent("WITHDRAW CASH"));
-			System.out.println("WITHDRAW CASH");
 			customer.requestAmt = cash;
+			for(Account acc : accounts){
+				if(acc.number == accountNum){
+					customer.account = acc; break;
+				}
+			}
 			customer.state = State.withdrawingCash; 
 		}
 		
@@ -155,39 +164,55 @@ public class MockTeller extends Mock {
 		}
 
 		private void depositCash(){
+			if(customer.account.loanTime <= 0 && customer.account.loanAmount > 0){
+				customer.account.loanAmount += ((-customer.account.loanTime+1)*25); //accounts for the extra day about to be decremented
+			}
+			
 			if(customer.account.loanAmount > 0){
 				if(customer.account.loanAmount > customer.requestAmt){
 				  customer.account.loanAmount -= customer.requestAmt;
 				  customer.account.loanTime--;
 				}
 				else{
-					customer.requestAmt -= customer.account.loanAmount;
+					customer.account.balance = customer.requestAmt-customer.account.loanAmount;
 					customer.account.loanAmount = 0.00;
 					customer.account.loanTime = 0;
 				}
 			}
-		    if(customer.requestAmt > 0){
-			  double newBalance = customer.account.getBalance()+customer.requestAmt;
-			  customer.account.setBalance(newBalance);
-			  customer.account.change = -customer.requestAmt;
-		    }
+			else{ //if there is no loan, add requestAmt to balance
+				customer.account.balance += customer.requestAmt;
+			}
+		  
+		    customer.account.change = -customer.requestAmt;
 			customer.bankCustomer.msgMoneyDeposited(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
 			customer.state = State.deciding;
 		}
 
 		private void withdrawCash(){
 			double newBalance = customer.account.balance-customer.requestAmt;
+			if(customer.account.loanTime <= 0 && customer.account.loanAmount > 0){
+				customer.account.loanAmount += ((-customer.account.loanTime+1)*25); //accounts for the extra day about to be decremented
+			}
 			if(newBalance >= 0){
 			  customer.account.balance = newBalance;
 			  customer.account.change = customer.requestAmt;
 			  customer.account.loanAmount = 0.00;
 			  customer.account.loanTime = 0;
 			}
-			else{
+			else if(customer.account.loanTime > 0 || (customer.account.loanTime == 0 && customer.account.loanAmount == 0)){ //can only take out loans if there is time left to pay them
 			  customer.account.change = customer.requestAmt;
-			  customer.account.loanAmount = -newBalance;
+			  if(customer.account.loanTime == 0 && customer.account.loanAmount == 0){
+				    customer.account.loanTime = 3; //if this is the first loan, loanTime should be 3
+			  }
+			  else{
+			    customer.account.loanTime--; //if the customer is adding to his loan, he will have less time
+			  }
+			  customer.account.loanAmount -= newBalance;
 			  customer.account.balance = 0.00;
-			  customer.account.loanTime = 0;
+			}
+			else {
+				customer.account.change = 0.00; //can't withdraw any money if can't pay off loans
+				customer.account.loanTime--; //double jeopardy as loan time gets worse as well
 			}
 			customer.bankCustomer.msgMoneyWithdrawn(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
 			customer.state = State.deciding;

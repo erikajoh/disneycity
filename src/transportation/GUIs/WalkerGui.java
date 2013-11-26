@@ -27,7 +27,7 @@ public class WalkerGui implements Gui{
 		reachedHalfway = false;
 		reachedDestination = false;
 		
-		animModule = new AnimationModule("Edgar", "WalkDown");
+		animModule = new AnimationModule("Edgar", "WalkDown", 10);
 	}
 	
 	public void updatePosition() {
@@ -59,6 +59,8 @@ public class WalkerGui implements Gui{
 		}
 		
 		if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
+			xLast = xDestination;
+			yLast = yDestination;
 			reachedDestination = true;
 			agent.msgDestination();
 		}
@@ -73,14 +75,14 @@ public class WalkerGui implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
-		xLast = xDestination;
-		yLast = yDestination;
 		this.xDestination = xDestination * 25;
-		this.yDestination = yDestination * 25;
+		this.yDestination = yDestination * 25+2;
+		reachedHalfway = false;
+		reachedDestination = false;
 	}
 	
 	public void doTauntAndLeave() {
-		animModule.changeAnimation("Taunt");
+		animModule.changeAnimation("Taunt", 20);
 	}
 	
 	public void setIgnore() {
