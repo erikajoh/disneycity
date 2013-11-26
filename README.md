@@ -1,6 +1,9 @@
 SimCity201 Project Team 01: Edgar in Disneyland
 ===============================================
 
+All sprites are the property of their respective owners.
+Thanks to the [Spriter's Resource](http://www.spriters-resource.com/) for the sprite sheets.
+
 ##Team Members
 Douglass Chen (Team Lead) <br>
 Daron Lee <br>
@@ -12,8 +15,15 @@ Kelsey Rose <br>
 
 + Douglass:
 	+  
-+ Daron: 
-	+ 
++ Daron (Transportation and City Panel): 
+	+ City Panel is clickable on the locations to change the building window.
+	+ Transportation spawns transportation agents when receiving messages from people to go somewhere.
+	+ A* is implemented per type of transportation agent so that each only moves on certain tiles.
+	+ Roads are constrained to where cars may go. This simulates real lanes of traffic. U-turns are allowed in some places.
+	+ The bus uses a queue that is updated to determine its route. This route is set at the beginning and cannot be changed. Nor will the bus change course for another vehicle.
+	+ The truck is a flying Pelipper. As such, the truck may fly over any time but still responds to collisions with other agents.
+	+ The truck goes to an idle position next to the market.
+	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
 + Dylan: 
 	+ 
 + Erika: 
