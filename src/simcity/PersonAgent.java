@@ -137,7 +137,7 @@ public class PersonAgent extends Agent {
 	
 	public void	addRestaurant(Restaurant r, String personType, int workSession) {
 		// TODO Hacked in restaurant type
-		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getRestaurantName(), "Restaurant", personType, r.getMenu().menuItems, workSession);
+		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getRestaurantName(), r.getType(), personType, r.getMenu().menuItems, workSession);
 		myObjects.add(tempMyRestaurant);
 	}
 	
@@ -638,7 +638,7 @@ public class PersonAgent extends Agent {
 	private void enterMarket() {
 		print("Entering market");
 		MyMarket myMarket = (MyMarket)currentMyObject;
-		myMarket.theMarket.personAs(this, "Customer", name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
+		myMarket.theMarket.personAs(this, name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
 	}
 	
 	// ************************* UTILITIES ***********************************
@@ -688,7 +688,7 @@ public class PersonAgent extends Agent {
 		for(int i = 0; i < myObjectsArray.length; i++)
 			if(myObjectsArray[i] instanceof MyRestaurant) {
 				MyRestaurant tempRest = (MyRestaurant)myObjectsArray[i];
-				if(tempRest.restaurant.getType().equals(foodPreference))
+				if(tempRest.restaurantType.equals(foodPreference))
 					return tempRest;
 			}
 		return null;

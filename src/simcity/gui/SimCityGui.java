@@ -220,10 +220,10 @@ public class SimCityGui extends JFrame  {
 		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom Panel"));
 		add(zoomPanel, c6);			
 	}
-	PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", cityAniPanel.getTransportation(), 'c');
 	
 	public static void main(String[] args) {
 		SimCityGui gui = new SimCityGui("Sim City Disneyland");
+		PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", null, 'c');
 		gui.setTitle("SimCity Disneyland");
 		gui.setVisible(true);
 		gui.setResizable(false);
