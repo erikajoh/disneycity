@@ -119,7 +119,7 @@ public class AnimationModule {
 	
 	public boolean changeFrame(int frame) {
 		if(frame > totalFrames) {
-			System.out.print("Called frame that doesn't exist in animation");
+			System.out.println("Called frame that doesn't exist in animation, total frames is " +totalFrames);
 			return false;
 		}
 		currentFrame = frame;
