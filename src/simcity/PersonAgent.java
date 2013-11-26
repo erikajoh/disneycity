@@ -95,7 +95,7 @@ public class PersonAgent extends Agent {
 		preferredCommute = PreferredCommute.Bus;
 		
 		this.foodPreference = foodPreference;
-		preferEatAtHome = false;
+		preferEatAtHome = true;
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
@@ -593,7 +593,7 @@ public class PersonAgent extends Agent {
 	private void payFare() {
 		print("Paying fare");
 		// TODO transportation paying fare message
-		transportation.msgPayFare(this, fareToPay);
+		transportation.msgPayFare(this, (float)fareToPay);
 	}
 	
 	//Bank actions
