@@ -2,6 +2,7 @@ package simcity.gui;
 
 import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_cafe.gui.RestaurantCafe;
+import restaurant_haus.gui.HausAnimationPanel;
 import restaurant_haus.gui.RestaurantHaus;
 import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_rancho.gui.RestaurantRancho;
@@ -19,6 +20,9 @@ import bank.gui.Bank;
 import market.Market;
 
 import java.awt.*;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
 import java.util.Timer;
 
@@ -33,6 +37,14 @@ public class SimCityPanel extends JPanel{
 	RestaurantBayou restBayou;
 	RestaurantCafe restCafe;
 	RestaurantHaus restHaus;
+	
+	Housing hauntedMansion;
+	Housing mainStApts1;
+	Housing mainStApts2;
+	Housing mainStApts3;
+	Housing mainStApts4;
+	Housing mainStApts5;
+	Housing mainStApts6;
 	
 	public final static int NEW_DAY_DELAY = 3000;
 	 	 
@@ -62,8 +74,13 @@ public class SimCityPanel extends JPanel{
 		restaurants.add(restCafe);
 		restaurants.add(restHaus);
 		
-		Housing firstHousing = gui.hauntedMansion;
-		Housing secondHousing = gui.mainStApts1;
+		hauntedMansion = gui.hauntedMansion;
+		mainStApts1 = gui.mainStApts1;
+		mainStApts2 = gui.mainStApts2;
+		mainStApts3 = gui.mainStApts3;
+		mainStApts4 = gui.mainStApts4;
+		mainStApts5 = gui.mainStApts5;
+		mainStApts6 = gui.mainStApts6;
 		Market firstMarket = gui.mickeysMarket;
 		Bank firstBank = gui.pirateBank;
 		
@@ -72,34 +89,112 @@ public class SimCityPanel extends JPanel{
 		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
-		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 200, foodPreferenceMexican, false,
+		
+		/* agents to add: 
+			PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", hauntedMansion, 200, foodPreferenceMexican, false,
 				"OwnerResident", transportation, 'W');
-		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secundus", secondHousing, 60, foodPreferenceItalian, false,
-				"OwnerResident", transportation, 'C');
+			PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secundus", mainStApts1, 60, foodPreferenceItalian, false,
+					"OwnerResident", transportation, 'B');
+			Edgar the First|Main St Apartments #1|5|Mexican|false|OwnerResident|W
+			Edgar the Second|Main St Apartments #1|60|Mexican|false|OwnerResident|W
+			Edgar the Third|Main St Apartments #1|30|Mexican|true|OwnerResident|W
+		*/
 		
-		firstHousing.setOwner(firstHackedPerson);
-		firstHousing.addRenter(firstHackedPerson);
-		firstHackedPerson.addRestaurant(restRancho, "Customer", 0);
-		firstHackedPerson.addRestaurant(restPizza, "Waiter", 1);
-		firstHackedPerson.addMarket(firstMarket, "Customer");
-		firstHackedPerson.addBank(firstBank, "Customer");
-		people.add(firstHackedPerson);
+		try {
+			URL fileURL = getClass().getResource("/res/simcity_config.txt");
+			URI fileURI = fileURL.toURI();
+			BufferedReader br = new BufferedReader(new FileReader(new File(fileURI)));
+			String what = br.readLine();
+			int numRecords = Integer.parseInt(what);
+			for(int i = 0; i < numRecords; i++) {
+				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
+				String st_Name = st.nextToken();
+				String st_HousingName = st.nextToken();
+				double st_Money = Double.parseDouble(st.nextToken());
+				String st_FoodPref = st.nextToken();
+				String st_AtHome = st.nextToken();
+					boolean st_preferAtHome = st_AtHome.charAt(0) == 't' ? true : false;
+				String st_HousingRelation = st.nextToken();
+				String st_Commute = st.nextToken();
+				
+				Housing st_Housing = mapStringToHousing(st_HousingName);
+				PersonAgent personToAdd = new PersonAgent(
+						st_Name, st_Housing, st_Money, st_FoodPref, st_preferAtHome,
+						st_HousingRelation, transportation, st_Commute.charAt(0));
+				people.add(personToAdd);
+			}
+			numRecords = Integer.parseInt(br.readLine());
+			for(int i = 0; i < numRecords; i++) {
+				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
+				String st_HousingName = st.nextToken();
+				Housing st_Housing = mapStringToHousing(st_HousingName);
+				String st_OwnerName = st.nextToken();
+				PersonAgent st_Owner = mapStringToPerson(st_OwnerName);
+				
+				st_Housing.setOwner(st_Owner);
+				while(st.hasMoreTokens()) {
+					String st_RenterName = st.nextToken();
+					PersonAgent st_Renter = mapStringToPerson(st_RenterName);
+					st_Housing.addRenter(st_Renter);
+				}
+			}
+			numRecords = Integer.parseInt(br.readLine());
+			for(int i = 0; i < numRecords; i++) {
+				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
+				String st_PersonName = st.nextToken();
+				String st_RestName = st.nextToken();
+				String st_RelationName = st.nextToken();
+				int st_session = Integer.parseInt(st.nextToken());
+				
+				PersonAgent st_Person = mapStringToPerson(st_PersonName);
+				Restaurant r = mapStringToRestaurant(st_RestName);
+				st_Person.addRestaurant(r, st_RelationName, st_session);
+			}
+			
+			for(int i = 0; i < people.size(); i++) {
+				PersonAgent currPerson = people.get(i);
+				
+				currPerson.addMarket(firstMarket, "Customer");
+				currPerson.addBank(firstBank, "Customer", 0);
+				
+				currPerson.startThread();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		secondHousing.setOwner(secondHackedPerson);
-		secondHousing.addRenter(secondHackedPerson);
-		secondHackedPerson.addRestaurant(restRancho, "Waiter", 2);
-		secondHackedPerson.addRestaurant(restPizza, "Customer", 0);
-		secondHackedPerson.addMarket(firstMarket, "Customer");
-		secondHackedPerson.addBank(firstBank, "Customer");
-		people.add(secondHackedPerson);
-
-		firstHackedPerson.startThread();
-		//secondHackedPerson.startThread();
-
 	    setLayout(new GridLayout());
 	
 		/* timing */
 	    newDay();
+	}
+	
+	public Housing mapStringToHousing(String houseName) {
+		switch(houseName) {
+			case "Haunted Mansion": return hauntedMansion;
+			case "Main St Apartments #1": return mainStApts1;
+			case "Main St Apartments #2": return mainStApts2;
+			case "Main St Apartments #3": return mainStApts3;
+			case "Main St Apartments #4": return mainStApts4;
+			case "Main St Apartments #5": return mainStApts5;
+			case "Main St Apartments #6": return mainStApts6;
+		}
+		return null;
+	}
+	
+	public PersonAgent mapStringToPerson(String personName) {
+		for(int i = 0; i < people.size(); i++)
+			if(personName.equals(people.get(i).getName()))
+				return people.get(i);
+		return null;
+	}
+	
+	public Restaurant mapStringToRestaurant(String restName) {
+		for(int i = 0; i < restaurants.size(); i++)
+			if(restName.equals(restaurants.get(i).getRestaurantName()))
+				return restaurants.get(i);
+		return null;
 	}
 	
 	public void newDay() {

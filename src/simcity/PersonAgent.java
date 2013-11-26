@@ -101,7 +101,7 @@ public class PersonAgent extends Agent {
 		this.foodPreference = foodPreference;
 		this.preferEatAtHome = preferEatAtHome;
 		
-		currentMyObject = addHousing(h, relationWithHousing);
+		currentMyObject = addHousing(h, relationWithHousing, 0);
 		transportation = t;
 		bodyState = BodyState.Asleep;
 		itemsOnHand = new HashMap<String, Integer>();
@@ -124,15 +124,15 @@ public class PersonAgent extends Agent {
 		preferEatAtHome = atHome;
 	}
 	
-	public MyHousing addHousing(Housing h, String personType) {
+	public MyHousing addHousing(Housing h, String personType, int session) {
 		MyHousing tempMyHousing = new MyHousing(h, h.getName(), personType);
-		if(personType == "Renter" || personType == "OwnerResident")
+		if(personType.equals("Renter") || personType.equals("OwnerResident"))
 			myHome = tempMyHousing; 
 		myObjects.add(tempMyHousing);
 		return tempMyHousing;
 	}
 	
-	public void	addBank(Bank b, String personType) {
+	public void	addBank(Bank b, String personType, int session) {
 		MyBank tempMyBank = new MyBank(b, b.getBankName(), personType);
 		myObjects.add(tempMyBank);
 	}
