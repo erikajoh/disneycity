@@ -13,6 +13,7 @@ import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
 import restaurant_rancho.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.Restaurant;
 import restaurant_rancho.test.mock.EventLog;
 import restaurant_rancho.test.mock.LoggedEvent;
 import simcity.RestMenu;
@@ -32,11 +33,13 @@ public class CashierAgent extends Agent implements Cashier{
 	public enum bankState {nothing, waitingForBank};
 	bankState bs;
 	boolean shiftDone = false;
+	Restaurant restaurant;
 	//public RestMenu menu= new RestMenu();
 	public enum checkState {nothing, pending, readyForCust, waitingForCust, paid, complete, notComplete, completing};
-	public CashierAgent(String name) {
+	public CashierAgent(String name, Restaurant restaurant) {
 		super();
 		this.name = name;
+		this.restaurant = restaurant;
 		checks = Collections.synchronizedList(new ArrayList<Check>());
 		bills = Collections.synchronizedList(new ArrayList<MarketBill>());
 		money = 100;
@@ -90,6 +93,12 @@ public class CashierAgent extends Agent implements Cashier{
 		money-=amount;
 	}
 	
+	public void msgHereIsMarketBill(Market m, double amount){
+		log.add(new LoggedEvent("Received Market Bill."));
+		bills.add(new MarketBill(m, amount));
+		stateChanged();
+	}
+	
 	public void msgHereIsMoney(Customer c, double amount) {
 		log.add(new LoggedEvent("Received Cash. " + amount));
 		Check check = findCheck(c);
@@ -108,12 +117,6 @@ public class CashierAgent extends Agent implements Cashier{
 			stateChanged();
 		}
 		
-	}
-	
-	public void msgHereIsMarketBill(Market m, double amount, int orderNum){
-		log.add(new LoggedEvent("Received Market Bill."));
-		bills.add(new MarketBill(m, amount, orderNum));
-		stateChanged();
 	}
 	
 	public void msgLeftBank(int aNum, double change, double loanAmount, int loan) {
@@ -163,7 +166,7 @@ public class CashierAgent extends Agent implements Cashier{
 		if (!bills.isEmpty()) {
 			synchronized(bills) {
 				for (MarketBill bill : bills) {
-					//payBill(bill);
+					payBill(bill);
 					return true;
 				}
 			}
@@ -220,14 +223,13 @@ public class CashierAgent extends Agent implements Cashier{
 		500);
 	}
 	
-	/*private void payBill(MarketBill bill) {
-		bill.market.msgHereIsPayment(bill.amount, bill.orderNum);
+	private void payBill(MarketBill bill) {
+		bill.market.msgHereIsPayment(restaurant, bill.amount);
 		money -= bill.amount;
 		print ("Paid market, I have " + money + " dollars now");
 		bills.remove(bill);
 		stateChanged();
 	}
-	*/
 	
 	private void notifyWaiter(Check check) { 
 		check.waiter.msgCheckReady(check.cust, check.amount);
@@ -252,12 +254,10 @@ public class CashierAgent extends Agent implements Cashier{
 	public static class MarketBill {
 		Market market;
 		double amount; 
-		int orderNum;
 		
-		public MarketBill(Market m, double am, int num) {
+		public MarketBill(Market m, double am) {
 			market = m;
 			amount = am;
-			orderNum = num;
 		}
 	}
 	

@@ -279,5 +279,11 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 		isOpen = false;
 		
 	}
+
+	@Override
+	public void msgHereIsBill(Market m, double amt) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

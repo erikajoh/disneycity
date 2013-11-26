@@ -323,4 +323,11 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 		if (cashier!=null) cashier.msgShiftDone();
 		
 	}
+	
+	@Override
+	public void msgHereIsBill(Market m, double amt) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

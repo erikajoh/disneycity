@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
+import simcity.Restaurant;
 
 public class CashierAgent extends Agent {
 	private String name;
@@ -15,6 +16,7 @@ public class CashierAgent extends Agent {
 	
 	private PersonAgent person;
 	private CustomerAgent customer;
+	private Restaurant rest;
 	private Market market;
 	
 	enum State {idle, rcvdPayment};
@@ -39,6 +41,10 @@ public class CashierAgent extends Agent {
 	
 	public void setMarket(Market market) {
 		this.market = market;
+	}
+	
+	public void setRestaurant(Restaurant rest) {
+		this.rest = rest;
 	}
 
 	// Messages
@@ -103,7 +109,7 @@ public class CashierAgent extends Agent {
 		print(""+amtRcvd);
 		if (amtRcvd >= b.amt){
 			r.increase(b.amt);
-			b.cust.msgHereIsChange(amtRcvd - b.amt);
+			if (rest == null) b.cust.msgHereIsChange(amtRcvd - b.amt);
 		}
 	}
 	
