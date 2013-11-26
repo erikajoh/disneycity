@@ -57,16 +57,16 @@ public class CookAgent extends Agent {
 			this.time = time;
 			this.inventory = 7;//hack to test inventory
 			if(this.choice.equals("Pastrami Cheeseburger")) {
-				this.inventory = 5;
+				this.inventory = 100;
 			}
 			if(this.choice.equals("Chicken Sausage Pretzel Roll")) {
-				this.inventory = 2;
+				this.inventory = 100;
 			}
 			if(this.choice.equals("BLT Flatbread")) {
-				this.inventory = 8;
+				this.inventory = 100;
 			}
 			if(this.choice.equals("Apple & Cheddar Salad")) {
-				this.inventory = 0;
+				this.inventory = 100;
 			}
 			s = InventoryState.Steady;
 			nextMarket = null;
