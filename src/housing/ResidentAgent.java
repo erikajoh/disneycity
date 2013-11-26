@@ -27,7 +27,7 @@ public class ResidentAgent extends Agent implements Resident {
 	
 	public EventLog log = new EventLog();
 	
-	private final static int START_INVENTORY = 1;
+	private final static int START_INVENTORY = 0;
 
 	public enum State
 	{idle, enteringHouse, readyToCook, noFood, foodDone, wantsMaintenance, maintenanceDone, goingToBed, leavingHouse, left};
