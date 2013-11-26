@@ -49,6 +49,7 @@ public class TruckAgent extends MobileAgent{
 			this.market = market;
 			this.ID = ID;
 			status = Status.WAITING;
+			stateChanged();
 		}
 		
 		deliveryOrder(PersonAgent person, String food, int quantity, Market market, String location) {
@@ -59,15 +60,16 @@ public class TruckAgent extends MobileAgent{
 			this.market = market;
 			this.location = location;
 			status = Status.WAITING;
+			stateChanged();
 		}
 		
-		public boolean returnType() {
-			if(person != null && restaurant == null)
-				return true;
-			if(person == null && restaurant != null)
-				return false;
-			return false;
-		}
+//		public boolean returnType() {
+//			if(person != null && restaurant == null)
+//				return true;
+//			if(person == null && restaurant != null)
+//				return false;
+//			return false;
+//		}
 	}
 	
 	List<deliveryOrder> orders;
@@ -111,6 +113,7 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERING) {
+					print("DELIVERING ORDER");
 					deliverOrder(order);
 					return true;
 				}
@@ -120,6 +123,7 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.WAITING) {
+					print("ORDER WAITING");
 					pickUpOrders();
 					return true;
 				}
@@ -129,8 +133,7 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERED) {
-					if (order.person != null) order.person.msgHereIsOrder(order.food, order.quantity);
-					else if (order.restaurant != null) order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
+					print("ORDER DELIVERED");
 					deleteOrder(order);
 					return true;
 				}
@@ -142,6 +145,7 @@ public class TruckAgent extends MobileAgent{
 	}
 
 	public void goToPosition(Position goal) {
+		print("going to position? "+goal.getX()+" "+goal.getY());
 		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
@@ -178,8 +182,8 @@ public class TruckAgent extends MobileAgent{
 			}
 
 			//Got the required lock. Lets move.
-			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
-			//currentPosition.release(aStar.getGrid());
+//			System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
+//			currentPosition.release(aStar.getGrid());
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			try {
 				animSem.acquire();
@@ -192,24 +196,21 @@ public class TruckAgent extends MobileAgent{
 	}
 
 	private void deliverOrder(deliveryOrder order) {
-		if(order.returnType()) {//person order
+		if(order.person != null) {//person order
 			goToPosition(master.directory.get(order.location).vehicleTile);
 		}
-		if(!order.returnType()) {//Market order
+		else if(order.restaurant != null) {//Restaurant order
 			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile);
 		}
-		
-		try {
-			animSem.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(!order.returnType()) {
-			//order.restaurant.msgHereIsDelivery(order.food, order.quantity);
-		}
-		
+//		try {
+//			animSem.acquire();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		if (order.person != null) order.person.msgHereIsOrder(order.food, order.quantity);
+		else if (order.restaurant != null) order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
+		order.status = Status.DELIVERED;
 		gui.doDeliveryDance();
 		try {
 			animSem.acquire();
@@ -221,14 +222,18 @@ public class TruckAgent extends MobileAgent{
 	
 	private void pickUpOrders() {
 		goToPosition(marketPosition);
-		try {
-			animSem.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		print("went to market to pick up orders");
+//		try {
+//			animSem.acquire();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		print("about to deliver orders maybe");
 		for(deliveryOrder order : orders) {
+			print("found an order to deliver");
 			order.status = Status.DELIVERING;
+			stateChanged();
 		}
 	}
 	
