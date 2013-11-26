@@ -72,7 +72,7 @@ public class AnimationModule {
 		}
 		else {
 			//Frame updates
-			if(frameDelayCounter == frameDelay && moving) {//UpdateFrame
+			if(frameDelayCounter >= frameDelay && moving) {//UpdateFrame
 				currentFrame ++;
 				if(currentFrame > totalFrames)
 					currentFrame = 1;

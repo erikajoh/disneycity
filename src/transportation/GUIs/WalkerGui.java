@@ -91,6 +91,14 @@ public class WalkerGui implements Gui{
 		isPresent = false;
 	}
 	
+	public void setStill() {
+		animModule.setStill();
+	}
+	
+	public void setMoving() {
+		animModule.setMoving();
+	}
+	
 	public boolean isPresent() {
 		return isPresent;
 	}

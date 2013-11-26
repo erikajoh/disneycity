@@ -99,7 +99,7 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock. Lets make n attempts.
 			while (!gotPermit && attempts < 3) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " got NO permit for " + tmpPath.toString() + " on attempt " + attempts);
-
+				gui.setStill();
 				//Wait for 1sec and try again to get lock.
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
@@ -118,6 +118,7 @@ public class WalkerAgent extends MobileAgent{
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
 			//currentPosition.release(aStar.getGrid());
+			gui.setMoving();
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			//System.out.println("DESTINATION: " + tmpPath.toString());
 			try {
