@@ -121,6 +121,7 @@ public class ManagerAgent extends Agent implements Manager {
 
 	public void msgRequestAccount(BankCustomer bc, double amount){
 		synchronized(waitingCustomers){
+			print("msgRequestAccount");
 		   for(WaitingCustomer wc : waitingCustomers){
 			   if(wc.bankCustomer == bc){
 				   wc.setAccountNum(-1);
