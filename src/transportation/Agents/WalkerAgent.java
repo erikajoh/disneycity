@@ -68,10 +68,10 @@ public class WalkerAgent extends MobileAgent{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		if(beginBusStop != null) {
-			goToPosition(beginBusStop.getAssociatedTile());
+			goToPosition(beginBusStop.getAssociatedTile(), false);
 		}
 		if(!arrived) {
-			goToPosition(endPosition);
+			goToPosition(endPosition, false);
 		}
 		if(arrived) {
 			tauntAndLeave();
@@ -79,8 +79,8 @@ public class WalkerAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToPosition(Position goal) {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal);
+	public void goToPosition(Position goal, boolean recalculate) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, recalculate);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -111,7 +111,7 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToPosition(goal);
+				goToPosition(goal, true);
 				break;
 			}
 

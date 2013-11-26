@@ -22,7 +22,7 @@ public class TruckGui implements Gui{
 		this.yDestination = yPos * 25;
 		this.xLast = xPos * 25 - 3;
 		this.yLast = yPos * 25;
-		speed = 2.50f;
+		speed = 1.66f;
 		this.agent = agent;		
 		reachedHalfway = true;
 		reachedDestination = true;
