@@ -327,8 +327,9 @@ public class TransportationController extends Agent implements Transportation{
 				driver.setGui(carGui);
 				driver.startThread();
 			}
-			else
+			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
+			}
 		}
 		else if(mover.method.equals("Walk")){
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
@@ -339,8 +340,11 @@ public class TransportationController extends Agent implements Transportation{
 				walker.setGui(walkerGui);
 				walker.startThread();
 			}
-			else
+			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
+				System.out.println("OBJECT IS WAITING");
+				System.exit(0);
+			}
 		}
 		else if(mover.method.equals("Bus")){
 			//find bus stop and spawn walker to go to bus stop
@@ -348,6 +352,7 @@ public class TransportationController extends Agent implements Transportation{
 			if(directory.get(mover.startingLocation).closestBusStop == directory.get(mover.endingLocation).closestBusStop) {
 				mover.method = "Walk";
 				spawnMover(mover);
+				return;
 			}
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
 				WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
@@ -356,8 +361,9 @@ public class TransportationController extends Agent implements Transportation{
 				busWalker.setGui(busWalkerGui);
 				busWalker.startThread();
 			}
-			else
+			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
+			}
 		 }
 	}
 
