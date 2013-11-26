@@ -16,6 +16,8 @@ public class MockPerson extends Mock implements Person {
 	public int newAccountNum;
 	public double loanAmt;
 	public int loanTime;
+	public int accountChoice = 0;
+	
 
 	private double change;
 		
@@ -86,16 +88,26 @@ public class MockPerson extends Mock implements Person {
 		log.add(new LoggedEvent("TELL BANK HERE"));
 		state = State.idle;		
 		
-		if(accounts.size() == 0){
+		if(accounts.size() == 0 || (decision != 0 && decision != 1)){
+			originalAccount = null;
 			bank.msgRequestAccount(this, requestAmount, true);
 		}
 		else if(decision == 0){
-			originalAccount = accounts.get(0); //really a pick method for the index
+			for(Account acc : accounts){
+				if(acc.number == accountChoice){
+					originalAccount = acc; break;
+				}
+			}
 		    bank.msgRequestDeposit(this, originalAccount.getNumber(), requestAmount, true);
 		}
 		else if(decision == 1){
-			 originalAccount = accounts.get(0); //really a pick method for the index
-			 bank.msgRequestWithdrawal(this, originalAccount.getNumber(), requestAmount, true);
+			for(Account acc : accounts){
+				if(acc.number == accountChoice){
+					originalAccount = acc; break;
+				}
+			}
+			bank.msgRequestWithdrawal(this, originalAccount.getNumber(), requestAmount, true);
+			requestAmount *= -1;
 		}
 	
 	}
@@ -104,12 +116,22 @@ public class MockPerson extends Mock implements Person {
 		log.add(new LoggedEvent("PERSON LEFT BANK "+ newAccountNum + " " + change + " " + loanAmt + " " + loanTime));
 		balance+=change;
 		if(originalAccount == null){
-			Account newAccount = new Account(newAccountNum, balance);
-			newAccount.setBalance(balance);
+			Account newAccount = new Account(newAccountNum, 0.00);
+			newAccount.balance += requestAmount;
+			newAccount.setLoanAmount(loanAmt);
+			newAccount.setLoanTime(loanTime);
 			accounts.add(newAccount);
 		}
 		else {
-			originalAccount.setBalance(balance);
+			originalAccount.balance += requestAmount;
+			if(originalAccount.balance < 0){
+				originalAccount.balance = 0;
+			}
+			if(originalAccount.loanAmount > 0 && loanAmt == 0){
+				originalAccount.balance -= originalAccount.loanAmount;
+			}
+			originalAccount.setLoanAmount(loanAmt);
+			originalAccount.setLoanTime(loanTime);
 		}
 		state = State.idle;
 	}
@@ -122,6 +144,36 @@ public class MockPerson extends Mock implements Person {
 	
 	public void setBalance(double b) {
 		balance = b;
+	}
+	
+	public double getBalance(int accNum) {
+		Account account = null;
+		for(Account acc : accounts){
+			if(acc.number == accNum){
+				account = acc; break;
+			}
+		}
+		return account.getBalance();
+	}
+	
+	public double getLoanAmount(int accNum) {
+		Account account = null;
+		for(Account acc : accounts){
+			if(acc.number == accNum){
+				account = acc; break;
+			}
+		}
+		return account.getLoanAmount();
+	}
+	
+	public int getLoanTime(int accNum) {
+		Account account = null;
+		for(Account acc : accounts){
+			if(acc.number == accNum){
+				account = acc; break;
+			}
+		}
+		return account.getLoanTime();
 	}
 	
 	public List<Account> getAccounts() {

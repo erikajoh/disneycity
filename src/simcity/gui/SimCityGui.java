@@ -31,7 +31,7 @@ import transportation.TransportationPanel;
 import restaurant_cafe.gui.CafeAnimationPanel;
 import restaurant_cafe.gui.RestaurantCafe;
 
-public class SimCityGui extends JFrame implements ActionListener  {
+public class SimCityGui extends JFrame  {
 
 	public static final int WINDOWX = 800;
 	public static final int WINDOWY = 600;
@@ -41,10 +41,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	SimCityPanel simCityPanel;
 	
 	JPanel cards;
-	
-	enum Panel {Mansion, Apt1, Apt2, Apt3, Apt4, Apt5, Apt6, Rancho, Bayou, Market, Bank, Pizza, Cafe, Haus};
-	Panel currP;
-			
+				
 	public static RestaurantRancho restRancho;
 	public RanchoAnimationPanel ranchoAniPanel = new RanchoAnimationPanel();
 	
@@ -96,19 +93,10 @@ public class SimCityGui extends JFrame implements ActionListener  {
 	private JPanel zoomPanel = new JPanel();
 	private JLabel cityLabel = new JLabel("Disney City View                                                   ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
-	private JButton panelB = new JButton("next panel");
 		
 	public static ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	
 	public SimCityGui(String name) {
-		
-//		int delay = 1000; //milliseconds
-//		  ActionListener taskPerformer = new ActionListener() {
-//		      public void actionPerformed(ActionEvent evt) {
-////		          housAniPanel.update();
-//		      }
-//		  };
-//		  new Timer(delay, taskPerformer).start();
 				
 		cards = new JPanel(new CardLayout());
 		cards.add(cafeAniPanel, "Cafe");
@@ -143,10 +131,6 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		animationPanelsList.add(cafeAniPanel);
 		animationPanelsList.add(hausAniPanel);
 		
-		panelB.addActionListener(this);
-		panelB.setPreferredSize(new Dimension(0, 0));
-		currP = Panel.Apt1;
-					
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
 		restBayou = new RestaurantBayou(this, "The Blue Bayou");
@@ -232,7 +216,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		c6.gridwidth = GridBagConstraints.REMAINDER;
 		c6.gridheight =2;
 		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom Panel"));
-		add(panelB, c6);			
+		add(zoomPanel, c6);			
 	}
 	
 	public static void main(String[] args) {
@@ -262,77 +246,14 @@ public class SimCityGui extends JFrame implements ActionListener  {
 		mickeysMarket.addPerson(null, "Manager", "MRAWP");
 		mickeysMarket.addPerson(null, "Cashier", "Kapow");
 		mickeysMarket.addPerson(null, "Worker", "Bleep");
+		
+		mainStApts1.addRenter();
 //		mickeysMarket.addPerson(null, "Customer", "Beebop", 100, "American", 1);
 
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource() == panelB) {
-			CardLayout cl = (CardLayout)(cards.getLayout());	
-			if (currP == Panel.Haus) {
-				cl.show(cards, "Bank");
-				currP = Panel.Bank;
-			}
-			else if (currP == Panel.Bank) {
-				System.out.println("showing hauntedmansion");
-				cl.show(cards, "Mansion");
-				currP = Panel.Mansion;
-			} else if (currP == Panel.Mansion) {
-				System.out.println("showing apt1");
-				cl.show(cards, "Apt1");
-				currP = Panel.Apt1;
-			} else if (currP == Panel.Apt1) {
-				System.out.println("showing apt2");
-				cl.show(cards, "Apt2");
-				currP = Panel.Apt2;
-			} else if (currP == Panel.Apt2) {
-				System.out.println("showing apt3");
-				cl.show(cards, "Apt3");
-				currP = Panel.Apt3;
-			} else if (currP == Panel.Apt3) {
-				System.out.println("showing apt4");
-				cl.show(cards, "Apt4");
-				currP = Panel.Apt4;
-			} else if (currP == Panel.Apt4) {
-				System.out.println("showing apt5");
-				cl.show(cards, "Apt5");
-				currP = Panel.Apt5;
-			} else if (currP == Panel.Apt5) {
-				System.out.println("showing apt6");
-				cl.show(cards, "Apt6");
-				currP = Panel.Apt6;
-			} else if (currP == Panel.Apt6) {
-				System.out.println("showing market");
-				cl.show(cards, "Market");
-				currP = Panel.Market;
-			} else if (currP == Panel.Market) {
-				System.out.println("showing rancho");
-				cl.show(cards, "Rancho");
-				currP = Panel.Rancho;
-			} else if (currP == Panel.Rancho) {
-				System.out.println("showing bayou");
-				cl.show(cards, "Bayou");
-				currP = Panel.Bayou;
-			} else if (currP == Panel.Bayou) {
-				System.out.println("showing pizza");
-				cl.show(cards,  "Pizza");
-				currP = Panel.Pizza;
-			} else if (currP == Panel.Pizza) {
-				System.out.println("showing cafe");
-				cl.show(cards,  "Cafe");
-				currP = Panel.Cafe;
-			} else if (currP == Panel.Cafe){
-				System.out.println("showing haus"); 
-				cl.show(cards,  "Haus");
-				currP = Panel.Haus;
-			}
-		}
 	}
 	
 	public void showPanel(String panel) {
 		System.out.println("showing " + panel);
 		((CardLayout)(cards.getLayout())).show(cards, panel);
-		currP = Panel.valueOf(panel);
 	}
 }

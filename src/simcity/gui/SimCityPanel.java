@@ -59,6 +59,7 @@ public class SimCityPanel extends JPanel{
 		firstHackedPerson.addMarket(firstMarket, "Customer");
 		firstHackedPerson.addBank(firstBank, "Customer");
 		people.add(firstHackedPerson);
+
 		/*
 		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", secondHousing, 60, foodPreferenceMexican, "Renter", transportation);
 		firstHousing.setOwner(firstHackedPerson);
@@ -68,6 +69,7 @@ public class SimCityPanel extends JPanel{
 		secondHackedPerson.addBank(firstBank, "Customer");
 		people.add(secondHackedPerson);
 		*/
+
 		// Alternatively, you can call the next line as a hack (in place of the previous three lines)
 		//		 firstHousing.setOwner();
 		 

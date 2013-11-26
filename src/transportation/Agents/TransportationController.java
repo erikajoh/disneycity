@@ -6,6 +6,8 @@ import java.util.List;
 
 import transportation.Transportation;
 import transportation.TransportationPanel;
+import transportation.GUIs.BusGui;
+import transportation.GUIs.CarGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 import transportation.Objects.MovementTile.MovementType;
@@ -81,6 +83,7 @@ public class TransportationController extends Agent implements Transportation{
 
 	MovementTile[][] grid;
 	List<BusStop> busStops;
+	BusAgent bus;
 
 	public TransportationController(TransportationPanel panel) {
 		master = panel;
@@ -146,30 +149,30 @@ public class TransportationController extends Agent implements Transportation{
 		//++++++++++++++++++++++BEGIN CREATION OF BUS STOPS++++++++++++++++++++++
 		busStops = new ArrayList<BusStop>();
 
-		BusStop tempBusStop = new BusStop();//Top Left Bus Stop 0
+		BusStop tempBusStop = new BusStop("Bus Stop NW");//Top Left Bus Stop 0
 		tempBusStop.addNearbyBuilding("Pirate Bank");
 		tempBusStop.addNearbyBuilding("Rancho Del Zocalo");
 		tempBusStop.addNearbyBuilding("Main St Apartments #1");
 		tempBusStop.addNearbyBuilding("Main St Apartments #4");
-		tempBusStop.associateWalkTile(grid[7][3]);
+		tempBusStop.associateWalkTile(new Position(7, 3));
 		busStops.add(tempBusStop);
 
-		tempBusStop = new BusStop();//Right Bus Stop 1
+		tempBusStop = new BusStop("Bus Stop E");//Right Bus Stop 1
 		tempBusStop.addNearbyBuilding("Main St Apartments #2");
 		tempBusStop.addNearbyBuilding("Haunted Mansion");
 		tempBusStop.addNearbyBuilding("The Blue Bayou");
 		tempBusStop.addNearbyBuilding("Main St Apartments #6");
 		tempBusStop.addNearbyBuilding("Carnation Cafe");
-		tempBusStop.associateWalkTile(grid[12][6]);
+		tempBusStop.associateWalkTile(new Position(12, 6));
 		busStops.add(tempBusStop);
 
-		tempBusStop = new BusStop();//Bottom Left Bus Stop 2
+		tempBusStop = new BusStop("Bus Stop SW");//Bottom Left Bus Stop 2
 		tempBusStop.addNearbyBuilding("Main St Apartments #4");
 		tempBusStop.addNearbyBuilding("Main St Apartments #5");
 		tempBusStop.addNearbyBuilding("Village Haus");
 		tempBusStop.addNearbyBuilding("Pizza Port");
 		tempBusStop.addNearbyBuilding("Mickey's Market");
-		tempBusStop.associateWalkTile(grid[5][8]);
+		tempBusStop.associateWalkTile(new Position(5, 8));
 		busStops.add(tempBusStop);
 		//+++++++++++++++++++++++END CREATION OF BUS STOPS+++++++++++++++++++++++
 
@@ -195,7 +198,7 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Pirate Bank", new Position(7, 2), new Position(7, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Rancho Del Zocalo", new Position(2, 2), new Position(4, 5), busStops.get(0));
+		tempBuilding = new Building("Rancho Del Zocalo", new Position(3, 2), new Position(4, 4), busStops.get(0));
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Carnation Cafe", new Position(12, 10), new Position(11, 8), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
@@ -205,13 +208,31 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Village Haus", new Position(2, 9), new Position(4, 8), busStops.get(2));
 		directory.put(tempBuilding.name, tempBuilding);
+		
+		tempBuilding = new Building("Bus Stop NW", new Position(7, 4), new Position(7, 5), busStops.get(0));
+		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Bus Stop E", new Position(12, 6), new Position(11, 6), busStops.get(1));
+		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Bus Stop SW", new Position(5, 9), new Position(5, 8), busStops.get(2));
+		directory.put(tempBuilding.name, tempBuilding);
 		//+++++++++++++++++++++++END CREATION OF DIRECTORY+++++++++++++++++++++++
-
+		
+		//Spawning Bus
+		bus = new BusAgent(this);
+		BusGui busGui = new BusGui(4, 4, bus);
+		master.addGui(busGui);
+		bus.setGui(busGui);
+		bus.startThread();
+		
 		super.startThread();
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
 	public void msgWantToGo(String startLocation, String endLocation, PersonAgent person, String mover, String character) {
+		for(Mover m : movingObjects) {
+			if(m.person == person)
+				return;
+		}
 		movingObjects.add(new Mover(person, startLocation, endLocation, mover, character));
 		stateChanged();
 	}
@@ -262,15 +283,19 @@ public class TransportationController extends Agent implements Transportation{
 
 	private void spawnMover(Mover mover) {
 		//Try to spawn mover
+		TransportationTraversal aStar = new TransportationTraversal(grid);
 		switch(mover.method) {
 		case "Car":
-			//spawn car
+			mover.transportationState = TransportationState.MOVING;
+			CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
+			driver.startThread();
+			CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
+			master.addGui(carGui);
+			driver.setGui(carGui);
 			break;
 
 		case  "Walk":
 			mover.transportationState = TransportationState.MOVING;
-			TransportationTraversal aStar = new TransportationTraversal(grid);
-			System.out.println(mover.startingLocation);
 			WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
 			walker.startThread();
 			WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
@@ -280,6 +305,12 @@ public class TransportationController extends Agent implements Transportation{
 
 		case "Bus":
 			//find bus stop and spawn walker to go to bus stop
+			mover.transportationState = TransportationState.MOVING;
+			WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, mover.endingLocation);
+			busWalker.startThread();
+			WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
+			master.addGui(busWalkerGui);
+			busWalker.setGui(busWalkerGui);
 			break;
 		}
 	}

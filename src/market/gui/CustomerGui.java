@@ -16,11 +16,9 @@ public class CustomerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, EnterMarket, LeaveMarket};
+	private enum Command {noCommand, EnterMarket, MoveUp, LeaveMarket};
 	private Command command=Command.noCommand;
 	
-	private Semaphore moving = new Semaphore(1, true);
-
 	public static final int mWidth = 400;
 	public static final int mHeight = 360;
 
@@ -42,7 +40,8 @@ public class CustomerGui implements Gui{
 			yPos--;
 		
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command != Command.noCommand) agent.msgAnimationFinished();
+			if (command == Command.MoveUp) agent.msgAnimationMoveUpFinished();
+			else if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
 	}
@@ -68,7 +67,7 @@ public class CustomerGui implements Gui{
 	public void DoEnterMarket() {//later you will map seatnumber to table coordinates.
 		System.out.println("enter");
 		xDestination = (int)(mWidth*0.18);
-		yDestination = (int)(mHeight*0.35);
+		yDestination = (int)(mHeight*0.35) + agent.getNum()*mHeight/10;
 		command = Command.EnterMarket;
 	}
 
@@ -76,6 +75,13 @@ public class CustomerGui implements Gui{
 		xDestination = 0;
 		yDestination = -mHeight/15;
 		command = Command.LeaveMarket;
+	}
+	
+	public void DoMoveUpInLine() {
+		System.out.println("moving");
+		xDestination = (int)(mWidth*0.18);
+		yDestination = (int)(mHeight*0.35) + agent.getNum()*mHeight/10;
+		command = Command.MoveUp;
 	}
 	
 	public void setText(String t) {

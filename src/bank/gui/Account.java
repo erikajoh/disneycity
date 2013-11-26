@@ -34,7 +34,7 @@ public class Account {
 	public void setLoanTime(int lt){
 		loanTime = lt;
 	}
-	public double getLoanTime(){
+	public int getLoanTime(){
 		return loanTime;
 	}
 }

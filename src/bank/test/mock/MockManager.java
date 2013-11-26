@@ -195,11 +195,11 @@ public class MockManager extends Mock {
 				wc.bankCustomer.msgRequestNewAccount(wc.requestAmt);
 			}
 			else if(wc.action == Action.deposit){
-				wc.bankCustomer.msgRequestDeposit(wc.requestAmt);
+				wc.bankCustomer.msgRequestDeposit(wc.requestAmt, wc.accountNum);
 			}
 			else if(wc.action == Action.withdraw){
 				log.add(new LoggedEvent("RA: "+wc.requestAmt));
-				wc.bankCustomer.msgRequestWithdraw(wc.requestAmt);
+				wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
 			}
 
 			wc.state = State.busy;

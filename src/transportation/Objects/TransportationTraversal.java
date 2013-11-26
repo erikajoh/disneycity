@@ -59,6 +59,13 @@ public class TransportationTraversal extends GraphTraversal {
 		//from pos.
 		for(int i = -1; i <= 1; i++) {//increment for x direction
 			//create the potential next position
+			if (grid[x][y].type == MovementTile.MovementType.ROAD) {
+				if(!grid[x][y].left && i == -1) {
+					continue;
+				}
+				if(!grid[x][y].right && i == 1)
+					continue;
+			}
 			int nextX=x+i;
 			int nextY=y;
 			//make sure next point is on the grid
@@ -86,6 +93,12 @@ public class TransportationTraversal extends GraphTraversal {
 			//them directly to nodelist 
 		}
 		for (int j = -1; j <= 1; j++) {//increment for y direction
+			if (grid[x][y].type == MovementTile.MovementType.ROAD) {
+				if(!grid[x][y].up && j == -1)
+					continue;
+				if(!grid[x][y].down && j == 1)
+					continue;
+			}
 			//create the potential next position
 			int nextX=x;
 			int nextY=y+j;

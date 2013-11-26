@@ -17,8 +17,7 @@ public class CustomerAgent extends Agent {
 	private CustomerGui customerGui;
 	private Wallet wallet;
 	double amtDue;
-	int quantity;
-	private Timer t = new Timer();
+	int quantity, numInLine;
 
 	private ManagerAgent manager;
 	private CashierAgent cashier;
@@ -31,7 +30,7 @@ public class CustomerAgent extends Agent {
 	
 	public int table;
 
-	public enum State {idle, entering, ordering, paying, leaving};
+	public enum State {idle, entering, moveUp, ordering, paying, leaving};
 	private State state = State.idle;
 	
 	/**
@@ -40,10 +39,12 @@ public class CustomerAgent extends Agent {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name, double amt, String choice, int quantity){
+	public CustomerAgent(String name, double amt, String choice, int quantity, int num){
 		super();
 		this.name = name;
 		this.choice = choice;
+		this.quantity = quantity;
+		this.numInLine = num;
 		wallet = new Wallet(amt);
 		state = State.entering;
 	}
@@ -51,6 +52,10 @@ public class CustomerAgent extends Agent {
 	/**
 	 * hack to establish connection to Host agent.
 	 */
+	
+	public int getNum() {
+		return numInLine;
+	}
 	
 	public void setPerson(PersonAgent person) {
 		this.person = person;
@@ -76,8 +81,14 @@ public class CustomerAgent extends Agent {
 		this.market = market;
 	}
 	
-	public void msgWhatWouldYouLike() { // from manager
-		state = State.ordering;
+//	public void msgWhatWouldYouLike() { // from manager
+//		state = State.ordering;
+//		stateChanged();
+//	}
+	
+	public void msgLineMoved() {
+		numInLine--;
+		state = State.moveUp;
 		stateChanged();
 	}
 	
@@ -101,6 +112,14 @@ public class CustomerAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgAnimationMoveUpFinished() {
+		//from animation
+		print("my new num is "+numInLine);
+		if (numInLine == 0) state = State.ordering;
+		moving.release();
+		stateChanged();
+	}
+	
 	public void msgAnimationFinished() {
 		//from animation
 		moving.release();
@@ -114,22 +133,24 @@ public class CustomerAgent extends Agent {
 		if (state == State.entering){
 			print("Entering market");
 			EnterMarket();
-			//state = State.idle;
-			state = State.ordering; //hack
+			if (numInLine == 0) state = State.ordering;
+			return true;
+		}
+		else if (state == State.moveUp){
+			state = State.idle;
+			MoveUp();
 			return true;
 		}
 		else if (state == State.ordering){
 			print("Ordering items");
 			PlaceOrder();
-			//state = State.idle;
-			state = State.paying; //hack
 			return true;
 		}
 		else if (state == State.paying){
 			print("Paying");
 			cashier.msgHereIsMoney(this, wallet.getAmt());
-			//state = State.idle;
-			state = State.leaving; //hack
+			state = State.idle;
+//			state = State.leaving; //hack
 			return true;
 		}
 		else if (state == State.leaving){
@@ -137,7 +158,6 @@ public class CustomerAgent extends Agent {
 			LeaveMarket();
 //			person.msgDoneAtMarket(quantity);
 			market.msgLeaving(this);
-			state = State.idle;
 			return true;
 		}
 		return false;
@@ -152,10 +172,17 @@ public class CustomerAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		state = State.idle;
 	}
 	
 	private void PlaceOrder() {
 		manager.msgWantToOrder(this, choice, 1);
+		state = State.idle;
+	}
+	
+	private void MoveUp() {
+		customerGui.DoMoveUpInLine();
+		state = State.idle;
 	}
 
 	private void LeaveMarket() {
@@ -166,6 +193,7 @@ public class CustomerAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		state = State.idle;
 	}
 	
 	public String getName() {
