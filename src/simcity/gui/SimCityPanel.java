@@ -90,16 +90,6 @@ public class SimCityPanel extends JPanel{
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 		
-		/* agents to add: 
-			PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", hauntedMansion, 200, foodPreferenceMexican, false,
-				"OwnerResident", transportation, 'W');
-			PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secundus", mainStApts1, 60, foodPreferenceItalian, false,
-					"OwnerResident", transportation, 'B');
-			Edgar the First|Main St Apartments #1|5|Mexican|false|OwnerResident|W
-			Edgar the Second|Main St Apartments #1|60|Mexican|false|OwnerResident|W
-			Edgar the Third|Main St Apartments #1|30|Mexican|true|OwnerResident|W
-		*/
-		
 		try {
 			URL fileURL = getClass().getResource("/res/simcity_config.txt");
 			URI fileURI = fileURL.toURI();
@@ -155,7 +145,7 @@ public class SimCityPanel extends JPanel{
 				PersonAgent currPerson = people.get(i);
 				
 				currPerson.addMarket(firstMarket, "Customer");
-				currPerson.addBank(firstBank, "Customer", 0);
+				currPerson.addBank(firstBank, "Customer");
 				
 				currPerson.startThread();
 			}

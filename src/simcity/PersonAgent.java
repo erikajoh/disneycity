@@ -35,7 +35,7 @@ public class PersonAgent extends Agent {
 	
 	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
 	
-	private final static double MONEY_ON_HAND_LIMIT = 50.0;
+	private final static double MONEY_ON_HAND_LIMIT = 80.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
 	
 	// Transportation
@@ -101,7 +101,7 @@ public class PersonAgent extends Agent {
 		this.foodPreference = foodPreference;
 		this.preferEatAtHome = preferEatAtHome;
 		
-		currentMyObject = addHousing(h, relationWithHousing, 0);
+		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
 		bodyState = BodyState.Asleep;
 		itemsOnHand = new HashMap<String, Integer>();
@@ -124,7 +124,7 @@ public class PersonAgent extends Agent {
 		preferEatAtHome = atHome;
 	}
 	
-	public MyHousing addHousing(Housing h, String personType, int session) {
+	public MyHousing addHousing(Housing h, String personType) {
 		MyHousing tempMyHousing = new MyHousing(h, h.getName(), personType);
 		if(personType.equals("Renter") || personType.equals("OwnerResident"))
 			myHome = tempMyHousing; 
@@ -132,7 +132,7 @@ public class PersonAgent extends Agent {
 		return tempMyHousing;
 	}
 	
-	public void	addBank(Bank b, String personType, int session) {
+	public void	addBank(Bank b, String personType) {
 		MyBank tempMyBank = new MyBank(b, b.getBankName(), personType);
 		myObjects.add(tempMyBank);
 	}
@@ -420,15 +420,15 @@ public class PersonAgent extends Agent {
 					case NeedTransaction:
 						if(myPersonalBankAccount == null) {
 							requestNewAccount();
-							event = PersonEvent.onHold;
+							event = PersonEvent.onHoldInBank;
 						}
 						else if(moneyWanted > 0) {
 							requestWithdrawal();
-							event = PersonEvent.onHold;
+							event = PersonEvent.onHoldInBank;
 						}
 						else if(moneyToDeposit > 0) {
 							requestDeposit();
-							event = PersonEvent.onHold;
+							event = PersonEvent.onHoldInBank;
 						}
 						break;
 					case None:

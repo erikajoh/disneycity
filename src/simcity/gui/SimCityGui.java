@@ -1,10 +1,7 @@
 package simcity.gui;
 
 import housing.Housing;
-import housing.ResidentAgent.State;
 import housing.gui.HousingAnimationPanel;
-import housing.test.mock.LoggedEvent;
-import bank.ManagerAgent;
 import bank.gui.Bank;
 import bank.gui.BankAnimationPanel;
 
@@ -14,14 +11,11 @@ import market.Market;
 import market.gui.MarketAnimationPanel;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 
 import restaurant_bayou.gui.BayouAnimationPanel;
 import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_rancho.gui.RanchoAnimationPanel;
-import restaurant_rancho.gui.RestaurantRancho;
-import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.gui.RestaurantRancho;
 import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_pizza.gui.PizzaAnimationPanel;
@@ -255,7 +249,7 @@ public class SimCityGui extends JFrame  {
         restCafe.addPerson(p, "Cashier", "cash", 50);
         restCafe.addPerson(null, "Market", "Trader Joes", 50);
         restCafe.addPerson(null, "Host", "Host", 50);
-        restCafe.addPerson(null, "Customer", "Sally", 50);
+        //restCafe.addPerson(null, "Customer", "Sally", 50);
 	
         
 		restHaus.addPerson(null, "Cook", "cook", 50);
