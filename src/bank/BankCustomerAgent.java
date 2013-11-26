@@ -115,6 +115,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	public void msgAnimationFinishedGoToTeller(){
+    	System.out.println("MSG AT TELLER");
 		print("AT TELLER " + state);
 		animState = AnimState.idle;
 		stateChanged();
