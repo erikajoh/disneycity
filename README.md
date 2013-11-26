@@ -22,6 +22,7 @@ Kelsey Rose <br>
 	+ Roads are constrained to where cars may go. This simulates real lanes of traffic. U-turns are allowed in some places.
 	+ The bus is our own personal Chocobus!(The yellow flightless bird on the roads)
 	+ The bus uses a queue that is updated to determine its route. This route is set at the beginning and cannot be changed. Nor will the bus change course for another vehicle.
+	+ If a person wants to get off at the same stop he gets on, he just walks to his destination.
 	+ The truck is a flying Pelipper. As such, the truck may fly over any tile but still responds to collisions with other agents.
 	+ The truck goes to an idle position next to the market.
 	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
