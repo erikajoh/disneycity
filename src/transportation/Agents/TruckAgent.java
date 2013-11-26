@@ -218,14 +218,6 @@ public class TruckAgent extends MobileAgent{
 	
 	private void idle() {
 		goToPosition(new Position (11, 11));
-		System.out.println("Going to idle position");
-		try {
-			animSem.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Out of Semaphore");
 		gui.doIdle();
 	}
 	
