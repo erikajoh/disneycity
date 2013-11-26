@@ -45,7 +45,6 @@ public class ResidentAgent extends Agent implements Resident {
 		this.type = type;
 		this.roomNo = roomNo;
 		building = new Building(type);
-		state = State.idle;
 //		state = State.enteringHouse; //hack
 //		foodPreference = "American"; //hack
 	}
@@ -80,7 +79,6 @@ public class ResidentAgent extends Agent implements Resident {
 			if (getFood(foodPreference)) {
 				timer.schedule(new TimerTask() {
 					public void run() {
-						print("food done");
 						log.add(new LoggedEvent("Food is done"));
 						state = State.foodDone;
 						stateChanged();
@@ -88,7 +86,6 @@ public class ResidentAgent extends Agent implements Resident {
 				},
 				5000);
 			} else {
-				print("no food");
 				log.add(new LoggedEvent("No food"));
 				state = State.noFood;
 				stateChanged();
@@ -119,7 +116,7 @@ public class ResidentAgent extends Agent implements Resident {
 		stateChanged();
 	}
 	
-	public void msgAnimationLeavingFinished(){
+	public void msgAnimationLeavingFinished(){ //from animation
 		moving.release();
 		state = State.left;
 		stateChanged();
@@ -127,7 +124,6 @@ public class ResidentAgent extends Agent implements Resident {
 	
 	public void msgMaintenanceAnimationFinished(){ //from animation
 		moving.release();
-		print("finished maintenance");
 		log.add(new LoggedEvent("Finished maintenance"));
 		state = State.maintenanceDone;
 		stateChanged();
@@ -174,6 +170,7 @@ public class ResidentAgent extends Agent implements Resident {
 		else if(state == State.noFood){
 			Do("No food");
 			housing.msgFoodDone(this, false);
+			state = State.idle;
 //			state = State.wantsMaintenance; //hack
 			return true;
 		}
@@ -227,6 +224,7 @@ public class ResidentAgent extends Agent implements Resident {
 			e.printStackTrace();
 		}
 		housing.msgEntered(this);
+		stateChanged();
 	}
 	
 	private void CookFood(){
@@ -239,6 +237,7 @@ public class ResidentAgent extends Agent implements Resident {
 			e.printStackTrace();
 		}
 		building.cookFood();
+		stateChanged();
 	}
 	
 	private void GoToTable(){
@@ -250,6 +249,7 @@ public class ResidentAgent extends Agent implements Resident {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		stateChanged();
 	}
 	
 	private void DoMaintenance(){
@@ -261,6 +261,7 @@ public class ResidentAgent extends Agent implements Resident {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		stateChanged();
 	}
 	
 	private void GoToBed(){
@@ -272,6 +273,7 @@ public class ResidentAgent extends Agent implements Resident {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		stateChanged();
 	}
 	
 	private void LeaveHouse(){
@@ -283,6 +285,7 @@ public class ResidentAgent extends Agent implements Resident {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		stateChanged();
 	}
 
 	// Accessors, etc.

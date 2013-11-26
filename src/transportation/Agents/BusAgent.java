@@ -111,6 +111,7 @@ public class BusAgent extends MobileAgent{
 			busRiders.add(busRider);
 			busRider.getPerson().msgPayFare(fare);
 			busRider.state = BusRider.RiderState.HASTOPAY;
+			msgPayFare(busRider.getPerson(), fare);
 			//busRider.state = BusRider.RiderState.RIDING;
 		}
 	}
@@ -126,6 +127,7 @@ public class BusAgent extends MobileAgent{
 
 		MovementTile[][] grid = master.grid;
 		while(true) {
+			//currentBusStop = null;
 			Position nextPosition = route.poll();
 			route.add(nextPosition);//bus must be able to loop
 			try {
@@ -143,11 +145,10 @@ public class BusAgent extends MobileAgent{
 				e.printStackTrace();
 			}
 			currentPosition = nextPosition;
+			currentBusStop = grid[nextPosition.getX()][nextPosition.getY()].getBusStop();
 			if(grid[nextPosition.getX()][nextPosition.getY()].getBusStop() != null) {
-				currentBusStop = grid[nextPosition.getX()][nextPosition.getY()].getBusStop();
 				break;
 			}
-			currentBusStop = null;
 		}
 
 		//gui code to go to next bus stop

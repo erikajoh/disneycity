@@ -137,11 +137,12 @@ public class WalkerAgent extends MobileAgent{
 			e.printStackTrace();
 		}
 		if(beginBusStop == null) {
-			System.out.println(String.valueOf(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits()));
+			master.msgArrivedAtDestination(walker);
 		}
 		else
 			beginBusStop.addRider(walker, endBusStop, building);
-		master.msgArrivedAtDestination(walker);
+		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+			master.grid[currentPosition.getX()][currentPosition.getY()].release();
 		gui.setIgnore();
 		stopThread();
 	}
