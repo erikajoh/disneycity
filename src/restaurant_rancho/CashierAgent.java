@@ -36,7 +36,7 @@ public class CashierAgent extends Agent implements Cashier{
 		this.name = name;
 		checks = Collections.synchronizedList(new ArrayList<Check>());
 		bills = Collections.synchronizedList(new ArrayList<MarketBill>());
-		money = 100;
+		money = 500;
 		accountNum = -1;
 		endOfDay = false;
 	}
@@ -49,7 +49,6 @@ public class CashierAgent extends Agent implements Cashier{
 		market = m;
 	}
 	public void setBank(Bank b){
-		print("bank is " + bank.getName());
 		bank = b;
 	}
 	public void setEndOfDay(Boolean b) {
@@ -119,10 +118,12 @@ public class CashierAgent extends Agent implements Cashier{
 		try{
 		if (money>400 || endOfDay) {
 			if (accountNum==-1) {
+				print("requesting account from bank");
 				bank.msgRequestAccount(person, money-100, false);
 				return true;
 			}
 			else {
+				print(" requesting deposit");
 				bank.msgRequestDeposit(person, accountNum, money-100, false);
 				return true;
 			}
