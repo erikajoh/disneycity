@@ -185,10 +185,12 @@ public class PersonAgent extends Agent {
 	
 	public void msgStopWork(double amount) {
 		// TODO how is releasing workers going to, well, work?
-		print("Stopping work");
+		print("Stopping work; got paid " + amount
+				);
 		moneyOnHand += amount;
 		// TODO what other states need to be changed such that he can go home? 
 		restState = RestaurantState.None;
+		workplace = null;
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
@@ -449,7 +451,7 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
-				if(!isNourished && !preferEatAtHome || restState == RestaurantState.WantToWork) {
+				if((!isNourished && !preferEatAtHome) || (restState == RestaurantState.WantToWork) && currentLocation.equals(workplace.name)) {
 					enterRestaurant();
 					event = PersonEvent.onHoldAtRestaurant;
 				}
