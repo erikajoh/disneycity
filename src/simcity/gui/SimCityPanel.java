@@ -1,5 +1,8 @@
 package simcity.gui;
 
+import restaurant_bayou.gui.RestaurantBayou;
+import restaurant_cafe.gui.RestaurantCafe;
+import restaurant_haus.gui.RestaurantHaus;
 import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_rancho.gui.RestaurantRancho;
 import simcity.PersonAgent;
@@ -27,10 +30,14 @@ public class SimCityPanel extends JPanel{
 	SimCityGui gui = null;
 	RestaurantRancho restRancho;
 	RestaurantPizza restPizza;
+	RestaurantBayou restBayou;
+	RestaurantCafe restCafe;
+	RestaurantHaus restHaus;
 	
 	public final static int NEW_DAY_DELAY = 3000;
 	 	 
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
+	ArrayList<Restaurant> restaurants = new ArrayList<Restaurant>();
 	ArrayList<Housing> housings = new ArrayList<Housing>();
 	ArrayList<Market> markets = new ArrayList<Market>();
 	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
@@ -46,6 +53,15 @@ public class SimCityPanel extends JPanel{
 
 		restRancho = gui.restRancho;
 		restPizza = gui.restPizza;
+		restBayou = gui.restBayou;
+		restCafe = gui.restCafe;
+		restHaus = gui.restHaus;
+		restaurants.add(restRancho);
+		restaurants.add(restPizza);
+		restaurants.add(restBayou);
+		restaurants.add(restCafe);
+		restaurants.add(restHaus);
+		
 		Housing firstHousing = gui.hauntedMansion;
 		Housing secondHousing = gui.mainStApts1;
 		Market firstMarket = gui.mickeysMarket;
@@ -56,7 +72,7 @@ public class SimCityPanel extends JPanel{
 		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
-		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 30, foodPreferenceMexican, false,
+		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 300, foodPreferenceMexican, false,
 				"OwnerResident", transportation, 'W');
 		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secundus", secondHousing, 60, foodPreferenceItalian, false,
 				"OwnerResident", transportation, 'C');
@@ -137,9 +153,6 @@ public class SimCityPanel extends JPanel{
 			if(currTicks == WORK_TWO_START) {
 				person.msgGoToWork(2);
 			}
-			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
-				person.msgStopWork();
-			}
 		}
 		
 		// handle ticks for housing
@@ -149,6 +162,16 @@ public class SimCityPanel extends JPanel{
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == START_OF_DAY && getCurrentDay().equals("Saturday")) {
 				theHousing.msgRentDue();
+			}
+		}
+		
+		// handle ticks for restaurants
+		for(int i = 0; i < housings.size(); i++) {
+			Restaurant theRestaurant = restaurants.get(i);
+			// rent is due signal: at the start of every Saturday
+			// TODO whole rent system needs to be tested with actual PersonAgents
+			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
+				theRestaurant.msgEndOfShift();
 			}
 		}
 	}

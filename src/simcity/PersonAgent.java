@@ -33,7 +33,7 @@ public class PersonAgent extends Agent {
 	private enum BodyState {Asleep, Active, Tired};
 	private BodyState bodyState;
 	
-	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, stopWork, payRent, receiveRent, needMaintenance };
+	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
@@ -75,7 +75,8 @@ public class PersonAgent extends Agent {
 	
 	// Synchronization
 	private PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
-	public enum PersonEvent {makingDecision, onHold, onHoldInTransportation, onHoldInTransportationPayFare, onHoldAtRestaurant, onHoldInMarket, onHoldInBank};
+	public enum PersonEvent {makingDecision, makingDecisionAtRestaurant, onHold, onHoldInTransportation, onHoldInTransportationPayFare, onHoldAtRestaurant,
+		onHoldInMarket, onHoldInBank};
 	public PersonEvent event = PersonEvent.makingDecision;
 	
 	// ************************* SETUP ***********************************
@@ -182,10 +183,13 @@ public class PersonAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgStopWork() {
+	public void msgStopWork(double amount) {
 		// TODO how is releasing workers going to, well, work?
 		print("Stopping work");
-		actionQueue.add(new Action(ActionString.stopWork, 2, 0));
+		moneyOnHand += amount;
+		// TODO what other states need to be changed such that he can go home? 
+		restState = RestaurantState.None;
+		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 	
@@ -325,9 +329,7 @@ public class PersonAgent extends Agent {
 				case needMaintenance: 
 					doMaintenance(); break;
 				case goToWork:
-					checkGoingToWork((int)theAction.amount); break; // TODO: handle go to work
-				case stopWork:
-					break; // TODO: handle stopping work
+					checkGoingToWork((int)theAction.amount); break;
 			}
 			event = PersonEvent.makingDecision;
 			print("returning true from action queue; popped: " + theAction.action + "; size: " + actionQueue.size());
@@ -447,7 +449,7 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
-				if(!isNourished && !preferEatAtHome || workplace.name.equals(currentLocation)) {
+				if(!isNourished && !preferEatAtHome || restState == RestaurantState.WantToWork) {
 					enterRestaurant();
 					event = PersonEvent.onHoldAtRestaurant;
 				}
@@ -591,6 +593,7 @@ public class PersonAgent extends Agent {
 				return;
 			}
 			print("I have enough money to buy from restaurant");
+			restState = RestaurantState.WantToEat;
 			targetLocation = targetRestaurant.name;
 		}
 	}
