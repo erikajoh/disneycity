@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -26,7 +27,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	private final int WINDOWX = 400;
 	private final int WINDOWY = 330;
 	
-	private BufferedImage img;
+	private Image img;
 	SimCityGui gui;
 	private Transportation controller;
 	
@@ -54,13 +55,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
         
         this.gui = gui;
         
-        try {
-			img =  ImageIO.read(new File("src" + File.separator + "res" + File.separator + "Background.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
- 
+        img = Toolkit.getDefaultToolkit().getImage("res/Background.png");	
     	timer = new Timer(20, this );
     	timer.start();
     	
