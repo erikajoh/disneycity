@@ -27,7 +27,6 @@ public class MarketAgent extends Agent implements Market {
 		super();
 		this.name = name;
 		for (String item: menu.menuList) {
-			print("heyo");
 			i.add(item, 3);
 			i.setCost(item, 10);
 		}

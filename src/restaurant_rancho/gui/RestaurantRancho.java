@@ -252,7 +252,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Cashier")) {
     		if (cashier == null) {
-    			cashier = new CashierAgent(name);
+    			cashier = new CashierAgent(name, this);
     			if (p!=null) cashier.setPerson(p);
     			if (bank!=null) cashier.setBank(bank);
     			if (market!=null) cashier.setMarket(market);
@@ -293,10 +293,18 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 		if (cook!=null) cook.msgShiftDone();
 		if (host!=null) host.msgShiftDone();
 		if (cashier!=null) cashier.subtract(30);
+
 		if (cashier!=null) cashier.msgShiftDone();
+		
 		*/
+
+
+
 		
 	}
-    
+	@Override
+	public void msgHereIsBill(Market m, double amount) {
+		cashier.msgHereIsMarketBill(m, amount);
+	} 
 
 }

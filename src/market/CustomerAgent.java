@@ -49,7 +49,6 @@ public class CustomerAgent extends Agent {
 		this.virtual = false;
 		wallet = new Wallet(amt);
 		state = State.entering;
-		print("created customer");
 	}
 	
 	public CustomerAgent(String name, double amt, String choice, int quantity, int num, String location){
@@ -62,10 +61,9 @@ public class CustomerAgent extends Agent {
 		this.location = location;
 		wallet = new Wallet(amt);
 		state = State.entering;
-		print("created customer");
 	}
 	
-	public CustomerAgent(String name, double amt, String choice, int quantity, int num, int orderID){
+	public CustomerAgent(String name, String choice, int quantity, int num, int orderID){
 		super();
 		this.name = name;
 		this.choice = choice;
@@ -73,9 +71,8 @@ public class CustomerAgent extends Agent {
 		this.numInLine = num;
 		this.orderID = orderID;
 		this.virtual = true;
-		wallet = new Wallet(amt);
+		wallet = new Wallet(0);
 		state = State.entering;
-		print("created customer");
 	}
 
 	/**
@@ -120,15 +117,20 @@ public class CustomerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgHereIsItemAndBill(int num, double amt) {
-		quantity = num;
-		amtDue = amt;
-		if (wallet.getAmt() < amtDue) state = State.leaving;
-		else state = State.paying;
+	public void msgHereIsItemAndBill(int num, double amt) { // from worker
+		if (rest != null) {
+			rest.msgHereIsBill(market, amt);
+			state = State.idle;
+		} else {
+			quantity = num;
+			amtDue = amt;
+			if (wallet.getAmt() < amtDue) state = State.leaving;
+			else state = State.paying;
+		}
 		stateChanged();
 	}
 	
-	public void msgOutOfItem() {
+	public void msgOutOfItem() { // from worker
 		quantity = 0;
 		state = State.leaving;
 		stateChanged();
@@ -137,6 +139,12 @@ public class CustomerAgent extends Agent {
 	public void msgHereIsChange(double amt) { // from cashier
 		wallet.update(amt);
 		state = State.leaving;
+		stateChanged();
+	}
+	
+	public void msgHereIsMoney(double amt) { // from market (from restaurant)
+		wallet.update(amt);
+		state = State.paying;
 		stateChanged();
 	}
 	
@@ -178,7 +186,6 @@ public class CustomerAgent extends Agent {
 			print("Paying");
 			cashier.msgHereIsMoney(this, wallet.getAmt());
 			state = State.idle;
-//			state = State.leaving; //hack
 			return true;
 		}
 		else if (state == State.leaving){

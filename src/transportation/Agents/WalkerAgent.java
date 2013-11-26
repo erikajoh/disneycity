@@ -1,6 +1,7 @@
 package transportation.Agents;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 import astar.astar.AStarNode;
@@ -68,10 +69,10 @@ public class WalkerAgent extends MobileAgent{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		if(beginBusStop != null) {
-			goToPosition(beginBusStop.getAssociatedTile());
+			goToPosition(beginBusStop.getAssociatedTile(), false);
 		}
 		if(!arrived) {
-			goToPosition(endPosition);
+			goToPosition(endPosition, false);
 		}
 		if(arrived) {
 			tauntAndLeave();
@@ -79,8 +80,8 @@ public class WalkerAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToPosition(Position goal) {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal);
+	public void goToPosition(Position goal, boolean recalculate) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, recalculate);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -96,8 +97,10 @@ public class WalkerAgent extends MobileAgent{
 			int attempts    = 1;
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 			
+			Random random = new Random();
+			int attemptsToMake = random.nextInt(3) + 3;
 			//Did not get lock. Lets make n attempts.
-			while (!gotPermit && attempts < 3) {
+			while (!gotPermit && attempts < attemptsToMake) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " got NO permit for " + tmpPath.toString() + " on attempt " + attempts);
 				gui.setStill();
 				//Wait for 1sec and try again to get lock.
@@ -111,7 +114,7 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToPosition(goal);
+				goToPosition(goal, true);
 				break;
 			}
 

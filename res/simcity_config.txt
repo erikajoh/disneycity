@@ -1,1 +1,6 @@
-Narwhal Prime|
+2
+Narwhal Prime|Haunted Mansion|200|Mexican|false|OwnerResident|W
+Narwhal Secundus|Main St Apartments #1|60|Mexican|false|OwnerResident|B
+2
+Narwhal Prime|Narwhal Prime
+Narwhal Secundus|Narwhal Secundus

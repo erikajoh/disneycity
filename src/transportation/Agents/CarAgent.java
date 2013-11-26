@@ -45,7 +45,7 @@ public class CarAgent extends MobileAgent{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		if(!arrived) {
-			goToEndPosition();
+			goToEndPosition(false);
 		}
 		if(arrived) {
 			tauntAndLeave();
@@ -53,8 +53,8 @@ public class CarAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToEndPosition() {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, endPosition);
+	public void goToEndPosition(boolean recalculate) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, endPosition, recalculate);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -85,7 +85,7 @@ public class CarAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToEndPosition();
+				goToEndPosition(false);
 				break;
 			}
 

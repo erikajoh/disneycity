@@ -313,7 +313,8 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	public void msgEndOfShift() {
 		isOpen = false;
 		System.out.println("RESTAURANT GOT END OF SHIFT");
-		for (WaiterAgent w: waiters) {
+		for (int i = 0; i < waiters.size(); i++) {
+			WaiterAgent w = waiters.get(i);
 			w.msgShiftDone();
 			if (cashier!=null) cashier.subtract(10);
 		}
@@ -323,4 +324,11 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 		if (cashier!=null) cashier.msgShiftDone();
 		
 	}
+	
+	@Override
+	public void msgHereIsBill(Market m, double amt) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

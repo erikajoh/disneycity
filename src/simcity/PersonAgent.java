@@ -35,7 +35,7 @@ public class PersonAgent extends Agent {
 	
 	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
 	
-	private final static double MONEY_ON_HAND_LIMIT = 50.0;
+	private final static double MONEY_ON_HAND_LIMIT = 80.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
 	
 	// Transportation
@@ -126,7 +126,7 @@ public class PersonAgent extends Agent {
 	
 	public MyHousing addHousing(Housing h, String personType) {
 		MyHousing tempMyHousing = new MyHousing(h, h.getName(), personType);
-		if(personType == "Renter" || personType == "OwnerResident")
+		if(personType.equals("Renter") || personType.equals("OwnerResident"))
 			myHome = tempMyHousing; 
 		myObjects.add(tempMyHousing);
 		return tempMyHousing;
@@ -185,10 +185,12 @@ public class PersonAgent extends Agent {
 	
 	public void msgStopWork(double amount) {
 		// TODO how is releasing workers going to, well, work?
-		print("Stopping work");
+		print("Stopping work; got paid " + amount
+				);
 		moneyOnHand += amount;
 		// TODO what other states need to be changed such that he can go home? 
 		restState = RestaurantState.None;
+		workplace = null;
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
@@ -418,15 +420,15 @@ public class PersonAgent extends Agent {
 					case NeedTransaction:
 						if(myPersonalBankAccount == null) {
 							requestNewAccount();
-							event = PersonEvent.onHold;
+							event = PersonEvent.onHoldInBank;
 						}
 						else if(moneyWanted > 0) {
 							requestWithdrawal();
-							event = PersonEvent.onHold;
+							event = PersonEvent.onHoldInBank;
 						}
 						else if(moneyToDeposit > 0) {
 							requestDeposit();
-							event = PersonEvent.onHold;
+							event = PersonEvent.onHoldInBank;
 						}
 						break;
 					case None:
@@ -449,7 +451,7 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
-				if(!isNourished && !preferEatAtHome || restState == RestaurantState.WantToWork) {
+				if((!isNourished && !preferEatAtHome) || (restState == RestaurantState.WantToWork) && currentLocation.equals(workplace.name)) {
 					enterRestaurant();
 					event = PersonEvent.onHoldAtRestaurant;
 				}

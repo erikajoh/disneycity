@@ -12,7 +12,6 @@ import transportation.GUIs.CarGui;
 import transportation.GUIs.TruckGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
-import transportation.Objects.MovementTile.MovementType;
 import agent.Agent;
 import astar.astar.Position;
 import simcity.*;

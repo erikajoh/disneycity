@@ -1,5 +1,3 @@
-
-
 package restaurant_rancho;
 
 import agent_rancho.Agent;
@@ -13,10 +11,6 @@ import restaurant_rancho.gui.RestaurantRancho;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
-
-	/**
-	 * Restaurant Host Agent
-	 */
 	
 	public abstract class WaiterAgent extends Agent implements Waiter{
 		public List<MyCustomer> customers;

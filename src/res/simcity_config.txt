@@ -1,0 +1,10 @@
+1
+Narwhal Secundus|Main St Apartments #1|40|Mexican|false|OwnerResident|B
+1
+Main St Apartments #1|Narwhal Secundus|Narwhal Secundus
+5
+Narwhal Secundus|Rancho Del Zocalo|Customer|0
+Narwhal Secundus|Blue Bayou|Customer|0
+Narwhal Secundus|Pizza Port|Waiter|2
+Narwhal Secundus|Village Haus|Customer|0
+Narwhal Secundus|Carnation Cafe|Customer|0

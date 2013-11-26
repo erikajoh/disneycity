@@ -9,7 +9,7 @@ public interface Restaurant {
 	public RestMenu getMenu();
 	
 	public String getRestaurantName();
-	
+		
 	public void setBank(Bank b);
 	
 	public void setMarket(Market m);
@@ -21,8 +21,10 @@ public interface Restaurant {
 	public void addPerson(PersonAgent p, String type, String name, double money);
 	
 	public String getType();
+	
+	public void msgHereIsBill(Market m, double amt);
 
 	public void msgHereIsOrder(String food, int quantity, int ID);
-	
+		
 	public void msgEndOfShift();
 }

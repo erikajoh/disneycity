@@ -20,7 +20,7 @@ public class FlyingTraversal extends GraphTraversal {
 		super();
 		this.grid = grid; 
 		//grid = new Object[1000][2000];
-		System.out.println("grid rows="+grid.length+",grid cols="+grid[0].length);
+		//System.out.println("grid rows="+grid.length+",grid cols="+grid[0].length);
 		nodes = new PriorityQueue<Node>(6, new Comparator<Node>()
 				{
 			public int compare(Node a, Node b)
@@ -47,7 +47,7 @@ public class FlyingTraversal extends GraphTraversal {
 		//System.out.print("createStartNode"); n.printNode();
 		return n;
 	}
-	public List<Node> expandFunc(Node n) {
+	public List<Node> expandFunc(Node n, boolean recalculate) {
 		AStarNode node = (AStarNode) n;
 		//loop computes the positions you can get to from node
 		List<Node> expandedNodes = new ArrayList<Node>();
@@ -66,9 +66,12 @@ public class FlyingTraversal extends GraphTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type == MovementTile.MovementType.UNTYPED) {
+			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type == MovementTile.MovementType.UNTYPED || grid[nextX][nextY].type == MovementTile.MovementType.ROAD) {
 				continue;
 			}
+			
+			if (recalculate && !next.open(grid))
+				continue;
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);

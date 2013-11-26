@@ -22,12 +22,12 @@ public class TruckGui implements Gui{
 		this.yDestination = yPos * 25;
 		this.xLast = xPos * 25 - 3;
 		this.yLast = yPos * 25;
-		speed = 1.00f;
+		speed = 1.66f;
 		this.agent = agent;		
 		reachedHalfway = true;
 		reachedDestination = true;
 		
-		animModule = new AnimationModule("Pelipper", "IDLE", 10);
+		animModule = new AnimationModule("Pelipper", "IDLE", 5);
 	}
 	
 	public void updatePosition() {
@@ -35,22 +35,22 @@ public class TruckGui implements Gui{
 			xPos = xDestination;
 		else if(xPos < xDestination) {
 			xPos += speed;
-			animModule.changeAnimation("Right");
+			animModule.changeAnimation("Right", 5);
 		}
 		else if(xPos > xDestination) {
 			xPos -= speed;
-			animModule.changeAnimation("Left");
+			animModule.changeAnimation("Left", 5);
 		}
 		
 		if(Math.abs(yDestination - yPos) <= speed)
 			yPos = yDestination;
 		if(yPos < yDestination) {
 			yPos += speed;
-			animModule.changeAnimation("Down");
+			animModule.changeAnimation("Down", 5);
 		}
 		else if(yPos > yDestination) {
 			yPos -= speed;
-			animModule.changeAnimation("Up");
+			animModule.changeAnimation("Up", 5);
 		}
 		
 		if(Math.abs(xLast - xPos) >= 15 || Math.abs(yLast - yPos) >= 15 && !reachedHalfway) {
@@ -64,7 +64,7 @@ public class TruckGui implements Gui{
 			agent.msgDestination();
 		}
 		
-		if(animModule.getAnimation().equals("Delivery") && animModule.getLastFrame())
+		if(animModule.getAnimation().equals("Deliver") && animModule.getLastFrame())
 			agent.msgDestination();
 	}
 	
@@ -73,7 +73,7 @@ public class TruckGui implements Gui{
 	}
 	
 	public void doDeliveryDance() {
-		animModule.changeAnimation("Deliver", 10);
+		animModule.changeAnimation("Deliver", 5);
 	}
 	
 	public void draw(Graphics2D g) {
