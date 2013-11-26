@@ -76,14 +76,13 @@ public class ResidentGui implements Gui{
 		standing = xPos == xDestination && yPos == yDestination;
 		sleeping = Math.abs(xPos - (int)(hWidth*0.7)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
 		
+		
 		// animation rules
 		if(sleeping) {
 			animModule.changeAnimation("Sleep");
-			animModule.setStill();
 		}
 		else if(standing) {
 			animModule.changeAnimation("Stand");
-			animModule.setStill();
 		}
 		else {
 			switch(currDir) {

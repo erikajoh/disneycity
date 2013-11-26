@@ -64,7 +64,7 @@ public class TruckGui implements Gui{
 			
 			System.out.println(String.valueOf(xPos) + " " + String.valueOf(xDestination) + " " + String.valueOf(yPos) + " " + String.valueOf(yDestination));
 			System.out.println(String.valueOf(reachedDestination));
-			System.exit(0);
+			//System.exit(0);
 			reachedDestination = true;
 			agent.msgDestination();
 		}
