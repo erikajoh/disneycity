@@ -199,32 +199,20 @@ public class TruckAgent extends MobileAgent{
 		else if(order.restaurant != null) {//Restaurant order
 			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile);
 		}
-//		try {
-//			animSem.acquire();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		if (order.person != null) order.person.msgHereIsOrder(order.food, order.quantity);
 		else if (order.restaurant != null) order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
 		order.status = Status.DELIVERED;
 		gui.doDeliveryDance();
-//		try {
-//			animSem.acquire();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			animSem.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void pickUpOrders() {
 		goToPosition(marketPosition);
-//		try {
-//			animSem.acquire();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		for(deliveryOrder order : orders) {
 			order.status = Status.DELIVERING;
 			stateChanged();
