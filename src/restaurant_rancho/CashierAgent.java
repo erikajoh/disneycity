@@ -29,6 +29,8 @@ public class CashierAgent extends Agent implements Cashier{
 	public double money;
 	private int accountNum;
 	private boolean endOfDay;
+	public enum bankState {nothing, waitingForBank};
+	bankState bs;
 	//public RestMenu menu= new RestMenu();
 	public enum checkState {nothing, pending, readyForCust, waitingForCust, paid, complete, notComplete, completing};
 	public CashierAgent(String name) {
@@ -39,6 +41,7 @@ public class CashierAgent extends Agent implements Cashier{
 		money = 500;
 		accountNum = -1;
 		endOfDay = false;
+		bs = bankState.nothing;
 	}
 	PersonAgent person;
 	Timer checkTimer = new Timer();
@@ -104,6 +107,9 @@ public class CashierAgent extends Agent implements Cashier{
 	public void msgLeftBank(int aNum, double change, double loanAmount, int loan) {
 		if(accountNum==-1) accountNum = aNum;
 		money+=change;
+		print("got account from bank");
+		bs = bankState.nothing;
+		stateChanged();
 	}
 	
 
@@ -117,14 +123,16 @@ public class CashierAgent extends Agent implements Cashier{
 		//rules 
 		try{
 		if (money>400 || endOfDay) {
-			if (accountNum==-1) {
+			if (accountNum==-1 && bs != bankState.waitingForBank) {
 				print("requesting account from bank");
 				bank.msgRequestAccount(person, money-100, false);
+				bs = bankState.waitingForBank;
 				return true;
 			}
-			else {
+			else if (accountNum!=-1 && bs != bankState.waitingForBank){
 				print(" requesting deposit");
 				bank.msgRequestDeposit(person, accountNum, money-100, false);
+				bs = bankState.waitingForBank;
 				return true;
 			}
 		}
