@@ -46,6 +46,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     public RestMenu menu = new RestMenu();
     Bank bank;
     Market market;
+    boolean isOpen = false;
     
     private static final int GAP_SIZE = 10;
     private static int WAITER_X_START = 140;
@@ -157,7 +158,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     }
     
     public boolean isOpen() {
-    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
+    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
     }
     
     public LinkedList<Agent> getAllAgents() {
@@ -305,6 +306,12 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndOfShift() {
+		isOpen = false;
 		
 	}
 }

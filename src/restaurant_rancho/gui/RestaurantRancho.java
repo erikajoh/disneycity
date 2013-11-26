@@ -36,6 +36,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	String type;
 	Bank bank;
 	Market market;
+
 	private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
     private HostAgent host;
     private CookAgent cook;
@@ -47,7 +48,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private ListPanel waiterPanel = new ListPanel (this, "Waiters");
     private JPanel group = new JPanel();
     private RestMenu menu = new RestMenu();
-    boolean isOpen;
+    boolean isOpen = true;
     public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
 
 
@@ -80,7 +81,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public boolean isOpen() {
-    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
+    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
     }
     
     public RestMenu getMenu() {
@@ -281,6 +282,11 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		cook.msgHereIsOrder(food, quantity, ID);
+	}
+	@Override
+	public void msgEndOfShift() {
+		isOpen = false;
+		
 	}
     
 

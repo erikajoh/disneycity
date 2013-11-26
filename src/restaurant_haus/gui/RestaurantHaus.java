@@ -40,6 +40,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     String type;
+    boolean isOpen = true;
     
     private boolean isPaused = false;
     
@@ -272,7 +273,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 
 	@Override
 	public boolean isOpen() {
-		return (cook!=null && waiters.size()>0 && cashier!=null && host!=null);
+		return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
 	}
 
 	@Override
@@ -294,6 +295,12 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndOfShift() {
+		isOpen = false;
 		
 	}
 }
