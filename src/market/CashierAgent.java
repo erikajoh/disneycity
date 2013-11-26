@@ -109,7 +109,7 @@ public class CashierAgent extends Agent {
 		print(""+amtRcvd);
 		if (amtRcvd >= b.amt){
 			r.increase(b.amt);
-			if (rest == null) b.cust.msgHereIsChange(amtRcvd - b.amt);
+			b.cust.msgHereIsChange(amtRcvd - b.amt);
 		}
 	}
 	

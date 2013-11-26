@@ -131,7 +131,7 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERED) {
-					pickUpOrders();
+					goToPosition(marketPosition);
 					deleteOrder(order);
 					return true;
 				}
