@@ -58,6 +58,7 @@ public class PersonAgent extends Agent {
 	private enum MarketState			{ None, WantToBuy, WantToWork };
 	private enum BankState				{ None, NeedTransaction };
 	private enum TransportationState	{ None, NeedToPayFare };
+	private RestaurantState restState = RestaurantState.None;
 	private MarketState marketState;
 	private BankState bankState;
 	private TransportationState transportationState;
@@ -351,6 +352,10 @@ public class PersonAgent extends Agent {
 					print("returning true because !insideHouse");
 					return true;
 				}
+				if(needToWork) {
+					leaveHouse();
+					event = PersonEvent.onHold;
+				}
 				if(rentToPay > 0) {
 					if(moneyOnHand >= rentToPay) {
 						payRent(rentToPay);
@@ -485,7 +490,13 @@ public class PersonAgent extends Agent {
 
 	private void checkGoingToWork(int workPeriod) {
 		print("Is it time for me to work? Time period: " + workPeriod);
-		
+		MyRestaurant workplace = findWorkplace(workPeriod); // TODO only restaurants are workplaces now
+		if(workplace != null) {
+			restState = RestaurantState.WantToWork;
+			print("I am going to work at restaurant");
+			targetLocation = workplace.name;
+			needToWork = true;
+		}
 	}
 
 	//House actions
@@ -710,7 +721,17 @@ public class PersonAgent extends Agent {
 		return null;
 	}
 	
-	
+	private MyRestaurant findWorkplace(int session) {
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++)
+			if(myObjectsArray[i] instanceof MyRestaurant) {
+				MyRestaurant tempRest = (MyRestaurant)myObjectsArray[i];
+				if(tempRest.workSession == session) {
+					return tempRest;
+				}
+			}
+		return null;
+	}
 	
 	private MyObject[] getObjects() {
 		return (MyObject[])myObjects.toArray(new MyObject[myObjects.size()]);

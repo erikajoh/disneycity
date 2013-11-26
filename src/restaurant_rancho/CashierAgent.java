@@ -38,7 +38,7 @@ public class CashierAgent extends Agent implements Cashier{
 		this.name = name;
 		checks = Collections.synchronizedList(new ArrayList<Check>());
 		bills = Collections.synchronizedList(new ArrayList<MarketBill>());
-		money = 500;
+		money = 100;
 		accountNum = -1;
 		endOfDay = false;
 		bs = bankState.nothing;
