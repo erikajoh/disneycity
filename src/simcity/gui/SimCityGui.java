@@ -220,6 +220,7 @@ public class SimCityGui extends JFrame  {
 		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom Panel"));
 		add(zoomPanel, c6);			
 	}
+	PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", cityAniPanel.getTransportation(), 'c');
 	
 	public static void main(String[] args) {
 		SimCityGui gui = new SimCityGui("Sim City Disneyland");
@@ -231,7 +232,7 @@ public class SimCityGui extends JFrame  {
 		restRancho.setBank(pirateBank);
 		restRancho.addPerson(null, "Cook", "cook", 50);
         restRancho.addPerson(null, "Waiter", "w", 50);
-        restRancho.addPerson(null, "Cashier", "cash", 50);
+        restRancho.addPerson(p, "Cashier", "cash", 50);
         restRancho.addPerson(null, "Market", "Trader Joes", 50);
         restRancho.addPerson(null, "Host", "Host", 50);
         restRancho.addPerson(null, "Customer", "Sally", 50);
