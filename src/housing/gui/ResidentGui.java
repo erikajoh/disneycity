@@ -135,8 +135,8 @@ public class ResidentGui implements Gui{
 			yDestination = (int)(hHeight*0.65);
 		}
 		if(type == "apt"){
-			xDestination = (int)(hWidth*0.8);
-			yDestination = (int)(hHeight*0.57);
+			xDestination = (int)(hWidth*0.74);
+			yDestination = (int)(hHeight*0.59);
 		}
 		command = Command.EnterHouse;
 		try {
