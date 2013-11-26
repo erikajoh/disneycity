@@ -52,13 +52,13 @@ public class AnimationModule {
 		animation = firstAnimation;
 		this.frameDelay = 30;
 	}
-	
+
 	public AnimationModule(String character){//Defaults the animation to walking downward (the sprite looks into your soul).
 		this.character = character;
 		animation = "WalkDown";
 		this.frameDelay = 30;
 	}
-	
+
 	public AnimationModule() {//This is where you don't care at all and you get the Edgar sprite
 		this.character = "Edgar";
 		animation = "WalkDown";
@@ -82,13 +82,16 @@ public class AnimationModule {
 				frameDelayCounter++;
 			}
 		}
-		String filePathway = "src" + File.separator + "res" + File.separator + character + File.separator + animation + File.separator + String.valueOf(currentFrame) + ".png";
+		String newPathway = "src" + File.separator + "res" + File.separator + character + File.separator + animation + File.separator + String.valueOf(currentFrame) + ".png";
 		//System.out.println(filePathway + ": being drawn.");
 
-		try {
-			img = ImageIO.read(new File(filePathway));
-		}
-		catch (IOException e) {
+		if(!newPathway.equals(filePathway)) {
+			filePathway = newPathway;
+			try {
+				img = ImageIO.read(new File(filePathway));
+			}
+			catch (IOException e) {
+			}
 		}
 
 		previousAnimation = animation;
@@ -117,7 +120,7 @@ public class AnimationModule {
 		this.animation = animation;
 		setMoving();
 	}
-	
+
 	public boolean changeFrame(int frame) {
 		if(frame > totalFrames) {
 			System.out.println("Called frame that doesn't exist in animation, total frames is " +totalFrames);
@@ -127,38 +130,38 @@ public class AnimationModule {
 		frameDelayCounter = 0;
 		return true;
 	}
-	
+
 	public void changeAnimation(String animation, int frameDelay) {//if an individual animation has a different frame delay
 		this.animation = animation;
 		this.frameDelay = frameDelay;
 		setMoving();
 	}
-	
+
 	public void setDelay(int delay) {
 		frameDelay = delay;
 	}
-	
+
 	public void setCharacter(String character) {
 		this.character = character;
 	}
-	
+
 	public void setStill() {
 		moving = false;
 		currentFrame = 1;
 	}
-	
+
 	public void setMoving() {
 		moving = true;
 	}
-	
+
 	public Image getImage(){
 		return img;
 	}
-	
+
 	public String getAnimation() {
 		return animation;
 	}
-	
+
 	public boolean getLastFrame() {
 		return (currentFrame == totalFrames);
 	}
