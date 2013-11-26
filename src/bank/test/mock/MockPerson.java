@@ -124,11 +124,18 @@ public class MockPerson extends Mock implements Person {
 		}
 		else {
 			originalAccount.balance += requestAmount;
+			if(originalAccount.loanAmount > 0 && loanAmt == 0){
+				if(originalAccount.loanTime > 0){
+				 originalAccount.balance -= originalAccount.loanAmount;
+			    }
+				else{
+					 originalAccount.balance -= (originalAccount.loanAmount+((-originalAccount.loanTime+1)*25));
+				}
+			    
+			
+			}
 			if(originalAccount.balance < 0){
 				originalAccount.balance = 0;
-			}
-			if(originalAccount.loanAmount > 0 && loanAmt == 0){
-				originalAccount.balance -= originalAccount.loanAmount;
 			}
 			originalAccount.setLoanAmount(loanAmt);
 			originalAccount.setLoanTime(loanTime);
