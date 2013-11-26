@@ -35,12 +35,13 @@ public class CashierAgent extends Agent implements Cashier {
 	public enum CheckState {NewCheck, InTransit, SentToWaiter, PaidByCustomer};
 	private String name;
 	PersonAgent person;
+	boolean shiftDone = false;
 
 	
 	// TODO: CashierMarket interaction MarketAgent added stuff
 	// TODO: CashierMarket interaction what is CheckTwo? A new class?
 	private List<FoodBill> billsToPay = Collections.synchronizedList(new ArrayList<FoodBill>());
-	private double totalMoney = 10.0; // keeps track of the money received
+	private double totalMoney = 200.0; // keeps track of the money received
 	private double totalDebt = 0.0; // keeps track of the money received
 	
 	public CashierAgent(String name) {
@@ -64,6 +65,10 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	public void setTotalMoney(double aMoney) {
 		totalMoney = aMoney;
+	}
+	
+	public void subtract(double amount) {
+		totalMoney -= 10;
 	}
 	
 	public void initializeMenu() {
@@ -97,6 +102,11 @@ public class CashierAgent extends Agent implements Cashier {
 			myCustomers.add(new MyCustomer(customer));
 		checks.add(newCheck);
 		stateChanged();
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (!pickAndExecuteAnAction()) {person.msgStopWork(10);}
 	}
 
 	@Override

@@ -44,6 +44,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	public CashierAgent cashier = null;
 	public RestMenu menu = new RestMenu();
 	PersonAgent person;
+	boolean shiftDone = false;
 
 
 	public WaiterAgent(String name) {
@@ -178,6 +179,11 @@ public class WaiterAgent extends Agent implements Waiter {
 		stateChanged();
 	}
 	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (myCustomers.size() == 0) {person.msgStopWork(10);}
+	}
+	
 	public void msgAtDestination() {
 		atTable.release();
 		stateChanged();
@@ -287,6 +293,7 @@ public class WaiterAgent extends Agent implements Waiter {
 					}
 				}
 			}
+			if (shiftDone) {person.msgStopWork(10);}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return true;

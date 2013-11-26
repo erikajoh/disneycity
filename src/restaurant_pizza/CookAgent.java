@@ -32,6 +32,7 @@ public class CookAgent extends Agent {
 	private final static int restockAmount = 2; // for testing: tells cook the max amount of the food he should bring back from market
 	
 	private String name;
+	boolean shiftDone = false;
 	
 	public enum AgentState {Working, WorkingAndPendingOrder};
 	public AgentState state = AgentState.Working;
@@ -128,6 +129,11 @@ public class CookAgent extends Agent {
 			orders.add(incomingOrder);
 		}
 		stateChanged();
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (orders.size() == 0) {person.msgStopWork(10);}
 	}
 
 	public void msgOrderDone(Order o) {

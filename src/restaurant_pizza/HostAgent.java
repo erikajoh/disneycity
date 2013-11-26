@@ -23,7 +23,7 @@ public class HostAgent extends Agent {
 	public enum CustomerState {Waiting, WaitingAndNotified, InRestaurant};
 	public enum WaiterState {Working, WorkingAndWantBreak, OnBreak};
 	PersonAgent person;
-	
+	boolean shiftDone = false;
 	private int waiterPointer = 0;
 	private String name;
 	
@@ -72,6 +72,11 @@ public class HostAgent extends Agent {
 		MyWaiter tempMyWaiter = new MyWaiter(w);
 		waiters.add(tempMyWaiter); // adding waiter to list
 		stateChanged();
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (waitingCustomers.size() == 0) {person.msgStopWork(10);}
 	}
 	
 	public void msgIWantFood(CustomerAgent cust) {
@@ -140,7 +145,7 @@ public class HostAgent extends Agent {
 	
 	// ***** SCHEDULER *****
 	protected boolean pickAndExecuteAnAction() {
-
+		if (waitingCustomers.size() == 0 && shiftDone == true) {person.msgStopWork(10);} 
 		if(waiters.isEmpty())
 			return false;
 		
@@ -183,6 +188,7 @@ public class HostAgent extends Agent {
 					c.cust.msgMustWait();
 					return true;
 				}
+				
 				synchronized (tables) {
 				
 					for(int tableIndex = 0; tableIndex < tables.size(); tableIndex++) {
