@@ -16,12 +16,12 @@ public class WaiterGui implements Gui {
     boolean actionInProgress= false;
     int waiterNum;
 
-    public static final int xTable1 = (RanchoAnimationPanel.WINDOWX*2)/11;
-	public static final int yTable1 = (RanchoAnimationPanel.WINDOWY*6)/10;
-	public static final int xTable2 = (RanchoAnimationPanel.WINDOWX*5)/11;
-	public static final int yTable2 = (RanchoAnimationPanel.WINDOWY*6)/10;;
-	public static final int xTable3 = (RanchoAnimationPanel.WINDOWX*8)/11; 
-	public static final int yTable3 = (RanchoAnimationPanel.WINDOWY*6)/10;
+	public static final int xTable1 = (RanchoAnimationPanel.WINDOWX/6);
+	public static final int yTable1 = (RanchoAnimationPanel.WINDOWY*25)/40;
+	public static final int xTable2 = xTable1+90;
+	public static final int yTable2 = yTable1;
+	public static final int xTable3 = xTable2+90;
+	public static final int yTable3 = yTable1;
 	
 	String waiterText = "";
 
@@ -31,7 +31,7 @@ public class WaiterGui implements Gui {
         xPos = -30; 
         yPos = -30;
         xDestination = 150 + (waiterNum%5)*50;
-        yDestination = 300 - (waiterNum/5)*60;
+        yDestination = 120 - (waiterNum/5)*60;
         actionInProgress=true;
     }
 
@@ -60,7 +60,7 @@ public class WaiterGui implements Gui {
     	g.setColor(Color.red);
     	g.setFont(new Font("helvetica", Font.BOLD, 16));
     	Image hostImage = Toolkit.getDefaultToolkit().getImage("res/host.png");
-		g.drawImage(hostImage, xPos+0, yPos+0, 50, 50, null);
+		g.drawImage(hostImage, xPos+0, yPos+0, 40, 40, null);
 		g.drawString(waiterText, xPos+10, yPos+40);
 		g.finalize();
     }
@@ -73,28 +73,28 @@ public class WaiterGui implements Gui {
         return true;
     }
     public void DoWalkToCust(int loc) {
-    	xDestination = 75 + ((loc%15)%5)*40;
-		yDestination = 155 - ((loc%15)/5)*40;
+    	xDestination = 50 + ((loc%15)%5)*40;
+		yDestination = 50 - ((loc%15)/5)*40;
     	actionInProgress = true;
     }
     public void DoGoToCook() {
-    	xDestination = 280;
-    	yDestination = 210;
+    	xDestination = 225;
+    	yDestination = 100;
     	actionInProgress=true;
     }
     public void DoPickUpFood(int plateLoc) {
     	if (plateLoc == 0) {
-    		xDestination = 280;
-    		yDestination = 170;
+    		xDestination = 225;
+    		yDestination = 75;
     	}
     	else if (plateLoc == 1) {
-    		xDestination = 280;
-    		yDestination = 210;
+    		xDestination = 225;
+    		yDestination = 100;
     		
     	}
     	else if (plateLoc == 2) {
-    		xDestination = 280;
-    		yDestination = 250;
+    		xDestination = 225;
+    		yDestination = 125;
     	}
     	
     	actionInProgress = true;
@@ -120,7 +120,7 @@ public class WaiterGui implements Gui {
     public void DoLeaveTable() {
     	actionInProgress = true;
         xDestination = 150 + (waiterNum%5)*50;
-        yDestination = 300 - (waiterNum/5)*60;
+        yDestination = 120 - (waiterNum/5)*60;
     }
 
     public int getXPos() {

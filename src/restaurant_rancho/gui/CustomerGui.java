@@ -12,6 +12,9 @@ public class CustomerGui implements Gui{
 	private CustomerAgent agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
+	private boolean sitting = false;
+	private enum direction { UP, DOWN, LEFT, RIGHT};
+	private direction currDir = direction.UP;
 
 	//private HostAgent host;
 	SimCityGui gui;
@@ -22,12 +25,12 @@ public class CustomerGui implements Gui{
 	private Command command=Command.noCommand;
 	AnimationModule animModule = new AnimationModule();
 	
-	public static final int xTable1 = (RanchoAnimationPanel.WINDOWX*2)/11;
-	public static final int yTable1 = (RanchoAnimationPanel.WINDOWY*6)/10;
-	public static final int xTable2 = (RanchoAnimationPanel.WINDOWX*5)/11;
-	public static final int yTable2 = (RanchoAnimationPanel.WINDOWY*6)/10;;
-	public static final int xTable3 = (RanchoAnimationPanel.WINDOWX*8)/11; 
-	public static final int yTable3 = (RanchoAnimationPanel.WINDOWY*6)/10;
+	public static final int xTable1 = (RanchoAnimationPanel.WINDOWX/6);
+	public static final int yTable1 = (RanchoAnimationPanel.WINDOWY*25)/40;
+	public static final int xTable2 = xTable1+90;
+	public static final int yTable2 = yTable1;
+	public static final int xTable3 = xTable2+90;
+	public static final int yTable3 = yTable1;
 	
 	String custText = "";
 	public int waitNum;
@@ -38,8 +41,8 @@ public class CustomerGui implements Gui{
 		xPos = -50;
 		yPos = -50;
 		command = Command.GoToWaitingSpot;
-		xDestination = 50 + ((num%15)%5)*40;
-		yDestination = 130 - ((num%15)/5)*40;
+		xDestination = 25 + ((num%15)%5)*40;
+		yDestination = 25 - ((num%15)/5)*40;
 		//maitreD = m;
 		waitNum = num;
 		this.gui = gui;
@@ -47,15 +50,41 @@ public class CustomerGui implements Gui{
 
 
 	public void updatePosition() {
-		if (xPos < xDestination)
+		if (xPos < xDestination) {
 			xPos++;
-		else if (xPos > xDestination)
+			currDir = direction.RIGHT;
+		}
+		else if (xPos > xDestination) {
 			xPos--;
-
-		if (yPos < yDestination)
+			currDir = direction.LEFT;
+		}
+		if (yPos < yDestination) {
 			yPos++;
-		else if (yPos > yDestination)
+			currDir = direction.DOWN;
+		}
+		else if (yPos > yDestination) {
 			yPos--;
+			currDir = direction.UP;
+		}
+		
+		sitting = xPos == xDestination && yPos == yDestination;
+		if(sitting) {
+			animModule.changeAnimation("Stand");
+			animModule.setStill();
+		}
+		else {
+			switch(currDir) {
+				case UP:
+					animModule.changeAnimation("WalkUp"); break;			
+				case DOWN:
+					animModule.changeAnimation("WalkDown"); break;
+				case LEFT:
+					animModule.changeAnimation("WalkLeft"); break;
+				case RIGHT:
+					animModule.changeAnimation("WalkRight"); break;
+			}
+		}
+		
 
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToSeat) {agent.msgAnimationFinishedGoToSeat(); }
@@ -67,7 +96,6 @@ public class CustomerGui implements Gui{
 				agent.msgAnimationFinishedGotToWaitingSpot();
 			}
 			command=Command.noCommand;
-			animModule.setStill();
 		}
 	}
 
@@ -109,8 +137,8 @@ public class CustomerGui implements Gui{
 	}
 	
 	public void DoGoToRestaurant(int loc) {
-		xDestination = 50 + ((loc%15)%5)*40;
-		yDestination = 130 - ((loc%15)/5)*40;
+		xDestination = 25 + ((loc%15)%5)*40;
+		yDestination = 25 - ((loc%15)/5)*40;
 	}
 	
 	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.

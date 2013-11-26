@@ -91,7 +91,7 @@ public class SimCityGui extends JFrame  {
 	private JPanel zoomAnimation = new JPanel();
 	private JPanel cityPanel = new JPanel();
 	private JPanel zoomPanel = new JPanel();
-	private JLabel cityLabel = new JLabel("Disney City View                                                   ");
+	private JLabel cityLabel = new JLabel("Disney City View                                          ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
 		
 	public static ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
@@ -225,17 +225,26 @@ public class SimCityGui extends JFrame  {
 		gui.setVisible(true);
 		gui.setResizable(false);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		restRancho.setMarket(mickeysMarket);
 		restRancho.addPerson(null, "Cook", "cook", 50);
         restRancho.addPerson(null, "Waiter", "w", 50);
         restRancho.addPerson(null, "Cashier", "cash", 50);
         restRancho.addPerson(null, "Market", "Trader Joes", 50);
         restRancho.addPerson(null, "Host", "Host", 50);
-        //restRancho.addPerson(null, "Customer", "Sally", 50);
+        restRancho.addPerson(null, "Customer", "Sally", 50);
 		//restPizza.addPerson(null, "Cook", "cook", 50);
         //restPizza.addPerson(null, "Waiter", "w", 50);
         //restPizza.addPerson(null, "Cashier", "cash", 50);
         //restPizza.addPerson(null, "Host", "Host", 50);
 		//restPizza.addPerson(null, "Customer", "Sally", 50);
+		
+        //restBayou.addPerson(null, "Cook", "cook", 50);
+        //restBayou.addPerson(null, "Waiter", "w", 50);
+        //restBayou.addPerson(null, "Cashier", "cash", 50);
+        //restBayou.addPerson(null, "Market", "Trader Joes", 50);
+        //restBayou.addPerson(null, "Host", "Host", 50);
+        //restBayou.addPerson(null, "Customer", "Sally", 50);
+	
         
 		restHaus.addPerson(null, "Cook", "cook", 50);
         restHaus.addPerson(null, "Waiter", "w", 50);

@@ -147,7 +147,7 @@ public class CustomerAgent extends Agent implements Customer {
 		//	CustomerAgent is a finite state machine
 		try {
 			if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry){
-				if (host.isFull() && !name.equalsIgnoreCase("wait")) {
+				if (host.isFull() && name.equalsIgnoreCase("wait")) {
 					customerGui.setEnabled();
 					customerGui.DoExitRestaurant();
 					return true;

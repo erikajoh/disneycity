@@ -10,11 +10,11 @@ public class CashierGui implements Gui {
 
     private HostAgent agent = null;
 
-    public static final int xTable = 100;
-    public static final int yTable = 250;
+    public static final int xTable = 255;
+    public static final int yTable = 15;
     
     private int xPos = -20, yPos = -20;//default cashier position
-    private int xDestination = xTable*9/2, yDestination = yTable/12;//start cashier position
+    private int xDestination = 240, yDestination = 25;//start cashier position
         
 //    public boolean leaving = false;
 
@@ -52,9 +52,9 @@ public class CashierGui implements Gui {
 
     public void draw(Graphics2D g) {
         g.setColor(Color.GRAY);
-        g.fillRect(xPos, yPos, xTable/2, yTable/12);
-//      Image img = Toolkit.getDefaultToolkit().getImage("host.jpg");
-//		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
+        //g.fillRect(xPos, yPos, xTable/2, yTable/12);
+        Image custImage = Toolkit.getDefaultToolkit().getImage("res/customer.gif");
+		g.drawImage(custImage, xTable, yTable, 25, 25, null);
         g.drawString("cashier", xPos, yPos);
     }
 
