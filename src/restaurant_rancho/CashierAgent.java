@@ -31,6 +31,7 @@ public class CashierAgent extends Agent implements Cashier{
 	private boolean endOfDay;
 	public enum bankState {nothing, waitingForBank};
 	bankState bs;
+	boolean shiftDone = false;
 	//public RestMenu menu= new RestMenu();
 	public enum checkState {nothing, pending, readyForCust, waitingForCust, paid, complete, notComplete, completing};
 	public CashierAgent(String name) {
@@ -71,11 +72,22 @@ public class CashierAgent extends Agent implements Cashier{
 
 	// Messages
 
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (checks.size()==0) {
+			person.msgStopWork(10);
+		}
+	}
+	
 	public void msgComputeCheck(Waiter w, Customer c, String choice, RestMenu menu) {
 		log.add(new LoggedEvent("Received Compute Check"));
 		print( "Choice is " + choice);
 		checks.add(new Check(c, w, choice, menu.menuItems.get(choice)));
 		stateChanged();
+	}
+	
+	public void subtract(double amount) {
+		money-=amount;
 	}
 	
 	public void msgHereIsMoney(Customer c, double amount) {
@@ -122,7 +134,8 @@ public class CashierAgent extends Agent implements Cashier{
 	
 		//rules 
 		try{
-		if (money>400 || endOfDay) {
+		
+		if (money>400 || shiftDone) {
 			if (accountNum==-1 && bs != bankState.waitingForBank) {
 				print("requesting account from bank");
 				bank.msgRequestAccount(person, money-100, false);
@@ -187,6 +200,7 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 		catch(ConcurrentModificationException e) {
 		}
+		if (shiftDone) { person.msgStopWork(10.0);}
 		
 
 		return false;

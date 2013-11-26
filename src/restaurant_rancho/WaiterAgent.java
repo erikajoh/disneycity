@@ -29,6 +29,7 @@ import java.util.concurrent.Semaphore;
 		public WaiterGui waiterGui = null;
 		public Cashier cashier;
 		double cash;
+		boolean shiftDone = false;
 		RestaurantRancho restaurant;
 		
 		PersonAgent person;
@@ -69,6 +70,13 @@ import java.util.concurrent.Semaphore;
 
 
 		// Messages
+		
+		public void msgShiftDone() {
+			shiftDone = true;
+			if (customers.size()==0) {
+				person.msgStopWork(10);
+			}
+		}
 		
 		public void msgCreateCustomer(Customer c, int t, int l) {
 			MyCustomer mc = new MyCustomer(c);
@@ -153,6 +161,7 @@ import java.util.concurrent.Semaphore;
 
 		// rules 
 			try{
+			if (customers.size() == 0 && shiftDone) {person.msgStopWork(10);}
 			for (MyCustomer c : customers) {
 				if (c.cs == customerState.leaving) {
 					notifyHostFreeTable(c);

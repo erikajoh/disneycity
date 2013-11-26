@@ -24,6 +24,7 @@ public class HostAgent extends Agent {
 	private String name;
 	private enum waiterState {working, onBreak};
 	PersonAgent person;
+	boolean shiftDone = false;
 
 	public HostAgent(String name) {
 		super();
@@ -67,6 +68,12 @@ public class HostAgent extends Agent {
 	}
 
 	// Messages
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (waitingCustomers.size()==0) {
+			person.msgStopWork(10);
+		}
+	}
 	public void msgIWantFood(CustomerAgent cust, int num) {
 		waitingCustomers.add(new MyCustomer(cust, num));
 		stateChanged();
@@ -135,6 +142,9 @@ public class HostAgent extends Agent {
 							Do("Gave " + waitingCustomers.get(0).cust + " to waiter " + waiter.w.getName());
 							waitingCustomers.remove(0);
 							return true;
+						}
+						if (waitingCustomers.isEmpty() && shiftDone) {
+							person.msgStopWork(10);
 						}
 					}
 				}

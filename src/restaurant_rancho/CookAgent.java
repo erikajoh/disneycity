@@ -33,6 +33,7 @@ public class CookAgent extends Agent {
 	private enum moState {pending, ordered};
 	public boolean inMarket;
 	int curID;
+	boolean shiftDone = false;
 	
 
 	public CookAgent(String name, RestaurantRancho rest, Market m) {
@@ -81,6 +82,13 @@ public class CookAgent extends Agent {
 	
 
 	// Messages
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (orders.size()==0) {
+			person.msgStopWork(10);
+		}
+	}
 	
 	public void msgAtLoc() {
 		cooking.release();
@@ -143,6 +151,7 @@ public class CookAgent extends Agent {
 				}
 				return true;
 			}
+			if (shiftDone) {person.msgStopWork(10);}
 			print("checking order stand");
 			Order newO = restaurant.orderStand.remove();
 			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
