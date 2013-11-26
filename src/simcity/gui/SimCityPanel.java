@@ -75,7 +75,7 @@ public class SimCityPanel extends JPanel{
 		//		 firstHousing.setOwner();
 		 
 		firstHackedPerson.startThread();
-		secondHackedPerson.startThread();
+		//secondHackedPerson.startThread();
 
 	    setLayout(new GridLayout());
 	
@@ -166,7 +166,7 @@ public class SimCityPanel extends JPanel{
 	private static final long END_OF_DAY = 750;
 	
 	// for setting random delay for eating
-	private static final int EAT_DELAY_MAX = 50;
+	private static final int EAT_DELAY_MAX = 25;
 	
 	public String getCurrentDay() {
 		return currentDay.toString();
