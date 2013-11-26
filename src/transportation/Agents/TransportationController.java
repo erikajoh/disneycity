@@ -316,8 +316,7 @@ public class TransportationController extends Agent implements Transportation{
 	private void spawnMover(Mover mover) {
 		//Try to spawn mover
 		TransportationTraversal aStar = new TransportationTraversal(grid);
-		switch(mover.method) {
-		case "Car":
+		if(mover.method.equals("Car")){
 			if(grid[directory.get(mover.startingLocation).vehicleTile.getX()][directory.get(mover.startingLocation).vehicleTile.getY()].tryAcquire()) {
 				mover.transportationState = TransportationState.MOVING;
 				CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
@@ -328,9 +327,8 @@ public class TransportationController extends Agent implements Transportation{
 			}
 			else
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
-			break;
-
-		case  "Walk":
+		}
+		else if(mover.method.equals("Walk")){
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
 				mover.transportationState = TransportationState.MOVING;
 				WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
@@ -341,15 +339,13 @@ public class TransportationController extends Agent implements Transportation{
 			}
 			else
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
-			break;
-
-		case "Bus":
+		}
+		else if(mover.method.equals("Bus")){
 			//find bus stop and spawn walker to go to bus stop
 			mover.transportationState = TransportationState.MOVING;
 			if(directory.get(mover.startingLocation).closestBusStop == directory.get(mover.endingLocation).closestBusStop) {
 				mover.method = "Walk";
 				spawnMover(mover);
-				break;
 			}
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
 				WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
@@ -360,8 +356,7 @@ public class TransportationController extends Agent implements Transportation{
 			}
 			else
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
-			break;
-		}
+		 }
 	}
 
 	private void despawnMover(Mover mover) {
