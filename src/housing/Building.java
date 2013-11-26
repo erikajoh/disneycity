@@ -10,7 +10,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Building {
-	int START_INVENTORY = 1;
+
+	private final static int START_INVENTORY = 0;
 	String type;
 	Timer timer = new Timer();
 	ResidentAgent resident;

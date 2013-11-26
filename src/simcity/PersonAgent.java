@@ -746,7 +746,6 @@ public class PersonAgent extends Agent {
 		String restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
 		
-		// TODO More things about different restaurant types
 		public MyRestaurant(Restaurant r, String restaurantName, String restaurantType, String personType, Hashtable<String, Double> menu) {
 			restaurant = r;
 			this.name = restaurantName;
@@ -778,8 +777,6 @@ public class PersonAgent extends Agent {
 		}
 	}
 	
-	// TODO: determine actions and whatever priorities there are
-	// TODO: determine if I even need this thing
 	// 0 = emergency (highest priority)
 	// 1 = urgent
 	// 2 = necessary
