@@ -60,7 +60,7 @@ public class TruckGui implements Gui{
 		
 		if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
 			reachedDestination = true;
-			System.out.println("Reached Destination");
+//			System.out.println("Reached Destination");
 			agent.msgDestination();
 		}
 		
@@ -87,7 +87,7 @@ public class TruckGui implements Gui{
 		this.xDestination = xDestination * 25 - 3;
 		this.yDestination = yDestination * 25;
 		reachedHalfway = false;
-		System.out.println("resetting Destination");
+//		System.out.println("resetting Destination");
 		reachedDestination = false;
 	}
 	

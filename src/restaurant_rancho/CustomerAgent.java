@@ -240,7 +240,7 @@ public class CustomerAgent extends Agent implements Customer{
 		}
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
-			person.msgDoneEating(eatingSuccess, cash);
+			if (person != null) person.msgDoneEating(eatingSuccess, cash);
 			customerGui.setText("");
 			return true;
 		}
