@@ -1,7 +1,5 @@
 package bank.test.mock;
 
-import bank.ManagerAgent;
-import bank.interfaces.BankCustomer;
 import simcity.gui.SimCityGui;
 
 import java.util.HashMap;
