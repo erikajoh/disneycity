@@ -218,8 +218,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Cook")) {
     		if (cook == null) {
+    			System.out.println("heyo market is " + market.getName());
     			cook = new CookAgent(name, this, market);
-    			//if (market!=null) { cook.setMarket(market); System.out.println("heyo");}
     			cookgui = new CookGui(cook);
     			if (p!=null) cook.setPerson(p);
     			cook.setGui(cookgui);

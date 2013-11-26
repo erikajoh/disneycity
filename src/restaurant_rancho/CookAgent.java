@@ -38,9 +38,9 @@ public class CookAgent extends Agent {
 		cookTimes = new Hashtable<String, Integer>();
 		foods = Collections.synchronizedList(new ArrayList<Food>());
 		waiters = Collections.synchronizedList(new ArrayList<WaiterAgent>());
-		foods.add(new Food("Citrus Fire-Grilled Chicken", 7, 0, 6, 7000));
-		foods.add(new Food("Red Chile Enchilada Platter", 7, 0, 6, 6000));
-		foods.add(new Food("Soft Tacos Monterrey", 7, 0, 6, 4000));
+		foods.add(new Food("Citrus Fire-Grilled Chicken", 0, 0, 6, 7000));
+		foods.add(new Food("Red Chile Enchilada Platter", 0, 0, 6, 6000));
+		foods.add(new Food("Soft Tacos Monterrey", 0, 0, 6, 4000));
 		foods.add(new Food("Burrito Sonora", 7, 0, 6, 7000));
 		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 6, 2500));
 		cookTimes.put("Citrus Fire-Grilled Chicken", 7000);
@@ -58,6 +58,7 @@ public class CookAgent extends Agent {
 	}
 	
 	public void setMarket(Market m) {
+		print("setting market " + m.getName());
 		market = m;
 	}
 	
@@ -127,6 +128,7 @@ public class CookAgent extends Agent {
 				synchronized(marketOrders) {
 					for (MarketOrder mo : marketOrders){ 
 						if (mo.os == moState.pending) {
+							print("ordering " + mo.food );
 							mo.os = moState.ordered;
 							market.personAs(this, 100, mo.food, mo.amount);
 							return true;
@@ -149,6 +151,7 @@ public class CookAgent extends Agent {
 				for (WaiterAgent w : waiters) w.msgUpdateMenu();
 			}
 			print("We are out of " + o.choice);
+			marketOrders.add(new MarketOrder(o.choice, findFood(o.choice).capacity));
 			orders.remove(o);
 			return;
 		}

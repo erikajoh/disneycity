@@ -51,7 +51,7 @@ public class WaiterGui implements Gui {
         	if ((xDestination == xTable*table + xTable/10) && (yDestination == yTable - yTable/12)) {
         		agent.msgAtTable();
         		atTable = true;
-        	} else if (leaving && xDestination == xTable*13/2-6*xTable/5 && yDestination == 11*yTable/12-3*xTable/2) {
+        	} else if (leaving && xDestination == 220 && yDestination == 150) {
         		leaving = false;
         		agent.msgAtTable();
         	} else if (leaving) {
@@ -84,8 +84,8 @@ public class WaiterGui implements Gui {
     }
     
     public void DoGoGetFood() {
-    	xDestination = xTable*13/2-6*xTable/5;
-    	yDestination = 11*yTable/12-3*xTable/2;
+    	xDestination = 220;
+    	yDestination = 150;
     	leaving = true;
     }
 
