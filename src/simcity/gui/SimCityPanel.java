@@ -24,6 +24,8 @@ public class SimCityPanel extends JPanel{
 	
 	SimCityGui gui = null;
 	RestaurantRancho restRancho;
+	
+	public final static int NEW_DAY_DELAY = 3000;
 	 	 
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
 	ArrayList<Housing> housings = new ArrayList<Housing>();
@@ -50,8 +52,10 @@ public class SimCityPanel extends JPanel{
 		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
-		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 10, foodPreferenceItalian, "OwnerResident", transportation);
-		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", secondHousing, 60, foodPreferenceMexican, "OwnerResident", transportation);
+		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 10, foodPreferenceItalian,
+				"OwnerResident", transportation, "Walk");
+		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", secondHousing, 60, foodPreferenceMexican,
+				"OwnerResident", transportation, "Bus");
 		
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
@@ -115,7 +119,7 @@ public class SimCityPanel extends JPanel{
 			if(currTicks == START_OF_DAY) {
 				person.msgWakeUp();
 			}
-			if(currTicks == END_OF_DAY) {
+			if(currTicks == NIGHT) {
 				person.msgGoToSleep();
 			}
 			// person maintenance signal: maintain house if it's Friday morning
@@ -156,9 +160,10 @@ public class SimCityPanel extends JPanel{
 	private static final long MORNING = 30;
 	private static final long WORK_ONE = 150;
 	private static final long NOON = 200;
-	private static final long WORK_TWO = 310;
+	private static final long WORK_TWO = 350;
 	private static final long EVENING = 400;
-	private static final long END_OF_DAY = 600;
+	private static final long NIGHT = 550;
+	private static final long END_OF_DAY = 750;
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 50;
@@ -202,7 +207,7 @@ public class SimCityPanel extends JPanel{
 				public void run() {
 					newDay();
 				}
-			}, 5000);
+			}, NEW_DAY_DELAY);
 		}
 	}
 	

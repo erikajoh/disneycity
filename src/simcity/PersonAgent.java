@@ -82,7 +82,7 @@ public class PersonAgent extends Agent {
 	
 	// Constructor for CustomerAgent class
 	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference,
-			String relationWithHousing, Transportation t) {
+			String relationWithHousing, Transportation t, String commute) {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
@@ -92,7 +92,10 @@ public class PersonAgent extends Agent {
 		targetLocation = currentLocation;
 		
 		currentLocationState = LocationState.Home;
-		preferredCommute = PreferredCommute.Bus;
+		switch(commute) {
+			case "Walk": preferredCommute = PreferredCommute.Walk; break;
+			case "Bus": preferredCommute = PreferredCommute.Bus; break;
+		}
 		
 		this.foodPreference = foodPreference;
 		preferEatAtHome = true;
