@@ -99,7 +99,7 @@ public class PersonAgent extends Agent {
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
-		bodyState = BodyState.Active;
+		bodyState = BodyState.Asleep;
 		itemsOnHand = new HashMap<String, Integer>();
 	}
 
