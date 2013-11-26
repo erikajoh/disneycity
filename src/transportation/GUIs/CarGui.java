@@ -24,8 +24,8 @@ public class CarGui implements Gui{
 		this.yLast = yPos * 25;
 		speed = 1.25f;
 		this.agent = agent;		
-		reachedHalfway = false;
-		reachedDestination = false;
+		reachedHalfway = true;
+		reachedDestination = true;
 		
 		animModule = new AnimationModule("Car", "Down", 10);
 	}
@@ -72,6 +72,8 @@ public class CarGui implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
+		xLast = xPos;
+		yLast = yPos;
 		this.xDestination = xDestination * 25;
 		this.yDestination = yDestination * 25+2;
 		reachedHalfway = false;

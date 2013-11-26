@@ -92,7 +92,7 @@ public class PersonAgent extends Agent {
 		targetLocation = currentLocation;
 		
 		currentLocationState = LocationState.Home;
-		preferredCommute = PreferredCommute.Bus;
+		preferredCommute = PreferredCommute.Car;
 		
 		this.foodPreference = foodPreference;
 		preferEatAtHome = true;

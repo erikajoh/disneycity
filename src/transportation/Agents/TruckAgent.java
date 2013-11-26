@@ -82,8 +82,9 @@ public class TruckAgent extends MobileAgent{
 	}
 	
 	public void msgDestination() {
-		if(animSem.availablePermits() == 0)
+		if(animSem.availablePermits() == 0) {
 			animSem.release();
+		}
 	}
 
 	//Remember to release semaphores to tiles when despawning
