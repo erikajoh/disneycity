@@ -52,10 +52,10 @@ public class PersonAgent extends Agent {
 	private double moneyToDeposit = 0.0;
 	private double rentToPay = 0.0;
 	private double fareToPay = 0.0;
-	private boolean needToWork = false;
+	private MyRestaurant workplace = null;
 	private String targetLocation;
 	private enum RestaurantState		{ None, WantToEat, WantToWork }
-	private enum MarketState			{ None, WantToBuy, WantToWork };
+	private enum MarketState			{ None, WantToBuy };
 	private enum BankState				{ None, NeedTransaction };
 	private enum TransportationState	{ None, NeedToPayFare };
 	private RestaurantState restState = RestaurantState.None;
@@ -340,19 +340,21 @@ public class PersonAgent extends Agent {
 			if(currentLocationState == LocationState.Home) { // at home
 				if(!insideHouse) { // if not inside house (i.e., at the doorstep), enter it
 					print("Not inside my house");
-					if(currentLocation.equals(targetLocation)) {
+					if(currentLocation.equals(targetLocation) && workplace == null) {
 						enterHouse();
 						insideHouse = true;
 						event = PersonEvent.onHold;
 					}
 					else {
+						if(workplace != null)
+							targetLocation = workplace.name;
 						goToTransportation();
 						event = PersonEvent.onHoldInTransportation;
 					}
 					print("returning true because !insideHouse");
 					return true;
 				}
-				if(needToWork) {
+				if(workplace != null) {
 					leaveHouse();
 					event = PersonEvent.onHold;
 				}
@@ -445,7 +447,7 @@ public class PersonAgent extends Agent {
 				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
-				if(!isNourished && !preferEatAtHome) {
+				if(!isNourished && !preferEatAtHome || workplace.name.equals(currentLocation)) {
 					enterRestaurant();
 					event = PersonEvent.onHoldAtRestaurant;
 				}
@@ -470,10 +472,6 @@ public class PersonAgent extends Agent {
 						enterMarket();
 						event = PersonEvent.onHoldInMarket;
 						break;
-					case WantToWork:
-						// TODO go to work
-						event = PersonEvent.onHold;
-						break;
 				}
 				print("Market: event onHold set");
 				return true;
@@ -495,7 +493,7 @@ public class PersonAgent extends Agent {
 			restState = RestaurantState.WantToWork;
 			print("I am going to work at restaurant");
 			targetLocation = workplace.name;
-			needToWork = true;
+			this.workplace = workplace;
 		}
 	}
 

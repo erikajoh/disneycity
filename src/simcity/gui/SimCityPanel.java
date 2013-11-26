@@ -64,14 +64,14 @@ public class SimCityPanel extends JPanel{
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
 		firstHackedPerson.addRestaurant(restRancho, "Customer", 0);
-		firstHackedPerson.addRestaurant(restPizza, "Waiter", 2);
+		firstHackedPerson.addRestaurant(restPizza, "Waiter", 1);
 		firstHackedPerson.addMarket(firstMarket, "Customer");
 		firstHackedPerson.addBank(firstBank, "Customer");
 		people.add(firstHackedPerson);
 		
 		secondHousing.setOwner(secondHackedPerson);
 		secondHousing.addRenter(secondHackedPerson);
-		secondHackedPerson.addRestaurant(restRancho, "Waiter", 1);
+		secondHackedPerson.addRestaurant(restRancho, "Waiter", 2);
 		secondHackedPerson.addRestaurant(restPizza, "Customer", 0);
 		secondHackedPerson.addMarket(firstMarket, "Customer");
 		secondHackedPerson.addBank(firstBank, "Customer");
@@ -163,15 +163,15 @@ public class SimCityPanel extends JPanel{
 	
 	// these are start times for each of the day phases
 	private static final long START_OF_DAY		= 1;
-	private static final long MORNING			= START_OF_DAY + 30;
-	private static final long WORK_ONE_START	= MORNING + 150;
-	private static final long NOON				= WORK_ONE_START + 150;
-	private static final long WORK_ONE_END		= NOON + 150;
-	private static final long WORK_TWO_START	= WORK_ONE_END + 50;
-	private static final long EVENING			= WORK_TWO_START + 150;
-	private static final long WORK_TWO_END		= EVENING + 150;
-	private static final long NIGHT				= WORK_TWO_END + 50;
-	private static final long END_OF_DAY		= NIGHT + 350;
+	private static final long MORNING			= START_OF_DAY + 40; //41
+	private static final long WORK_ONE_START	= MORNING + 160;//201
+	private static final long NOON				= WORK_ONE_START + 160;//361
+	private static final long WORK_ONE_END		= NOON + 160;//521
+	private static final long WORK_TWO_START	= WORK_ONE_END + 60;//561
+	private static final long EVENING			= WORK_TWO_START + 160;//721
+	private static final long WORK_TWO_END		= EVENING + 160;//881
+	private static final long NIGHT				= WORK_TWO_END + 60;//921
+	private static final long END_OF_DAY		= NIGHT + 350;//1271
 	// length of day 1231
 	
 	// for setting random delay for eating
