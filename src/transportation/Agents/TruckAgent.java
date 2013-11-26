@@ -134,6 +134,7 @@ public class TruckAgent extends MobileAgent{
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERED) {
 					print("ORDER DELIVERED");
+					pickUpOrders();
 					deleteOrder(order);
 					return true;
 				}
@@ -212,12 +213,12 @@ public class TruckAgent extends MobileAgent{
 		else if (order.restaurant != null) order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
 		order.status = Status.DELIVERED;
 		gui.doDeliveryDance();
-		try {
-			animSem.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			animSem.acquire();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	private void pickUpOrders() {
