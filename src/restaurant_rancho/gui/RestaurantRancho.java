@@ -261,6 +261,10 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 		}
 		
 	}
+	@Override
+	public void msgHereIsOrder(String food, int quantity, int ID) {
+		cook.msgHereIsOrder(food, quantity, ID);
+	}
     
 
 }
