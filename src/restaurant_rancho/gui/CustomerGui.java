@@ -3,6 +3,7 @@ package restaurant_rancho.gui;
 import restaurant_rancho.CustomerAgent;
 import restaurant_rancho.HostAgent;
 import simcity.gui.SimCityGui;
+import AnimationTools.AnimationModule;
 
 import java.awt.*;
 
@@ -19,6 +20,7 @@ public class CustomerGui implements Gui{
 	private int xDestination, yDestination;
 	private enum Command {noCommand, GoToWaitingSpot, GoToSeat, LeaveRestaurant};
 	private Command command=Command.noCommand;
+	AnimationModule animModule = new AnimationModule();
 	
 	public static final int xTable1 = (RanchoAnimationPanel.WINDOWX*2)/11;
 	public static final int yTable1 = (RanchoAnimationPanel.WINDOWY*6)/10;
@@ -65,6 +67,7 @@ public class CustomerGui implements Gui{
 				agent.msgAnimationFinishedGotToWaitingSpot();
 			}
 			command=Command.noCommand;
+			animModule.setStill();
 		}
 	}
 
@@ -72,8 +75,10 @@ public class CustomerGui implements Gui{
 		
 		g.setColor(Color.blue);
     	g.setFont(new Font("helvetica", Font.BOLD, 16));
-		Image custImage = Toolkit.getDefaultToolkit().getImage("res/customer.gif");
-		g.drawImage(custImage, xPos, yPos, 30, 30, null);
+		//Image custImage = Toolkit.getDefaultToolkit().getImage("res/customer.gif");
+		//g.drawImage(custImage, xPos, yPos, 30, 30, null);
+    	animModule.updateAnimation();//updates the frame and animation 
+    	g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 		g.drawString(custText, xPos+30, yPos+20);
 		g.finalize();
 	}

@@ -3,11 +3,14 @@ package restaurant_bayou.gui;
 import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.HostAgent;
 import simcity.gui.SimCityGui;
+import AnimationTools.AnimationModule;
 
 import java.awt.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+
+import AnimationTools.AnimationModule;
 
 public class CustomerGui implements Gui{
 
@@ -17,6 +20,7 @@ public class CustomerGui implements Gui{
 	private String text = "";
 
 	SimCityGui gui;
+	AnimationModule animModule = new AnimationModule();
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -54,13 +58,16 @@ public class CustomerGui implements Gui{
 				isHungry = false;
 				setEnabled();
 			}
+			animModule.setStill();
 			command=Command.noCommand;
 		}
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.CYAN);
-		g.fillRect(xPos, yPos, xTable/6, yTable/12);
+		//g.fillRect(xPos, yPos, xTable/6, yTable/12);
+		animModule.updateAnimation();//updates the frame and animation 
+		g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 //		Image img = Toolkit.getDefaultToolkit().getImage("customer.jpg");
 //		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
 		g.setColor(Color.GRAY);
