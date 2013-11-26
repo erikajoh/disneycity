@@ -91,7 +91,7 @@ public class SimCityGui extends JFrame  {
 	private JPanel zoomAnimation = new JPanel();
 	private JPanel cityPanel = new JPanel();
 	private JPanel zoomPanel = new JPanel();
-	private JLabel cityLabel = new JLabel("Disney City View                                                   ");
+	private JLabel cityLabel = new JLabel("Disney City View                                          ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
 		
 	public static ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();

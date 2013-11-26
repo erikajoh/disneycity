@@ -23,7 +23,7 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
  
-    	Timer timer = new Timer(5, this );
+    	Timer timer = new Timer(10, this );
     	timer.start();
     }
 
