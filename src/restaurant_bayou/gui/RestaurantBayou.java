@@ -303,6 +303,16 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 	@Override
 	public void msgEndOfShift() {
 		isOpen = false;
+		/*for (WaiterAgent w: waiters) {
+			w.msgShiftDone();
+			cashier.subtract(10);
+		}
+		cook.msgShiftDone();
+		host.msgShiftDone();
+		cashier.subtract(30);
+		cashier.msgShiftDone();
+		*/
+		
 		
 	}
 	

@@ -33,6 +33,7 @@ public class HostAgent extends Agent {
 	public CashierAgent cashier;
 	private String name;
 	private PersonAgent person;
+	boolean shiftDone = false;
 	
 	public HostAgent(String name) {
 		super();

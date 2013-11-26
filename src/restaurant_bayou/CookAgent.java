@@ -24,7 +24,8 @@ public class CookAgent extends Agent {
 	public List<MyMarket> markets =  Collections.synchronizedList(new ArrayList<MyMarket>());
 	private CookGui cookGui;
 	private PersonAgent person;
-	private RestMenu menu = new RestMenu();;
+	private RestMenu menu = new RestMenu();
+	boolean shiftDone = false;
 
 	/**
 	 * Constructor for CookAgent class

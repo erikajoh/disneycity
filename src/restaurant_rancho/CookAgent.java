@@ -152,7 +152,6 @@ public class CookAgent extends Agent {
 				return true;
 			}
 			if (shiftDone) {person.msgStopWork(10);}
-			print("checking order stand");
 			Order newO = restaurant.orderStand.remove();
 			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
 			else {waitTimer();}

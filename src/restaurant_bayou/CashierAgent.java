@@ -24,6 +24,7 @@ public class CashierAgent extends Agent {
 	public List<Market> cutoffMarkets =  Collections.synchronizedList(new ArrayList<Market>());
 	private CookAgent cook;
 	private PersonAgent person;
+	boolean shiftDone = false;
 	
 	public EventLog log = new EventLog();
 
@@ -39,6 +40,10 @@ public class CashierAgent extends Agent {
 		myMenu = m;
 	}
 	
+	public void msgShiftDone() { 
+		shiftDone = true;
+		if (!pickAndExecuteAnAction()) { person.msgStopWork(10); }
+	}
 	public void setPerson(PersonAgent p) {
 		person = p;
 	}
