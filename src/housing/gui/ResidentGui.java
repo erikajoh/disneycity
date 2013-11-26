@@ -156,7 +156,7 @@ public class ResidentGui implements Gui{
 	
 	public void DoLeaveBedroom() {
 		if (type == "house") {
-			xDestination = (int)(hWidth*0.53);
+			xDestination = (int)(hWidth*0.57);
 			yDestination = (int)(hHeight*0.65);
 		} else if (type == "apt") {
 			if (roomNo == 0) {
@@ -221,7 +221,7 @@ public class ResidentGui implements Gui{
 	
 	private void GoTowardBed(int i) {
 		if (i == 0) {
-			xDestination = (int)(hWidth*0.53);
+			xDestination = (int)(hWidth*0.57);
 			yDestination = (int)(hHeight*0.15);
 			command = Command.HelperMove;
 		} else {
@@ -335,11 +335,11 @@ public class ResidentGui implements Gui{
 			command = Command.HelperMove;
 		} else if (i == 2) {
 			xDestination = (int)(hWidth*0.05);
-			yDestination = (int)(hHeight*0.05);
+			yDestination = (int)(hHeight*0.25);
 			command = Command.HelperMove;
 		} else if (i == 3) {
 			xDestination = (int)(hWidth*0.4);
-			yDestination = (int)(hHeight*0.05);
+			yDestination = (int)(hHeight*0.25);
 			command = Command.HelperMove;
 		} else if (i == 4) {
 			xDestination = (int)(hWidth*0.4);
