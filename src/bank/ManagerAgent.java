@@ -45,7 +45,7 @@ public class ManagerAgent extends Agent implements Manager {
 
 		List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
 		enum State{entered, waiting, leaving, busy, idle};
-		enum Action{newAccount, deposit, withdraw};
+		enum Action{none, newAccount, deposit, withdraw};
 		
 		List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
@@ -232,6 +232,7 @@ public class ManagerAgent extends Agent implements Manager {
 		wc.state = State.busy;
 		mt.teller.msgNewCustomer(wc.bankCustomer);
 		mt.state = TellerState.busy;
+		wc.action = Action.none;
 	}
 	
 	private void tellerBusy(WaitingCustomer wc){
