@@ -22,6 +22,7 @@ Kelsey Rose <br>
 	+ 
 
 ##Instructions
++ To import into Eclipse: (1) clone the repository, (2) File > Import > Existing Projects into Workspace and then navigate to the location of the cloned repository and import it, (3) right-click the root folder and select Build Path > Configure Build Path > Add External JARs... and then navigate to the Java file on your computer and add it, (4) import JUnit by hovering over errors in any of the unit test files.
 + Locate the SimCityGui.java file in the simcity.gui package, and execute it as a Java Application in Eclipse by right-clicking the file and selecting Run As > Java Application.
 
 ###Scenarios
