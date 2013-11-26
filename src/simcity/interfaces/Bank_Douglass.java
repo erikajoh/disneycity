@@ -1,12 +1,13 @@
 package simcity.interfaces;
 
+import bank.interfaces.BankCustomer;
 import simcity.PersonAgent;
 
 public interface Bank_Douglass {
-	public String getName();
+	public String getBankName();
 	
-	public void msgRequestAccount(double amount, PersonAgent person);
-	public void msgRequestDeposit(int accountNumber, double amount, PersonAgent person, boolean forLoan);
-	public void msgRequestWithdrawal(int accountNumber, double amount, PersonAgent person);
-	public void msgRequestLoan(int accountNumber, double amount, PersonAgent person);
+	public void msgRequestAccount(PersonAgent person, double reqAmt, boolean present);
+	public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt, boolean present);
+	public void msgRequestWithdrawal(PersonAgent person, int accountNum, double reqAmt, boolean present);
+	public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime);
 }

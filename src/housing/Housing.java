@@ -7,8 +7,9 @@ import java.util.Map;
 
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
+import simcity.interfaces.Housing_Douglass;
 
-public class Housing {
+public class Housing implements Housing_Douglass {
 	
 	String name, type;
 	double rentAmt = 5;
