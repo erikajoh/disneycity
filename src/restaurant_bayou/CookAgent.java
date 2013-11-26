@@ -39,9 +39,9 @@ public class CookAgent extends Agent {
 	    menu.addItem("Portobello Mushroom and Couscous Macque Choux", 29.99);
 	    menu.addItem("Seafood Jambalaya", 31.99);
 		for (String item: menu.menuList) {
-			i.add(item, 1);
+			i.add(item, 8);
 		}
-		i.empty();
+		//i.empty();
 	}
 	
 	public void setPerson(PersonAgent p) {

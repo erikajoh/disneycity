@@ -19,7 +19,7 @@ public class HostAgent extends Agent {
 	public List<Table> tables = 
 			Collections.synchronizedList(new ArrayList<Table>(NTABLES));
 
-	public static final int NTABLES = 5;
+	public static final int NTABLES = 3;
 	public enum CustomerState {Waiting, WaitingAndNotified, InRestaurant};
 	public enum WaiterState {Working, WorkingAndWantBreak, OnBreak};
 	PersonAgent person;

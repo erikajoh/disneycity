@@ -2,6 +2,7 @@ package restaurant_pizza.gui;
 
 import restaurant_pizza.CustomerAgent;
 import simcity.gui.SimCityGui;
+import AnimationTools.AnimationModule;
 
 import java.awt.*;
 
@@ -24,6 +25,7 @@ public class CustomerGui implements Gui{
     private static final int Y_HOME_DESTINATION = -40;
     
     public static final int mySize = 25;
+    AnimationModule animModule = new AnimationModule();
     
     private int xWaitingArea = mySize;
     private int yWaitingArea = mySize;

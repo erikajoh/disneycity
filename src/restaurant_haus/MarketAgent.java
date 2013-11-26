@@ -74,10 +74,10 @@ public class MarketAgent extends Agent implements Market {
 
 		deliveryTime = time;//hack for delivery time
 
-		marketInventory.put("steak", new Food("steak", steak));
-		marketInventory.put("chicken", new Food("chicken", chicken));
-		marketInventory.put("pizza", new Food("pizza", pizza));
-		marketInventory.put("salad", new Food("salad", salad));
+		marketInventory.put("Pastrami Cheeseburger", new Food("Pastrami Cheeseburger", steak));
+		marketInventory.put("Chicken Sausage Pretzel Roll", new Food("Chicken Sausage Pretzel Roll", chicken));
+		marketInventory.put("BLT Flatbread", new Food("BLT Flatbread", pizza));
+		marketInventory.put("Apple & Cheddar Salad", new Food("Apple & Cheddar Salad", salad));
 		//hack for inventories
 	}
 
