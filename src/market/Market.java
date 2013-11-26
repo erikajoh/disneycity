@@ -55,8 +55,6 @@ public class Market {
 		}
 		else if (c.getRest()!=null) {
 			transport.msgSendDelivery(c.getRest(), this, c.getChoice(), c.quantity, c.orderID);
-			System.out.println("removing order whee");
-			System.out.println("before removing size is "+virtualCustomers.size());
 			virtualCustomers.remove(c);
 		}
 	}

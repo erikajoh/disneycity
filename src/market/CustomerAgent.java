@@ -49,7 +49,6 @@ public class CustomerAgent extends Agent {
 		this.virtual = false;
 		wallet = new Wallet(amt);
 		state = State.entering;
-		print("created customer");
 	}
 	
 	public CustomerAgent(String name, double amt, String choice, int quantity, int num, String location){
@@ -186,8 +185,7 @@ public class CustomerAgent extends Agent {
 		else if (state == State.paying){
 			print("Paying");
 			cashier.msgHereIsMoney(this, wallet.getAmt());
-			if (rest != null) state = State.leaving;
-			else state = State.idle;
+			state = State.idle;
 			return true;
 		}
 		else if (state == State.leaving){
