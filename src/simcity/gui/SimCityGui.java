@@ -228,6 +228,7 @@ public class SimCityGui extends JFrame  {
 		gui.setResizable(false);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		restRancho.setMarket(mickeysMarket);
+		restRancho.setBank(pirateBank);
 		restRancho.addPerson(null, "Cook", "cook", 50);
         restRancho.addPerson(null, "Waiter", "w", 50);
         restRancho.addPerson(null, "Cashier", "cash", 50);
