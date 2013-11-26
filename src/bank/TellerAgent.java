@@ -243,6 +243,7 @@ public class TellerAgent extends Agent implements Teller {
 	}
 	
 	private void customerLeaving(){
+		customer.state = State.idle;
 		manager.msgTellerFree(this, customer.bankCustomer);
 		customer = null;
 	}

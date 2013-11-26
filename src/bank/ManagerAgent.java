@@ -90,14 +90,16 @@ public class ManagerAgent extends Agent implements Manager {
 		synchronized(tellers){
 		    for(MyTeller t : tellers){
 			   if(t.teller == teller){
-				   t.state = TellerState.idle; break;
+				   t.state = TellerState.idle;
+				   break;
 			    }
 		    }
 		}
 		synchronized(waitingCustomers){
 		    for(WaitingCustomer wc : waitingCustomers){
 			    if(wc.bankCustomer == bankCustomer){
-				    wc.state = State.leaving; break;
+				    wc.state = State.leaving;
+				    break;
 			    }
 		    }
 		}
@@ -179,9 +181,8 @@ public class ManagerAgent extends Agent implements Manager {
 					       	  assignTeller(mt, wc);
 					    	  wc.state = State.busy;
 					    	  mt.state = TellerState.busy;
-					    	  break;
+					    	  return true;
 					       }
-					      return true;
 				      }
 				   }
 				}
@@ -194,13 +195,12 @@ public class ManagerAgent extends Agent implements Manager {
 				       for(MyTeller mt : tellers){
 					      if(mt.state == TellerState.idle){
 						       assignTeller(mt, wc);
+						       tellerBusy(wc);
 						       return true;
 					       }
 					    }
 				     }
 			   }
-				tellerBusy(wc);
-				return true;
 			}
 		}
 		synchronized(waitingCustomers){
@@ -248,6 +248,7 @@ public class ManagerAgent extends Agent implements Manager {
 		print(bc.getAccountNum() + " $" + bc.getBalance());
 		wc.state = State.idle;
 		bank.msgLeave(wc.bankCustomer, bc.getAccountNum(), bc.getChange(), bc.getLoanAmount(), bc.getLoanTime());
+		waitingCustomers.remove(wc);
 	}
 	
 	public void addAccount(Account acc){

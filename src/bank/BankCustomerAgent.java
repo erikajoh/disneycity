@@ -123,6 +123,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	public void msgAnimationFinishedLeavingBank(){
 		animState = AnimState.idle;
+		state = State.left;
 		stateChanged();
 	}
 
@@ -191,8 +192,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	private void leaveBank(){
 		animState = AnimState.walking;
-		state = State.left;
-		stateChanged();
+		state = State.idle;
 		personGui.DoLeaveBank();
 	}
 	
