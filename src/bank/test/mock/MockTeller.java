@@ -15,7 +15,7 @@ public class MockTeller extends Mock {
 	  MockManager manager;
 	  List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
-		enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
+		public enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
 
 		class Customer {
 		  MockBankCustomer bankCustomer;

@@ -16,6 +16,13 @@ public class Housing {
 	PersonAgent ownerPerson;
 	ArrayList<Renter> renters = new ArrayList<Renter>();
 	HousingAnimationPanel panel;
+	
+	class Renter {
+		ResidentAgent agent;
+		PersonAgent person;
+		int roomNo;
+		Renter(ResidentAgent a, PersonAgent p, int n) { agent = a; person = p; roomNo = n; }
+	}
 		
 	public Housing(HousingAnimationPanel p, String n) {
 		panel = p;
@@ -41,22 +48,16 @@ public class Housing {
 	}
 	
 	public void addRenter() { //hack
-		ResidentAgent r = new ResidentAgent("r"+renters.size()+1, type);
+		ResidentAgent r = new ResidentAgent("renter "+renters.size(), type, renters.size());
 		r.setHousing(this);
-		panel.addRenter(r);
+		panel.addRenter(r, type, renters.size());
 	}
 	
 	public void addRenter(PersonAgent rp) {
-		ResidentAgent r = new ResidentAgent("r"+renters.size()+1, type);
+		ResidentAgent r = new ResidentAgent("renter "+renters.size(), type, renters.size());
 		r.setHousing(this);
-		renters.add(new Renter(r, rp));
-		panel.addRenter(r);
-	}
-	
-	class Renter {
-		ResidentAgent agent;
-		PersonAgent person;
-		Renter(ResidentAgent a, PersonAgent p) { agent = a; person = p; }
+		panel.addRenter(r, type, renters.size());
+		renters.add(new Renter(r, rp, renters.size()));
 	}
 	
 	//Messages

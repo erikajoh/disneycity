@@ -22,6 +22,7 @@ public class ResidentGui implements Gui{
 	private ResidentAgent agent = null;
 	private boolean isPresent = false;
 	private String text = "";
+	private int roomNo;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -30,17 +31,25 @@ public class ResidentGui implements Gui{
 	
 	private Semaphore moving = new Semaphore(0, true);
 	private boolean inBedroom = false;
+	
+	String type;
 
 	public static final int hWidth = 400;
 	public static final int hHeight = 360;
 
-	public ResidentGui(ResidentAgent r){
+	public ResidentGui(ResidentAgent r, String t, int n){
 		animModule = new AnimationModule();
-		
 		agent = r;
 		agent.setGui(this);
-		xPos = (int)(hWidth*0.23);
-		yPos = (int)(hHeight*0.92);
+		type = t;
+		roomNo = n;
+		if(type == "house"){
+			xPos = (int)(hWidth*0.23);
+			yPos = (int)(hHeight*0.92);
+		} else if(type == "apt"){
+			xPos = (int)(hWidth);
+			yPos = (int)(hHeight*0.57);
+		}
 	}
 
 	public void updatePosition() {
@@ -65,7 +74,7 @@ public class ResidentGui implements Gui{
 		
 		// special animation states
 		standing = xPos == xDestination && yPos == yDestination;
-		sleeping = Math.abs(xPos - (int)(hWidth*0.8)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
+		sleeping = Math.abs(xPos - (int)(hWidth*0.7)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
 		
 		// animation rules
 		if(sleeping) {
@@ -120,9 +129,16 @@ public class ResidentGui implements Gui{
 	public void DoEnterHouse() {
 		System.out.println("Entering house");
 		setPresent(true);
-		xDestination = (int)(hWidth*0.23);
-		yDestination = (int)(hHeight*0.65);
-		command = Command.EnterHouse;
+		if(type == "house"){
+			xDestination = (int)(hWidth*0.23);
+			yDestination = (int)(hHeight*0.65);
+			command = Command.EnterHouse;
+		}
+		if(type == "apt"){
+			xDestination = (int)(hWidth*0.8);
+			yDestination = (int)(hHeight*0.57);
+			command = Command.EnterHouse;
+		}
 	}
 	
 	public void DoLeaveBedroom() {
@@ -166,7 +182,7 @@ public class ResidentGui implements Gui{
 			yDestination = (int)(hHeight*0.15);
 			command = Command.GoToBed;
 		} else {
-			xDestination = (int)(hWidth*0.8);
+			xDestination = (int)(hWidth*0.7);
 			yDestination = (int)(hHeight*0.15);
 			command = Command.AtBed;
 		}

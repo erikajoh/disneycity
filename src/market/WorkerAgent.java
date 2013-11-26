@@ -39,7 +39,6 @@ public class WorkerAgent extends Agent {
 		this.name = name;
 		this.manager = manager;
 		this.num = num;
-		print(""+num);
 
 	}
 	

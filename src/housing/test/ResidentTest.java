@@ -20,7 +20,7 @@ public class ResidentTest extends TestCase
 	 */
 	public void setUp() throws Exception{
 		super.setUp();		
-		renter = new ResidentAgent("renter", "house");
+		renter = new ResidentAgent("renter", "house", 0);
 //		owner = new MockOwner("mockowner");
 	}	
 	
