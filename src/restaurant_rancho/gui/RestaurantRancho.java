@@ -53,6 +53,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 
     public RestaurantRancho(SimCityGui g, String n) {
     	name = n;
+    	type = "Mexican";
         this.gui = g;
         menu.addItem("Citrus Fire-Grilled Chicken", 13.49);
         menu.addItem("Red Chile Enchilada Platter", 9.99);

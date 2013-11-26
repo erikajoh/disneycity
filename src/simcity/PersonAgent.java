@@ -135,9 +135,9 @@ public class PersonAgent extends Agent {
 		myObjects.add(tempMyBank);
 	}
 	
-	public void	addRestaurant(Restaurant r, String personType) {
+	public void	addRestaurant(Restaurant r, String personType, int workSession) {
 		// TODO Hacked in restaurant type
-		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getRestaurantName(), "Restaurant", personType, r.getMenu().menuItems);
+		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getRestaurantName(), "Restaurant", personType, r.getMenu().menuItems, workSession);
 		myObjects.add(tempMyRestaurant);
 	}
 	
@@ -688,7 +688,7 @@ public class PersonAgent extends Agent {
 		for(int i = 0; i < myObjectsArray.length; i++)
 			if(myObjectsArray[i] instanceof MyRestaurant) {
 				MyRestaurant tempRest = (MyRestaurant)myObjectsArray[i];
-				//if(tempRest.restaurantType.equals(foodPreference))
+				if(tempRest.restaurant.getType().equals(foodPreference))
 					return tempRest;
 			}
 		return null;
@@ -759,13 +759,15 @@ public class PersonAgent extends Agent {
 		Restaurant restaurant;
 		String restaurantType, personType;
 		Map<String, Double> menu = new HashMap<String, Double>();
+		int workSession; // 0 = not working; 1 = at work state 1; 2 = at work state 2
 		
-		public MyRestaurant(Restaurant r, String restaurantName, String restaurantType, String personType, Hashtable<String, Double> menu) {
+		public MyRestaurant(Restaurant r, String restaurantName, String restaurantType, String personType, Hashtable<String, Double> menu, int workSession) {
 			restaurant = r;
 			this.name = restaurantName;
 			this.restaurantType = restaurantType;
 			this.personType = personType;
 			this.menu = menu;
+			this.workSession = workSession;
 		}
 	}
 	

@@ -1,7 +1,9 @@
 package simcity.gui;
 
+import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_rancho.gui.RestaurantRancho;
 import simcity.PersonAgent;
+import simcity.Restaurant;
 import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.MockTransportation_Douglass;
 import transportation.Transportation;
@@ -24,6 +26,7 @@ public class SimCityPanel extends JPanel{
 	
 	SimCityGui gui = null;
 	RestaurantRancho restRancho;
+	RestaurantPizza restPizza;
 	
 	public final static int NEW_DAY_DELAY = 3000;
 	 	 
@@ -52,21 +55,21 @@ public class SimCityPanel extends JPanel{
 		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
-		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 10, foodPreferenceItalian, true,
+		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 10, foodPreferenceItalian, false,
 				"OwnerResident", transportation, 'W');
 		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secundus", secondHousing, 60, foodPreferenceMexican, false,
 				"OwnerResident", transportation, 'C');
 		
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
-		firstHackedPerson.addRestaurant(restRancho, "Customer");
+		firstHackedPerson.addRestaurant(restRancho, "Customer", 0);
 		firstHackedPerson.addMarket(firstMarket, "Customer");
 		firstHackedPerson.addBank(firstBank, "Customer");
 		people.add(firstHackedPerson);
 		
 		secondHousing.setOwner(secondHackedPerson);
 		secondHousing.addRenter(secondHackedPerson);
-		secondHackedPerson.addRestaurant(restRancho, "Customer");
+		secondHackedPerson.addRestaurant(restRancho, "Waiter", 1);
 		secondHackedPerson.addMarket(firstMarket, "Customer");
 		secondHackedPerson.addBank(firstBank, "Customer");
 		people.add(secondHackedPerson);
