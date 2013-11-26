@@ -87,25 +87,31 @@ public class ManagerAgent extends Agent implements Manager {
 	// Messages
 	
 	public void msgTellerFree(Teller teller, BankCustomer bankCustomer){
-		for(MyTeller t : tellers){
-			if(t.teller == teller){
-				t.state = TellerState.idle; break;
-			}
+		synchronized(tellers){
+		    for(MyTeller t : tellers){
+			   if(t.teller == teller){
+				   t.state = TellerState.idle; break;
+			    }
+		    }
 		}
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.bankCustomer == bankCustomer){
-				wc.state = State.leaving; break;
-			}
+		synchronized(waitingCustomers){
+		    for(WaitingCustomer wc : waitingCustomers){
+			    if(wc.bankCustomer == bankCustomer){
+				    wc.state = State.leaving; break;
+			    }
+		    }
 		}
 		stateChanged();
 	}
 	
 	public void msgCustomerHere(BankCustomer bca){
 		boolean found = false;
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.bankCustomer == bca){
-		       wc.state = State.entered;
-		       found = true; break;
+		synchronized(waitingCustomers){
+		    for(WaitingCustomer wc : waitingCustomers){
+			    if(wc.bankCustomer == bca){
+		           wc.state = State.entered;
+		           found = true; break;
+		        }
 		    }
 		}
 		if(found == false){
@@ -114,25 +120,29 @@ public class ManagerAgent extends Agent implements Manager {
 	}
 
 	public void msgRequestAccount(BankCustomer bc, double amount){
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.bankCustomer == bc){
-				wc.setAccountNum(-1);
-				wc.setRequestAmt(amount);
-				wc.action = Action.newAccount;
-				break;
-			}
+		synchronized(waitingCustomers){
+		   for(WaitingCustomer wc : waitingCustomers){
+			   if(wc.bankCustomer == bc){
+				   wc.setAccountNum(-1);
+				   wc.setRequestAmt(amount);
+				   wc.action = Action.newAccount;
+				   break;
+			   }
+		   }
 		}
 		stateChanged();
 	}
 	
 	public void msgRequestDeposit(BankCustomer bc, int accountNumber, double amount){
 		WaitingCustomer waitingCustomer = null;
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.bankCustomer == bc){
-				waitingCustomer = wc;
-				wc.setAccountNum(accountNumber);
-				wc.setRequestAmt(amount);
-				break;
+		synchronized(waitingCustomers){
+		   for(WaitingCustomer wc : waitingCustomers){
+			   if(wc.bankCustomer == bc){
+				   waitingCustomer = wc;
+				   wc.setAccountNum(accountNumber);
+				   wc.setRequestAmt(amount);
+				   break;
+			   }
 			}
 		}
 		waitingCustomer.action = Action.deposit;
@@ -140,13 +150,15 @@ public class ManagerAgent extends Agent implements Manager {
 	}
 	
 	public void msgRequestWithdrawal(BankCustomer bc, int accountNumber, double amount){
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.bankCustomer == bc){
-				wc.setAccountNum(accountNumber);
-				wc.setRequestAmt(amount);
-				wc.action = Action.withdraw;
-				break;
-			}
+		synchronized(waitingCustomers){
+		    for(WaitingCustomer wc : waitingCustomers){
+			   if(wc.bankCustomer == bc){
+				   wc.setAccountNum(accountNumber);
+				   wc.setRequestAmt(amount);
+				   wc.action = Action.withdraw;
+				   break;
+			   }
+		    }
 		}
 		  stateChanged();
 	}
@@ -156,39 +168,42 @@ public class ManagerAgent extends Agent implements Manager {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		/* Think of this next rule as:
-            Does there exist a table and customer,
-            so that table is unoccupied and customer is waiting.
-            If so seat him at the table.
-		 */
-		//print("HERE");
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.state == State.waiting){
-				for(MyTeller mt : tellers){
-					if(mt.state == TellerState.idle){
-						assignTeller(mt, wc);
-						return true;
-					}
+		synchronized(waitingCustomers){
+		   for(WaitingCustomer wc : waitingCustomers){
+			   if(wc.state == State.waiting){
+				   synchronized(tellers){
+				      for(MyTeller mt : tellers){
+					      if(mt.state == TellerState.idle){
+					       	assignTeller(mt, wc);
+						    return true;
+					       }
+				      }
+				   }
 				}
 			}
 		}
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.state == State.entered){
-				for(MyTeller mt : tellers){
-					if(mt.state == TellerState.idle){
-						assignTeller(mt, wc);
-						return true;
-					}
-				}
+		synchronized(waitingCustomers){
+		   for(WaitingCustomer wc : waitingCustomers){
+			   if(wc.state == State.entered){
+					synchronized(tellers){
+				       for(MyTeller mt : tellers){
+					      if(mt.state == TellerState.idle){
+						       assignTeller(mt, wc);
+						       return true;
+					       }
+					    }
+				     }
+			   }
 				tellerBusy(wc);
 				return true;
 			}
 		}
-		
-		for(WaitingCustomer wc : waitingCustomers){
-			if(wc.state == State.leaving){
-				updatePersonInfo(wc);
-				return true;
+		synchronized(waitingCustomers){
+		    for(WaitingCustomer wc : waitingCustomers){
+			   if(wc.state == State.leaving){
+				   updatePersonInfo(wc);
+				   return true;
+			   }
 			}
 		}
 		

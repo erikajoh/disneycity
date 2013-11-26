@@ -36,11 +36,13 @@ public class TellerAgent extends Agent implements Teller {
 		  }
 		  else{
 			  List<Account> accounts = manager.getAccounts();
-		      for(Account acc :accounts){
-			      if(acc.number == accountNumber){
-			    	  account = acc; break;
-			      }
-		      }
+			  synchronized(accounts){
+		         for(Account acc :accounts){
+			         if(acc.number == accountNumber){
+			    	     account = acc; break;
+			         }
+		         }
+			  }
 		  }
 		  		  
 		  state = State.idle;
@@ -70,12 +72,14 @@ public class TellerAgent extends Agent implements Teller {
 	
 	// Messages
 	public void msgNewCustomer(BankCustomer bankCustomer){
-		for(Customer cust : customers){
-			if(cust.bankCustomer == bankCustomer){
-				print("CUSTOMER IS "+bankCustomer.toString());
-				customer = cust;
-				customer.state = State.idle;
-			}
+		synchronized(customers){
+		   for(Customer cust : customers){
+			   if(cust.bankCustomer == bankCustomer){
+				   print("CUSTOMER IS "+bankCustomer.toString());
+				   customer = cust;
+				   customer.state = State.idle;
+			   }
+		   }
 		}
 		if(customer == null){
 			customer = new Customer(bankCustomer);
@@ -86,12 +90,14 @@ public class TellerAgent extends Agent implements Teller {
 	public void	msgOpenAccount(BankCustomer bankCustomer, double cash){ //open account w/ initial amt of cash
 		print("OPEN ACCOUNT");
 		boolean found = false;
-		for(Customer cust : customers){
-			if(cust.bankCustomer == bankCustomer){
-				customer = cust;
-				customer.state = State.openingAccount;
-				found = true; break;
-			}
+		synchronized(customers){
+		   for(Customer cust : customers){
+			   if(cust.bankCustomer == bankCustomer){
+				   customer = cust;
+				   customer.state = State.openingAccount;
+				   found = true; break;
+			   }
+		   }
 		}
 		if(found == false){
 			customer = new Customer(bankCustomer);
@@ -105,10 +111,12 @@ public class TellerAgent extends Agent implements Teller {
 		print("DEPOSIT CASH ");
 		customer.requestAmt = cash;
 		List<Account> accounts = manager.getAccounts();
-		for(Account acc : accounts){
-			if(acc.number == accountNum){
-				customer.account = acc; break;
-			}
+		synchronized(accounts){
+		   for(Account acc : accounts){
+			   if(acc.number == accountNum){
+				   customer.account = acc; break;
+			   }
+		   }
 		}
 		stateChanged();
 	}
@@ -117,10 +125,12 @@ public class TellerAgent extends Agent implements Teller {
 		print("DEPOSIT CASH ");
 		customer.requestAmt = cash;
 		List<Account> accounts = manager.getAccounts();
-		for(Account acc : accounts){
-			if(acc.number == accountNum){
-				customer.account = acc; break;
-			}
+		synchronized(accounts){
+		   for(Account acc : accounts){
+			   if(acc.number == accountNum){
+				   customer.account = acc; break;
+			   }
+		   }
 		}
 		customer.state = State.withdrawingCash; 
 		stateChanged();

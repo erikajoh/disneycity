@@ -80,7 +80,7 @@ public class PersonAgent extends Agent {
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
-	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference,
+	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference, boolean preferEatAtHome,
 			String relationWithHousing, Transportation t, char commute) {
 		super();
 		name = aName;
@@ -97,7 +97,7 @@ public class PersonAgent extends Agent {
 		}
 		
 		this.foodPreference = foodPreference;
-		preferEatAtHome = true;
+		this.preferEatAtHome = preferEatAtHome;
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
@@ -709,6 +709,7 @@ public class PersonAgent extends Agent {
 				return (MyBank)myObjectsArray[i];
 		return null;
 	}
+	
 	
 	
 	private MyObject[] getObjects() {
