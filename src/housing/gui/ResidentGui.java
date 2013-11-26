@@ -79,11 +79,11 @@ public class ResidentGui implements Gui{
 		// animation rules
 		if(sleeping) {
 			animModule.changeAnimation("Sleep");
-			animModule.changeFrame(1);
+			animModule.setStill();
 		}
 		else if(standing) {
 			animModule.changeAnimation("Stand");
-			animModule.changeFrame(1);
+			animModule.setStill();
 		}
 		else {
 			switch(currDir) {

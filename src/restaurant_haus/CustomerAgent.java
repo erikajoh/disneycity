@@ -333,6 +333,7 @@ public class CustomerAgent extends Agent implements Customer {
 		else {
 			print("No thanks, I'll leave now.");
 			host.msgImLeaving(this);
+			person.msgDoneEating(false);
 			state = AgentState.DoingNothing;
 			customerGui.setNotHungry();
 		}
@@ -360,6 +361,7 @@ public class CustomerAgent extends Agent implements Customer {
 			if(state == AgentState.Reorder) {
 				w.msgDoneEating(this);
 				state = AgentState.Leaving;
+				person.msgDoneEating(false);
 				leaveTable();
 				return false;
 			}
