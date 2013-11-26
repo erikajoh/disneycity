@@ -7,7 +7,8 @@ public class MovementTile extends Semaphore{
 		UNTYPED,
 		WALKWAY,
 		ROAD,
-		CROSSWALK
+		CROSSWALK,
+		FLYING
 	};
 	
 	MovementType type;

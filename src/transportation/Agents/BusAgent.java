@@ -143,6 +143,7 @@ public class BusAgent extends MobileAgent{
 				currentBusStop = grid[nextPosition.getX()][nextPosition.getY()].getBusStop();
 				break;
 			}
+			currentBusStop = null;
 		}
 
 		//gui code to go to next bus stop

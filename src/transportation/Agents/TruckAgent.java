@@ -1,62 +1,86 @@
 package transportation.Agents;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import astar.astar.AStarNode;
 import astar.astar.Position;
 import simcity.PersonAgent;
+import simcity.Restaurant;
+import transportation.GUIs.TruckGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 
-public class WalkerAgent extends MobileAgent{
-
-	PersonAgent walker;
+public class TruckAgent extends MobileAgent{
+	
 	Position currentPosition;
-	Position endPosition;
+	Position marketPosition;
+	Position deliveryPosition;
 	TransportationController master;
-	WalkerGui gui;
-	boolean arrived;
-	TransportationTraversal aStar;
-	
+	TruckGui gui = null;
+	FlyingTraversal aStar;
 	Semaphore animSem;
-	BusStop beginBusStop, endBusStop;
-	String building;
-
-	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
-		this.walker = walker;
-		this.currentPosition = currentPosition;
-		this.endPosition = endPosition;
-		this.master = master;
-		arrived = false;
-		this.aStar = aStar;
-		
-		animSem = new Semaphore(0, true);
-		beginBusStop = null;
-		endBusStop = null;
-		building = null;
+	
+	enum Status {
+		WAITING,
+		DELIVERING,
+		DELIVERED
 	}
 	
-	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
-		this.walker = walker;
-		this.currentPosition = currentPosition;
-		this.endPosition = endPosition;
+	class deliveryOrder {
+		String food;
+		int quantity;
+		Restaurant restaurant;
+		PersonAgent person;
+		
+		Status status;
+		
+		
+		deliveryOrder(Restaurant restaurant, String food, int quantity) {
+			this.restaurant = restaurant;
+			this.food = food;
+			this.quantity = quantity;
+			person = null;
+		}
+		
+		deliveryOrder(PersonAgent person, String food, int quantity) {
+			this.restaurant = null;
+			this.food = food;
+			this.quantity = quantity;
+			this.person = person;
+		}
+		
+		public boolean returnType() {
+			if(person != null && restaurant == null)
+				return true;
+			if(person == null && restaurant != null)
+				return false;
+			return false;
+		}
+	}
+	
+	List<deliveryOrder> orders;
+	
+	public TruckAgent(Position marketPosition, TransportationController master, FlyingTraversal aStar) {
+		this.currentPosition = marketPosition;
+		this.marketPosition = marketPosition;
 		this.master = master;
-		arrived = false;
-		this.aStar = aStar;
 		
 		animSem = new Semaphore(0, true);
-		this.beginBusStop = beginBusStop;
-		this.endBusStop= endBusStop;
-		this.building = building;
+		this.aStar = aStar;
+		
+		orders = Collections.synchronizedList(new ArrayList<deliveryOrder>());
 	}
+	
 	
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
-
+	
 	public void msgDestination() {
 		animSem.release();
 	}
@@ -64,15 +88,34 @@ public class WalkerAgent extends MobileAgent{
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {
-		if(beginBusStop != null) {
-			goToPosition(beginBusStop.getAssociatedTile());
+		synchronized(orders) {
+			for(deliveryOrder order : orders) {
+				if(order.status == Status.DELIVERING) {
+					deliverOrder(order);
+					return true;
+				}
+			}
 		}
-		if(!arrived) {
-			goToPosition(endPosition);
+		
+		synchronized(orders) {
+			for(deliveryOrder order : orders) {
+				if(order.status == Status.WAITING) {
+					pickUpOrders();
+					return true;
+				}
+			}
 		}
-		if(arrived) {
-			tauntAndLeave();
+		
+		synchronized(orders) {
+			for(deliveryOrder order : orders) {
+				if(order.status == Status.DELIVERED) {
+					deleteOrder(order);
+					return true;
+				}
+			}
 		}
+		
+		idle();
 		return false;
 	}
 
@@ -124,36 +167,71 @@ public class WalkerAgent extends MobileAgent{
 			}
 			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
 		}
-		
-		arrived = true;
 	}
 
-	public void tauntAndLeave() {
-		gui.doTauntAndLeave();
+	private void deliverOrder(deliveryOrder order) {
+		if(order.returnType()) {//person order
+			//goToPosition(order.person.)
+		}
+		if(!order.returnType()) {//Market order
+			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile);
+		}
+		
 		try {
 			animSem.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(beginBusStop == null) {
-			System.out.println(String.valueOf(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits()));
+		
+		if(!order.returnType()) {
+			order.restaurant.msgHereIsDelivery(order.food, order.quantity);
 		}
-		else
-			beginBusStop.addRider(walker, endBusStop, building);
-		master.msgArrivedAtDestination(walker);
-		gui.setIgnore();
-		stopThread();
+		
+		gui.doDeliveryDance();
+		try {
+			animSem.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
-	public void setGui (WalkerGui gui) {
+	
+	private void pickUpOrders() {
+		goToPosition(marketPosition);
+		try {
+			animSem.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(deliveryOrder order : orders) {
+			order.status = Status.DELIVERING;
+		}
+	}
+	
+	private void deleteOrder(deliveryOrder order) {
+		orders.remove(order);
+	}
+	
+	private void idle() {
+		goToPosition(new Position (11, 11));
+		try {
+			animSem.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		gui.doIdle();
+	}
+	
+	public void setGui (TruckGui gui) {
 		this.gui = gui;
 	}
 
 	@Override
 	public String getType() {
 		// TODO Auto-generated method stub
-		return "walker";
+		return "Truck";
 	}
-
 }

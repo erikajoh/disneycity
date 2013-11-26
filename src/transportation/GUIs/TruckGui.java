@@ -3,31 +3,31 @@ import java.awt.Graphics2D;
 
 import AnimationTools.AnimationModule;
 import simcity.gui.*;
-import transportation.Agents.WalkerAgent;
+import transportation.Agents.TruckAgent;
 
-public class WalkerGui implements Gui{
+public class TruckGui implements Gui{
 	
 	private float xPos, yPos, xDestination, yDestination, xLast, yLast, speed;
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	
 	
-	WalkerAgent agent;
+	TruckAgent agent;
 	boolean isPresent = true;
 	
-	public WalkerGui(float xPos, float yPos, WalkerAgent agent) {
-		this.xPos = xPos * 25;
+	public TruckGui(float xPos, float yPos, TruckAgent agent) {
+		this.xPos = xPos * 25 -3;
 		this.yPos = yPos * 25;
-		this.xDestination = xPos * 25;
+		this.xDestination = xPos * 25 -3;
 		this.yDestination = yPos * 25;
-		this.xLast = xPos * 25;
+		this.xLast = xPos * 25 - 3;
 		this.yLast = yPos * 25;
 		speed = 1.00f;
 		this.agent = agent;		
 		reachedHalfway = false;
 		reachedDestination = false;
 		
-		animModule = new AnimationModule("Edgar", "WalkDown", 10);
+		animModule = new AnimationModule("Pelipper", "IDLE", 20);
 	}
 	
 	public void updatePosition() {
@@ -35,22 +35,22 @@ public class WalkerGui implements Gui{
 			xPos = xDestination;
 		else if(xPos < xDestination) {
 			xPos += speed;
-			animModule.changeAnimation("WalkRight");
+			animModule.changeAnimation("Right");
 		}
 		else if(xPos > xDestination) {
 			xPos -= speed;
-			animModule.changeAnimation("WalkLeft");
+			animModule.changeAnimation("Left");
 		}
 		
 		if(Math.abs(yDestination - yPos) <= speed)
 			yPos = yDestination;
 		if(yPos < yDestination) {
 			yPos += speed;
-			animModule.changeAnimation("WalkDown");
+			animModule.changeAnimation("Down");
 		}
 		else if(yPos > yDestination) {
 			yPos -= speed;
-			animModule.changeAnimation("WalkUp");
+			animModule.changeAnimation("Up");
 		}
 		
 		if(Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed && !reachedHalfway) {
@@ -64,9 +64,6 @@ public class WalkerGui implements Gui{
 			reachedDestination = true;
 			agent.msgDestination();
 		}
-		
-		if(animModule.getAnimation().equals("Taunt") && animModule.getLastFrame())
-			agent.msgDestination();
 	}
 
 	public void draw(Graphics2D g) {
@@ -75,14 +72,10 @@ public class WalkerGui implements Gui{
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
-		this.xDestination = xDestination * 25;
-		this.yDestination = yDestination * 25+2;
+		this.xDestination = xDestination * 25 - 3;
+		this.yDestination = yDestination * 25;
 		reachedHalfway = false;
 		reachedDestination = false;
-	}
-	
-	public void doTauntAndLeave() {
-		animModule.changeAnimation("Taunt", 10);
 	}
 	
 	public void setIgnore() {
