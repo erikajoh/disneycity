@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import market.Market;
 import transportation.Transportation;
 import transportation.TransportationPanel;
 import transportation.GUIs.BusGui;
@@ -80,6 +81,8 @@ public class TransportationController extends Agent implements Transportation{
 		}
 	}
 
+	
+	
 	Map<String, Building> directory;
 
 	MovementTile[][] grid;
@@ -268,6 +271,11 @@ public class TransportationController extends Agent implements Transportation{
 			}
 		}
 		stateChanged();
+	}
+	
+	@Override
+	public void msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity) {
+		truck.msgDeliverOrder(restaurant, market, food, quantity);
 	}
 
 	//+++++++++++++++++SCHEDULER+++++++++++++++++

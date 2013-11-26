@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import market.Market;
 import astar.astar.AStarNode;
 import astar.astar.Position;
 import simcity.PersonAgent;
@@ -34,22 +35,27 @@ public class TruckAgent extends MobileAgent{
 		int quantity;
 		Restaurant restaurant;
 		PersonAgent person;
+		Market market;
 		
 		Status status;
 		
 		
-		deliveryOrder(Restaurant restaurant, String food, int quantity) {
+		deliveryOrder(Restaurant restaurant, String food, int quantity, Market market) {
 			this.restaurant = restaurant;
 			this.food = food;
 			this.quantity = quantity;
 			person = null;
+			this.market = market;
+			status = Status.WAITING;
 		}
 		
-		deliveryOrder(PersonAgent person, String food, int quantity) {
+		deliveryOrder(PersonAgent person, String food, int quantity, Market market) {
 			this.restaurant = null;
 			this.food = food;
 			this.quantity = quantity;
 			this.person = person;
+			this.market = market;
+			status = Status.WAITING;
 		}
 		
 		public boolean returnType() {
@@ -74,6 +80,10 @@ public class TruckAgent extends MobileAgent{
 		orders = Collections.synchronizedList(new ArrayList<deliveryOrder>());
 	}
 	
+	public void msgDeliverOrder(Restaurant restaurant, Market market, String food, int quantity) {
+		orders.add(new deliveryOrder(restaurant, food, quantity, market));
+		stateChanged();
+	}
 	
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)

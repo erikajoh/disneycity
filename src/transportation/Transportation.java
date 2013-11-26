@@ -1,5 +1,6 @@
 package transportation;
 
+import market.Market;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 
@@ -8,5 +9,5 @@ public interface Transportation {
 
 	public abstract void msgPayFare(PersonAgent personAgent, float fareToPay);
 	
-	public abstract void msgSendDelivery(Restaurant restaurant, String food, int quantity);
+	public abstract void msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity);
 }
