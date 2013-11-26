@@ -601,6 +601,7 @@ public class PersonAgent extends Agent {
 	private void enterRestaurant() {
 		print("Entering restaurant");
 		MyRestaurant myRest = (MyRestaurant)currentMyObject;
+		if (myRest.personType == "Waiter" ) print("going to restaurant as waiter " + " i am " + this.getName());
 		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand);
 	}
 	

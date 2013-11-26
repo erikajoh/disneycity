@@ -74,7 +74,7 @@ import java.util.concurrent.Semaphore;
 		public void msgShiftDone() {
 			shiftDone = true;
 			if (customers.size()==0) {
-				person.msgStopWork(10);
+				if (person!=null) person.msgStopWork(10);
 			}
 		}
 		

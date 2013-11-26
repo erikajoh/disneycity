@@ -236,7 +236,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		WaiterAgent newWaiter = new WaiterAgent(name);	
     		WaiterGui newWaiterGui = new WaiterGui(newWaiter, WAITER_X_START, WAITER_Y_START);
     		WAITER_X_START += newWaiterGui.mySize;
-    		if (p!=null) newWaiter.setPerson(p);
+    		if (p!=null) { newWaiter.setPerson(p); System.out.println("setting person " + p.getName());}
     		newWaiter.setGui(newWaiterGui);
     		gui.pizzaAniPanel.addGui(newWaiterGui);
 
@@ -312,6 +312,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	@Override
 	public void msgEndOfShift() {
 		isOpen = false;
+		System.out.println("RESTAURANT GOT END OF SHIFT");
 		for (WaiterAgent w: waiters) {
 			w.msgShiftDone();
 			if (cashier!=null) cashier.subtract(10);

@@ -286,7 +286,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	@Override
 	public void msgEndOfShift() {
 		isOpen = false;
-		for (WaiterAgent w: waiters) {
+		/*for (WaiterAgent w: waiters) {
 			w.msgShiftDone();
 			if (cashier!=null) cashier.subtract(10);
 		}
@@ -294,6 +294,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 		if (host!=null) host.msgShiftDone();
 		if (cashier!=null) cashier.subtract(30);
 		if (cashier!=null) cashier.msgShiftDone();
+		*/
 		
 	}
     
