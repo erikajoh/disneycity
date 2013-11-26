@@ -8,11 +8,19 @@ import java.util.concurrent.Semaphore;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import AnimationTools.AnimationModule;
+
 public class CustomerGui implements Gui{
 
 	private CustomerAgent agent = null;
 	private boolean isPresent = false;
 	private String text = "";
+	
+	/* animation from Doug */
+	AnimationModule animModule;
+	private enum Direction { UP, DOWN, LEFT, RIGHT};
+	boolean standing = false;
+	private Direction currDir = Direction.UP;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -23,6 +31,7 @@ public class CustomerGui implements Gui{
 	public static final int mHeight = 360;
 
 	public CustomerGui(CustomerAgent c){
+		animModule = new AnimationModule();
 		agent = c;
 		agent.setGui(this);
 		xPos = (int)(mWidth*0.18);
@@ -30,14 +39,44 @@ public class CustomerGui implements Gui{
 	}
 
 	public void updatePosition() {
-		if (xPos < xDestination)
+		
+		// general animation states
+		if (xPos < xDestination) {
 			xPos++;
-		else if (xPos > xDestination)
+			currDir = Direction.RIGHT;
+		}
+		else if (xPos > xDestination) {
 			xPos--;
-		else if (yPos < yDestination)
+			currDir = Direction.LEFT;
+		}
+		else if (yPos < yDestination) {
 			yPos++;
-		else if (yPos > yDestination)
+			currDir = Direction.DOWN;
+		}
+		else if (yPos > yDestination) {
 			yPos--;
+			currDir = Direction.UP;
+		}
+		
+		// special animation states
+		standing = xPos == xDestination && yPos == yDestination;		
+		
+		// animation rules
+		if(standing) {
+			animModule.changeAnimation("Stand");
+		}
+		else {
+			switch(currDir) {
+				case UP:
+					animModule.changeAnimation("WalkUp"); break;			
+				case DOWN:
+					animModule.changeAnimation("WalkDown"); break;
+				case LEFT:
+					animModule.changeAnimation("WalkLeft"); break;
+				case RIGHT:
+					animModule.changeAnimation("WalkRight"); break;
+			}
+		}
 		
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command == Command.MoveUp) agent.msgAnimationMoveUpFinished();
@@ -48,9 +87,8 @@ public class CustomerGui implements Gui{
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.CYAN);
-		g.fillRect(xPos, yPos, mWidth/20, mHeight/15);
-//		Image img = Toolkit.getDefaultToolkit().getImage("customer.jpg");
-//		g.drawImage(img, xPos, yPos, yTable/12, yTable/12, null);
+		animModule.updateAnimation();//updates the frame and animation 
+		g.drawImage(animModule.getImage(), xPos, yPos, null);
 		g.setColor(Color.GRAY);
 		if (text == null) text = "";
 		g.drawString(text, xPos, yPos);

@@ -28,6 +28,7 @@ public class CookAgent extends Agent {
 	Market market;
 	private enum moState {pending, ordered};
 	public boolean inMarket;
+	int curID;
 	
 
 	public CookAgent(String name, RestaurantRancho rest, Market m) {
@@ -50,6 +51,7 @@ public class CookAgent extends Agent {
 		cookTimes.put("Chicken Tortilla Soup", 3500);
 		restaurant = rest;
 		inMarket = false;
+		curID = 0;
 	
 	}
 
@@ -87,16 +89,16 @@ public class CookAgent extends Agent {
 		stateChanged();	
 	}
 	
-	public void msgHereIsOrder(String choice, int amount) {
+	public void msgHereIsOrder(String choice, int amount, int id) {
 		print("Received a delivery from the market!");
 		for (MarketOrder mo : marketOrders){
-			if (mo.food == choice && mo.amount == amount) {
+			if (mo.id == id && mo.amount == amount) {
 				Food f = findFood(mo.food);
 				f.amount = amount;
 				marketOrders.remove(mo);
 			} else if (mo.food == choice && mo.amount != 0) {
 				Food f = findFood(mo.food);
-				f.amount = amount - mo.amount;
+				f.amount = amount + mo.amount;
 				mo.amount -= amount;
 			}
 		}
@@ -130,7 +132,7 @@ public class CookAgent extends Agent {
 						if (mo.os == moState.pending) {
 							print("ordering " + mo.food );
 							mo.os = moState.ordered;
-							market.personAs(this, 100, mo.food, mo.amount);
+							market.personAs(this, 100, "Mexican", mo.amount, mo.id);
 							return true;
 						}
 					}
@@ -252,9 +254,12 @@ public class CookAgent extends Agent {
 		String food;
 		int amount;
 		moState os;
+		int id;
 		MarketOrder(String f, int a) {
 			amount = a;
 			food = f;
+			id = curID;
+			curID++;
 			os = moState.pending;
 		}
 		
