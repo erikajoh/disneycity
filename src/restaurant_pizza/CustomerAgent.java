@@ -204,6 +204,7 @@ public class CustomerAgent extends Agent implements Customer {
 		if(state == AgentState.WaitingToBeSeated && event == AgentEvent.leaving) {
 			state = AgentState.DoingNothing;
 			host.msgCannotWait(this);
+			person.msgDoneEating(false);
 			LeaveTable();
 			return true;
 		}
@@ -256,13 +257,13 @@ public class CustomerAgent extends Agent implements Customer {
 		if (state == AgentState.CashierProcessing && event == AgentEvent.leaving) {
 			state = AgentState.DoingNothing;
 			LeaveTable();
-			person.msgFoodDone(true);
+			person.msgDoneEating(true);
 			return true;
 		}
 		// Special rules
 		if(event == AgentEvent.cannotAffordAnything) {
 			state = AgentState.DoingNothing;
-			person.msgDoneEating(true);
+			person.msgDoneEating(false);
 			waiter.msgLeavingRestaurant(this);
 			LeaveTable();
 		}
