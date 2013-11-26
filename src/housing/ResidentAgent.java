@@ -27,12 +27,14 @@ public class ResidentAgent extends Agent implements Resident {
 	
 	public EventLog log = new EventLog();
 	
-	private final static int START_INVENTORY = 1;
+	private final static int START_INVENTORY = 0;
 
 	public enum State
 	{idle, enteringHouse, readyToCook, noFood, foodDone, wantsMaintenance, maintenanceDone, goingToBed, leavingHouse, left};
 	
 	State state = State.idle;
+	
+//	State prevState; //hack
 	
 	/**
 	 * Constructor for RenterAgent class
@@ -53,66 +55,13 @@ public class ResidentAgent extends Agent implements Resident {
 		return name;
 	}
 	
-	class Building {
-		String type;
-		Timer timer = new Timer();
-		private HashMap<String, Integer> inventory = new HashMap<String, Integer>();
-		Building(String t) {
-			type = t;
-			// TODO: This be hacked
-			inventory.put("Mexican", START_INVENTORY);
-			inventory.put("Southern", START_INVENTORY);
-			inventory.put("Italian", START_INVENTORY);
-			inventory.put("German", START_INVENTORY);
-			inventory.put("American", START_INVENTORY);
-		}
-		private boolean getFood(String f) {
-			if (inventory.get(f) != 0) {
-				inventory.put(f, inventory.get(f)-1);
-				state = State.idle;
-				return true;
-			} else {
-				return false;
-			}
-		}
-		public void cookFood() {
-			if (getFood(foodPreference)) {
-				timer.schedule(new TimerTask() {
-					public void run() {
-						log.add(new LoggedEvent("Food is done"));
-						state = State.foodDone;
-						stateChanged();
-					}
-				},
-				5000);
-			} else {
-				log.add(new LoggedEvent("No food"));
-				state = State.noFood;
-				stateChanged();
-			}
-		}
-
-		public void addItems(Map<String, Integer> items) {
-			Set<String> keySet = items.keySet();
-			String[] keyArray = keySet.toArray(new String[keySet.size()]);
-			for(int i = 0; i < keyArray.length; i++) {
-				if(inventory.get(keyArray[i]) != null) {
-					Integer aQuantity = items.get(keyArray[i]);
-					inventory.put(keyArray[i], aQuantity + inventory.get(keyArray[i]));
-				}
-			}
-		}
-	}
-	
 	// Messages
 	
 	public void msgAnimationFinished(){ //from animation
 		moving.release();
-		stateChanged();
-	}
-	
-	public void msgDoMaintenance(){
-		state = State.wantsMaintenance;
+//		if (prevState == State.enteringHouse) state = State.readyToCook; //hack
+//		else if (prevState == State.foodDone) state = State.wantsMaintenance; //hack
+//		else if (prevState == State.goingToBed) state = State.leavingHouse; //hack
 		stateChanged();
 	}
 	
@@ -129,6 +78,11 @@ public class ResidentAgent extends Agent implements Resident {
 		stateChanged();
 	}
 	
+	public void msgDoMaintenance(){ //from Housing class
+		state = State.wantsMaintenance;
+		stateChanged();
+	}
+	
 	public void msgLeave() { //from Housing class
 		log.add(new LoggedEvent("Leaving"));
 		state = State.leavingHouse;
@@ -138,6 +92,12 @@ public class ResidentAgent extends Agent implements Resident {
 	public void msgCookFood(String choice) { //from Housing class
 		foodPreference = choice;
 		state = State.readyToCook;
+		stateChanged();
+	}
+	
+	public void msgDoneCooking(boolean success) { //from Building class
+		if (success) state = State.foodDone;
+		else state = State.noFood;
 		stateChanged();
 	}
 
@@ -156,57 +116,61 @@ public class ResidentAgent extends Agent implements Resident {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
+//		prevState = state; //hack
 		if(state == State.enteringHouse){
+			state = State.idle;
 			Do("Entering house");
 			EnterHouse();
-//			state = State.readyToCook; //hack
 			return true;
 		}
 		else if(state == State.readyToCook){
+			state = State.idle;
 			Do("Ready to cook");
 			CookFood();
 			return true;
 		}
 		else if(state == State.noFood){
+			state = State.idle;
 			Do("No food");
 			housing.msgFoodDone(this, false);
-			state = State.idle;
-//			state = State.wantsMaintenance; //hack
 			return true;
 		}
 		else if(state == State.foodDone){
+			state = State.idle;
 			Do("Food done");
 			GoToTable();
 			housing.msgFoodDone(this, true);
-//			state = State.wantsMaintenance; //hack
 			return true;
 		}
 		else if(state == State.wantsMaintenance){
+			state = State.idle;
 			Do("Want maintenance");
 			DoMaintenance();
 			return true;
 		}
 		else if(state == State.maintenanceDone){
+			state = State.idle;
 			Do("Maintenance done");
 			housing.msgFinishedMaintenance(this);
 //			state = State.goingToBed; //hack
 			return true;
 		}
 		else if(state == State.goingToBed){
+			state = State.idle;
 			Do("Going to bed");
 			GoToBed();
-//			state = State.leavingHouse; //hack
 			return true;
 		}
 		else if(state == State.leavingHouse){
+			state = State.idle;
 			Do("Leaving house");
 			LeaveHouse();
 			return true;
 		}
 		else if(state == State.left){
+			state = State.idle;
 			Do("Left house");
 			housing.msgLeft(this);
-			state = State.idle;
 			return true;
 		}
 		return false;
@@ -215,7 +179,6 @@ public class ResidentAgent extends Agent implements Resident {
 	// Actions
 	
 	private void EnterHouse(){
-		state = State.idle;
 		renterGui.DoEnterHouse();
 		try {
 			moving.acquire();
@@ -228,7 +191,6 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void CookFood(){
-		state = State.idle;
 		renterGui.DoGoToKitchen();
 		try {
 			moving.acquire();
@@ -236,12 +198,11 @@ public class ResidentAgent extends Agent implements Resident {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		building.cookFood();
+		building.cookFood(this, foodPreference);
 		stateChanged();
 	}
 	
 	private void GoToTable(){
-		state = State.idle;
 		renterGui.DoGoToTable();
 		try {
 			moving.acquire();
@@ -253,7 +214,6 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void DoMaintenance(){
-		state = State.idle;
 		renterGui.DoMaintenance();
 		try {
 			moving.acquire();
@@ -265,7 +225,6 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void GoToBed(){
-		state = State.idle;
 		renterGui.DoGoToBed();
 		try {
 			moving.acquire();
@@ -277,7 +236,6 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void LeaveHouse(){
-		state = State.idle;
 		renterGui.DoLeaveHouse();
 		try {
 			moving.acquire();

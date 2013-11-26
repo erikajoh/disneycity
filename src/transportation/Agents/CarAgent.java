@@ -106,6 +106,8 @@ public class CarAgent extends MobileAgent{
 	}
 
 	public void tauntAndLeave() {
+		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+			master.grid[currentPosition.getX()][currentPosition.getY()].release();
 		master.msgArrivedAtDestination(driver);
 		gui.setIgnore();
 		stopThread();

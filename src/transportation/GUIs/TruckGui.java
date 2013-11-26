@@ -24,10 +24,10 @@ public class TruckGui implements Gui{
 		this.yLast = yPos * 25;
 		speed = 1.00f;
 		this.agent = agent;		
-		reachedHalfway = false;
-		reachedDestination = false;
+		reachedHalfway = true;
+		reachedDestination = true;
 		
-		animModule = new AnimationModule("Pelipper", "IDLE", 20);
+		animModule = new AnimationModule("Pelipper", "IDLE", 10);
 	}
 	
 	public void updatePosition() {
@@ -61,17 +61,34 @@ public class TruckGui implements Gui{
 		if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
 			xLast = xDestination;
 			yLast = yDestination;
+			
+			System.out.println(String.valueOf(xPos) + " " + String.valueOf(xDestination) + " " + String.valueOf(yPos) + " " + String.valueOf(yDestination));
+			System.out.println(String.valueOf(reachedDestination));
+			//System.exit(0);
 			reachedDestination = true;
 			agent.msgDestination();
 		}
+		
+		if(animModule.getAnimation().equals("Delivery") && animModule.getLastFrame())
+			agent.msgDestination();
 	}
-
+	
+	public void doIdle() {
+		animModule.changeAnimation("Idle", 30);
+	}
+	
+	public void doDeliveryDance() {
+		animModule.changeAnimation("Deliver", 10);
+	}
+	
 	public void draw(Graphics2D g) {
 		animModule.updateAnimation();
 		g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
+		this.xLast = this.xDestination;
+		this.yLast = this.yDestination;
 		this.xDestination = xDestination * 25 - 3;
 		this.yDestination = yDestination * 25;
 		reachedHalfway = false;

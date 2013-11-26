@@ -28,54 +28,50 @@ public class SimCityPanel extends JPanel{
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
 	ArrayList<Housing> housings = new ArrayList<Housing>();
 	ArrayList<Market> markets = new ArrayList<Market>();
-	
 	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	
 	Transportation transportation;
-	
-	private JPanel group = new JPanel();
 	 
 	public SimCityPanel(SimCityGui gui) {
 		
 		this.gui = gui;
 		restRancho = gui.restRancho;
 		
-		Housing firstHousing = gui.hauntedMansion;
-		Market firstMarket = gui.mickeysMarket;
-		Bank firstBank = gui.pirateBank;
 		String foodPreferenceMexican = "Mexican";
 		String foodPreferenceItalian = "Italian";
 		
+		Housing firstHousing = gui.hauntedMansion;
 		Housing secondHousing = gui.mainStApts1;
+		Market firstMarket = gui.mickeysMarket;
+		Bank firstBank = gui.pirateBank;
 		
 		animationPanelsList = gui.animationPanelsList;
 		transportation = gui.cityAniPanel.getTransportation();
 		
 		// All PersonAgents are instantiated here. Upon instantiation, we must pass
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
-		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 70, foodPreferenceItalian, "OwnerResident", transportation);
+		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 10, foodPreferenceItalian, "OwnerResident", transportation);
+		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", secondHousing, 60, foodPreferenceMexican, "OwnerResident", transportation);
+		
 		firstHousing.setOwner(firstHackedPerson);
 		firstHousing.addRenter(firstHackedPerson);
 		firstHackedPerson.addRestaurant(restRancho, "Customer");
 		firstHackedPerson.addMarket(firstMarket, "Customer");
 		firstHackedPerson.addBank(firstBank, "Customer");
 		people.add(firstHackedPerson);
-
-		/*
-		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", secondHousing, 60, foodPreferenceMexican, "Renter", transportation);
-		firstHousing.setOwner(firstHackedPerson);
-		firstHousing.addRenter(secondHackedPerson);
+		
+		secondHousing.setOwner(secondHackedPerson);
+		secondHousing.addRenter(secondHackedPerson);
 		secondHackedPerson.addRestaurant(restRancho, "Customer");
 		secondHackedPerson.addMarket(firstMarket, "Customer");
 		secondHackedPerson.addBank(firstBank, "Customer");
 		people.add(secondHackedPerson);
-		*/
 
 		// Alternatively, you can call the next line as a hack (in place of the previous three lines)
 		//		 firstHousing.setOwner();
 		 
 		firstHackedPerson.startThread();
-		//secondHackedPerson.startThread();
+		secondHackedPerson.startThread();
 
 	    setLayout(new GridLayout());
 	
@@ -95,7 +91,7 @@ public class SimCityPanel extends JPanel{
 	
 	public void handleTick() {
 		long currTicks = getNumTicks();
-		if(currTicks % 50 == 0)
+		if(currTicks % 10 == 0)
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
 		
 		// handle ticks for people
@@ -115,22 +111,19 @@ public class SimCityPanel extends JPanel{
 				}, (int)(Math.random() * EAT_DELAY_MAX * TICK_DELAY));
 			}
 			
-			// body state signals
-			// waking up and sleeping
+			// body state signals: waking up and sleeping
 			if(currTicks == START_OF_DAY) {
 				person.msgWakeUp();
 			}
 			if(currTicks == END_OF_DAY) {
 				person.msgGoToSleep();
 			}
-			// person maintenance signal
-			// maintain house if it's Friday morning
+			// person maintenance signal: maintain house if it's Friday morning
 			if(currTicks == MORNING && getCurrentDay().equals("Friday")) {
 				person.msgNeedMaintenance();
 			}
 			
-			// job signals
-			// two constants, WORK_ONE and WORK_TWO, determine when to send the signals to go to work
+			// job signals: two constants, WORK_ONE and WORK_TWO, determine when to send the signals to go to work
 			if(currTicks == WORK_ONE) {
 				person.msgGoToWork(1);
 			}
@@ -158,7 +151,7 @@ public class SimCityPanel extends JPanel{
 	/* Time intervals */
 	private static final int TICK_DELAY = 125; // every 1/8 second = one clock tick
 	
-	// these are start times for each of the day's phases
+	// these are start times for each of the day phases
 	private static final long START_OF_DAY = 1;
 	private static final long MORNING = 30;
 	private static final long WORK_ONE = 150;

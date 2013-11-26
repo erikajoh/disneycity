@@ -1,11 +1,5 @@
 package bank.test;
 
-
-
-//import bank.customerAgent.customerBillState;
-//import bank.WaiterAgent.Bill;
-
-
 import bank.test.mock.MockBank;
 import bank.test.mock.MockBankCustomer;
 import bank.test.mock.MockManager;
@@ -14,10 +8,15 @@ import bank.test.mock.MockPerson;
 import junit.framework.*;
 
 /**
- * 
- * This class is a JUnit test class to unit test the customerAgent's basic interaction
- * with waiters, customers, and the host.
- * It is provided as an example to students in CS201 for their unit testing lab.
+ *  PLEASE READ: 
+ *  I felt there were two necessary test case files
+ *  BankCustomerTest tests all scenarios of customers creating accounts, withdrawing and depositing.
+ *  It incorporates multiple customers, multiple accounts, and multiple loans in all varieties.
+ *  
+ *  ManagerTest tests all scenarios of assigning tellers to customers.
+ *  
+ *  TellerTest wasn't necessary as it was just an intermediate for BankCustomerTest and provided that all of those
+ *  test cases passed, it wouldn't prove anything.
  *
  * Assumptions:
  * 1) Person will never say they deposited more money than they actually did
@@ -2257,12 +2256,12 @@ public void testBankOpenAndWithdrawScenario(){
     }
 	
 	/**
-	 * This tests two customers opening two accounts. Both withdraw cash and have loans. One is able to pay it back right away while the other passes the limit.
-	 *//*
-	public void testBankTwoCustomersWithLoansSameTellerScenario(){
-		customer0 = new MockPerson("Person"); //initializing customer0 with an account with 100.00 cash, 0 on hand
-		customer0.setBalance(100.00);
-		customer0.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+	 * This tests two customers with two different tellers paying off loans
+	 */
+	public void testBankTwoCustomersWithLoansDiffTellerScenario(){
+		customer0 = new MockPerson("Person");
+		customer0.setBalance(50.00);
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -2273,11 +2272,45 @@ public void testBankOpenAndWithdrawScenario(){
 		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
 		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
 		mbc.msgAnimationFinishedGoToTeller();
+		
+		customer1 = new MockPerson("Person1"); //repeat sequence for second customer
+		customer1.setBalance(50.00);
+		customer1.msgArrive(-1, 25.00); //second customer has to be assigned to second teller as first is busy with first customer
+		customer1.setBank(bank);
+		assertEquals(customer1.accounts.size(), 0);
+		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+	    mbc = bank.getMBC(customer1);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+		mbc.msgAnimationFinishedGoToTeller();
+		
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
+		assertTrue(teller1.log.getLastLoggedEvent().toString(), teller1.log.containsString("OPEN ACCOUNT"));
+		assertTrue("teller1 will finally open the account", teller1.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
+	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+	  	mbc.msgAnimationFinishedLeavingBank();
+	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+		assertTrue(teller1.log.getLastLoggedEvent().toString(), teller1.log.containsString("LEAVING"));
+		assertTrue("Teller will tell manager that he is free", teller1.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue(customer1.log.getLastLoggedEvent().toString(), customer1.log.containsString("TRANSACTION COMPLETE"));
+		assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+		assertEquals(customer1.balance, 25.00);
+		assertEquals(customer1.accounts.size(), 1);//account # is 0
+		
+	    mbc = bank.getMBC(customer0);
 		assertNotSame(mbc.teller, null);
 		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
 		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
 		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
-		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
 		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
 	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
 	  	mbc.msgAnimationFinishedLeavingBank();
@@ -2288,415 +2321,370 @@ public void testBankOpenAndWithdrawScenario(){
 		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
 		assertTrue(customer0.log.getLastLoggedEvent().toString(), customer0.log.containsString("TRANSACTION COMPLETE"));
 		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-		assertEquals(customer0.balance, 0.00);
-		assertEquals(customer0.getBalance(0), 100.00);
-		assertEquals(customer0.accounts.size(), 1);
+		assertEquals(customer0.balance, 25.00);
+		assertEquals(customer0.accounts.size(), 1); //account # is 1
 		
-		customer1 = new MockPerson("Person1"); //initializing customer1 with an account with 100.00 cash, 0 on hand
-		customer1.setBalance(100.00);
-		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
-		customer1.setBank(bank);
-		assertEquals(customer1.accounts.size(), 0);
-		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+		customer0.accountChoice = 1; 
+		customer0.msgArrive(1, 40.00); //customer 0 withdrawing 40.00
+		assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
 		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-		mbc = bank.getMBC(customer1);
+	    mbc = bank.getMBC(customer0);
 		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
+
 		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
 		mbc.msgAnimationFinishedGoToTeller();
 		assertNotSame(mbc.teller, null);
-		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
+		assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
 		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedLeavingBank();
+		assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		mbc.msgAnimationFinishedLeavingBank();
 	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
 		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
 		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-		assertTrue(customer1.log.getLastLoggedEvent().toString(), customer1.log.containsString("TRANSACTION COMPLETE"));
-		assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-		assertEquals(customer1.balance, 0.00);
-		assertEquals(customer1.getBalance(1), 100.00);
-		assertEquals(customer1.accounts.size(), 1);
+		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+		assertEquals(customer0.balance, 65.00); //25.00+40.00=65.00
+		assertEquals(customer0.getLoanAmount(1), 15.00); //25.00-40.00=-15.00
+		assertEquals(customer0.getLoanTime(1), 3); //3 days to start
+		assertEquals(customer0.accounts.size(), 1); //account # is 1
 		
-		customer1.accountChoice = 1; //customer picks to use his account (#1)
-		customer1.msgArrive(1, 200.00); //now withdrawing cash, should have 200.00 balance, 100.00 loan
-	  	assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer1);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		customer1.accountChoice = 0; //must have account choice!!!
+		customer1.msgArrive(1, 50.00); //customer withdrawing 50.00
+		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+	    mbc = bank.getMBC(customer1);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
 
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //now at teller0
+		mbc.msgAnimationFinishedGoToTeller();
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+		assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
 		mbc.msgAnimationFinishedLeavingBank();
 	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-	  	assertEquals(customer1.balance, 200.00); 
-	  	assertEquals(customer1.getBalance(1), 0.00); 
-	  	assertEquals(customer1.loanAmt, 100.00);
-	  	assertEquals(customer1.loanTime, 3); 
-	  	
-		customer0.accountChoice = 0; //customer picks to use his account (#0)
-		customer0.msgArrive(1, 150.00); //now withdrawing cash, should have 200.00 balance, 100.00 loan
-	  	assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer0);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-	  	assertEquals(customer0.balance, 150.00); 
-	  	assertEquals(customer0.getBalance(0), 0.00); 
-	  	assertEquals(customer0.loanAmt, 50.00);
-	  	assertEquals(customer0.loanTime, 3); 
-	  	
-		customer1.accountChoice = 1; //customer picks to use his account (#1)
-		customer1.msgArrive(0, 50.00); //now depositing cash to pay back some of loan, should have 150.00 balance, 50.00 loan
-	  	assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer1);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-	  	assertEquals(customer1.balance, 150.00); 
-	  	assertEquals(customer1.loanAmt, 50.00); //decreases but still persists since not paid off
-	  	assertEquals(customer1.loanTime, 2); //decreases to 2 since new bank visit
-	  	
-	  	customer0.balance = 40.00;
-		customer0.accountChoice = 0; //customer picks to use his account (#0)
-		customer0.msgArrive(0, 10.00); //now paying off some of the loan, should have 30.00 cash, 40.00 loan left
+		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+		assertEquals(customer1.balance, 75.00); //25.00+50.00=75.00
+		assertEquals(customer1.getLoanAmount(0), 25.00); //25.00-50.00=-25.00
+		assertEquals(customer1.getLoanTime(0), 3); //3 loan days to start
+		assertEquals(customer1.accounts.size(), 1);     
+		
+		//both depositing 10.00 to loans
+		customer1.accountChoice = 0; //must have account choice!!!
+		customer1.msgArrive(0, 25.00); //customer withdrawing 50.00
+		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+	    mbc = bank.getMBC(customer1);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		
+		
+		customer0.accountChoice = 1; 
+		customer0.msgArrive(0, 10.00); //customer 0 withdrawing 10.00
 		assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer0);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+	    mbc = bank.getMBC(customer0);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //assigned to teller1
+		mbc.msgAnimationFinishedGoToTeller();
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+		assertTrue("teller1 will finally open the account", teller1.pickAndExecuteAnAction());
+		assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
 		mbc.msgAnimationFinishedLeavingBank();
 	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-	  	assertEquals(customer0.balance, 30.00); 
-	  	assertEquals(customer0.loanAmt, 40.00);
-	  	assertEquals(customer0.loanTime, 2); //1 less loan time visit
-	  	
-		customer1.accountChoice = 1; //customer picks to use his account (#1)
-		customer1.msgArrive(0, 60.00); //now fully paying off loan
-	  	assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer1);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		assertTrue("Teller will tell manager that he is free", teller1.pickAndExecuteAnAction());
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+		assertEquals(customer0.balance, 55.00); //65.00-10.00=55.00
+		assertEquals(customer0.getLoanAmount(1), 5.00); //15.00-5.00=10.00
+		assertEquals(customer0.getLoanTime(1), 2); //3 days to start
+		assertEquals(customer0.accounts.size(), 1); //account # is 1
+		
+		mbc = bank.getMBC(customer1); //reset to get customer 1's bank customer
+		
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //now at teller0
+		mbc.msgAnimationFinishedGoToTeller(); //depositing 25.00 which should reset loan
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+		assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
 		mbc.msgAnimationFinishedLeavingBank();
 	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-	  	assertEquals(customer1.balance, 90.00); 
-	  	assertEquals(customer1.loanAmt, 0.00); //customer1's loan is now fully paid off
-	  	assertEquals(customer1.loanTime, 0); //time is reset to 0
-	  	
-		customer0.accountChoice = 0; //customer picks to use his account (#0)
-		customer0.msgArrive(0, 10.00); //now paying off some of the loan, should have 30.00 cash, 40.00 loan left
+		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+		assertEquals(customer1.balance, 50.00); //75.00-25.00=50.00
+		assertEquals(customer1.getLoanAmount(0), 0.00); //loan amount is now reset
+		assertEquals(customer1.getLoanTime(0), 0); //3 loan days to start
+		assertEquals(customer1.accounts.size(), 1);    
+		
+		customer0.accountChoice = 1; 
+		customer0.msgArrive(0, 5.00); //customer 0 depositing 5.00 which should finally offset the loan
 		assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer0);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+	    mbc = bank.getMBC(customer0);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //REASSIGNED TO TELLER #0
+		mbc.msgAnimationFinishedGoToTeller();
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+		assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
 		mbc.msgAnimationFinishedLeavingBank();
 	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-	  	assertEquals(customer0.balance, 20.00); 
-	  	assertEquals(customer0.loanAmt, 30.00);
-	  	assertEquals(customer0.loanTime, 1); //1 less loan time visit
-	  	
-		customer0.accountChoice = 0; //customer picks to use his account (#0)
-		customer0.msgArrive(0, 10.00); //now paying off some of the loan, should have 30.00 cash, 40.00 loan left
-		assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer0);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-	  	assertEquals(customer0.balance, 10.00); 
-	  	assertEquals(customer0.loanAmt, 20.00);
-	  	assertEquals(customer0.loanTime, 0); //1 less loan time visit
-	  	
-		customer0.accountChoice = 0; //customer picks to use his account (#0)
-		customer0.msgArrive(0, 10.00); //now paying off some of the loan, should have 30.00 cash, 40.00 loan left
-		assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer0);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-	  	assertEquals(customer0.balance, 0.00); 
-	  	assertEquals(customer0.loanAmt, 35.00);
-	  	assertEquals(customer0.loanTime, -1); //1 less loan time visit
-	  	
-	  	customer0.balance = 100.00; //finally gets money to pay off loan
-		customer0.accountChoice = 0; //customer picks to use his account (#0)
-		customer0.msgArrive(0, 95.00); //now paying off some of the loan, should have 30.00 cash, 40.00 loan left
-		assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer0);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-	  	assertEquals(customer0.balance, 5.00); 
-	  	assertEquals(customer0.loanAmt, 0.00);
-	  	assertEquals(customer0.loanTime, 0); //finally reset                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-    }*/
+		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+		assertEquals(customer0.balance, 50.00); //55.00-5.00=50.00
+		assertEquals(customer0.getLoanAmount(1), 0.00); //5.00-5.00=0.00
+		assertEquals(customer0.getLoanTime(1), 0); //reset
+		assertEquals(customer0.accounts.size(), 1); //account # is 1
+    }
 	
 	/**
-	 * This tests two customers opening three accounts (one for first, two for second). Both withdraw cash from each account and one has a loan.
-	 *//*
-	public void testBankTwoCustomersTwoAccountsSameTellerScenario(){
-		customer0 = new MockPerson("Person"); //initializing customer0 with an account with 100.00 cash, 0 on hand
-		customer0.setBalance(200.00);
-		customer0.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
-		customer0.setBank(bank);
-		assertEquals(customer0.accounts.size(), 0);
-		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-		MockBankCustomer mbc = bank.getMBC(customer0);
-		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
-		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedGoToTeller();
-		assertNotSame(mbc.teller, null);
-		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
-		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
-		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
-		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-		assertTrue(customer0.log.getLastLoggedEvent().toString(), customer0.log.containsString("TRANSACTION COMPLETE"));
-		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-		assertEquals(customer0.balance, 100.00);
-		assertEquals(customer0.getBalance(0), 100.00);
-		assertEquals(customer0.accounts.size(), 1);
-		
-		
-		customer1 = new MockPerson("Person1"); //initializing customer1 with an account with 100.00 cash, 0 on hand
-		customer1.setBalance(200.00);
-		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
-		customer1.setBank(bank);
-		assertEquals(customer1.accounts.size(), 0);
-		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-		mbc = bank.getMBC(customer1);
-		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
-		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedGoToTeller();
-		assertNotSame(mbc.teller, null);
-		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
-		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
-		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
-		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-		assertTrue(customer1.log.getLastLoggedEvent().toString(), customer1.log.containsString("TRANSACTION COMPLETE"));
-		assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-		assertEquals(customer1.balance, 100.00);
-		assertEquals(customer1.getBalance(1), 100.00);
-		assertEquals(customer1.accounts.size(), 1);
-		
-		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
-		customer1.setBank(bank);
-		assertEquals(customer1.accounts.size(), 1);
-		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-		mbc = bank.getMBC(customer1);
-		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
-		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedGoToTeller();
-		assertNotSame(mbc.teller, null);
-		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
-		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
-		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
-		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-		assertTrue(customer1.log.getLastLoggedEvent().toString(), customer1.log.containsString("TRANSACTION COMPLETE"));
-		assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-		assertEquals(customer1.balance, 0.00);
-		assertEquals(customer1.getBalance(2), 100.00);
-		assertEquals(customer1.accounts.size(), 2);
-		
-		
-		customer1.accountChoice = 2; //customer1 picks to use his second account (#2)
-		customer1.msgArrive(1, 50.00); //now withdrawing cash
-	  	assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer1);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+	 * This tests the most complicated scenario, multiple customers, multiple accounts, multiple tellers, multiple loans
+	 */	
+	public void testBankTwoCustomersMultAccountsWithLoansDiffTellerScenario(){
+			customer0 = new MockPerson("Person");
+			customer0.setBalance(50.00);
+			customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+			customer0.setBank(bank);
+			assertEquals(customer0.accounts.size(), 0);
+			assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+			MockBankCustomer mbc = bank.getMBC(customer0);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedGoToTeller();
+			
+			customer1 = new MockPerson("Person1"); //repeat sequence for second customer
+			customer1.setBalance(100.00);
+			customer1.msgArrive(-1, 25.00); //second customer has to be assigned to second teller as first is busy with first customer
+			customer1.setBank(bank);
+			assertEquals(customer1.accounts.size(), 0);
+			assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer1);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedGoToTeller();
+			
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
+			assertTrue(teller1.log.getLastLoggedEvent().toString(), teller1.log.containsString("OPEN ACCOUNT"));
+			assertTrue("teller1 will finally open the account", teller1.pickAndExecuteAnAction());
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
+		  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		  	mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue(teller1.log.getLastLoggedEvent().toString(), teller1.log.containsString("LEAVING"));
+			assertTrue("Teller will tell manager that he is free", teller1.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue(customer1.log.getLastLoggedEvent().toString(), customer1.log.containsString("TRANSACTION COMPLETE"));
+			assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+			assertEquals(customer1.balance, 75.00);
+			assertEquals(customer1.accounts.size(), 1);//account # is 0
+			
+		    mbc = bank.getMBC(customer0);
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
+			assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
+			assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
+		  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		  	mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
+			assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue(customer0.log.getLastLoggedEvent().toString(), customer0.log.containsString("TRANSACTION COMPLETE"));
+			assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+			assertEquals(customer0.balance, 25.00);
+			assertEquals(customer0.accounts.size(), 1); //account # is 1
+			
+			customer1.msgArrive(-1, 25.00); //second customer reenters bank to get second account
+			customer1.setBank(bank);
+			assertEquals(customer1.accounts.size(), 1);
+			assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer1);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("ASSIGNING AND NEW ACCOUNT"));
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("REQ NEW ACCOUNT"));
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedGoToTeller();
+			assertNotSame(mbc.teller, null);
+			
+			assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction()); //reset to teller 0
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("OPEN ACCOUNT"));
+			assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("OPEN ACCOUNT"));
+			assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+			assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ACCOUNT OPENED"));
+		  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+		  	mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
+			assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue(customer1.log.getLastLoggedEvent().toString(), customer1.log.containsString("TRANSACTION COMPLETE"));
+			assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+			assertEquals(customer1.balance, 50.00);
+			assertEquals(customer1.getBalance(2), 25.00);
+			assertEquals(customer1.accounts.size(), 2);//account # is 2
+			
+			customer0.accountChoice = 1; 
+			customer0.msgArrive(1, 40.00); //customer 0 withdrawing 40.00
+			assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer0);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
 
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-	  	assertEquals(customer1.balance, 50.00); 
-	  	assertEquals(customer1.getBalance(2), 50.00); 
-	  	assertEquals(customer1.getLoanAmount(2), 0.00); //no loan
-	  	assertEquals(customer1.getLoanTime(2), 0); 
-	  	
-		customer0.accountChoice = 0; //customer0 picks to use his only account
-		customer0.msgArrive(1, 75.00); //now withdrawing cash
-	  	assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	    mbc = bank.getMBC(customer0);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedGoToTeller();
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+			assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+			assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+			assertEquals(customer0.balance, 65.00); //25.00+40.00=65.00
+			assertEquals(customer0.getLoanAmount(1), 15.00); //25.00-40.00=-15.00
+			assertEquals(customer0.getLoanTime(1), 3); //3 days to start
+			assertEquals(customer0.accounts.size(), 1); //account # is 1
+			
+			customer1.accountChoice = 0; //must have account choice!!!
+			customer1.msgArrive(1, 50.00); //customer withdrawing 50.00
+			assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer1);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
 
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
-	  	assertEquals(customer0.balance, 175.00); 
-	  	assertEquals(customer0.getBalance(0), 25.00); 
-	  	assertEquals(customer0.loanAmt, 0.00); //no loan
-	  	assertEquals(customer0.loanTime, 0); 
-	  	
-	  	customer1.accountChoice = 1; //customer2 now chooses his other, first account (#1)
-		customer1.msgArrive(1, 300.00); //now withdrawing cash
-	  	assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
-	  	assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
-	      mbc = bank.getMBC(customer1);
-	  	assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
-
-	  	assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
-	  	mbc.msgAnimationFinishedGoToTeller();
-	  	assertNotSame(mbc.teller, null);
-	  	assertTrue("Finished simulation to teller so bank customer should deposit cash", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
-		mbc.msgAnimationFinishedLeavingBank();
-	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
-	  	assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
-	  	assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
-	  	assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
-	  	assertEquals(customer1.balance, 350.00); 
-	  	assertEquals(customer1.getBalance(1), 0.00); //balance in account 1 is drained because of the loan
-	  	assertEquals(customer1.getLoanAmount(1), 200.00); //loan for 200, 100-300 = -200
-	  	assertEquals(customer1.getLoanTime(1), 3);  //3 visits to pay back loan                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-    }*/
-	
-
-
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //now at teller0
+			mbc.msgAnimationFinishedGoToTeller();
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+			assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+			assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+			assertEquals(customer1.balance, 100.00); //50.00+50.00=75.00
+			assertEquals(customer1.getLoanAmount(0), 25.00); //25.00-50.00=-25.00
+			assertEquals(customer1.getLoanTime(0), 3); //3 loan days to start
+			assertEquals(customer1.accounts.size(), 2);     
+			
+			//both depositing 10.00 to loans
+			customer1.accountChoice = 0; //must have account choice!!!
+			customer1.msgArrive(0, 25.00); //customer withdrawing 50.00
+			assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer1);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			
+			
+			customer0.accountChoice = 1; 
+			customer0.msgArrive(0, 10.00); //customer 0 withdrawing 10.00
+			assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer0);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //assigned to teller1
+			mbc.msgAnimationFinishedGoToTeller();
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+			assertTrue("teller1 will finally open the account", teller1.pickAndExecuteAnAction());
+			assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue("Teller will tell manager that he is free", teller1.pickAndExecuteAnAction());
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+			assertEquals(customer0.balance, 55.00); //65.00-10.00=55.00
+			assertEquals(customer0.getLoanAmount(1), 5.00); //15.00-5.00=10.00
+			assertEquals(customer0.getLoanTime(1), 2); //3 days to start
+			assertEquals(customer0.accounts.size(), 1); //account # is 1
+			
+			mbc = bank.getMBC(customer1); //reset to get customer 1's bank customer
+			
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //now at teller0
+			mbc.msgAnimationFinishedGoToTeller(); //depositing 25.00 which should reset loan
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+			assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+			assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+			assertEquals(customer1.balance, 75.00); //100.00-25.00=75.00
+			assertEquals(customer1.getLoanAmount(0), 0.00); //loan amount is now reset
+			assertEquals(customer1.getLoanTime(0), 0); //3 loan days to start
+			assertEquals(customer1.accounts.size(), 2);    
+			
+			customer0.accountChoice = 1; 
+			customer0.msgArrive(0, 5.00); //customer 0 depositing 5.00 which should finally offset the loan
+			assertTrue("customer0 has arrived", customer0.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer0);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //REASSIGNED TO TELLER #0
+			mbc.msgAnimationFinishedGoToTeller();
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+			assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+			assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+			assertEquals(customer0.balance, 50.00); //55.00-5.00=50.00
+			assertEquals(customer0.getLoanAmount(1), 0.00); //5.00-5.00=0.00
+			assertEquals(customer0.getLoanTime(1), 0); //reset
+			assertEquals(customer0.accounts.size(), 1); //account # is 1
+			
+			customer1.accountChoice = 2; 
+			customer1.msgArrive(0, 25.00); //customer 1 depositing 25.00 in account 2
+			assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
+			assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("New Bank Customer"));
+		    mbc = bank.getMBC(customer1);
+			assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+			
+			assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction()); //REASSIGNED TO TELLER #0
+			mbc.msgAnimationFinishedGoToTeller();
+			assertNotSame(mbc.teller, null);
+			assertTrue("Finished simulation to teller so bank customer should withdraw cash", mbc.pickAndExecuteAnAction());
+			assertTrue("teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+			assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+			mbc.msgAnimationFinishedLeavingBank();
+		  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+			assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+			assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+			assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+			assertEquals(customer1.balance, 50.00); //75.00-25.00=50.00
+			assertEquals(customer1.getBalance(2), 50.00); //75.00-25.00=50.00
+			assertEquals(customer1.getLoanAmount(2), 0.00); //5.00-5.00=0.00
+			assertEquals(customer1.getLoanTime(2), 0); //reset
+			assertEquals(customer1.accounts.size(), 2); //account # is 2
+	    }
 }
