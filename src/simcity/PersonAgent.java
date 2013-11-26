@@ -12,8 +12,6 @@ import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
 import transportation.Transportation;
 
-// Priority of coding classes: Person, Housing, Transportation, Bank, Restaurant, Market 
-
 public class PersonAgent extends Agent {
 	
 	// ************************* DATA ***********************************
@@ -86,7 +84,7 @@ public class PersonAgent extends Agent {
 		super();
 		name = aName;
 		myPersonality = PersonType.Normal;
-		isNourished = false;
+		isNourished = true;
 		currentLocation = h.getName();
 		moneyOnHand = startMoney;
 		targetLocation = currentLocation;
@@ -95,11 +93,11 @@ public class PersonAgent extends Agent {
 		preferredCommute = PreferredCommute.Walk;
 		
 		this.foodPreference = foodPreference;
-		preferEatAtHome = false;
+		preferEatAtHome = true;
 		
 		currentMyObject = addHousing(h, relationWithHousing);
 		transportation = t;
-		bodyState = BodyState.Asleep;
+		bodyState = BodyState.Active;
 		itemsOnHand = new HashMap<String, Integer>();
 	}
 
@@ -161,14 +159,14 @@ public class PersonAgent extends Agent {
 	
 	public void msgGoToSleep() {
 		print("Must go to sleep");
-		actionQueue.add(new Action(ActionString.goToSleep, 2, 0));
+		actionQueue.add(new Action(ActionString.goToSleep, 1, 0));
 		stateChanged();
 	}
 	
 	public void msgSetHungry() {
 		print("I'm hungry now");
 		if(isNourished) {
-			actionQueue.add(new Action(ActionString.becomeHungry, 2, 1));
+			actionQueue.add(new Action(ActionString.becomeHungry, 3, 1));
 			stateChanged();
 		}
 	}
@@ -310,6 +308,7 @@ public class PersonAgent extends Agent {
 					checkGoingToWork((int)theAction.amount); break; // TODO: handle go to work
 			}
 			event = PersonEvent.makingDecision;
+			print("returning true from action queue; popped: " + theAction.action + "; size: " + actionQueue.size());
 			return true;
 		}
 		
@@ -327,6 +326,7 @@ public class PersonAgent extends Agent {
 						goToTransportation();
 					}
 					event = PersonEvent.onHold;
+					print("returning true because !insideHouse");
 					return true;
 				}
 				if(rentToPay > 0) {
@@ -336,6 +336,7 @@ public class PersonAgent extends Agent {
 					else {
 						getRentMoneyFromBank();
 					}
+					print("returning true because rentToPay > 0");
 					return true;
 				}
 				if(!isNourished) { // if I'm hungry
@@ -358,17 +359,20 @@ public class PersonAgent extends Agent {
 						leaveHouse();
 						event = PersonEvent.onHold;
 					}
+					print("returning true because !isNourished");
 					return true;
 				}
 				if(currentLocation.equals(targetLocation)) {
 					if(moneyOnHand > MONEY_ON_HAND_LIMIT) {
-						haveMoneyToDeposit(); 
+						haveMoneyToDeposit();
+						print("returning true because haveMoneyToDeposit()");
 						return true;
 					}
 				}
 				else {
 					leaveHouse();
 					event = PersonEvent.onHold;
+					print("returning true because isNourished");
 					return true;
 				}
 				if(bodyState == BodyState.Tired) {

@@ -246,7 +246,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
         restRancho.addPerson(null, "Cashier", "cash", 50);
         restRancho.addPerson(null, "Market", "Trader Joes", 50);
         restRancho.addPerson(null, "Host", "Host", 50);
-        restRancho.addPerson(null, "Customer", "Sally", 50);
+        //restRancho.addPerson(null, "Customer", "Sally", 50);
 		//restPizza.addPerson(null, "Cook", "cook", 50);
         //restPizza.addPerson(null, "Waiter", "w", 50);
         //restPizza.addPerson(null, "Cashier", "cash", 50);
@@ -257,7 +257,7 @@ public class SimCityGui extends JFrame implements ActionListener  {
         restHaus.addPerson(null, "Waiter", "w", 50);
         restHaus.addPerson(null, "Cashier", "cash", 50);
         restHaus.addPerson(null, "Host", "Host", 50);
-		restHaus.addPerson(null, "Customer", "Sally", 50);
+		//restHaus.addPerson(null, "Customer", "Sally", 50);
 		
 		mickeysMarket.addPerson(null, "Manager", "MRAWP");
 		mickeysMarket.addPerson(null, "Cashier", "Kapow");
