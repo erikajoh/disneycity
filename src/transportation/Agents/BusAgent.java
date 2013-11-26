@@ -111,9 +111,10 @@ public class BusAgent extends MobileAgent{
 			busRiders.add(busRider);
 			busRider.getPerson().msgPayFare(fare);
 			busRider.state = BusRider.RiderState.HASTOPAY;
-			msgPayFare(busRider.getPerson(), fare);
+			//msgPayFare(busRider.getPerson(), fare);
 			//busRider.state = BusRider.RiderState.RIDING;
 		}
+		currentBusStop.clearRiders();
 	}
 
 	//Also removes BusRiders that aren't on the bus anymore
