@@ -32,7 +32,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private Teller teller = null;
 	
 	public enum State
-	{deciding, openingAccount, depositing, withdrawing, leaving, left, idle};
+	{deciding, goingToTeller, openingAccount, depositing, withdrawing, leaving, left, idle};
 	State state = State.idle;
 
 	public enum AnimState{go, walking, idle};
@@ -166,7 +166,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void goToTeller(){
 		animState = AnimState.walking;
 		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
-	    //simCityGui.updateInfoPanel(this);
+		state = State.openingAccount;
+//	    simCityGui.updateInfoPanel(this);
 	}
 	
 	private void openAccount(){
@@ -175,25 +176,30 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 		teller.msgOpenAccount(this, requestAmt);
 		state = State.idle;
+		stateChanged();
 	}
 	
 	private void depositCash(){
 		teller.msgDepositCash(accountNum, requestAmt);
 		state = State.idle;
+		stateChanged();
 	}
 	private void withdrawCash(){
 		teller.msgWithdrawCash(accountNum, requestAmt);
 		state = State.idle;
+		stateChanged();
 	}
 	private void leaveBank(){
 		animState = AnimState.walking;
 		state = State.left;
+		stateChanged();
 		personGui.DoLeaveBank();
 	}
 	
 	private void leftBank(){
 		state = State.idle;
 		teller.msgLeavingBank();
+		stateChanged();
 	}
 
 	// Accessors, etc.
