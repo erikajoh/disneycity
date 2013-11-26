@@ -7,7 +7,6 @@ import java.util.*;
 
 import market.Market;
 import housing.Housing;
-import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
 import transportation.Transportation;
@@ -34,7 +33,7 @@ public class PersonAgent extends Agent {
 	private enum BodyState {Asleep, Active, Tired};
 	private BodyState bodyState;
 	
-	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
+	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, stopWork, payRent, receiveRent, needMaintenance };
 	
 	private final static double MONEY_ON_HAND_LIMIT = 50.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
@@ -177,8 +176,15 @@ public class PersonAgent extends Agent {
 	}
 
 	public void msgGoToWork(int i) {
-		print("Go to work: work period #" + i);
+		print("Going to work: work period #" + i);
 		actionQueue.add(new Action(ActionString.goToWork, 2, i));
+		stateChanged();
+	}
+	
+	public void msgStopWork() {
+		// TODO how is releasing workers going to, well, work?
+		print("Stopping work");
+		actionQueue.add(new Action(ActionString.stopWork, 2, 0));
 		stateChanged();
 	}
 	
@@ -209,7 +215,6 @@ public class PersonAgent extends Agent {
 	}
 	
 	public void msgFoodDone(boolean doneEating) {
-		// TODO housing message
 		if(doneEating) {
 			isNourished = true;
 			preferEatAtHome = !preferEatAtHome;
@@ -320,6 +325,8 @@ public class PersonAgent extends Agent {
 					doMaintenance(); break;
 				case goToWork:
 					checkGoingToWork((int)theAction.amount); break; // TODO: handle go to work
+				case stopWork:
+					break; // TODO: handle stopping work
 			}
 			event = PersonEvent.makingDecision;
 			print("returning true from action queue; popped: " + theAction.action + "; size: " + actionQueue.size());
@@ -559,18 +566,23 @@ public class PersonAgent extends Agent {
 	private void hungryToRestaurant() {
 		print("I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
-		Map<String, Double> theMenu = targetRestaurant.menu;
-		double lowestPrice = getLowestPrice(theMenu);
-		if(moneyOnHand < lowestPrice) {
-			log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
-			moneyWanted = lowestPrice - moneyOnHand;
-			bankState = BankState.NeedTransaction;
-			MyBank targetBank = chooseBank();
-			targetLocation = targetBank.name;
-			return;
+		// TODO: Added this in case no restaurants available; need to test this works
+		if(targetRestaurant == null)
+			preferEatAtHome = !preferEatAtHome;
+		else {
+			Map<String, Double> theMenu = targetRestaurant.menu;
+			double lowestPrice = getLowestPrice(theMenu);
+			if(moneyOnHand < lowestPrice) {
+				log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
+				moneyWanted = lowestPrice - moneyOnHand;
+				bankState = BankState.NeedTransaction;
+				MyBank targetBank = chooseBank();
+				targetLocation = targetBank.name;
+				return;
+			}
+			print("I have enough money to buy from restaurant");
+			targetLocation = targetRestaurant.name;
 		}
-		print("I have enough money to buy from restaurant");
-		targetLocation = targetRestaurant.name;
 	}
 	
 	private void enterRestaurant() {
@@ -795,10 +807,5 @@ public class PersonAgent extends Agent {
 			Action other = (Action)arg;
 			return priority - other.priority;
 		}
-	}
-	
-	private void addAction(ActionString anAction, int aPriority, double anAmount) {
-		Action theAction = new Action(anAction, aPriority, anAmount);
-		actionQueue.add(theAction);
 	}
 }

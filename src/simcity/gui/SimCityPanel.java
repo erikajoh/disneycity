@@ -37,11 +37,11 @@ public class SimCityPanel extends JPanel{
 	public SimCityPanel(SimCityGui gui) {
 		
 		this.gui = gui;
-		restRancho = gui.restRancho;
 		
 		String foodPreferenceMexican = "Mexican";
 		String foodPreferenceItalian = "Italian";
-		
+
+		restRancho = gui.restRancho;
 		Housing firstHousing = gui.hauntedMansion;
 		Housing secondHousing = gui.mainStApts1;
 		Market firstMarket = gui.mickeysMarket;
@@ -54,7 +54,7 @@ public class SimCityPanel extends JPanel{
 		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 		PersonAgent firstHackedPerson = new PersonAgent("Narwhal Prime", firstHousing, 10, foodPreferenceItalian,
 				"OwnerResident", transportation, "Walk");
-		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secondary", secondHousing, 60, foodPreferenceMexican,
+		PersonAgent secondHackedPerson = new PersonAgent("Narwhal Secundus", secondHousing, 60, foodPreferenceMexican,
 				"OwnerResident", transportation, "Bus");
 		
 		firstHousing.setOwner(firstHackedPerson);
@@ -71,9 +71,6 @@ public class SimCityPanel extends JPanel{
 		secondHackedPerson.addBank(firstBank, "Customer");
 		people.add(secondHackedPerson);
 
-		// Alternatively, you can call the next line as a hack (in place of the previous three lines)
-		//		 firstHousing.setOwner();
-		 
 		firstHackedPerson.startThread();
 		//secondHackedPerson.startThread();
 
@@ -127,20 +124,23 @@ public class SimCityPanel extends JPanel{
 				person.msgNeedMaintenance();
 			}
 			
-			// job signals: two constants, WORK_ONE and WORK_TWO, determine when to send the signals to go to work
-			if(currTicks == WORK_ONE) {
+			// job signals: there are two possible times when people start working
+			if(currTicks == WORK_ONE_START) {
 				person.msgGoToWork(1);
 			}
-			if(currTicks == WORK_TWO) {
+			if(currTicks == WORK_TWO_START) {
 				person.msgGoToWork(2);
+			}
+			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
+				person.msgStopWork();
 			}
 		}
 		
 		// handle ticks for housing
 		for(int i = 0; i < housings.size(); i++) {
 			Housing theHousing = housings.get(i);
-			// rent is due signal
-			// rent is due at the start of every Saturday
+			// rent is due signal: at the start of every Saturday
+			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == START_OF_DAY && getCurrentDay().equals("Saturday")) {
 				theHousing.msgRentDue();
 			}
@@ -156,14 +156,17 @@ public class SimCityPanel extends JPanel{
 	private static final int TICK_DELAY = 125; // every 1/8 second = one clock tick
 	
 	// these are start times for each of the day phases
-	private static final long START_OF_DAY = 1;
-	private static final long MORNING = 30;
-	private static final long WORK_ONE = 150;
-	private static final long NOON = 200;
-	private static final long WORK_TWO = 350;
-	private static final long EVENING = 400;
-	private static final long NIGHT = 550;
-	private static final long END_OF_DAY = 750;
+	private static final long START_OF_DAY		= 1;
+	private static final long MORNING			= START_OF_DAY + 30;
+	private static final long WORK_ONE_START	= MORNING + 150;
+	private static final long NOON				= WORK_ONE_START + 150;
+	private static final long WORK_ONE_END		= NOON + 150;
+	private static final long WORK_TWO_START	= WORK_ONE_END + 50;
+	private static final long EVENING			= WORK_TWO_START + 150;
+	private static final long WORK_TWO_END		= EVENING + 150;
+	private static final long NIGHT				= WORK_TWO_END + 50;
+	private static final long END_OF_DAY		= NIGHT + 350;
+	// length of day 1231
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 25;
@@ -200,7 +203,7 @@ public class SimCityPanel extends JPanel{
 		if(numTicks > END_OF_DAY) {
 			numTicks = 0;
 			setNextDay();
-			timer.cancel(); // TODO test that this stops entire simulation
+			timer.cancel();
 			System.out.println("New day beginning soon");
 			timer = new Timer();
 			timer.schedule(new TimerTask(){
