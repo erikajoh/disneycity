@@ -34,7 +34,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	private Hashtable<Integer, Check> checks = new Hashtable<Integer, Check>();
 	private List<Integer> checksReady = new ArrayList<Integer>();
 	private PersonAgent person;
-	
+	boolean shiftDone = false;
 	
 	private boolean readyForNextTask = true;
 	private boolean wantBreak = false;

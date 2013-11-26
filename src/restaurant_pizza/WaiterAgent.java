@@ -181,6 +181,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void msgShiftDone() {
 		shiftDone = true;
+		print("telling waiter to go home");
 		if (myCustomers.size() == 0) {person.msgStopWork(10);}
 	}
 	

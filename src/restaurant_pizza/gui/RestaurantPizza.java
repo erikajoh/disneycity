@@ -314,12 +314,12 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 		isOpen = false;
 		for (WaiterAgent w: waiters) {
 			w.msgShiftDone();
-			cashier.subtract(10);
+			if (cashier!=null) cashier.subtract(10);
 		}
-		cook.msgShiftDone();
-		host.msgShiftDone();
-		cashier.subtract(30);
-		cashier.msgShiftDone();
+		if (cook!=null) cook.msgShiftDone();
+		if (host!=null) host.msgShiftDone();
+		if (cashier!=null) cashier.subtract(30);
+		if (cashier!=null) cashier.msgShiftDone();
 		
 	}
 }
