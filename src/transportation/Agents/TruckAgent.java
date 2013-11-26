@@ -82,7 +82,8 @@ public class TruckAgent extends MobileAgent{
 	}
 	
 	public void msgDestination() {
-		animSem.release();
+		if(animSem.availablePermits() == 0)
+			animSem.release();
 	}
 
 	//Remember to release semaphores to tiles when despawning
@@ -185,7 +186,7 @@ public class TruckAgent extends MobileAgent{
 		}
 		
 		if(!order.returnType()) {
-			order.restaurant.msgHereIsDelivery(order.food, order.quantity);
+			//order.restaurant.msgHereIsDelivery(order.food, order.quantity);
 		}
 		
 		gui.doDeliveryDance();

@@ -8,6 +8,7 @@ import transportation.Transportation;
 import transportation.TransportationPanel;
 import transportation.GUIs.BusGui;
 import transportation.GUIs.CarGui;
+import transportation.GUIs.TruckGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 import transportation.Objects.MovementTile.MovementType;
@@ -84,6 +85,7 @@ public class TransportationController extends Agent implements Transportation{
 	MovementTile[][] grid;
 	List<BusStop> busStops;
 	BusAgent bus;
+	TruckAgent truck;
 
 	public TransportationController(TransportationPanel panel) {
 		master = panel;
@@ -234,7 +236,14 @@ public class TransportationController extends Agent implements Transportation{
 		master.addGui(busGui);
 		bus.setGui(busGui);
 		bus.startThread();
-
+		
+		//Spawning Delivery Truck
+		truck = new TruckAgent(new Position(10, 10), this, new FlyingTraversal(grid));
+		TruckGui truckGui = new TruckGui(11, 10, truck);
+		master.addGui(truckGui);
+		truck.setGui(truckGui);
+		truck.startThread();
+		
 		super.startThread();
 	}
 
@@ -303,19 +312,19 @@ public class TransportationController extends Agent implements Transportation{
 		case "Car":
 			mover.transportationState = TransportationState.MOVING;
 			CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
-			driver.startThread();
 			CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
 			master.addGui(carGui);
 			driver.setGui(carGui);
+			driver.startThread();
 			break;
 
 		case  "Walk":
 			mover.transportationState = TransportationState.MOVING;
 			WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
-			walker.startThread();
 			WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
 			master.addGui(walkerGui);
 			walker.setGui(walkerGui);
+			walker.startThread();
 			break;
 
 		case "Bus":
@@ -327,10 +336,10 @@ public class TransportationController extends Agent implements Transportation{
 				break;
 			}
 			WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
-			busWalker.startThread();
 			WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
 			master.addGui(busWalkerGui);
 			busWalker.setGui(busWalkerGui);
+			busWalker.startThread();
 			break;
 		}
 	}
