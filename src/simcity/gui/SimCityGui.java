@@ -147,10 +147,10 @@ public class SimCityGui extends JFrame  {
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
 		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
 		pirateBank = new Bank(this, "Pirate Bank");
-		ManagerAgent manager = new ManagerAgent("Manager", pirateBank, this);
-		pirateBank.setManager(manager);		
+		//ManagerAgent manager = new ManagerAgent("Manager", pirateBank, this);
+		//pirateBank.setManager(manager);		
 		simCityPanel = new SimCityPanel(this);
-		manager.startThread();
+		//manager.startThread();
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
