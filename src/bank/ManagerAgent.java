@@ -206,11 +206,11 @@ public class ManagerAgent extends Agent implements Manager {
 			wc.bankCustomer.msgRequestNewAccount(wc.requestAmt);
 		}
 		else if(wc.action == Action.deposit){
-			wc.bankCustomer.msgRequestDeposit(wc.requestAmt);
+			wc.bankCustomer.msgRequestDeposit(wc.requestAmt, wc.accountNum);
 		}
 		else if(wc.action == Action.withdraw){
 			print("RA: "+wc.requestAmt);
-			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt);
+			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
 		}
 
 		//wc.person.msgGoToTeller(mt.teller);

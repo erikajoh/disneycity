@@ -100,12 +100,22 @@ public class MockTeller extends Mock {
 		public void	msgDepositCash(int accountNum, double cash){
 			log.add(new LoggedEvent("DEPOSIT CASH"));
 			customer.requestAmt = cash;
+			for(Account acc : accounts){
+				if(acc.number == accountNum){
+					customer.account = acc; break;
+				}
+			}
 			customer.state = State.depositingCash; 
 		}
 		
 		public void	msgWithdrawCash(int accountNum, double cash){
 			log.add(new LoggedEvent("WITHDRAW CASH"));
 			customer.requestAmt = cash;
+			for(Account acc : accounts){
+				if(acc.number == accountNum){
+					customer.account = acc; break;
+				}
+			}
 			customer.state = State.withdrawingCash; 
 		}
 		
@@ -168,6 +178,9 @@ public class MockTeller extends Mock {
 					customer.account.loanAmount = 0.00;
 					customer.account.loanTime = 0;
 				}
+			}
+			else{ //if there is no loan, add requestAmt to balance
+				customer.account.balance += customer.requestAmt;
 			}
 		  
 		    customer.account.change = -customer.requestAmt;

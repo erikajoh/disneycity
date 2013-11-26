@@ -6,7 +6,6 @@ import bank.gui.Account;
 import bank.interfaces.Teller;
 import bank.interfaces.Manager;
 import bank.interfaces.BankCustomer;
-import bank.test.mock.MockTeller.State;
 
 import java.util.*;
 
@@ -180,6 +179,9 @@ public class TellerAgent extends Agent implements Teller {
 				customer.account.loanAmount = 0.00;
 				customer.account.loanTime = 0;
 			}
+		}
+		else{ //if there is no loan, add requestAmt to balance
+			customer.account.balance += customer.requestAmt;
 		}
 	  
 	    customer.account.change = -customer.requestAmt;

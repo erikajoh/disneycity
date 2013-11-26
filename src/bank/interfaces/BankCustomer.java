@@ -14,8 +14,8 @@ import bank.gui.Account;
  */
 public interface BankCustomer {
 	public void	msgRequestNewAccount(double requestAmt);
-	public void	msgRequestDeposit(double requestAmt);
-	public void	msgRequestWithdraw(double requestAmt);
+	public void	msgRequestDeposit(double requestAmt, int accountNum);
+	public void	msgRequestWithdraw(double requestAmt, int accountNum);
 	
 	public void msgGoToTeller(Teller teller);
 	public void msgAccountOpened(int accountNum, double change);
