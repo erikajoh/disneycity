@@ -7,6 +7,7 @@ import market.WorkerAgent;
 import market.gui.CustomerGui;
 import market.gui.WorkerGui;
 import simcity.PersonAgent;
+import simcity.Restaurant;
 import simcity.gui.SimCityGui;
 import restaurant_rancho.CookAgent;
 
@@ -34,6 +35,7 @@ public class Market {
     private CashierAgent cashier;    
     private List<WorkerAgent> workers = new ArrayList<WorkerAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
+    private List<CustomerAgent> virtualCustomers = new ArrayList<CustomerAgent>();
     private Hashtable<String, Integer> inventory = new Hashtable<String, Integer>();
     private Hashtable<String, Double> prices = new Hashtable<String, Double>();
     private Hashtable<String, Integer> locations = new Hashtable<String, Integer>();
@@ -60,8 +62,8 @@ public class Market {
 			cust.msgLineMoved();
 		}
 	}
-    
-     /*
+	    
+     /* msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity);
      * msgRestaurantDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
      * msgHomeDelivery(PersonAgent c, String order, int quantity); // to transportation from manager
      * msgFulfillOrder(String order, int quantity); // to worker from manager
@@ -115,13 +117,13 @@ public class Market {
     }
     
     public void addPerson(CookAgent c, String name, double money, String choice, int quantity) {
-//    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, customers.size());	
-//		if (manager!=null) cust.setManager(manager);
-//		if (cashier!=null) cust.setCashier(cashier);
-//		cust.setCook(c);
-//		c.setMarket(this);
-//		customers.add(cust);
-//		c.startThread();
+    	CustomerAgent cust = new CustomerAgent(name, money, choice, quantity, customers.size());	
+		if (manager!=null) cust.setManager(manager);
+		if (cashier!=null) cust.setCashier(cashier);
+		cust.setCook(c);
+		c.setMarket(this);
+		virtualCustomers.add(cust);
+		c.startThread();
     }
     
     public void addPerson(PersonAgent p, String type, String name, double money, String choice, int quantity) {
@@ -137,17 +139,16 @@ public class Market {
     		c.setMarket(this);
     		customers.add(c);
     		c.startThread();
-        	System.out.println("adding person to size: "+customers.size());
     		g.updatePosition();
     	}
     	else if (type.equals("VirtualCustomer")) {
-//    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
-//    		if (manager!=null) c.setManager(manager);
-//    		if (cashier!=null) c.setCashier(cashier);
-//    		c.setPerson(p);
-//    		c.setMarket(this);
-//    		customers.add(c);
-//    		c.startThread();
+    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
+    		if (manager!=null) c.setManager(manager);
+    		if (cashier!=null) c.setCashier(cashier);
+    		c.setPerson(p);
+    		c.setMarket(this);
+    		virtualCustomers.add(c);
+    		c.startThread();
     	}
     
     }
