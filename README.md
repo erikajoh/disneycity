@@ -72,3 +72,4 @@ Kelsey Rose <br>
 ####Transportation
 + A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
 + Currently no cars are shown in this implementation, though there are bus and truck systems.
++ Bus currently drops off everyone riding on the same tile instantly.

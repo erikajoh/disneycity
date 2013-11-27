@@ -19,12 +19,12 @@ public class CookGui implements Gui {
     public final int size = 20;
     
     boolean atDestination = false;
-    private int xPos = 350, yPos = -20;//default cook position
-    private int xDestination = -20, yDestination = -20;//default start position
-    private Point refrigerator = new Point(425-size, 290);
-    private Point stove = new Point(425-size, 170);
-    private Point plating = new Point(375, 200);
-    private Point phone = new Point(375, 290);
+    private int xPos = 340, yPos = 125;//default cook position
+    private int xDestination = 340, yDestination = 125;//default start position
+    private Point refrigerator = new Point(320, 50);
+    private Point stove = new Point(325, 125);
+    private Point plating = new Point(310, 115);
+    private Point phone = new Point(405, 290);
     
     private enum STATE {CARRYING, STATIONARY};
     
