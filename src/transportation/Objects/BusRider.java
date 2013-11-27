@@ -1,10 +1,10 @@
 package transportation.Objects;
 
 import astar.astar.Position;
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 public class BusRider {
-	PersonAgent person;
+	Person person;
 	BusStop finalStop;
 	String destination;
 	public RiderState state;
@@ -16,14 +16,14 @@ public class BusRider {
 		GOTOFF
 	}
 	
-	public BusRider(PersonAgent person, BusStop finalStop, String destination) {
-		this.person = person;
+	public BusRider(Person walker, BusStop finalStop, String destination) {
+		this.person = walker;
 		this.finalStop = finalStop;
 		this.destination = destination;
 		state = RiderState.WAITING;
 	}
 	
-	public PersonAgent getPerson() {
+	public Person getPerson() {
 		return person;
 	}
 	

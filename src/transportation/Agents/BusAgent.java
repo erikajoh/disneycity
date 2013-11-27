@@ -9,6 +9,7 @@ import java.util.concurrent.Semaphore;
 
 import astar.astar.Position;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import transportation.GUIs.BusGui;
 import transportation.Objects.BusRider;
 import transportation.Objects.BusStop;
@@ -47,7 +48,7 @@ public class BusAgent extends MobileAgent{
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
-	public void msgPayFare(PersonAgent person, float fare) {
+	public void msgPayFare(Person person, float fare) {
 		for(BusRider busRider : busRiders) {
 			if(busRider.getPerson() == person) {
 				busRider.state = BusRider.RiderState.RIDING;

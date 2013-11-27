@@ -5,14 +5,14 @@ import java.util.concurrent.Semaphore;
 
 import astar.astar.AStarNode;
 import astar.astar.Position;
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import transportation.GUIs.CarGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 
 public class CarAgent extends MobileAgent{
 	
-	PersonAgent driver;
+	Person driver;
 	Position currentPosition;
 	Position endPosition;
 	TransportationController master;
@@ -21,8 +21,8 @@ public class CarAgent extends MobileAgent{
 	TransportationTraversal aStar;
 	Semaphore animSem;
 	
-	public CarAgent(PersonAgent driver, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
-		this.driver = driver;
+	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
+		this.driver = person;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
 		this.master = master;

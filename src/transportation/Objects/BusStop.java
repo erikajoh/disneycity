@@ -4,6 +4,7 @@ import java.util.*;
 
 import astar.astar.Position;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 public class BusStop {
 	public List<BusRider> busWaiters;
@@ -25,8 +26,8 @@ public class BusStop {
 		busWaiters = new ArrayList<BusRider>();
 	}
 	
-	public void addRider(PersonAgent person, BusStop finalStop, String destination) {
-		busWaiters.add(new BusRider(person, finalStop, destination));
+	public void addRider(Person walker, BusStop finalStop, String destination) {
+		busWaiters.add(new BusRider(walker, finalStop, destination));
 	}
 	
 	public void addNearbyBuilding(String building) {
