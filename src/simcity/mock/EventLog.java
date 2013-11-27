@@ -84,6 +84,10 @@ public class EventLog {
 	public LoggedEvent getLastLoggedEvent() {
 		return events.getLast();
 	}
+	
+	public LoggedEvent getPenultimateLoggedEvent() {
+		return events.get(events.size() - 2);
+	}
 
 	public String toString() {
 		StringBuilder text = new StringBuilder();

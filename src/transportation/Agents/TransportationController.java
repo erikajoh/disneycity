@@ -22,16 +22,16 @@ public class TransportationController extends Agent implements Transportation{
 
 	TransportationPanel master;
 
-	enum TransportationState {
+	public enum TransportationState {
 		REQUEST,
 		MOVING,
 		DESTINATION,
 		WAITINGTOSPAWN
 	};
 
-	class Mover {
-		TransportationState transportationState;
-		Person person;
+	public class Mover {
+		public TransportationState transportationState;
+		public Person person;
 		MobileAgent mobile;
 
 		String startingLocation;
@@ -250,12 +250,13 @@ public class TransportationController extends Agent implements Transportation{
 		truck.setGui(truckGui);
 		truck.startThread();
 
-		super.startThread();
+		if(master != null)
+			super.startThread();
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
 	public void msgWantToGo(String startLocation, String endLocation, Person person, String mover, String character) {
-		log.add(new LoggedEvent("Received transportation request"));
+		log.add(new LoggedEvent("Received transportation request from " + person.getName()));
 		for(Mover m : movingObjects) {
 			if(m.person == person && !m.method.equals("Bus"))
 				return;
@@ -324,6 +325,7 @@ public class TransportationController extends Agent implements Transportation{
 		//Try to spawn mover
 		TransportationTraversal aStar = new TransportationTraversal(grid);
 		if(mover.method.equals("Car")){
+			log.add(new LoggedEvent("Spawning Car"));
 			if(grid[directory.get(mover.startingLocation).vehicleTile.getX()][directory.get(mover.startingLocation).vehicleTile.getY()].tryAcquire()) {
 				mover.transportationState = TransportationState.MOVING;
 				CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
@@ -338,6 +340,7 @@ public class TransportationController extends Agent implements Transportation{
 			}
 		}
 		else if(mover.method.equals("Walk")){
+			log.add(new LoggedEvent("Spawning Walker"));
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
 				mover.transportationState = TransportationState.MOVING;
 				WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
@@ -349,9 +352,11 @@ public class TransportationController extends Agent implements Transportation{
 			}
 			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
+				log.add(new LoggedEvent("Failed to spawn Walker"));
 			}
 		}
 		else if(mover.method.equals("Bus")){
+			log.add(new LoggedEvent("Spawning Bus"));
 			//find bus stop and spawn walker to go to bus stop
 			mover.transportationState = TransportationState.MOVING;
 			if(directory.get(mover.startingLocation).closestBusStop == directory.get(mover.endingLocation).closestBusStop) {
@@ -374,12 +379,14 @@ public class TransportationController extends Agent implements Transportation{
 	}
 
 	private void despawnMover(Mover mover) {
+		log.add(new LoggedEvent("Deleting mover"));
 		if(!mover.method.equals("Bus"))
 			mover.person.msgReachedDestination(mover.endingLocation);
 		movingObjects.remove(mover);
 	}
 
 	private void retrySpawn(Mover mover) {
+		log.add(new LoggedEvent("Resetting mover state"));
 		mover.transportationState = TransportationState.REQUEST;
 	}
 
