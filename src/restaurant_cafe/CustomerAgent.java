@@ -11,6 +11,7 @@ import restaurant_cafe.interfaces.Waiter;
 import agent_cafe.Agent;
 import simcity.gui.SimCityGui;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,7 +31,7 @@ public class CustomerAgent extends Agent implements Customer {
 	Menu menu;
 	String choice;
 	Check check;
-	PersonAgent person;
+	Person person;
 
 	
 	// agent correspondents
@@ -67,7 +68,7 @@ public class CustomerAgent extends Agent implements Customer {
 		this.host = host;
 	}
 
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

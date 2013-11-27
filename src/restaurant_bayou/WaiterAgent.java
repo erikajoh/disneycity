@@ -12,6 +12,7 @@ import restaurant_bayou.gui.WaiterGui;
 import restaurant_bayou.interfaces.Waiter;
 import simcity.PersonAgent;
 import simcity.RestMenu;
+import simcity.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -33,7 +34,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	private List<String> unavailableFood = new ArrayList<String>();
 	private Hashtable<Integer, Check> checks = new Hashtable<Integer, Check>();
 	private List<Integer> checksReady = new ArrayList<Integer>();
-	private PersonAgent person;
+	private Person person;
 	boolean shiftDone = false;
 	
 	private boolean readyForNextTask = true;
@@ -68,7 +69,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		stateChanged();
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	

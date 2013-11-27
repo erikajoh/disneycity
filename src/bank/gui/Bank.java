@@ -22,7 +22,7 @@ import java.util.Vector;
  * Panel in frame that contains all the bank information,
  * including host, cook, waiters, and customers.
  */
-public class Bank extends JPanel implements ActionListener, Bank_Douglass {
+public class Bank extends JPanel implements ActionListener {
 
     //Host, cook, waiters and customers
 

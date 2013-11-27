@@ -21,6 +21,8 @@ import java.awt.event.*;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
+import simcity.interfaces.Person;
+import simcity.interfaces.Market_Douglass;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -45,11 +47,11 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     private ListPanel marketPanel = new ListPanel(this, "markets");
     private JPanel group = new JPanel();
     private JLabel restSubLabel = new JLabel();
-    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
+    private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
     public RestMenu menu = new RestMenu();
     boolean isOpen;
     private Bank bank;
-    private Market market2;
+    private Market_Douglass market2;
 
     private SimCityGui gui; //reference to main gui
 
@@ -151,7 +153,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
         }
     }*/
     
-    public void personAs(PersonAgent p, String type, String name, double money) {
+    public void personAs(Person p, String type, String name, double money) {
     	addPerson(p, type, name, money);
     }
 
@@ -161,7 +163,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(PersonAgent p, String type, String name, double money) {
+    public void addPerson(Person p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
     		//if (returningCusts.contains(p)) {
@@ -285,7 +287,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     }
 
 	@Override
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		market2 = m;
 		// T
 	}
@@ -316,7 +318,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 	*/}
 	
 	@Override
-	public void msgHereIsBill(Market m, double amt) {
+	public void msgHereIsBill(Market_Douglass m, double amt) {
 		// TODO Auto-generated method stub
 		
 	}

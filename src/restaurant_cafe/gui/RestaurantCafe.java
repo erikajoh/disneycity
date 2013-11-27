@@ -24,7 +24,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
-
+import simcity.interfaces.Person;
+import simcity.interfaces.Market_Douglass;
 import simcity.PersonAgent;
 
 /**
@@ -41,11 +42,11 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     private CookAgent cook;
     private CashierAgent cashier;
     public Bank bank;
-    public Market market;
+    public Market_Douglass market;
     String type;
     boolean isOpen = true;
     
-    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
+    private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     
@@ -134,7 +135,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(PersonAgent p, String type, String name, double money) {
+    public void addPerson(Person p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
     		//if ((p!=null) && returningCusts.containsKey(p)) {
@@ -249,14 +250,14 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void personAs(PersonAgent p, String type, String name, double money) {
+	public void personAs(Person p, String type, String name, double money) {
 		addPerson(p, type, name, money);
 	}
 
 
 
 	@Override
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		market = m;
 	}
 	
@@ -281,7 +282,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void msgHereIsBill(Market m, double amt) {
+	public void msgHereIsBill(Market_Douglass m, double amt) {
 		// TODO Auto-generated method stub
 		
 	}

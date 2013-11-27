@@ -10,6 +10,7 @@ import simcity.RestMenu;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.gui.CookGui;
 import restaurant_bayou.interfaces.Market;
+import simcity.interfaces.Person;
 
 public class CookAgent extends Agent {
 	private String name;
@@ -23,7 +24,7 @@ public class CookAgent extends Agent {
 	private List<MyMarket> cutoffMarkets =  Collections.synchronizedList(new ArrayList<MyMarket>()); 
 	public List<MyMarket> markets =  Collections.synchronizedList(new ArrayList<MyMarket>());
 	private CookGui cookGui;
-	private PersonAgent person;
+	private Person person;
 	private RestMenu menu = new RestMenu();
 	boolean shiftDone = false;
 
@@ -45,7 +46,7 @@ public class CookAgent extends Agent {
 		//i.empty();
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

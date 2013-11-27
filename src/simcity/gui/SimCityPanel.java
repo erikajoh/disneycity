@@ -162,14 +162,26 @@ public class SimCityPanel extends JPanel{
 	}
 	
 	public Housing mapStringToHousing(String houseName) {
-		switch(houseName) {
-			case "Haunted Mansion": return hauntedMansion;
-			case "Main St Apartments #1": return mainStApts1;
-			case "Main St Apartments #2": return mainStApts2;
-			case "Main St Apartments #3": return mainStApts3;
-			case "Main St Apartments #4": return mainStApts4;
-			case "Main St Apartments #5": return mainStApts5;
-			case "Main St Apartments #6": return mainStApts6;
+		if(houseName.equals("Haunted Mansion")){
+			return hauntedMansion;
+		}
+		else if(houseName.equals("Main St Apartments #1")){
+			return mainStApts1;
+		}
+		else if(houseName.equals("Main St Apartments #2")){
+			return mainStApts2;
+		}
+		else if(houseName.equals("Main St Apartments #3")){
+			return mainStApts3;
+		}
+		else if(houseName.equals("Main St Apartments #4")){
+			return mainStApts4;
+		}
+		else if(houseName.equals("Main St Apartments #5")){
+			return mainStApts5;
+		}
+		else if(houseName.equals("Main St Apartments #6")){
+			return mainStApts6;
 		}
 		return null;
 	}

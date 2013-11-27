@@ -3,6 +3,7 @@ package simcity.test;
 import java.util.*;
 
 import simcity.PersonAgent;
+import simcity.Restaurant;
 import simcity.test.mock.*;
 import junit.framework.*;
 
@@ -17,6 +18,7 @@ public class PersonTest extends TestCase
 	MockBank_Douglass mockBank;
 	MockRestaurant_Douglass mockRestaurant;
 	MockTransportation_Douglass mockTransportation;
+	MockMarket_Douglass mockMarket;
 	
 	// custom test variables
 	
@@ -47,7 +49,7 @@ public class PersonTest extends TestCase
 		person.setIsNourished(false);
 		person.addBank(mockBank, "BankCustomer");
 		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
-		person.addRestaurant(mockRestaurant, "Customer");
+		person.addRestaurant(mockRestaurant, "Customer", 0);
 		
 		// step 1 pre-conditions
 		assertEquals("Person: 5 dollars at start",
@@ -55,12 +57,13 @@ public class PersonTest extends TestCase
 		assertFalse("Person: not nourished at start", 
 				person.getIsNourished());
 		assertEquals("Restaurant: 3 food items", 
-				3, mockRestaurant.menu.size());
+				3, mockRestaurant.getMenu().menuItems.size());
 		
 		// step 1: person wants to go to restaurant, needs money first
 			// step 1a: person tells transportation that he wants to go to restaurant
 			// step 1b: transportation sends person in transit
 			// step 1c: person arrives at bank
+		person.msgWakeUp();
 		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
 				person.pickAndExecuteAnAction());
 		
@@ -163,7 +166,7 @@ public class PersonTest extends TestCase
 		person.setIsNourished(false);
 		person.addBank(mockBank, "BankCustomer");
 		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
-		person.addRestaurant(mockRestaurant, "Customer");
+		person.addRestaurant(mockRestaurant, "Customer", 0);
 		
 		
 	}
@@ -185,5 +188,24 @@ public class PersonTest extends TestCase
 	// TEST #4
 	// Person: start at house, needs to go to work, walks to work, arrives successfully,
 	// finishes work, gets paid, walks home, done
+	
+	
+	// TEST #5
+	//
+	
+	// TEST #6
+	//
+
+	// TEST #7
+	//
+
+	// TEST #8
+	//
+
+	// TEST #9
+	//	
+	
+	// TEST #10
+	// 
 }
 

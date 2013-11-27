@@ -1,5 +1,9 @@
 package simcity.test.mock;
 
+import housing.ResidentAgent;
+
+import java.util.Map;
+
 import simcity.PersonAgent;
 import simcity.interfaces.Housing_Douglass;
 
@@ -22,17 +26,9 @@ public class MockHousing_Douglass extends Mock_Douglass implements Housing_Dougl
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void msgIAmHome(PersonAgent personAgent) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void msgIAmLeaving(PersonAgent personAgent) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	@Override
@@ -44,6 +40,48 @@ public class MockHousing_Douglass extends Mock_Douglass implements Housing_Dougl
 	@Override
 	public void msgPrepareToCookAtHome(PersonAgent personAgent,
 			String foodPreference) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgIAmHome(PersonAgent rp, Map<String, Integer> items) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgDoMaintenance() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgRentDue() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEntered(ResidentAgent ra) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgFinishedMaintenance(ResidentAgent ra) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgFoodDone(ResidentAgent ra, boolean success) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgLeft(ResidentAgent ra) {
 		// TODO Auto-generated method stub
 		
 	}

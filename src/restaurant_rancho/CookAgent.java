@@ -10,9 +10,11 @@ import restaurant_rancho.CustomerAgent.AgentEvent;
 import restaurant_rancho.CustomerAgent.AgentState;
 import restaurant_rancho.gui.CookGui;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import restaurant_rancho.gui.RestaurantRancho;
 import market.Market;
 import restaurant_rancho.ProducerConsumerMonitor;
+import simcity.interfaces.Market_Douglass;
 
 public class CookAgent extends Agent {
 	
@@ -27,16 +29,16 @@ public class CookAgent extends Agent {
 	Timer checkTimer = new Timer();
 	private Semaphore cooking = new Semaphore(0,true);
 	int cookNum = 0;
-	PersonAgent person;
+	Person person;
 	RestaurantRancho restaurant;
-	Market market;
+	Market_Douglass market;
 	private enum moState {pending, ordered};
 	public boolean inMarket;
 	int curID;
 	boolean shiftDone = false;
 	
 
-	public CookAgent(String name, RestaurantRancho rest, Market m) {
+	public CookAgent(String name, RestaurantRancho rest, Market_Douglass m) {
 		super();
 		this.name = name;
 		market = m;
@@ -64,12 +66,12 @@ public class CookAgent extends Agent {
 		return name;
 	}
 	
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		print("setting market " + m.getName());
 		market = m;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 
