@@ -1,11 +1,10 @@
 package simcity;
 
 import simcity.RestMenu;
-import simcity.interfaces.Restaurant_Douglass;
 import bank.gui.Bank;
 import market.Market;
 
-public interface Restaurant extends Restaurant_Douglass {
+public interface Restaurant {
 	
 	public RestMenu getMenu();
 	
