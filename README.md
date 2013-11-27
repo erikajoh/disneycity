@@ -58,3 +58,4 @@ Kelsey Rose <br>
 
 ####Transportation
 + A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
++ Bus currently drops off everyone riding on the same tile instantly.
