@@ -259,7 +259,7 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 
 	public static class MarketBill {
-		Market_Douglass market;
+		public Market_Douglass market;
 		double amount; 
 		
 		public MarketBill(Market_Douglass m, double am) {

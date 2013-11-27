@@ -24,11 +24,11 @@ public class MockMarket_Sim implements Market_Douglass {
 		
 	}
 	public void msgHereIsPayment(Restaurant rest, double amt){
-		log.add(new LoggedEvent("Received msg Here Is Payment from rest " + rest.getRestaurantName()));
+		log.add(new LoggedEvent("Received msg Here Is Payment from rest"));
 		
 	}
     public void personAs(Restaurant r, String choice, int quantity, int id){
-    	log.add(new LoggedEvent("Received msg personAs from rest " + r.getRestaurantName()));
+    	log.add(new LoggedEvent("Received msg personAs from rest "));
     	
     }
     public void personAs(PersonAgent p, String name, double money, String choice, int quantity, String location){

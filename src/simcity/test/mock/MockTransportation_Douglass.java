@@ -27,7 +27,7 @@ public class MockTransportation_Douglass extends Mock_Douglass implements Transp
 	
 	@Override
 	public void msgWantToGo(String startLocation, String endLocation, PersonAgent person, String mover, String character) {
-		log.add(new LoggedEvent("Received msgGoTo: "
+		log.add(new LoggedEvent("Received msgWantToGo: "
 				+ "startLocation = " + startLocation + "; "
 				+ "endLocation = " + endLocation + "; "
 				+ "person = " + person.getName() + "; "
@@ -38,7 +38,7 @@ public class MockTransportation_Douglass extends Mock_Douglass implements Transp
 			public void run() {
 				thePerson.msgReachedDestination(theLocation);
 			}
-		}, 3000);
+		}, 1000);
 	}
 	
 	@Override

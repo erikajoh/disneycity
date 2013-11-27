@@ -102,34 +102,58 @@ public class PersonTest extends TestCase
 		assertTrue("Person: event = makingDecision", 
 				person.event.toString().equals("makingDecision"));
 		
-		assertTrue("Call scheduler, going to bank now, scheduler returns true",
+		assertTrue("Call scheduler, set target destination to bank, scheduler returns true",
 				person.pickAndExecuteAnAction());
 		assertTrue("Contains log: describes going from house to bank",
 				person.log.containsString("Going from Mock House 1 to Mock Bank 1"));
 		
+		assertFalse("Call scheduler, in transit, on hold, scheduler returns false",
+				person.pickAndExecuteAnAction());
+		
 		mockTransportation.msgWantToGo(person.getCurrLocation(), "Mock Bank 1", person, "method", "Edgar");
-		assertTrue("Contains log: describes arriving at bank",
-				person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
-		
-		assertEquals("Transportation: 1 event log",
-				1, mockTransportation.log.size());
+		assertEquals("Received msgWantToGo: "
+				+ "startLocation = " + "Mock House 1" + "; "
+				+ "endLocation = " + "Mock Bank 1" + "; "
+				+ "person = " + "Narwhal Prime" + "; "
+				+ "method = method",
+				"Received msgWantToGo: "
+				+ "startLocation = " + person.getCurrLocation() + "; "
+				+ "endLocation = " + "Mock Bank 1" + "; "
+				+ "person = " + person.getName() + "; "
+				+ "method = method");
+		long startTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - startTime < 2000);
 
-		assertEquals("Person: currentLocation = Mock Bank 1",
-				"Mock Bank 1", person.getCurrLocation());
-		assertEquals("Person: currentLocationState = Bank",
-				"Bank", person.getCurrLocationState());
-		
 		// step 2: person is at bank, withdraws money from account
 			// step 2a: person requests withdrawal from bank, blocks
 			// TODO: step 2b: bank checks if withdrawal is valid
 			// step 2b: after brief delay, bank messages that withdrawal approved
 			// step 2c: person receives money, gets released
-		assertTrue("Call scheduler, request withdrawal from bank, scheduler returns true",
+		
+		assertTrue("Call scheduler, arrive at bank successfully, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		 
+		assertEquals("Person: 12 event logs",
+				12, person.log.size());
+		assertTrue("", person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
+		assertTrue("Person: creates account",
+				person.log.containsString("Creating account"));
+		
+		assertEquals("Transportation: 2 event log",
+				2, mockTransportation.log.size());
+		
+		assertTrue("Call scheduler, nothing to do here, scheduler returns false",
+				!person.pickAndExecuteAnAction());
+
+		assertEquals("Person: currentLocation = Mock Bank 1",
+				"Mock Bank 1", person.getCurrLocation());
+		assertEquals("Person: currentLocationState = Bank",
+				"Bank", person.getCurrLocationState());
+		assertTrue("Person: event = onHoldInBank", 
+				person.event.toString().equals("onHoldInBank"));
+		
 		// step 2 post-conditions and step 3 pre-conditions
-		assertEquals("Person: 5 event logs",
-				5, person.log.size());
+		assertEquals("Person: 12 event logs",
+				12, person.log.size());
 		assertEquals("Person: has 8 dollars", 
 				8.00, person.getMoney());
 		assertTrue("Contains log: Want to withdraw 3.0 from Mock Bank 1",
@@ -155,9 +179,14 @@ public class PersonTest extends TestCase
 				7, person.log.size());
 		assertTrue("Contains log: describes going from bank to restaurant",
 				person.log.containsString("Going from Mock Bank 1 to Mock Restaurant 1"));
+		startTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - startTime < 2000);
 		assertTrue("Contains log: describes arriving at restaurant",
+				
 				person.log.containsString("Received msgReachedDestination: destination = Mock Restaurant 1"));
 		
+		assertTrue("Contains log: describes arriving at bank",
+				person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
 		assertEquals("Person: currentLocation = Mock Restaurant 1",
 				"Mock Restaurant 1", person.getCurrLocation());
 		assertEquals("Person: currentLocationState = Restaurant",
@@ -166,7 +195,7 @@ public class PersonTest extends TestCase
 		// step 4: person enters and eats at restaurant
 		assertTrue("Call scheduler, enter restaurant, eat, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		long startTime = System.currentTimeMillis();
+		startTime = System.currentTimeMillis();
 		while(System.currentTimeMillis() - startTime < 2000);
 		
 		// step 4 post-conditions and step 5 pre-conditions
@@ -235,11 +264,5 @@ public class PersonTest extends TestCase
 
 	// TEST #8
 	//
-
-	// TEST #9
-	//	
-	
-	// TEST #10
-	// 
 }
 

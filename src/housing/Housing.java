@@ -1,6 +1,8 @@
 package housing;
 
 import housing.gui.HousingAnimationPanel;
+import housing.test.mock.EventLog;
+import housing.test.mock.LoggedEvent;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,6 +19,8 @@ public class Housing implements Housing_Douglass {
 	PersonAgent ownerPerson;
 	ArrayList<Renter> renters = new ArrayList<Renter>();
 	HousingAnimationPanel panel;
+	
+	public EventLog log = new EventLog();
 	
 	class Renter {
 		ResidentAgent agent;
@@ -65,64 +69,75 @@ public class Housing implements Housing_Douglass {
 	//Messages
 	
 	public void msgIAmHome(PersonAgent rp, Map<String, Integer> items) { // from person
+		log.add(new LoggedEvent("Home"));
 		for (Renter r: renters) {
 			if (r.person == rp) r.agent.msgHome(items);
 		}
 	}
 	
 	public void msgPrepareToCookAtHome(PersonAgent rp, String choice) { // from person
+		log.add(new LoggedEvent("Cooking"));
 		for (Renter r: renters) {
 			if (r.person == rp) r.agent.msgCookFood(choice);
 		}		
 	}
 	
 	public void msgHereIsRent(PersonAgent rp, double amt) { // from person
-		ownerPerson.msgHereIsRent(amt);
+		log.add(new LoggedEvent("Here is rent"));
+		if (ownerPerson != null) ownerPerson.msgHereIsRent(amt);
 	}
 		
 	public void msgGoToBed(PersonAgent rp) { // from person
+		log.add(new LoggedEvent("Go to bed"));
 		for (Renter r: renters) {
 			if (r.person == rp) r.agent.msgToBed();
 		}	
 	}
 	
 	public void msgIAmLeaving(PersonAgent rp) { // from person
+		log.add(new LoggedEvent("Leaving"));
 		for (Renter r: renters) {
 			if (r.person == rp) r.agent.msgLeave();
 		}
 	}
 	
 	public void msgDoMaintenance() { // from timer
+		log.add(new LoggedEvent("Do maintenance"));
 		for (Renter r: renters) {
 			r.agent.msgDoMaintenance();
 		}
 	}
 	
 	public void msgRentDue() { // from timer
+		log.add(new LoggedEvent("Rent is due"));
 		for (Renter r: renters) {
 			r.person.msgRentIsDue(rentAmt);
 		}
 	}
 	
 	public void msgEntered(ResidentAgent ra) { // from renter
+		log.add(new LoggedEvent("Entered"));
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgDoneEntering();
 		} 
 	}
 	
 	public void msgFinishedMaintenance(ResidentAgent ra) { // from renter
+		log.add(new LoggedEvent("Finished maintenance"));
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgFinishedMaintenance();
 		}  
 	}
 	
 	public void msgFoodDone(ResidentAgent ra, boolean success) { // from renter
+		log.add(new LoggedEvent("Food done"));
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgFoodDone(success);
 		}  
 	}
 	
 	public void msgLeft(ResidentAgent ra) { // from renter
+		log.add(new LoggedEvent("Left"));
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgDoneLeaving();
 		} 
