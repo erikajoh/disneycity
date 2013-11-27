@@ -342,8 +342,6 @@ public class TransportationController extends Agent implements Transportation{
 			}
 			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
-				System.out.println("OBJECT IS WAITING");
-				System.exit(0);
 			}
 		}
 		else if(mover.method.equals("Bus")){

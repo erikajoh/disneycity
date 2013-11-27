@@ -1,6 +1,6 @@
 2
-Narwhal Prime|Haunted Mansion|50|Mexican|false|OwnerResident|B
-Narwhal Secundus|Main St Apartments #1|40|Mexican|false|OwnerResident|B
+Narwhal Prime|Haunted Mansion|50|German|false|OwnerResident|B
+Narwhal Secundus|Main St Apartments #1|40|German|false|OwnerResident|B
 2
 Haunted Mansion|Narwhal Prime|Narwhal Prime
 Main St Apartments #1|Narwhal Secundus|Narwhal Secundus
