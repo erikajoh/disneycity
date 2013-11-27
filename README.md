@@ -39,6 +39,8 @@ Kelsey Rose <br>
 	+ The truck is a flying Pelipper (white bird with huge beak). As such, the truck may fly over any tile but still responds to collisions with other agents.
 	+ The truck goes to an idle position next to the market.
 	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
+	+ Unit tests for the animation system and the transportation controller are located in src/transportation/Tests/
+	
 + **_Dylan (Bank):_** 
 	+ Created the bank which includes BankCustomerAgents (spawned PersonAgents), TellerAgents and one ManagerAgent
 	+ Also designed gui/characters/sprites/images for bank
