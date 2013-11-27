@@ -14,6 +14,7 @@ import restaurant_bayou.interfaces.Market;
 import restaurant_bayou.interfaces.Waiter;
 import restaurant_bayou.test.mock.EventLog;
 import restaurant_bayou.test.mock.LoggedEvent;
+import simcity.interfaces.Person;
 
 public class CashierAgent extends Agent {
 	private String name;
@@ -23,7 +24,7 @@ public class CashierAgent extends Agent {
 	public List<Bill> marketBills =  Collections.synchronizedList(new ArrayList<Bill>());
 	public List<Market> cutoffMarkets =  Collections.synchronizedList(new ArrayList<Market>());
 	private CookAgent cook;
-	private PersonAgent person;
+	private Person person;
 	boolean shiftDone = false;
 	
 	public EventLog log = new EventLog();
@@ -44,7 +45,7 @@ public class CashierAgent extends Agent {
 		shiftDone = true;
 		if (!pickAndExecuteAnAction()) { person.msgStopWork(10); }
 	}
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

@@ -10,6 +10,7 @@ import restaurant_rancho.CustomerAgent.AgentEvent;
 import restaurant_rancho.CustomerAgent.AgentState;
 import restaurant_rancho.gui.CookGui;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import restaurant_rancho.gui.RestaurantRancho;
 import market.Market;
 import restaurant_rancho.ProducerConsumerMonitor;
@@ -28,7 +29,7 @@ public class CookAgent extends Agent {
 	Timer checkTimer = new Timer();
 	private Semaphore cooking = new Semaphore(0,true);
 	int cookNum = 0;
-	PersonAgent person;
+	Person person;
 	RestaurantRancho restaurant;
 	Market_Douglass market;
 	private enum moState {pending, ordered};
@@ -70,7 +71,7 @@ public class CookAgent extends Agent {
 		market = m;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

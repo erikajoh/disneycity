@@ -12,6 +12,8 @@ import bank.gui.Bank;
 import simcity.PersonAgent;
 import agent_pizza.Agent;
 import simcity.gui.SimCityGui;
+import simcity.interfaces.Market_Douglass;
+import simcity.interfaces.Person;
 
 import javax.swing.*;
 
@@ -45,7 +47,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private JPanel group = new JPanel();
     public RestMenu menu = new RestMenu();
     Bank bank;
-    Market market;
+    Market_Douglass market;
     boolean isOpen = false;
     
     private static final int GAP_SIZE = 10;
@@ -62,7 +64,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private CashierAgent cashier;
     String type;
     
-    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
+    private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
@@ -198,7 +200,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
         }
     }
   */  
-    public void personAs(PersonAgent p, String type, String name, double money){
+    public void personAs(Person p, String type, String name, double money){
     	addPerson(p, type, name, money);
     }
 
@@ -208,7 +210,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(PersonAgent p, String type, String name, double money) {
+    public void addPerson(Person p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
     		//if ((p!=null) && returningCusts.containsKey(p)) {
@@ -228,7 +230,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		c.setGui(g);
     		c.getGui().setHungry();
     		customers.add(c);
-    		c.setPerson(p);
     		c.startThread();
     		//}
     	}
@@ -236,7 +237,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		WaiterAgent newWaiter = new WaiterAgent(name);	
     		WaiterGui newWaiterGui = new WaiterGui(newWaiter, WAITER_X_START, WAITER_Y_START);
     		WAITER_X_START += newWaiterGui.mySize;
-    		if (p!=null) { newWaiter.setPerson(p); System.out.println("setting person " + p.getName());}
+    		if (p!=null) { newWaiter.setPerson(p);}
     		newWaiter.setGui(newWaiterGui);
     		gui.pizzaAniPanel.addGui(newWaiterGui);
 
@@ -247,7 +248,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		waiterGuis.add(newWaiterGui);
     		waiters.add(newWaiter);
     		if (host!=null) host.msgAddWaiter(newWaiter);
-    		newWaiter.setPerson(p);
     		newWaiter.startThread();
     	}
     	else if (type.equals("Host")) {
@@ -260,7 +260,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     			w.setHost(host);
     			host.msgAddWaiter(w);
     		}
-    		host.setPerson(p);
     		host.startThread();
     	}
     	else if (type.equals("Cook")) {
@@ -273,7 +272,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     			w.setCook(cook);
     		}
     		cook.setMarkets(markets);
-    		cook.setPerson(p);
     		cook.startThread();
     	}
     	else if (type.equals("Cashier")) {
@@ -282,7 +280,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		for (WaiterAgent w: waiters) {
     			w.setCashier(cashier);
     		}
-    		cashier.setPerson(p);
     		cashier.startThread();
     	}
     }
@@ -294,7 +291,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	}
 
 	@Override
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		market = m;
 		
 	}
@@ -326,7 +323,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	}
 	
 	@Override
-	public void msgHereIsBill(Market m, double amt) {
+	public void msgHereIsBill(Market_Douglass m, double amt) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -13,6 +13,7 @@ import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
 import restaurant_rancho.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.Restaurant;
 import restaurant_rancho.test.mock.EventLog;
 import restaurant_rancho.test.mock.LoggedEvent;
@@ -49,7 +50,7 @@ public class CashierAgent extends Agent implements Cashier{
 		endOfDay = false;
 		bs = bankState.nothing;
 	}
-	PersonAgent person;
+	Person person;
 	Timer checkTimer = new Timer();
 	private Bank_Douglass bank;
 	private Market_Douglass market;
@@ -71,7 +72,7 @@ public class CashierAgent extends Agent implements Cashier{
 	public String getName() {
 		return name;
 	}
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

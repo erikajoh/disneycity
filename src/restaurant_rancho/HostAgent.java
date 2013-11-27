@@ -5,6 +5,7 @@ import restaurant_rancho.Table;
 import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.gui.WaiterGui;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -23,7 +24,7 @@ public class HostAgent extends Agent {
 	private Collection<Table> tables;
 	private String name;
 	private enum waiterState {working, onBreak};
-	PersonAgent person;
+	Person person;
 	boolean shiftDone = false;
 
 	public HostAgent(String name) {
@@ -41,7 +42,7 @@ public class HostAgent extends Agent {
 	
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	

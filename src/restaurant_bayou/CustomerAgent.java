@@ -10,6 +10,7 @@ import restaurant_bayou.interfaces.Customer;
 import agent_bayou.Agent;
 import simcity.PersonAgent;
 import simcity.RestMenu;
+import simcity.interfaces.Person;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private Wallet wallet;
 	private int dishDoingTime = 0;
 	private Timer t = new Timer();
-	private PersonAgent person;
+	private Person person;
 	boolean eatingSuccess=false;
 
 	private HostAgent host;
@@ -65,7 +66,7 @@ public class CustomerAgent extends Agent implements Customer {
 		this.host = host;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	
