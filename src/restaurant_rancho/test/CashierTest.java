@@ -269,7 +269,7 @@ public class CashierTest extends TestCase
 		
 	}
 	
-	public void testFiveOneMarket() {
+	public void testFiveNewMarket() {
 		MockMarket market = new MockMarket ("mockmarket");
 		
 		assertFalse("Cashier's scheduler should return false before MarketBill is added, but it doesn't", cashier.pickAndExecuteAnAction() );

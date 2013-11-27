@@ -10,7 +10,7 @@ public interface Housing_Douglass {
 	
 	public void msgHereIsRent(PersonAgent personAgent, double amount);
 	
-	public void msgIAmHome(PersonAgent personAgent);
+	//public void msgIAmHome(PersonAgent personAgent);
 	
 	public void msgIAmLeaving(PersonAgent personAgent);
 	

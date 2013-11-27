@@ -22,12 +22,10 @@ public class MockHousing_Douglass extends Mock_Douglass implements Housing_Dougl
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void msgIAmHome(PersonAgent personAgent) {
+	//public void msgIAmHome(PersonAgent personAgent) {
 		// TODO Auto-generated method stub
 		
-	}
+//	}
 
 	@Override
 	public void msgIAmLeaving(PersonAgent personAgent) {
