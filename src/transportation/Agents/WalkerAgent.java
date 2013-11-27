@@ -6,13 +6,13 @@ import java.util.concurrent.Semaphore;
 
 import astar.astar.AStarNode;
 import astar.astar.Position;
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 
 public class WalkerAgent extends MobileAgent{
 
-	PersonAgent walker;
+	Person walker;
 	Position currentPosition;
 	Position endPosition;
 	TransportationController master;
@@ -24,7 +24,7 @@ public class WalkerAgent extends MobileAgent{
 	BusStop beginBusStop, endBusStop;
 	String building;
 
-	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
+	public WalkerAgent(Person walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
 		this.walker = walker;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
@@ -38,8 +38,8 @@ public class WalkerAgent extends MobileAgent{
 		building = null;
 	}
 	
-	public WalkerAgent(PersonAgent walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
-		this.walker = walker;
+	public WalkerAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
+		this.walker = person;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
 		this.master = master;

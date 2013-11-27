@@ -14,6 +14,8 @@ import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 import agent.Agent;
 import astar.astar.Position;
+import simcity.interfaces.Person;
+import simcity.mock.LoggedEvent;
 import simcity.*;
 
 public class TransportationController extends Agent implements Transportation{
@@ -29,7 +31,7 @@ public class TransportationController extends Agent implements Transportation{
 
 	class Mover {
 		TransportationState transportationState;
-		PersonAgent person;
+		Person person;
 		MobileAgent mobile;
 
 		String startingLocation;
@@ -37,7 +39,7 @@ public class TransportationController extends Agent implements Transportation{
 		String method;
 		String character;
 
-		Mover(PersonAgent person, String startingLocation, String endingLocation, String method, String character) {
+		Mover(Person person, String startingLocation, String endingLocation, String method, String character) {
 			this.person = person;
 			this.startingLocation = startingLocation;
 			this.endingLocation = endingLocation;
@@ -47,7 +49,7 @@ public class TransportationController extends Agent implements Transportation{
 		}
 	}
 
-	List<Mover> movingObjects;
+	public List<Mover> movingObjects;
 
 	class Building {
 		String name;
@@ -80,14 +82,14 @@ public class TransportationController extends Agent implements Transportation{
 		}
 	}
 
-	
-	
-	Map<String, Building> directory;
+
+
+	public Map<String, Building> directory;
 
 	MovementTile[][] grid;
-	List<BusStop> busStops;
-	BusAgent bus;
-	TruckAgent truck;
+	public List<BusStop> busStops;
+	public BusAgent bus;
+	public TruckAgent truck;
 
 	public TransportationController(TransportationPanel panel) {
 		master = panel;
@@ -235,14 +237,16 @@ public class TransportationController extends Agent implements Transportation{
 		//Spawning Bus
 		bus = new BusAgent(this);
 		BusGui busGui = new BusGui(4, 4, bus);
-		master.addGui(busGui);
+		if(master != null)
+			master.addGui(busGui);
 		bus.setGui(busGui);
 		bus.startThread();
 
 		//Spawning Delivery Truck
 		truck = new TruckAgent(new Position(11, 10), this, new FlyingTraversal(grid));
 		TruckGui truckGui = new TruckGui(11, 10, truck);
-		master.addGui(truckGui);
+		if(master != null)
+			master.addGui(truckGui);
 		truck.setGui(truckGui);
 		truck.startThread();
 
@@ -250,8 +254,8 @@ public class TransportationController extends Agent implements Transportation{
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
-	public void msgWantToGo(String startLocation, String endLocation, PersonAgent person, String mover, String character) {
-
+	public void msgWantToGo(String startLocation, String endLocation, Person person, String mover, String character) {
+		log.add(new LoggedEvent("Received transportation request"));
 		for(Mover m : movingObjects) {
 			if(m.person == person && !m.method.equals("Bus"))
 				return;
@@ -263,7 +267,8 @@ public class TransportationController extends Agent implements Transportation{
 		stateChanged();
 	}
 
-	public void msgArrivedAtDestination(PersonAgent person){
+	public void msgArrivedAtDestination(Person person){
+		log.add(new LoggedEvent(person.getName() + ": Person reached destination"));
 		for(Mover mover : movingObjects) {
 			if(mover.person == person) {
 				mover.transportationState = TransportationState.DESTINATION;
@@ -271,18 +276,18 @@ public class TransportationController extends Agent implements Transportation{
 		}
 		stateChanged();
 	}
-	
+
 	public void msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity, int id) {
 		truck.msgDeliverOrder(restaurant, market, food, quantity, id);
 	}
-	
-	public void msgSendDelivery(PersonAgent person, Market market, String food, int quantity, String location) {
+
+	public void msgSendDelivery(Person person, Market market, String food, int quantity, String location) {
 		truck.msgDeliverOrder(person, market, food, quantity, location);
 	}
 
 	//+++++++++++++++++SCHEDULER+++++++++++++++++
 	@Override
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		synchronized(movingObjects) {
 			for(Mover mover : movingObjects) {
 				if(mover.transportationState == TransportationState.REQUEST) {
@@ -323,7 +328,8 @@ public class TransportationController extends Agent implements Transportation{
 				mover.transportationState = TransportationState.MOVING;
 				CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
 				CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
-				master.addGui(carGui);
+				if(master != null)
+					master.addGui(carGui);
 				driver.setGui(carGui);
 				driver.startThread();
 			}
@@ -336,7 +342,8 @@ public class TransportationController extends Agent implements Transportation{
 				mover.transportationState = TransportationState.MOVING;
 				WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
 				WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
-				master.addGui(walkerGui);
+				if(master != null)
+					master.addGui(walkerGui);
 				walker.setGui(walkerGui);
 				walker.startThread();
 			}
@@ -355,14 +362,15 @@ public class TransportationController extends Agent implements Transportation{
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
 				WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
 				WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
-				master.addGui(busWalkerGui);
+				if(master != null)
+					master.addGui(busWalkerGui);
 				busWalker.setGui(busWalkerGui);
 				busWalker.startThread();
 			}
 			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
 			}
-		 }
+		}
 	}
 
 	private void despawnMover(Mover mover) {
@@ -379,7 +387,7 @@ public class TransportationController extends Agent implements Transportation{
 		return grid;
 	}
 
-	public void msgPayFare(PersonAgent person, float fare) {
+	public void msgPayFare(Person person, float fare) {
 		bus.msgPayFare(person, fare);
 	}
 }

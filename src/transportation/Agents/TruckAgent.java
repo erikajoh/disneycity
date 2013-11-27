@@ -8,8 +8,8 @@ import java.util.concurrent.Semaphore;
 import market.Market;
 import astar.astar.AStarNode;
 import astar.astar.Position;
-import simcity.PersonAgent;
 import simcity.Restaurant;
+import simcity.interfaces.Person;
 import transportation.GUIs.TruckGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
@@ -34,7 +34,7 @@ public class TruckAgent extends MobileAgent{
 		String food;
 		int quantity;
 		Restaurant restaurant;
-		PersonAgent person;
+		Person person;
 		Market market;
 		int ID;
 		String location;
@@ -52,7 +52,7 @@ public class TruckAgent extends MobileAgent{
 			stateChanged();
 		}
 		
-		deliveryOrder(PersonAgent person, String food, int quantity, Market market, String location) {
+		deliveryOrder(Person person, String food, int quantity, Market market, String location) {
 			this.restaurant = null;
 			this.food = food;
 			this.quantity = quantity;
@@ -90,7 +90,7 @@ public class TruckAgent extends MobileAgent{
 		stateChanged();
 	}
 	
-	public void msgDeliverOrder(PersonAgent person, Market market, String food, int quantity, String location) {
+	public void msgDeliverOrder(Person person, Market market, String food, int quantity, String location) {
 		orders.add(new deliveryOrder(person, food, quantity, market, location));
 		stateChanged();
 	}
