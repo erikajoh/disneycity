@@ -5,6 +5,7 @@ import restaurant_haus.gui.Gui;
 import restaurant_haus.gui.WaiterGui;
 import restaurant_haus.interfaces.*;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.awt.Point;
 import java.util.*;
@@ -35,7 +36,7 @@ public class WaiterAgent extends Agent implements Waiter{
 	public Menu m;
 	public HostAgent h = null;
 	public CashierAgent cashier;
-	public PersonAgent person;
+	public Person person;
 	
 
 	Timer breakTimer = new Timer();
@@ -51,7 +52,7 @@ public class WaiterAgent extends Agent implements Waiter{
 		this.h = h;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

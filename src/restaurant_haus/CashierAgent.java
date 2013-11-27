@@ -7,6 +7,7 @@ import restaurant_haus.interfaces.Customer;
 import restaurant_haus.interfaces.Market;
 import restaurant_haus.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -22,7 +23,7 @@ public class CashierAgent extends Agent implements Cashier{
 
 	private String name;
 	public double money;
-	public PersonAgent person;
+	public Person person;
 
 
 	Menu m;
@@ -67,7 +68,7 @@ public class CashierAgent extends Agent implements Cashier{
 		money = 90.00f;
 	}
 
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

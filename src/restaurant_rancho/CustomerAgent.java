@@ -7,6 +7,7 @@ import restaurant_rancho.interfaces.Customer;
 import restaurant_rancho.interfaces.Waiter;
 import agent_rancho.Agent;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.Restaurant;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,7 +35,7 @@ public class CustomerAgent extends Agent implements Customer{
 	double iOwe= 0; 
 	boolean returning;
 	boolean atWaitingSpot;
-	PersonAgent person;
+	Person person;
 
 	String choice = "";
 	public enum AgentState
@@ -62,7 +63,7 @@ public class CustomerAgent extends Agent implements Customer{
 	 * hack to establish connection to Host agent.
 	 */
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	

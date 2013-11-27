@@ -8,6 +8,7 @@ import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Host;
 import restaurant_cafe.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.awt.Point;
 import java.util.*;
@@ -31,7 +32,7 @@ public class HostAgent extends Agent implements Host {
 			state = s;
 		}
 	}
-	PersonAgent person;
+	Person person;
 	enum CustomerState{waiting, eating, done};
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	class MyWaiter {
@@ -64,7 +65,7 @@ public class HostAgent extends Agent implements Host {
 			tables.add(new Table(ix));
 			}
 	}
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

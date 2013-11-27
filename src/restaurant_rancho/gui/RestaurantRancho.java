@@ -13,8 +13,9 @@ import simcity.RestMenu;
 import simcity.Restaurant;
 import restaurant_rancho.ProducerConsumerMonitor;
 import restaurant_rancho.WaiterAgentPC;
-
+import simcity.interfaces.Market_Douglass;
 import javax.swing.*;
+import simcity.interfaces.Person;
 
 import restaurant_rancho.WaiterAgentNorm;
 import market.Market;
@@ -36,9 +37,9 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	String name;
 	String type;
 	Bank bank;
-	Market market;
+	Market_Douglass market;
 
-	private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
+	private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
     private HostAgent host;
     private CookAgent cook;
     private CashierAgent cashier;    
@@ -93,7 +94,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     public String getType() { return type; }
     
    // public void personAs(String type, String name, PersonAgent p) {
-    public void personAs(PersonAgent p, String type, String name, double money){
+    public void personAs(Person p, String type, String name, double money){
     	addPerson(p, type, name, money);
     }
     
@@ -171,7 +172,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(PersonAgent p, String type, String name, double money) {
+    public void addPerson(Person p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
     		//if ((p!=null) && returningCusts.containsKey(p)) {
@@ -238,7 +239,6 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Cook")) {
     		if (cook == null) {
-    			System.out.println("heyo market is " + market.getName());
     			cook = new CookAgent(name, this, market);
     			cookgui = new CookGui(cook);
     			if (p!=null) cook.setPerson(p);
@@ -268,9 +268,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		
     }
 	@Override
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		market = m;
-		System.out.println("heyo" + "market is " + market.getName());
 		if (cashier!=null) {
 			cashier.setMarket(m);
 		}
@@ -304,7 +303,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 		
 	}
 	@Override
-	public void msgHereIsBill(Market m, double amount) {
+	public void msgHereIsBill(Market_Douglass m, double amount) {
 		cashier.msgHereIsMarketBill(m, amount);
 	}
 

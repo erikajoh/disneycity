@@ -12,6 +12,7 @@ import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Market;
 import restaurant_cafe.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.awt.Point;
 import java.util.*;
@@ -47,7 +48,7 @@ public class CookAgent extends Agent implements Cook {
 	    	s = OrderState.pending;
 	    }
 	};
-	PersonAgent person;
+	Person person;
 	enum OrderState{pending, cooking, reorder, done};
 	public Collection<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 	public Collection<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
@@ -78,7 +79,7 @@ public class CookAgent extends Agent implements Cook {
 		return name;
 	}
 
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	public String getName() {

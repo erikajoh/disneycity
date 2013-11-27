@@ -2,6 +2,7 @@ package restaurant_haus;
 
 import restaurant_haus.gui.CustomerGui;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import restaurant_haus.interfaces.Customer;
 import agent_haus.Agent;
 
@@ -20,7 +21,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private int hungerLevel = 5;        // determines length of meal
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
-	public PersonAgent person;
+	public Person person;
 
 
 	Point tablePos;
@@ -87,7 +88,7 @@ public class CustomerAgent extends Agent implements Customer {
 		money = cash;
 	}
 
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	public String getCustomerName() {

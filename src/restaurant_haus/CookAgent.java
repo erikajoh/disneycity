@@ -4,6 +4,7 @@ import agent_haus.Agent;
 import restaurant_haus.gui.CookGui;
 import restaurant_haus.gui.WaiterGui;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -23,7 +24,7 @@ public class CookAgent extends Agent {
 	private Semaphore atDestination = new Semaphore(0, true);
 	
 	CookGui cookGui;
-	public PersonAgent person;
+	public Person person;
 
 	
 	Menu m;
@@ -76,7 +77,7 @@ public class CookAgent extends Agent {
 			inventory--;
 		}
 	}
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	

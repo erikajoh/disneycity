@@ -20,6 +20,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Vector;
+import simcity.interfaces.Market_Douglass;
+import simcity.interfaces.Person;
 
 import javax.swing.JTabbedPane;
 
@@ -35,7 +37,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private HostAgent host;
     private CashierAgent cashier;
     CookAgent cook;
-    private Hashtable<PersonAgent, CustomerAgent> returningCusts = new Hashtable<PersonAgent, CustomerAgent>();
+    private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
@@ -57,7 +59,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private ImageIcon personalPicture; 
     private RestMenu menu = new RestMenu();
     String name;
-    Market market;
+    Market_Douglass market;
     Bank bank;
     
     private JTabbedPane restruantPane = new JTabbedPane();
@@ -152,7 +154,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(PersonAgent p, String type, String name, double money) {
+    public void addPerson(Person p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {
     		//if ((p!=null) && returningCusts.containsKey(p)) {
@@ -277,13 +279,13 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void personAs(PersonAgent p, String type, String name, double money) {
+	public void personAs(Person p, String type, String name, double money) {
 		addPerson(p, type, name, money);
 		
 	}
 
 	@Override
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		market = m;
 		
 	}
@@ -305,7 +307,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void msgHereIsBill(Market m, double amt) {
+	public void msgHereIsBill(Market_Douglass m, double amt) {
 		// TODO Auto-generated method stub
 		
 	}

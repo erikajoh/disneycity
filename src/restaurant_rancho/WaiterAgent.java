@@ -6,6 +6,7 @@ import restaurant_rancho.gui.WaiterGui;
 import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import restaurant_rancho.interfaces.Waiter;
 import restaurant_rancho.gui.RestaurantRancho;
 
@@ -26,7 +27,7 @@ import java.util.concurrent.Semaphore;
 		boolean shiftDone = false;
 		RestaurantRancho restaurant;
 		
-		PersonAgent person;
+		Person person;
 		
 		public WaiterAgent(String name, RestaurantRancho rest) {
 			super();
@@ -54,7 +55,7 @@ import java.util.concurrent.Semaphore;
 			return name;
 		}
 		
-		public void setPerson(PersonAgent p) {
+		public void setPerson(Person p) {
 			person = p;
 		}
 

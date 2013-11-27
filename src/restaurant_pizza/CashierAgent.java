@@ -17,6 +17,7 @@ import restaurant_pizza.test.mock.EventLog;
 import restaurant_pizza.test.mock.LoggedEvent;
 import simcity.RestMenu;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 public class CashierAgent extends Agent implements Cashier {
 	
@@ -34,7 +35,7 @@ public class CashierAgent extends Agent implements Cashier {
 	public enum CustomerState {NewCustomer, ValidPayment, InvalidPayment};
 	public enum CheckState {NewCheck, InTransit, SentToWaiter, PaidByCustomer};
 	private String name;
-	PersonAgent person;
+	Person person;
 	boolean shiftDone = false;
 
 	
@@ -55,7 +56,7 @@ public class CashierAgent extends Agent implements Cashier {
 		return name;
 	}
 
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	

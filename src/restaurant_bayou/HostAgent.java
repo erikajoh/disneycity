@@ -6,6 +6,7 @@ import restaurant_bayou.gui.CookGui;
 import restaurant_bayou.gui.WaiterGui;
 import simcity.PersonAgent;
 import simcity.RestMenu;
+import simcity.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -32,7 +33,7 @@ public class HostAgent extends Agent {
 	public CookAgent cook;
 	public CashierAgent cashier;
 	private String name;
-	private PersonAgent person;
+	private Person person;
 	boolean shiftDone = false;
 	
 	public HostAgent(String name) {
@@ -58,7 +59,7 @@ public class HostAgent extends Agent {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 

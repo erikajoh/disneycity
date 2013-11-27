@@ -7,6 +7,7 @@ import java.util.*;
 import restaurant_pizza.interfaces.Customer;
 import restaurant_pizza.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 public class HostAgent extends Agent {
 	
@@ -22,7 +23,7 @@ public class HostAgent extends Agent {
 	public static final int NTABLES = 3;
 	public enum CustomerState {Waiting, WaitingAndNotified, InRestaurant};
 	public enum WaiterState {Working, WorkingAndWantBreak, OnBreak};
-	PersonAgent person;
+	Person person;
 	boolean shiftDone = false;
 	private int waiterPointer = 0;
 	private String name;
@@ -61,7 +62,7 @@ public class HostAgent extends Agent {
 		return tables;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	

@@ -2,6 +2,7 @@ package restaurant_haus;
 
 import agent_haus.Agent;
 import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.awt.Point;
 import java.util.*;
@@ -24,7 +25,7 @@ public class HostAgent extends Agent {
 	public List<Table> tables;
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
-	public PersonAgent person;
+	public Person person;
 	private String name;
 
 	private Menu m = new Menu();
@@ -50,7 +51,7 @@ public class HostAgent extends Agent {
 		return name;
 	}
 
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		person = p;
 	}
 	public String getName() {
