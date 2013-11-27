@@ -52,11 +52,16 @@ Kelsey Rose <br>
 	+ **Issues:** see below after instructions
 
 + **_Erika (Markets, Housing):_** 
-	+ 
+	+ + Designed and implemented the Housing and Market components, incl. related agents, animations, graphics and tests; took over the Market component when a team member dropped out of the class a few days into the project.
+	+ Housing serves as the "default" location for the Person, so it is unique in that it passes the control back to the Person each time it completes a task. Thus, the Person has control over the ResidentAgent's actions by sending messages to the Housing class. Housing provides a choice between a "house" which accomodates one Person, or an "apartment" which accomodates up to four Persons.
+	+ Markets can serve in-person customers, "virtual" (i.e. home delivery) customers, and restaurant delivery customers. When Markets receive an in-person order, the Worker brings the item(s) to the Cashier station to give to the Customer. When Markets receive "virtual"/delivery orders, the Worker brings the item(s) to the truck loading zone, and the Market's truck is sent to deliver the item(s).
+	+ Debugged the Bank component and fixed issues such as multiple bank customers being spawned.
+	+ Added to the Restaurant and Transportation components (CookAgent, CashierAgent, TransportationController, TruckAgent) for the Restaurant-Market and Transportation-Market interactions.
+	+ Contributed to the main GUI zoom panel creation.
 + **_Kelsey (Restaurants, Front-end Lead):_** 
 	+ Integrated all 5 restaurants using a base Restaurant interface. 
 	+ Updated and upgraded animations in all restaurants 
-	+ Upgraded Douglass's restaurant fully (Pizza Port) in order to accept and release workers for shifts (see issues for glitch) , and wrote framework to upgrade all restaurants to accept and release workers for shifts
+	+ Upgraded Douglass's restaurant fully (Pizza Port) in order to accept and release workers for shifts (see issues for glitch), and wrote framework to upgrade all restaurants to accept and release workers for shifts
 	+ Designed and created all background images for restaurants 
 	+ Created SimCity Disneyland Image and panel (Daron made the image clickable and therefore established the grid of the SimCity image)
 	+ Designed layout and wrote all main GUI code
