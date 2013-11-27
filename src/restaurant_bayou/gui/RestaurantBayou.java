@@ -12,6 +12,7 @@ import simcity.RestMenu;
 import simcity.gui.SimCityGui;
 import bank.gui.Bank;
 import market.Market;
+import simcity.interfaces.Bank_Douglass;
 
 import javax.swing.*;
 
@@ -50,7 +51,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
     public RestMenu menu = new RestMenu();
     boolean isOpen;
-    private Bank bank;
+    private Bank_Douglass bank;
     private Market_Douglass market2;
 
     private SimCityGui gui; //reference to main gui
@@ -80,7 +81,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 //        add(group);
     }
     
-    public void setBank(Bank b) {
+    public void setBank(Bank_Douglass b) {
     	bank = b;
     }
     

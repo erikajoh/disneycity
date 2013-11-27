@@ -14,7 +14,7 @@ import agent_pizza.Agent;
 import simcity.gui.SimCityGui;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
-
+import simcity.interfaces.Bank_Douglass;
 import javax.swing.*;
 
 import market.Market;
@@ -46,7 +46,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private ListPanel waiterPanel = new ListPanel(this, "Waiter");
     private JPanel group = new JPanel();
     public RestMenu menu = new RestMenu();
-    Bank bank;
+    Bank_Douglass bank;
     Market_Douglass market;
     boolean isOpen = false;
     
@@ -285,7 +285,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     }
 
 	@Override
-	public void setBank(Bank b) {
+	public void setBank(Bank_Douglass b) {
 		bank = b;
 		
 	}

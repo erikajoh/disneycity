@@ -24,6 +24,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import simcity.interfaces.Bank_Douglass;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -36,7 +37,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	//Host, cook, waiters and customers
 	String name;
 	String type;
-	Bank bank;
+	Bank_Douglass bank;
 	Market_Douglass market;
 
 	private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
@@ -77,7 +78,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	return gui;
     }
     
-    public void setBank(Bank b) {
+    public void setBank(Bank_Douglass b) {
     	bank = b;
     	if (cashier!=null) setBank(b);
     }

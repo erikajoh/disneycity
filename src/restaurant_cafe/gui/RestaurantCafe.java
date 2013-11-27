@@ -12,6 +12,7 @@ import simcity.RestMenu;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
 import market.Market;
+import simcity.interfaces.Bank_Douglass;
 
 import javax.swing.*;
 
@@ -41,7 +42,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     private HostGui hostGui;
     private CookAgent cook;
     private CashierAgent cashier;
-    public Bank bank;
+    public Bank_Douglass bank;
     public Market_Douglass market;
     String type;
     boolean isOpen = true;
@@ -240,7 +241,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 		return name;
 	}
 
-	public void setBank(Bank b) {
+	public void setBank(Bank_Douglass b) {
 		bank = b;
 		
 	}

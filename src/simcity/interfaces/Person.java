@@ -2,6 +2,8 @@ package simcity.interfaces;
 import bank.gui.Bank;
 
 public interface Person {
+	
+	public String getName();
 	public void msgWakeUp() ;
 	
 	public void msgGoToSleep() ;
