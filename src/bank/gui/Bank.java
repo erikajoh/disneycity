@@ -5,7 +5,7 @@ import bank.ManagerAgent;
 import simcity.PersonAgent;
 import bank.TellerAgent;
 import bank.interfaces.BankCustomer;
-import simcity.interfaces.Bank_Douglass;
+
 import simcity.interfaces.Person;
 
 import javax.swing.*;

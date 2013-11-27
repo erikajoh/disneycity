@@ -6,6 +6,7 @@ import bank.interfaces.BankCustomer;
 import agent.Constants;
 import simcity.PersonAgent;
 import simcity.interfaces.Bank_Douglass;
+import simcity.interfaces.Person;
 
 public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 
@@ -22,19 +23,12 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 	public String getName() {
 		return name;
 	}
-	
-	@Override
-	public void msgRequestAccount(PersonAgent person, double reqAmt,
-			boolean present) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
-	public void msgRequestWithdrawal(PersonAgent person, int accountNumber, double amount, boolean present) {
+	public void msgRequestWithdrawal(Person person, int accountNumber, double amount, boolean present) {
 		final int finalNum = accountNumber;
 		final double finalAmount = amount;
-		final PersonAgent finalPerson = person; 
+		final Person finalPerson = person; 
 		log.add(new LoggedEvent("Received msgRequestWithdrawal: "
 				+ "amount = " + amount + "; "
 				+ "accountNumber = " + accountNumber));
@@ -46,11 +40,11 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 	}
 
 	@Override
-	public void msgRequestDeposit(PersonAgent person, int accountNumber, double amount, boolean present) {
+	public void msgRequestDeposit(Person person, int accountNumber, double amount, boolean present) {
 		final double finalAmount = amount;
 		final int finalNum = accountNumber;
 		final double finalLoan = 0;
-		final PersonAgent finalPerson = person; 
+		final Person finalPerson = person; 
 		log.add(new LoggedEvent("Received msgRequestDeposit: "
 				+ "amount = " + amount + "; "
 				+ "accountNumber = " + accountNumber));
@@ -69,6 +63,12 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 	@Override
 	public void msgLeave(BankCustomer bc, int accountNum, double change,
 			double loanAmt, int loanTime) {
+		
+	}
+
+	@Override
+	public void msgRequestAccount(Person person, double reqAmt, boolean present) {
+		// TODO Auto-generated method stub
 		
 	}
 }
