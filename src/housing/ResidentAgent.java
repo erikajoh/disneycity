@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Housing renter agent.
  */
-public class ResidentAgent extends Agent implements Resident {
+public class ResidentAgent extends Agent {
 	private String name;
 		
 	// agent correspondents
@@ -116,24 +116,28 @@ public class ResidentAgent extends Agent implements Resident {
 	public boolean pickAndExecuteAnAction() {
 //		prevState = state; //hack
 		if(state == State.enteringHouse){
+			log.add(new LoggedEvent("Entering house"));
 			state = State.idle;
 			Do("Entering house");
 			EnterHouse();
 			return true;
 		}
 		else if(state == State.readyToCook){
+			log.add(new LoggedEvent("Ready to cook"));
 			state = State.idle;
 			Do("Ready to cook");
 			CookFood();
 			return true;
 		}
 		else if(state == State.noFood){
+			log.add(new LoggedEvent("No food"));
 			state = State.idle;
 			Do("No food");
 			housing.msgFoodDone(this, false);
 			return true;
 		}
 		else if(state == State.foodDone){
+			log.add(new LoggedEvent("Food done"));
 			state = State.idle;
 			Do("Food done");
 			GoToTable();
@@ -141,12 +145,14 @@ public class ResidentAgent extends Agent implements Resident {
 			return true;
 		}
 		else if(state == State.wantsMaintenance){
+			log.add(new LoggedEvent("Wants maintenance"));
 			state = State.idle;
 			Do("Want maintenance");
 			DoMaintenance();
 			return true;
 		}
 		else if(state == State.maintenanceDone){
+			log.add(new LoggedEvent("Maintenance done"));
 			state = State.idle;
 			Do("Maintenance done");
 			housing.msgFinishedMaintenance(this);
@@ -154,18 +160,21 @@ public class ResidentAgent extends Agent implements Resident {
 			return true;
 		}
 		else if(state == State.goingToBed){
+			log.add(new LoggedEvent("Going to bed"));
 			state = State.idle;
 			Do("Going to bed");
 			GoToBed();
 			return true;
 		}
 		else if(state == State.leavingHouse){
+			log.add(new LoggedEvent("Leaving house"));
 			state = State.idle;
 			Do("Leaving house");
 			LeaveHouse();
 			return true;
 		}
 		else if(state == State.left){
+			log.add(new LoggedEvent("Left"));
 			state = State.idle;
 			Do("Left house");
 			housing.msgLeft(this);
@@ -177,7 +186,7 @@ public class ResidentAgent extends Agent implements Resident {
 	// Actions
 	
 	private void EnterHouse(){
-		renterGui.DoEnterHouse();
+		if (renterGui != null) renterGui.DoEnterHouse();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
@@ -189,7 +198,7 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void CookFood(){
-		renterGui.DoGoToKitchen();
+		if (renterGui != null) renterGui.DoGoToKitchen();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
@@ -201,7 +210,7 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void GoToTable(){
-		renterGui.DoGoToTable();
+		if (renterGui != null) renterGui.DoGoToTable();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
@@ -212,7 +221,7 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void DoMaintenance(){
-		renterGui.DoMaintenance();
+		if (renterGui != null) renterGui.DoMaintenance();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
@@ -223,7 +232,7 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void GoToBed(){
-		renterGui.DoGoToBed();
+		if (renterGui != null) renterGui.DoGoToBed();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
@@ -234,7 +243,7 @@ public class ResidentAgent extends Agent implements Resident {
 	}
 	
 	private void LeaveHouse(){
-		renterGui.DoLeaveHouse();
+		if (renterGui != null) renterGui.DoLeaveHouse();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
