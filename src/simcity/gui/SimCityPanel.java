@@ -111,6 +111,7 @@ public class SimCityPanel extends JPanel{
 				PersonAgent personToAdd = new PersonAgent(
 						st_Name, st_Housing, st_Money, st_FoodPref, st_preferAtHome,
 						st_HousingRelation, transportation, st_Commute.charAt(0));
+				personToAdd.startThread();
 				people.add(personToAdd);
 			}
 			numRecords = Integer.parseInt(br.readLine());
