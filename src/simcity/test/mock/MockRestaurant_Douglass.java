@@ -98,12 +98,6 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	}
 
 	@Override
-	public void setBank(Bank b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void setMarket(Market_Douglass m) {
 		// TODO Auto-generated method stub
 		
@@ -117,6 +111,12 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 
 	@Override
 	public void msgHereIsBill(Market_Douglass m, double amt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBank(Bank_Douglass b) {
 		// TODO Auto-generated method stub
 		
 	}
