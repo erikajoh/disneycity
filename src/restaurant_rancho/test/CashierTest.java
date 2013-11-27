@@ -10,6 +10,8 @@ import restaurant_rancho.test.mock.MockMarket;
 import restaurant_rancho.test.mock.MockWaiter;
 import restaurant_rancho.gui.RestaurantRancho;
 import simcity.Restaurant;
+import restaurant_rancho.test.mock.MockBank;
+import restaurant_rancho.test.mock.MockMarket_Sim;
 /**
  * 
  * This class is a JUnit test class to unit test the CashierAgent's basic interaction
@@ -27,6 +29,8 @@ public class CashierTest extends TestCase
 	MockWaiter waiter2;
 	MockCustomer customer2;
 	Restaurant restaurant;
+	MockBank bank;
+	MockMarket_Sim market;
 	
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
@@ -39,6 +43,8 @@ public class CashierTest extends TestCase
 		customer2 = new MockCustomer("mockcustomer2");
 		waiter = new MockWaiter("mockwaiter");
 		waiter2 = new MockWaiter("mockwaiter2");
+		bank = new MockBank("mockbank");
+		market = new MockMarket_Sim("mockmarket");
 	}	
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
@@ -269,63 +275,85 @@ public class CashierTest extends TestCase
 		
 	}
 	
-	public void testFiveNewMarket() {
-		MockMarket market = new MockMarket ("mockmarket");
+	public void testFiveBankCreateAccount() {
+		//MockMarket market = new MockMarket ("mockmarket");
 		
 		assertFalse("Cashier's scheduler should return false before MarketBill is added, but it doesn't", cashier.pickAndExecuteAnAction() );
+		cashier.setBank(bank);
+		Check check = new Check(customer, waiter, "Pizza", 450.0);
+		check.cs = checkState.notComplete;
+		cashier.checks.add(check);
 		
-	/*	cashier.msgHereIsMarketBill(market,  21, 1);
+		//checking preconditions
 		
-		assertTrue("Cashier's event log should have \"Received Market Bill\" in it, but it doesn't", cashier.log.containsString("Received Market Bill"));
+		assertTrue("Cashier should have one check", cashier.checks.size()==1);
+		assertEquals("Customer log should be empty before he pays cashier ", 0, cashier.log.size());
 		
-		cashier.money = 100;
+		cashier.msgHereIsMoney(customer,450);
 		
-		assertTrue("Cashier's scheduler should return true after bill is added, but it doesn't", cashier.pickAndExecuteAnAction());
+		assertTrue("Cashier's scheduler should return true after money goes above, but doesn't ", cashier.pickAndExecuteAnAction());
+	  
+		assertTrue("Bank's event log should have \"Received msg Request Account\" in it, but it doesn't", bank.log.containsString("Received msg Request Account"));
 		
-		assertTrue("Market should have an event logged with \"Received payment from cashier\" with right amount, but it does not, instead it says "+  market.log.getLastLoggedEvent(), market.log.containsString("Received payment from cashier of 21.0"));
-		assertTrue("Cashier's money should now be the correct amount after paying (79) but it is not" , cashier.money==79);
-		
-		assertTrue("Cashier should now have 0 bills in its list of bills, but it still has a bill", cashier.bills.size()==0);
-		
-		assertFalse("Cashier's scheduler should return false since there are no bills, but it returns true", cashier.pickAndExecuteAnAction());
-	*/	
+		//cannot test anything else because Bank is incomplete due to a team member's lack of effort in integration
+	
 		
 	}
 	
-	public void testSixTwoMarkets() {
-		MockMarket market1 = new MockMarket("mockmarket");
-		MockMarket market2 = new MockMarket("mockmarket1");
+	public void testSixLowBalance() {
+		assertFalse("Cashier's scheduler should return false before MarketBill is added, but it doesn't", cashier.pickAndExecuteAnAction() );
+		cashier.setBank(bank);
 		
-		/*cashier.msgHereIsMarketBill(market1, 15, 1);
+		Check check = new Check(customer, waiter, "Pizza", 6.0);
+		check.cs = checkState.notComplete;
+		cashier.checks.add(check);
 		
-		assertTrue("Cashier's event log should have \"Received Market Bill\" in it, but it doesn't", cashier.log.containsString("Received Market Bill"));
+		assertTrue("Cashier should have one check", cashier.checks.size()==1);
+		assertEquals("Customer log should be empty before he pays cashier ", 0, cashier.log.size());
+	
+		cashier.msgHereIsMoney(customer,450);
 		
-		cashier.msgHereIsMarketBill(market2,  6,  2);
+		assertTrue("Cashier's scheduler should return true after money goes above, but doesn't ", cashier.pickAndExecuteAnAction());
 		
-		assertTrue("Cashier's event log should now have two logged items, but it does not", cashier.log.size()==2);
+		assertFalse("Cashier's scheduler should return false, but doesn't ", cashier.pickAndExecuteAnAction());
 		
-		cashier.money = 100;
+		cashier.subtract(100);
 		
-		assertTrue("Cashier's scheduler should return true after bills are added, but it doesn't", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("Market1 should have an event logged with \"Received payment from cashier\" with right amount, but it does not, instead it says "+  market1.log.getLastLoggedEvent(), market1.log.containsString("Received payment from cashier of 15.0"));
-		
-		assertTrue("Cashier's money should now be the correct amount after paying (85) but it is not" , cashier.money==85);
-		
-		assertTrue("Cashier should now have 1 bills in its list of bills, but it still has 2 bills", cashier.bills.size()==1);
-		
-		assertTrue("Cashier's scheduler should return true since there is a bills, but it returns true", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("Market2 should have an event logged with \"Received payment from cashier\" with right amount, but it does not, instead it says "+  market2.log.getLastLoggedEvent(), market2.log.containsString("Received payment from cashier of 6.0"));
-		
-		assertTrue("Cashier's money should now be the correct amount after paying (79) but it is not" , cashier.money==79);
-		
-		assertTrue("Cashier should now have 0 bills in its list of bills, but it still has a bill", cashier.bills.size()==0);
-		
-		assertFalse("Cashier's scheduler should return false since there are no bills, but it returns true", cashier.pickAndExecuteAnAction());
-		*/
+		assertTrue("Cashier's scheduler should return true after money goes down below low threshold, but doesn't ", cashier.pickAndExecuteAnAction());
+	  
+		//cashier asks for bank account because it doesn't have one
+		assertTrue("Bank's event log should have \"Received msg Request Account\" in it, but it doesn't", bank.log.containsString("Received msg Request Account"));
 		
 	}
 	
+	public void testSevenLowBalanceAndHasAccount() {
+		assertFalse("Cashier's scheduler should return false before money is added or subtracted, but it doesn't", cashier.pickAndExecuteAnAction() );
+		
+		cashier.setBank(bank);
+		
+		cashier.setAcctNum(1010);
+		
+		assertTrue("Cashier should have no checks", cashier.checks.size()==0);
+		
+		assertFalse("Cashier's scheduler should return false before money is added or subtracted, but it doesn't", cashier.pickAndExecuteAnAction() );
+		
+		cashier.subtract(100); 
+		
+		assertTrue("Cashier's balance should be low now (below 20), but it isn't", cashier.money <20);
+		
+		assertTrue("Cashier's scheduler should return true after money goes low, but doesn't ", cashier.pickAndExecuteAnAction());
+		
+		assertTrue("Bank's event log should have \"Received msg Request Withdrawal\" in it, but it doesn't", bank.log.containsString("Received msg Request Withdrawal"));
+		
+		assertTrue("Cashier's balance should be low now (below 20), but it isn't", cashier.money <20);
+		
+		//cannot test any more because bank does not integrate with my restaurant due to team member's lack of effort and commitment to integrating
+	}
+	
+	public void testEightMarket() {
+		
+		
+		
+	}
 	
 }

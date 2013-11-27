@@ -5,8 +5,8 @@ import bank.ManagerAgent;
 import simcity.PersonAgent;
 import bank.TellerAgent;
 import bank.interfaces.BankCustomer;
-
-
+import simcity.interfaces.Bank_Douglass;
+import simcity.interfaces.Person;
 
 import javax.swing.*;
 
@@ -22,15 +22,15 @@ import java.util.Vector;
  * Panel in frame that contains all the bank information,
  * including host, cook, waiters, and customers.
  */
-public class Bank extends JPanel implements ActionListener {
+public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 
     //Host, cook, waiters and customers
 
 	String bankName;
 	
-    private Vector<PersonAgent> customers = new Vector<PersonAgent>();
+    private Vector<Person> customers = new Vector<Person>();
     private Vector<TellerAgent> tellers = new Vector<TellerAgent>();
-	private Map<BankCustomer, PersonAgent> spawns = new HashMap<BankCustomer, PersonAgent>();
+	private Map<BankCustomer, Person> spawns = new HashMap<BankCustomer, Person>();
 
 
     private SimCityGui gui; //reference to main gui
@@ -56,35 +56,35 @@ public class Bank extends JPanel implements ActionListener {
         }
         /*
         String name = "Dylan";
-		PersonAgent p = new PersonAgent(name);
+		Person p = new Person(name);
 		p.setBank(this);
 		p.msgArrive(-1);
 		customers.add(p);
 		p.startThread();*/
     }
     
-    public void msgRequestAccount(PersonAgent person, double reqAmt, boolean present){
+    public void msgRequestAccount(Person person, double reqAmt, boolean present){
     	BankCustomer bca = createBankCustomer(person, present);
     	manager.msgRequestAccount(bca, reqAmt);
     }
     
-    public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt, boolean present){
+    public void msgRequestDeposit(Person person, int accountNum, double reqAmt, boolean present){
     	BankCustomer bca = createBankCustomer(person, present);
     	manager.msgRequestDeposit(bca, accountNum, reqAmt);
     }
     
-    public void msgRequestWithdrawal(PersonAgent person, int accountNum, double reqAmt, boolean present){
+    public void msgRequestWithdrawal(Person person, int accountNum, double reqAmt, boolean present){
     	BankCustomer bca = createBankCustomer(person, present);
     	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
     }
 	
 	public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime){
-		PersonAgent person = (PersonAgent)spawns.get(bc);
+		Person person = (Person)spawns.get(bc);
 		System.out.println(bc.toString());
 		person.msgLeftBank(this, accountNum, change, loanAmt, loanTime);
 	}
     
-    public BankCustomer createBankCustomer(PersonAgent person, boolean present){
+    public BankCustomer createBankCustomer(Person person, boolean present){
     	 customers.add(person);
    	  	 BankCustomerAgent bca = new BankCustomerAgent(person.getName(), manager, gui);
 	     BankCustomerGui g = new BankCustomerGui(bca, gui, present, 400, 330);
@@ -111,7 +111,7 @@ public class Bank extends JPanel implements ActionListener {
     public void addPerson(String type, String name) {
 
     	if (type.equals("Customers")) {
-    		/*PersonAgent p = new PersonAgent(name);
+    		/*Person p = new Person(name);
     		p.msgArrive(-1);
     		customers.add(p);
     		p.startThread();*/
