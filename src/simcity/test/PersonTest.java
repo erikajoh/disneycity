@@ -3,6 +3,7 @@ package simcity.test;
 import java.util.*;
 
 import simcity.PersonAgent;
+import simcity.Restaurant;
 import simcity.test.mock.*;
 import junit.framework.*;
 
@@ -15,8 +16,9 @@ public class PersonTest extends TestCase
 	PersonAgent person;
 	MockHousing_Douglass mockHousing;
 	MockBank_Douglass mockBank;
-	MockRestaurant_Douglass mockRestaurant;
+	Restaurant mockRestaurant;
 	MockTransportation_Douglass mockTransportation;
+	MockMarket_Douglass mockMarket;
 	
 	// custom test variables
 	
@@ -185,5 +187,24 @@ public class PersonTest extends TestCase
 	// TEST #4
 	// Person: start at house, needs to go to work, walks to work, arrives successfully,
 	// finishes work, gets paid, walks home, done
+	
+	
+	// TEST #5
+	//
+	
+	// TEST #6
+	//
+
+	// TEST #7
+	//
+
+	// TEST #8
+	//
+
+	// TEST #9
+	//	
+	
+	// TEST #10
+	// 
 }
 

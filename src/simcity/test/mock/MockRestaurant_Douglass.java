@@ -6,10 +6,12 @@ import market.Market;
 import bank.gui.Bank;
 import agent.Constants;
 import simcity.PersonAgent;
+import simcity.RestMenu;
+import simcity.Restaurant;
 import simcity.interfaces.*;
 import simcity.RestMenu;
 
-public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant_Douglass {
+public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant {
 
 	public EventLog log;
 	public Timer timer;
@@ -33,8 +35,13 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	@Override
 	public String getType() { return type; }
 
-	@Override
-	public RestMenu getMenu() { return menu; }
+	public RestMenu getMenu() {
+		RestMenu theMenu = new RestMenu();
+		Set<String> keySet = menu.keySet();
+		for(String key : keySet)
+			theMenu.addItem(key, menu.get(key));
+		return theMenu;
+	}
 
 	@Override
 	public void personAs(PersonAgent personAgent, String personType,
@@ -47,25 +54,15 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 			waitingCustomers.add(newCustomer);
 		}
 		final PersonAgent finalPerson = personAgent; 
+		final double finalMoney = moneyOnHand; 
 		timer.schedule(new TimerTask() {
 			public void run() {
 				finalPerson.setIsNourished(true);
-				finalPerson.msgDoneEating(true, moneyOnHand);
+				finalPerson.msgDoneEating(true, finalMoney);
 			}
 	    }, Constants.SECOND / 2);
 	}
 	
-	/*
-	@Override
-	public void msgHereIsBill(double amount, boolean lastBillFulfilled) {
-		if(lastBillFulfilled) {
-			log.add(new LoggedEvent("msgHereIsBill from cashier: valid payment"));
-		}
-		else {
-			log.add(new LoggedEvent("msgHereIsBill from cashier: invalid payment"));
-		}
-	}
-	*/
 	class MyCustomer {
 		String name;
 		double moneyOnHand;
@@ -77,7 +74,11 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 		}
 	}
 
-
+	@Override
+	public String getRestaurantName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public boolean isOpen() {
@@ -86,8 +87,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	}
 
 	@Override
-	public void setBank(Bank b) {
-		// TODO Auto-generated method stub
+	public void addPerson(PersonAgent p, String type, String name, double money) {
 		
 	}
 
@@ -105,6 +105,18 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 
 	@Override
 	public void msgEndOfShift() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBank(Bank b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMarket(Market m) {
 		// TODO Auto-generated method stub
 		
 	}

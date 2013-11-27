@@ -7,8 +7,9 @@ import market.Market;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 
+
 public interface Restaurant{
-	
+
 	public RestMenu getMenu();
 	
 	public String getRestaurantName();
