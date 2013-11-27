@@ -12,6 +12,7 @@ import simcity.RestMenu;
 import simcity.gui.SimCityGui;
 import simcity.Restaurant;
 import market.Market;
+import simcity.interfaces.Bank_Douglass;
 
 import javax.swing.*;
 
@@ -60,7 +61,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private RestMenu menu = new RestMenu();
     String name;
     Market_Douglass market;
-    Bank bank;
+    Bank_Douglass bank;
     
     private JTabbedPane restruantPane = new JTabbedPane();
 
@@ -269,7 +270,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void setBank(Bank b) {
+	public void setBank(Bank_Douglass b) {
 		bank = b;		
 	}
 

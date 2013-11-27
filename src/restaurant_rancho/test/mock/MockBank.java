@@ -1,8 +1,10 @@
 package restaurant_rancho.test.mock;
-import restaurant_rancho.interfaces.Bank;
-import restaurant_rancho.HostAgent;
+import bank.interfaces.BankCustomer;
+import simcity.interfaces.Bank_Douglass;
+import simcity.interfaces.Person;
 
-public class MockBank extends Mock implements Bank {
+
+public class MockBank extends Mock implements Bank_Douglass {
 	
 
 		public EventLog log = new EventLog();
@@ -13,8 +15,27 @@ public class MockBank extends Mock implements Bank {
 			this.name = name;
 		}
 		
-		public void msgEnteredBank(HostAgent host) {
+	
+		public String getBankName() {
+			return name;
 			
 		}
-
+		
+		public void msgRequestAccount(Person person, double reqAmt, boolean present) {
+			log.add(new LoggedEvent("Received msg Request Account"));
+			
+			
+		}
+		public void msgRequestDeposit(Person person, int accountNum, double reqAmt, boolean present) {
+			log.add(new LoggedEvent("Received msg Request Deposit"));
+			
+		}
+		public void msgRequestWithdrawal(Person person, int accountNum, double reqAmt, boolean present) {
+			log.add(new LoggedEvent("Received msg Request Withdrawal"));
+			
+		}
+		public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime){
+			log.add(new LoggedEvent("Received msg Leave"));
+			
+		}
 }

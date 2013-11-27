@@ -5,6 +5,7 @@ import bank.gui.Bank;
 import market.Market;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
+import simcity.interfaces.Bank_Douglass;
 
 public interface Restaurant {
 	
@@ -12,7 +13,7 @@ public interface Restaurant {
 	
 	public String getRestaurantName();
 		
-	public void setBank(Bank b);
+	public void setBank(Bank_Douglass b);
 	
 	public void setMarket(Market_Douglass m);
 	

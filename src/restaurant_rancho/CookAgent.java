@@ -15,8 +15,9 @@ import restaurant_rancho.gui.RestaurantRancho;
 import market.Market;
 import restaurant_rancho.ProducerConsumerMonitor;
 import simcity.interfaces.Market_Douglass;
+import restaurant_rancho.interfaces.Cook;
 
-public class CookAgent extends Agent {
+public class CookAgent extends Agent implements Cook{
 	
 	public List<Order> orders;
 	public enum orderState {pending, cooking, done};

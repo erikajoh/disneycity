@@ -61,6 +61,10 @@ public class CashierAgent extends Agent implements Cashier{
 	public void setBank(Bank_Douglass b){
 		bank = b;
 	}
+	
+	public void setAcctNum(int act) {
+		accountNum = act;
+	}
 	public void setEndOfDay(Boolean b) {
 		endOfDay = b;
 	}
