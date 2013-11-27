@@ -53,8 +53,15 @@ Kelsey Rose <br>
 
 + **_Erika (Markets, Housing):_** 
 	+ 
-+ **_Kelsey (Restaurants, Front-end design):_** 
-	+ 
++ **_Kelsey (Restaurants, Front-end Lead):_** 
+	+ Integrated all 5 restaurants using a base Restaurant interface. 
+	+ Updated and upgraded animations in all restaurants 
+	+ Upgraded Douglass's restaurant fully (Pizza Port) in order to accept and release workers for shifts (see issues for glitch) , and wrote framework to upgrade all restaurants to accept and release workers for shifts
+	+ Designed and created all background images for restaurants 
+	+ Created SimCity Disneyland Image and panel (Daron made the image clickable and therefore established the grid of the SimCity image)
+	+ Designed layout and wrote all main GUI code
+	+ Updated my restaurant (restaurant_rancho, or Rancho Del Zocalo) to include Producer-Consumer model, Bank integration, and new Market integration 
+	+ (Messages to bank work but messages from bank do not work, as the team member who wrote the bank could not integrate fully with SimCity in time)
 
 ##Instructions
 + IMPORTANT: Please use Eclipse to compile and run the project. It was brought to attention by one of the teaching assistants that using the Ant build file would cause problems since we files of the same name in different files.
@@ -77,12 +84,13 @@ Kelsey Rose <br>
 + The simcity_config.txt file located in src/res is the configuration file to modify initial people. The 2nd and 3rd line are important: they initialize the people with various parameters that may be modified.
 
 ###Issues/problems
-+ Currently we only have one restaurant (#14 in the city map) that has partial job functionality - more specifically, they can enter, stay, and get paid, but testing for whether they can serve customers and finish their tasks before leaving has not been implemented yet. Over time we believe we can not only make this restaurant fully functional but use this restaurant to help implement the features in the others.
-	+ Furthermore, #14 does not get rid of WaiterAgent icons in the restaurant when the waiter finishes work and leaves.
++ Currently we only have one restaurant (#14 in the city map) that has near complete job functionality - more specifically, they can enter, stay, and get paid, and if all necessary workers are there, they should be able to run the restaurant as normal. The problem currently is that the PersonAgent is released, but their spawned WaiterAgent role is not released when they leave (an issue that we are confident that we can resolve quickly after this due date). Over time we can not only make this restaurant fully functional but finish implementing the same feature in the others.
+	
 
 ###Bank
 + Since the PersonAgent isn't making a salary they will eventually be banned from making loans from the bank (because they can't be paid back). The person will then eventually run out of money. This was done on purpose and should never be an issue for v2 when the PersonAgent has a job
 + The bank was also designed to take orders from restaurants (from the Cashier or HostAgent's linked PersonAgent) but we ran into small issues with it from the bank's end since Cashier and HostAgent's aren't full PersonAgents yet. Due to this, we had to postpone this feature to v2
++ Bank is not fully integrated and its design does not work with any Restaurants
 
 ####Transportation
 + A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
