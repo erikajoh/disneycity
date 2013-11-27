@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+import simcity.mock.EventLog;
+
 /**
  * Base class for simple agents
  */
@@ -12,6 +14,8 @@ public abstract class Agent {
     Semaphore paused = new Semaphore(0);
     boolean isPaused = false;
     private AgentThread agentThread;
+    
+    public EventLog log = new EventLog();
     
     public void pauseOrRestart() {
     	if (isPaused == true) {
