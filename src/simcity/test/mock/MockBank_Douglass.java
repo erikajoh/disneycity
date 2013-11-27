@@ -25,18 +25,18 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 	}
 
 	@Override
+	public void msgRequestAccount(Person person, double reqAmt, boolean present) {
+		person.msgLeftBank(this, 1, reqAmt, 0.0, 0);
+	}
+	
+	@Override
 	public void msgRequestWithdrawal(Person person, int accountNumber, double amount, boolean present) {
 		final int finalNum = accountNumber;
 		final double finalAmount = amount;
 		final Person finalPerson = person; 
-		log.add(new LoggedEvent("Received msgRequestWithdrawal: "
-				+ "amount = " + amount + "; "
-				+ "accountNumber = " + accountNumber));
-		timer.schedule(new TimerTask() {
-			public void run() {
-				finalPerson.msgLeftBank(null, finalNum, -finalAmount, 0.0, 3);
-			}
-	    }, Constants.SECOND);
+		log.add(new LoggedEvent("Received msgRequestWithdrawal(): "
+				+ "amount = " + amount + "; "));
+		person.msgLeftBank(null, finalNum, finalAmount, 0.0, 3);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 				+ "accountNumber = " + accountNumber));
 		timer.schedule(new TimerTask() {
 			public void run() {
-				finalPerson.msgLeftBank(null, finalNum, finalAmount, 0.0, 3);
+				finalPerson.msgLeftBank(null, -finalNum, finalAmount, 0.0, 3);
 			}
 	    }, Constants.SECOND);
 	}
@@ -63,12 +63,6 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 	@Override
 	public void msgLeave(BankCustomer bc, int accountNum, double change,
 			double loanAmt, int loanTime) {
-		
-	}
-
-	@Override
-	public void msgRequestAccount(Person person, double reqAmt, boolean present) {
-		// TODO Auto-generated method stub
-		
+		return; /* here, I managed leaving cases separately above */
 	}
 }

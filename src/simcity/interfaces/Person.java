@@ -34,7 +34,7 @@ public interface Person {
 	public void msgPayFare(double fare) ;
 
 	// from Bank
-	public void msgLeftBank(Bank theBank, int accountNumber, double change, double loanAmount, int loanTime) ;
+	public void msgLeftBank(Bank_Douglass theBank, int accountNumber, double change, double loanAmount, int loanTime) ;
 	// from Restaurant
 	public void msgDoneEating(boolean success, double newMoneyOnHand) ;
 	

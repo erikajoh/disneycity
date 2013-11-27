@@ -272,7 +272,7 @@ public class PersonAgent extends Agent implements Person {
 	}
 
 	// from Bank
-	public void msgLeftBank(Bank theBank, int accountNumber, double change, double loanAmount, int loanTime) {
+	public void msgLeftBank(Bank_Douglass theBank, int accountNumber, double change, double loanAmount, int loanTime) {
 		log.add(new LoggedEvent("Leaving bank"));
 		if(myPersonalBankAccount == null) {
 			myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
@@ -781,12 +781,12 @@ public class PersonAgent extends Agent implements Person {
 	private class MyBankAccount extends MyObject {
 		MyBank theBank;
 		String accountType;
-		Bank bank;
+		Bank_Douglass bank;
 		int accountNumber;
 		double amount = 0, loanNeeded = 0;
 		int loanTime;
 		
-		public MyBankAccount(int accountNumber, String accountType, Bank bank, double amount, double loanNeeded, int loanTime) {
+		public MyBankAccount(int accountNumber, String accountType, Bank_Douglass bank, double amount, double loanNeeded, int loanTime) {
 			this.name = "Account " + accountNumber;
 			this.accountType = accountType;
 			this.bank = bank;

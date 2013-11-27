@@ -40,8 +40,8 @@ public class PersonTest extends TestCase
 	
 	// TEST #1
 	// Person: leave house, walk to bank, withdraw money, walk to restaurant,
-	// run restaurant scenario (successfully eat and pay), walk to home, done
-	public void testNormative_HomeBankRestaurantHome() {
+	// run restaurant scenario (successfully eat and pay)
+	public void testNormative_HomeBankRestaurant() {
 		
 		// setup
 		person.setMoney(5);
@@ -132,8 +132,8 @@ public class PersonTest extends TestCase
 		
 		assertTrue("Call scheduler, arrive at bank successfully, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		assertEquals("Person: 12 event logs",
-				12, person.log.size());
+		assertEquals("Person: 13 event logs",
+				13, person.log.size());
 		assertTrue("", person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
 		assertTrue("Person: creates account",
 				person.log.containsString("Creating account"));
@@ -151,15 +151,15 @@ public class PersonTest extends TestCase
 		assertTrue("Person: event = onHoldInBank", 
 				person.event.toString().equals("onHoldInBank"));
 		
+		mockBank.msgRequestWithdrawal(person, 1, 8.00 - person.getMoney(), true);
+		
 		// step 2 post-conditions and step 3 pre-conditions
-		assertEquals("Person: 12 event logs",
-				12, person.log.size());
+		assertEquals("Person: 14 event logs",
+				14, person.log.size());
 		assertEquals("Person: has 8 dollars", 
 				8.00, person.getMoney());
-		assertTrue("Contains log: Want to withdraw 3.0 from Mock Bank 1",
-				person.log.containsString("Want to withdraw 3.0 from Mock Bank 1"));
-		assertTrue("Contains log: Received msgMoneyWithdrawn: amount = 3.0",
-				person.log.containsString("Received msgMoneyWithdrawn: amount = 3.0"));
+		assertTrue("Bank log: Received msgRequestWithdrawal(): amount = 3.0",
+				mockBank.log.containsString("Received msgRequestWithdrawal(): amount"));
 		
 		assertEquals("Bank: 1 event log",
 				1, mockBank.log.size());
@@ -174,95 +174,43 @@ public class PersonTest extends TestCase
 				person.pickAndExecuteAnAction());
 		 
 		// step 3 post-conditions and step 4 pre-conditions
-		 
-		assertEquals("Person: 7 event logs",
-				7, person.log.size());
-		assertTrue("Contains log: describes going from bank to restaurant",
-				person.log.containsString("Going from Mock Bank 1 to Mock Restaurant 1"));
+		
+		assertTrue("Call scheduler, time to go home",
+				person.pickAndExecuteAnAction());
+		assertEquals("Person: 15 event logs",
+				15, person.log.size());
 		startTime = System.currentTimeMillis();
 		while(System.currentTimeMillis() - startTime < 2000);
-		assertTrue("Contains log: describes arriving at restaurant",
-				
-				person.log.containsString("Received msgReachedDestination: destination = Mock Restaurant 1"));
-		
-		assertTrue("Contains log: describes arriving at bank",
-				person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
-		assertEquals("Person: currentLocation = Mock Restaurant 1",
-				"Mock Restaurant 1", person.getCurrLocation());
-		assertEquals("Person: currentLocationState = Restaurant",
-				"Restaurant", person.getCurrLocationState());
-		 
-		// step 4: person enters and eats at restaurant
-		assertTrue("Call scheduler, enter restaurant, eat, scheduler returns true",
-				person.pickAndExecuteAnAction());
-		startTime = System.currentTimeMillis();
-		while(System.currentTimeMillis() - startTime < 2000);
-		
-		// step 4 post-conditions and step 5 pre-conditions
-		assertEquals("Restaurant: 1 event log",
-				1, mockRestaurant.log.size());
-		assertTrue("Contains log: person eats at restaurant",
-				person.log.containsString("Received msgReachedDestination: destination = Mock Restaurant 1"));
-		
-		assertEquals("Person: is nourished",
-				true, person.getIsNourished());
-		
-		// step 5: person is done eating, goes home 
-		assertTrue("Call scheduler, going home, scheduler returns true",
-				person.pickAndExecuteAnAction());
-		
-		// step 5 post-conditions
-		assertEquals("Person: currentLocation = Mock House 1",
-				"Mock House 1", person.getCurrLocation());
-		assertEquals("Person: currentLocationState = Home",
-				"Home", person.getCurrLocationState());
 		
 	}
 	
 	// TEST #2
-	// Person: start at house, want to eat at home, not enough food,
-	// not enough money, go to bank, go to market, walk to home, cook, eat, done
-	public void testNormative_HomeBankMarketHomeCook() {
+	// Person: start with surplus money, go to bank, deposit
+	public void testNormative_SurplusMoney() {
 		// setup
-		person.setMoney(5);
-		person.setFoodPreference("Chinese", false);
-		person.setIsNourished(false);
+		person.setMoney(500);
+		person.setIsNourished(true);
 		person.addBank(mockBank, "BankCustomer");
-		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
-		person.addRestaurant(mockRestaurant, "Customer", 0);
+		person.addHousing(mockHousing, "OwnerResident");
 		
+		assertEquals("Person: 500 dollars at start",
+				500.00, person.getMoney());
+		assertTrue("Person: nourished at start", 
+				person.getIsNourished());
 		
+		// step 1: wake up
+		person.msgWakeUp();
+		assertTrue("Call scheduler, wake up, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		
+		assertEquals("Person: 1 event logs",
+				1, person.log.size());
+		assertTrue("Contains log: Must wake up",
+				person.log.containsString("Must wake up"));
+		assertTrue("Call scheduler, enter restaurant, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		
+		// step 2: transportation
+		mockTransportation.msgWantToGo("Mock House 1", "Mock Bank 1", person, "method", "Edgar");
 	}
-	
-	// TEST #3a
-	// Person: start at house, has enough money on hand to buy car, walks to market,
-	// buys car, drives home, done
-	public void testNormative_HomeMarketCarHome() {
-		
-	}
-
-	// TEST #3b
-	// Person: start at house, has enough money on hand and in bank to buy car, walks to market,
-	// buys car, drives home, done 
-	public void testNormative_HomeBankMarketCarHome() {
-		
-	}
-	
-	// TEST #4
-	// Person: start at house, needs to go to work, walks to work, arrives successfully,
-	// finishes work, gets paid, walks home, done
-	
-	
-	// TEST #5
-	//
-	
-	// TEST #6
-	//
-
-	// TEST #7
-	//
-
-	// TEST #8
-	//
 }
-
