@@ -64,16 +64,50 @@ public class PersonTest extends TestCase
 			// step 1b: transportation sends person in transit
 			// step 1c: person arrives at bank
 		person.msgWakeUp();
-		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
+		assertTrue("Call scheduler, wake up, scheduler returns true",
 				person.pickAndExecuteAnAction());
 		
 		// step 1 post-conditions and step 2 pre-conditions
+		assertEquals("Person: 1 event logs",
+				1, person.log.size());
+		assertTrue("Contains log: Must wake up",
+				person.log.containsString("Must wake up"));
+		assertTrue("Call scheduler, enter restaurant, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		
+		person.msgDoneEntering();
 		assertEquals("Person: 3 event logs",
 				3, person.log.size());
+		assertTrue("Contains log: Returning true because !insideHouse",
+				person.log.containsString("Returning true because !insideHouse"));
+		assertTrue("Contains log: msgDoneEntering() called",
+				person.log.containsString("msgDoneEntering() called"));
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
+		
+		assertTrue("Call scheduler, deciding hunger, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		assertEquals("Person: 6 event logs",
+				6, person.log.size());
 		assertTrue("Contains log: want to go to restaurant but not enough money",
-				person.log.containsString("Want to eat at restaurant; not enough money"));
+				person.log.containsString("returning true because !isNourished"));
+		assertTrue("Contains log: want to go to restaurant but not enough money",
+				person.log.containsString("Want to eat at restaurant; not enough money"));		
+		
+		person.msgDoneLeaving(); // leaving house to go get food
+		assertEquals("Person: 7 event logs",
+				7, person.log.size());
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
+		
+		assertTrue("Call scheduler, going to bank now, scheduler returns true",
+				person.pickAndExecuteAnAction());
 		assertTrue("Contains log: describes going from house to bank",
 				person.log.containsString("Going from Mock House 1 to Mock Bank 1"));
+		
+		mockTransportation.msgWantToGo(person.getCurrLocation(), "Mock Bank 1", person, "method", "Edgar");
 		assertTrue("Contains log: describes arriving at bank",
 				person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
 		

@@ -6,7 +6,7 @@ import simcity.PersonAgent;
 import bank.TellerAgent;
 import bank.interfaces.BankCustomer;
 
-
+import simcity.interfaces.Person;
 
 import javax.swing.*;
 
@@ -22,7 +22,7 @@ import java.util.Vector;
  * Panel in frame that contains all the bank information,
  * including host, cook, waiters, and customers.
  */
-public class Bank extends JPanel implements ActionListener {
+public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 
     //Host, cook, waiters and customers
 

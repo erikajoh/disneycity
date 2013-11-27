@@ -370,7 +370,8 @@ public class PersonAgent extends Agent implements Person {
 						goToTransportation();
 						event = PersonEvent.onHoldInTransportation;
 					}
-					print("returning true because !insideHouse");
+					log.add(new LoggedEvent("Returning true because !insideHouse"));
+					print("Returning true because !insideHouse");
 					return true;
 				}
 				if(workplace != null) {
@@ -407,6 +408,7 @@ public class PersonAgent extends Agent implements Person {
 						leaveHouse();
 						event = PersonEvent.onHold;
 					}
+					log.add(new LoggedEvent("returning true because !isNourished"));
 					print("returning true because !isNourished");
 					return true;
 				}

@@ -44,8 +44,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	}
 
 	@Override
-	public void personAs(PersonAgent personAgent, String personType,
-			String name, double moneyOnHand) {
+	public void personAs(Person personAgent, String personType, String name, double moneyOnHand) {
 		log.add(new LoggedEvent("Received msgPersonAs: "
 				+ "name = " + name + "; "
 				+ "money = " + moneyOnHand));
@@ -53,11 +52,11 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 			MyCustomer newCustomer = new MyCustomer(name, moneyOnHand, "");
 			waitingCustomers.add(newCustomer);
 		}
-		final PersonAgent finalPerson = personAgent; 
+		final Person finalPerson = personAgent; 
 		final double finalMoney = moneyOnHand; 
 		timer.schedule(new TimerTask() {
 			public void run() {
-				finalPerson.setIsNourished(true);
+				finalPerson.msgSetHungry();
 				finalPerson.msgDoneEating(true, finalMoney);
 			}
 	    }, Constants.SECOND / 2);
@@ -87,17 +86,6 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	}
 
 	@Override
-	public void addPerson(PersonAgent p, String type, String name, double money) {
-		
-	}
-
-	@Override
-	public void msgHereIsBill(Market m, double amt) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		// TODO Auto-generated method stub
 		
@@ -116,7 +104,19 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	}
 
 	@Override
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void addPerson(Person p, String type, String name, double money) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsBill(Market_Douglass m, double amt) {
 		// TODO Auto-generated method stub
 		
 	}
