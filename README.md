@@ -86,7 +86,7 @@ Kelsey Rose <br>
 	+ Third section: N = 5 (# of restaurants) * P (# of people), for specifying jobs
 		+ PersonName|RestaurantName|RelationWithRestaurant|WorkSession
 
-###Scenarioes
+###Scenarios
 + Important: The basic time unit of the city is a "tick", or 1/8 of a second. In this version the day length is specified to at least 1200 ticks. Thus, if the simulation ever seems frozen, wait until the day ends. By then the people should be sleeping in their houses. The current # of ticks passed in the day should be displayed in console.
 + The simcity_config.txt file located in src/res is the configuration file to modify initial people. The 2nd and 3rd line are important: they initialize the people with various parameters that may be modified.
 
