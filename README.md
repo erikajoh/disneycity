@@ -21,13 +21,14 @@ Kelsey Rose <br>
 
 ##Description
 
-+ Douglass (Person):
++ **_Douglass (Person):_**
 	+ The entirety of the PersonAgent design - data, scheduler, messages, actions
 	+ Since PersonAgent is the middleman of all the other buildings in the city, the PersonAgent is responsible for integrating all of the markets/restaurants/etc. together
 	+ A Person tracks money on hand, hungry or not, whether he has jobs or not, preferred transportation method, etc.
 	+ A Person has pointers to all other locations in the city and avoids shared data via wrapper classes (e.g. MyBank objects for each Bank)
 	+ Our design philosophy is to make the PersonAgent class an abstraction that tracks individual data for each person in the city and holds the entire city system together. A Person does not "enter" a location (including Transportation) but rather spawns a copy of himself with the necessary data that serves to link the PersonAgent with any other class in the city. This serves to decouple our design and prevent sharing of data which would break our Agent methodology.
-+ Daron (Transportation and City Panel): 
+
++ **_Daron (Transportation and City Panel):_** 
 	+ The locations in the City Panel (top-left panel) are all clickable on the locations to change the building window.
 	+ Transportation spawns transportation agents when receiving messages from people to go somewhere.
 	+ A* is implemented for each type of transportation agent so that each only moves on certain tiles and prevent (almost all) collisions.
@@ -38,24 +39,21 @@ Kelsey Rose <br>
 	+ The truck is a flying Pelipper (white bird with huge beak). As such, the truck may fly over any tile but still responds to collisions with other agents.
 	+ The truck goes to an idle position next to the market.
 	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
-+ Dylan (Bank): 
-	+ Banks handle money transactions with people, markets, and restaurants
-	+ Tellers handle the transactions; bank customer agents walk up to them and perform a desired action: create account, withdraw, deposit
-	+ If bank customer desires more money than they have, they automatically requst a loan
-	+ Banks have ability to track loans and keep a rudimentary "credit score" - if loans are not paid off in full for too long, no more money can be withdrawwn
-	+ Interacts with the bank in terms of handling depositing/withdrawl if bank has surplus or depleted cash reserves
++ **_Dylan (Bank):_** 
 	+ Created the bank which includes BankCustomerAgents (spawned PersonAgents), TellerAgents and one ManagerAgent
 	+ Also designed gui/characters/sprites/images for bank
-	+ The bank should function like a normal one does with the following assumptions:
-	+ 1) A person will only make one action (new account, withdraw or deposit) per trip to the bank
-	+ 2) A person will never say they deposited more money than they actually did
-	+ 3) A loan automatically is generated when a person withdraws more money in the account than they have. Each time they revisit the bank for the SAME account, their time to pay back the loan decreases. Customers can take out multiple loans, but their time to pay them back won't reset. If they fail to pay back the loan in the number of visits they won't be able to take out another loan. Additionally they're loan will grow by increasing interest. After the first day of missing a loan they will owe an additional 25 dollars, then an additional 50 for the second day and so on. There are steep fines for missing payment on loans.
-	+ Issues: see below after instructions
-+ Erika (Markets, Housing): 
-	+ Markets supply food to 
-	+ Employees in markets run to shelves and give appropriate items to Person (who has spawned a customer agent on his behalf - see design philosophy for Person"
-	+ Food deliveries by truck are to restaurants only for now; deliveries to person are from market to house
-+ Kelsey (Restaurants, Front-end design): 
+	+ **The bank should function properly with the following assumptions:**
+		+ A person will only make one action (new account, withdraw or deposit) per trip to the bank
+		+ A person will never say they deposited more money than they actually did
+		+ A loan automatically is generated when a person withdraws more money in the account than they have. Each time they revisit the bank for the SAME account, their time to pay back the loan decreases. Customers can take out multiple loans, but their time to pay them back won't reset. If they fail to pay back the loan in the number of visits they won't be able to take out another loan. Additionally they're loan will grow by increasing interest. After the first day of missing a loan they will owe an additional 25 dollars, then an additional 50 for the second day and so on. There are steep fines for missing payment on loans.
+	
+	+ **Unit Tests:** I designed a complete BankCustomerTest and ManagerTest. TellerTest was too repetitive and didn't prove anything since BankCustomerTest passed all of its tests. See the intro of BankCustomerTest.java for more details.
+	
+	+ **Issues:** see below after instructions
+
++ **_Erika (Markets, Housing):_** 
+	+ 
++ **_Kelsey (Restaurants, Front-end design):_** 
 	+ 
 
 ##Instructions
@@ -83,8 +81,8 @@ Kelsey Rose <br>
 	+ Furthermore, #14 does not get rid of WaiterAgent icons in the restaurant when the waiter finishes work and leaves.
 
 ###Bank
-+ If the PersonAgent isn't making a salary they will eventually be banned from making loans from the bank and run out of money. This was done on purpose and should never be an issue for v2 when the PersonAgent has a job
-+ The bank was also designed to take orders from restaurants (from the Cashier or HostAgent's linked PersonAgent) but we ran into small issues with it from the Bank's end since Cashier and HostAgent's aren't full PersonAgents yet. Due to this, we had to postpone this feature to v2.
++ Since the PersonAgent isn't making a salary they will eventually be banned from making loans from the bank (because they can't be paid back). The person will then eventually run out of money. This was done on purpose and should never be an issue for v2 when the PersonAgent has a job
++ The bank was also designed to take orders from restaurants (from the Cashier or HostAgent's linked PersonAgent) but we ran into small issues with it from the bank's end since Cashier and HostAgent's aren't full PersonAgents yet. Due to this, we had to postpone this feature to v2
 
 ####Transportation
 + A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
