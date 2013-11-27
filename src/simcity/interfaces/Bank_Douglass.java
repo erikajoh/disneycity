@@ -10,4 +10,5 @@ public interface Bank_Douglass {
 	public void msgRequestDeposit(PersonAgent person, int accountNum, double reqAmt, boolean present);
 	public void msgRequestWithdrawal(PersonAgent person, int accountNum, double reqAmt, boolean present);
 	public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime);
+  
 }
