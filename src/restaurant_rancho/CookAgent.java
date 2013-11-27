@@ -13,6 +13,7 @@ import simcity.PersonAgent;
 import restaurant_rancho.gui.RestaurantRancho;
 import market.Market;
 import restaurant_rancho.ProducerConsumerMonitor;
+import simcity.interfaces.Market_Douglass;
 
 public class CookAgent extends Agent {
 	
@@ -29,14 +30,14 @@ public class CookAgent extends Agent {
 	int cookNum = 0;
 	PersonAgent person;
 	RestaurantRancho restaurant;
-	Market market;
+	Market_Douglass market;
 	private enum moState {pending, ordered};
 	public boolean inMarket;
 	int curID;
 	boolean shiftDone = false;
 	
 
-	public CookAgent(String name, RestaurantRancho rest, Market m) {
+	public CookAgent(String name, RestaurantRancho rest, Market_Douglass m) {
 		super();
 		this.name = name;
 		market = m;
@@ -64,7 +65,7 @@ public class CookAgent extends Agent {
 		return name;
 	}
 	
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		print("setting market " + m.getName());
 		market = m;
 	}

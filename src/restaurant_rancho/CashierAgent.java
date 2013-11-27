@@ -19,6 +19,8 @@ import restaurant_rancho.test.mock.LoggedEvent;
 import simcity.RestMenu;
 import bank.gui.Bank;
 import market.Market;
+import simcity.interfaces.Market_Douglass;
+import simcity.interfaces.Bank_Douglass;
 
 
 public class CashierAgent extends Agent implements Cashier{
@@ -49,13 +51,13 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 	PersonAgent person;
 	Timer checkTimer = new Timer();
-	private Bank bank;
-	private Market market;
+	private Bank_Douglass bank;
+	private Market_Douglass market;
 	
-	public void setMarket(Market m) {
+	public void setMarket(Market_Douglass m) {
 		market = m;
 	}
-	public void setBank(Bank b){
+	public void setBank(Bank_Douglass b){
 		bank = b;
 	}
 	public void setEndOfDay(Boolean b) {
@@ -93,7 +95,7 @@ public class CashierAgent extends Agent implements Cashier{
 		money-=amount;
 	}
 	
-	public void msgHereIsMarketBill(Market m, double amount){
+	public void msgHereIsMarketBill(Market_Douglass m, double amount){
 		log.add(new LoggedEvent("Received Market Bill."));
 		bills.add(new MarketBill(m, amount));
 		stateChanged();
@@ -252,10 +254,10 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 
 	public static class MarketBill {
-		Market market;
+		Market_Douglass market;
 		double amount; 
 		
-		public MarketBill(Market m, double am) {
+		public MarketBill(Market_Douglass m, double am) {
 			market = m;
 			amount = am;
 		}
