@@ -2,6 +2,8 @@ package simcity;
 
 import agent.Agent;
 import bank.gui.Bank;
+import simcity.interfaces.Bank_Douglass;
+import simcity.interfaces.Housing_Douglass;
 import simcity.interfaces.Person;
 
 import java.util.*;
@@ -75,7 +77,7 @@ public class PersonAgent extends Agent implements Person {
 	boolean preferEatAtHome;
 	
 	// Synchronization
-	private PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
+	public PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
 	public enum PersonEvent {makingDecision, makingDecisionAtRestaurant, onHold, onHoldInTransportation, onHoldInTransportationPayFare, onHoldAtRestaurant,
 		onHoldInMarket, onHoldInBank};
 	public PersonEvent event = PersonEvent.makingDecision;
@@ -83,7 +85,7 @@ public class PersonAgent extends Agent implements Person {
 	// ************************* SETUP ***********************************
 	
 	// Constructor for CustomerAgent class
-	public PersonAgent(String aName, Housing h, double startMoney, String foodPreference, boolean preferEatAtHome,
+	public PersonAgent(String aName, Housing_Douglass h, double startMoney, String foodPreference, boolean preferEatAtHome,
 			String relationWithHousing, Transportation t, char commute) {
 		super();
 		name = aName;
@@ -125,7 +127,7 @@ public class PersonAgent extends Agent implements Person {
 		preferEatAtHome = atHome;
 	}
 	
-	public MyHousing addHousing(Housing h, String personType) {
+	public MyHousing addHousing(Housing_Douglass h, String personType) {
 		MyHousing tempMyHousing = new MyHousing(h, h.getName(), personType);
 		if(personType.equals("Renter") || personType.equals("OwnerResident"))
 			myHome = tempMyHousing; 
@@ -133,7 +135,7 @@ public class PersonAgent extends Agent implements Person {
 		return tempMyHousing;
 	}
 	
-	public void	addBank(Bank b, String personType) {
+	public void	addBank(Bank_Douglass b, String personType) {
 		MyBank tempMyBank = new MyBank(b, b.getBankName(), personType);
 		myObjects.add(tempMyBank);
 	}
@@ -158,6 +160,7 @@ public class PersonAgent extends Agent implements Person {
 	// from main class
 	// TODO: handle sleeping/waking in scheduler
 	public void msgWakeUp() {
+		log.add(new LoggedEvent("Must wake up"));
 		print("Must wake up");
 		actionQueue.add(new Action(ActionString.wakeUp, 0, 0));
 		event = PersonEvent.makingDecision;
@@ -165,12 +168,14 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	public void msgGoToSleep() {
+		log.add(new LoggedEvent("Must go to sleep"));
 		print("Must go to sleep");
 		actionQueue.add(new Action(ActionString.goToSleep, 1, 0));
 		stateChanged();
 	}
 	
 	public void msgSetHungry() {
+		log.add(new LoggedEvent("I'm hungry now"));
 		print("I'm hungry now");
 		if(isNourished) {
 			actionQueue.add(new Action(ActionString.becomeHungry, 3, 1));
@@ -179,15 +184,15 @@ public class PersonAgent extends Agent implements Person {
 	}
 
 	public void msgGoToWork(int i) {
+		log.add(new LoggedEvent("Going to work: work period #" + i));
 		print("Going to work: work period #" + i);
 		actionQueue.add(new Action(ActionString.goToWork, 2, i));
 		stateChanged();
 	}
 	
 	public void msgStopWork(double amount) {
-		// TODO how is releasing workers going to, well, work?
-		print("Stopping work; got paid " + amount
-				);
+		log.add(new LoggedEvent("Stopping work; got paid " + amount));
+		print("Stopping work; got paid " + amount);
 		moneyOnHand += amount;
 		// TODO what other states need to be changed such that he can go home? 
 		restState = RestaurantState.None;
@@ -198,31 +203,37 @@ public class PersonAgent extends Agent implements Person {
 	
 	// from Housing
 	public void msgDoneEntering() {
+		log.add(new LoggedEvent("msgDoneEntering() called"));
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 	
 	public void msgRentIsDue(double amount) {
+		log.add(new LoggedEvent("msgRentisDue() called"));
 		actionQueue.add(new Action(ActionString.payRent, 1, amount));
 		stateChanged();
 	}
 	
 	public void msgHereIsRent(double amount) {
+		log.add(new LoggedEvent("msgHereIsRent() called"));
 		actionQueue.add(new Action(ActionString.receiveRent, 1, amount));
 		stateChanged();
 	}
 	
 	public void msgNeedMaintenance() {
+		log.add(new LoggedEvent("msgNeedMaintenance() called"));
 		actionQueue.add(new Action(ActionString.needMaintenance, 1, 0));
 		stateChanged();
 	}
 	
 	public void msgFinishedMaintenance() {
+		log.add(new LoggedEvent("msgFinishedMaintenance() called"));
 		event = PersonEvent.makingDecision;
 		stateChanged();
 	}
 	
 	public void msgFoodDone(boolean doneEating) {
+		log.add(new LoggedEvent("msgFoodDone() called"));
 		if(doneEating) {
 			isNourished = true;
 			preferEatAtHome = !preferEatAtHome;
@@ -235,6 +246,7 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	public void msgDoneLeaving() {
+		log.add(new LoggedEvent("msgDoneLeaving() called"));
 		insideHouse = false;
 		event = PersonEvent.makingDecision;
 		stateChanged();
@@ -252,6 +264,7 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	public void msgPayFare(double fare) {
+		log.add(new LoggedEvent("msgPayFare() called; fare = " + fare));
 		fareToPay += fare;
 		transportationState = TransportationState.NeedToPayFare;
 		event = PersonEvent.onHoldInTransportationPayFare;
@@ -260,7 +273,7 @@ public class PersonAgent extends Agent implements Person {
 
 	// from Bank
 	public void msgLeftBank(Bank theBank, int accountNumber, double change, double loanAmount, int loanTime) {
-		print("Leaving bank");
+		log.add(new LoggedEvent("Leaving bank"));
 		if(myPersonalBankAccount == null) {
 			myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
 		}
@@ -277,6 +290,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	// from Restaurant
 	public void msgDoneEating(boolean success, double newMoneyOnHand) {
+		log.add(new LoggedEvent("Received msgDoneEating()"));
 		if(success) {
 			isNourished = true;
 			moneyOnHand = newMoneyOnHand;
@@ -288,7 +302,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	// from Market
 	public void msgHereIsOrder(String order, int quantity) {
-		print("Received msgHereIsOrder from Market");
+		log.add(new LoggedEvent("Received msgHereIsOrder from Market"));
 		marketState = MarketState.None;
 		event = PersonEvent.makingDecision;
 		if(itemsOnHand.get(order) == null)
@@ -750,11 +764,11 @@ public class PersonAgent extends Agent implements Person {
 	
 	// TODO interact with housing more
 	private class MyHousing extends MyObject {
-		Housing housing;
+		Housing_Douglass housing;
 		String occupantType;
 		Map<String, Integer> inventory = new HashMap<String, Integer>();
 		
-		public MyHousing(Housing h, String housingName, String occupantType) {
+		public MyHousing(Housing_Douglass h, String housingName, String occupantType) {
 			housing = h;
 			this.name = housingName;
 			this.occupantType = occupantType;
@@ -799,9 +813,9 @@ public class PersonAgent extends Agent implements Person {
 	
 	private class MyBank extends MyObject {
 		
-		Bank bank;
+		Bank_Douglass bank;
 		String personType;
-		public MyBank(Bank b, String name, String type) {
+		public MyBank(Bank_Douglass b, String name, String type) {
 			bank = b;
 			this.name = name;
 			personType = type;

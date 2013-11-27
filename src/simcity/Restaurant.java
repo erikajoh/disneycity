@@ -1,16 +1,14 @@
 package simcity;
 
 import simcity.RestMenu;
-import simcity.interfaces.Restaurant_Douglass;
 import bank.gui.Bank;
 import market.Market;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 import simcity.interfaces.Bank_Douglass;
 
-
-public interface Restaurant{
-
+public interface Restaurant {
+	
 	public RestMenu getMenu();
 	
 	public String getRestaurantName();

@@ -16,7 +16,7 @@ public class PersonTest extends TestCase
 	PersonAgent person;
 	MockHousing_Douglass mockHousing;
 	MockBank_Douglass mockBank;
-	Restaurant mockRestaurant;
+	MockRestaurant_Douglass mockRestaurant;
 	MockTransportation_Douglass mockTransportation;
 	MockMarket_Douglass mockMarket;
 	
@@ -49,7 +49,7 @@ public class PersonTest extends TestCase
 		person.setIsNourished(false);
 		person.addBank(mockBank, "BankCustomer");
 		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
-		person.addRestaurant(mockRestaurant, "Customer");
+		person.addRestaurant(mockRestaurant, "Customer", 0);
 		
 		// step 1 pre-conditions
 		assertEquals("Person: 5 dollars at start",
@@ -57,12 +57,13 @@ public class PersonTest extends TestCase
 		assertFalse("Person: not nourished at start", 
 				person.getIsNourished());
 		assertEquals("Restaurant: 3 food items", 
-				3, mockRestaurant.menu.size());
+				3, mockRestaurant.getMenu().menuItems.size());
 		
 		// step 1: person wants to go to restaurant, needs money first
 			// step 1a: person tells transportation that he wants to go to restaurant
 			// step 1b: transportation sends person in transit
 			// step 1c: person arrives at bank
+		person.msgWakeUp();
 		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
 				person.pickAndExecuteAnAction());
 		
@@ -165,7 +166,7 @@ public class PersonTest extends TestCase
 		person.setIsNourished(false);
 		person.addBank(mockBank, "BankCustomer");
 		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
-		person.addRestaurant(mockRestaurant, "Customer");
+		person.addRestaurant(mockRestaurant, "Customer", 0);
 		
 		
 	}

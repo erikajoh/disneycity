@@ -97,7 +97,7 @@ public class AnimationModule {
 		previousAnimation = animation;
 	}
 
-	private int findFrameCount() {//returns the number of frames in the current animation
+	public int findFrameCount() {//returns the number of frames in the current animation
 		File f = new File("src" + File.separator + "res" + File.separator + character + File.separator + animation + File.separator);
 		//System.out.println("src" + File.separator + "res" + File.separator + character + File.separator + animation + File.separator);
 		/*try {
