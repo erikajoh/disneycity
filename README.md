@@ -39,7 +39,16 @@ Kelsey Rose <br>
 	+ The truck goes to an idle position next to the market.
 	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
 + Dylan (Bank): 
-	+ 
+	+ Created the bank which includes BankCustomerAgents (spawned PersonAgents), TellerAgents and one ManagerAgent
+	+ Also designed gui/characters/sprites/images for bank
+
+	+ The bank should function like a normal one does with the following assumptions:
+	+ 1) A person will only make one action (new account, withdraw or deposit) per trip to the bank
+	+ 2) A person will never say they deposited more money than they actually did
+	+ 3) A loan automatically is generated when a person withdraws more money in the account than they have. Each time they revisit the bank for the SAME account, their time to pay back the loan decreases. Customers can take out multiple loans, but their time to pay them back won't reset. If they fail to pay back the loan in the number of visits they won't be able to take out another loan. Additionally they're loan will grow by increasing interest. After the first day of missing a loan they will owe an additional 25 dollars, then an additional 50 for the second day and so on. There are steep fines for missing payment on loans.
+	
+	+ Issues: see below after instructions
+
 + Erika (Markets, Housing): 
 	+ 
 + Kelsey (Restaurants, Front-end design): 
@@ -69,7 +78,12 @@ Kelsey Rose <br>
 + Currently we only have one restaurant (#14 in the city map) that has partial job functionality - more specifically, they can enter, stay, and get paid, but testing for whether they can serve customers and finish their tasks before leaving has not been implemented yet. Over time we believe we can not only make this restaurant fully functional but use this restaurant to help implement the features in the others.
 	+ Furthermore, #14 does not get rid of WaiterAgent icons in the restaurant when the waiter finishes work and leaves.
 
+###Bank
++ If the PersonAgent isn't making a salary they will eventually be banned from making loans from the bank and run out of money. This was done on purpose and should never be an issue for v2 when the PersonAgent has a job
++ The bank was also designed to take orders from restaurants (from the Cashier or HostAgent's linked PersonAgent) but we ran into small issues with it from the Bank's end since Cashier and HostAgent's aren't full PersonAgents yet. Due to this, we had to postpone this feature to v2.
+
 ####Transportation
 + A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
 + Currently no cars are shown in this implementation, though there are bus and truck systems.
 + Bus currently drops off everyone riding on the same tile instantly.
+
