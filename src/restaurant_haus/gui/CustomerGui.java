@@ -69,9 +69,9 @@ public class CustomerGui implements Gui{
 		 g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
 		if(foodState == FoodState.Received) {
 			g.setColor(Color.MAGENTA);
-			g.fillRect(xPos + size, yPos, size, size);
+			g.fillRect(xPos + size, yPos + 40, size, size);
 			g.setColor(Color.BLACK);
-			g.drawString(food, xPos + size, yPos + (int)(size * .5));
+			g.drawString(food, xPos + size, yPos + (int)(size * .5)+ 40);
 		}
 		g.setColor(Color.BLACK);
 		if(foodState == FoodState.Waiting) {

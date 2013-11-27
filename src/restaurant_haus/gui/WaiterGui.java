@@ -99,14 +99,14 @@ public class WaiterGui implements Gui {
     }
     
     public void GoToCook() {
-    	xDestination = 350 - waiterSize;
-        yDestination = 210;
+    	xDestination = 255;
+        yDestination = 115;
         atPosition = false;
     }
     
     public void GoToOrder() {
-    	xDestination = 350 - waiterSize;
-        yDestination = 260;
+    	xDestination = 255;
+        yDestination = 125;
         atPosition = false;
     }
     
@@ -116,8 +116,8 @@ public class WaiterGui implements Gui {
     }
     
     public void GoToCashier() {
-    	xDestination = 150;
-    	yDestination = 40;
+    	xDestination = xPos+1;
+    	yDestination = yPos+1;
     	atPosition = false;
     }
     

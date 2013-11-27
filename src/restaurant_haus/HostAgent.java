@@ -15,8 +15,8 @@ import java.util.concurrent.Semaphore;
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
 public class HostAgent extends Agent {
-	static final int NTABLES = 4;//a global for the number of tables.
-	static final int columns = 2;//number of columns in restruant gui
+	static final int NTABLES = 3;//a global for the number of tables.
+	static final int columns = 3;//number of columns in restruant gui
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
 	public List<MyCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<MyCustomer>());
@@ -69,7 +69,7 @@ public class HostAgent extends Agent {
 	public void msgGiveJob(WaiterAgent waiter) {
 		MyWaiter tempWaiter = new MyWaiter(waiter);
 		waiters.add(tempWaiter);
-		waiter.setHome(260 + 25*(waiters.indexOf(tempWaiter)%7),10 + 25*(waiters.indexOf(tempWaiter)/7));
+		waiter.setHome(100 + 25*(waiters.indexOf(tempWaiter)%7),150 + 25*(waiters.indexOf(tempWaiter)/7));
 		waiter.giveMenu(m);
 		print(waiter.getName() + " started working as a waiter.");
 		stateChanged();
@@ -413,8 +413,8 @@ public class HostAgent extends Agent {
 			int xOffset = (this.tableNumber-1)%columns;
 			int yOffset = (this.tableNumber-1)/columns;
 
-			xPos = 75 + 100*xOffset;
-			yPos = 125 + 100*yOffset;
+			xPos = 53 + 83*xOffset;
+			yPos = 228;
 		}
 
 		int getX() {

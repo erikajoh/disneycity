@@ -6,6 +6,7 @@ import restaurant_haus.gui.WaiterGui;
 import restaurant_haus.interfaces.*;
 import simcity.PersonAgent;
 
+import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -391,7 +392,7 @@ public class WaiterAgent extends Agent implements Waiter{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		waiterGui.GoToTable(h.getTableCoordinates(mc.table));
+		waiterGui.GoToTable(new Point(h.getTableCoordinates(mc.table).x, h.getTableCoordinates(mc.table).y + 40));
 		cook.msgPickUpFood(this);
 		waiterGui.CarryingFood(mc.choice);
 		try {
