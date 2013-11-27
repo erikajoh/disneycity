@@ -69,6 +69,7 @@ Kelsey Rose <br>
 	+ Designed layout and wrote all main GUI code
 	+ Updated my restaurant (restaurant_rancho, or Rancho Del Zocalo) to include Producer-Consumer model, Bank integration, and new Market integration 
 	+ (Messages to bank work but messages from bank do not work, as the team member who wrote the bank could not integrate fully with SimCity in time)
+	+ UNIT TESTING: I unit tested the restaurant integration with market and bank with a cashier test, as the cashier is the main point of contact for the bank and interacts with the market. I removed test cases 5 and 6 in the cashier test from v2.2 and added 6 more unit tests to fully test the market and bank integration with restaurant.
 
 ##Instructions
 + IMPORTANT: Please use Eclipse to compile and run the project. It was brought to attention by one of the teaching assistants that using the Ant build file would cause problems since we files of the same name in different files.
