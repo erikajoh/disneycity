@@ -8,11 +8,12 @@ import java.util.concurrent.Semaphore;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 import market.gui.CustomerGui;
+import market.interfaces.Customer;
 import restaurant_rancho.CookAgent;
 /**
  * Restaurant customer agent.
  */
-public class CustomerAgent extends Agent {
+public class CustomerAgent extends Agent implements Customer {
 	private String name, choice, location;
 	Timer timer = new Timer();
 	private CustomerGui customerGui;

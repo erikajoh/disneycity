@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 import market.gui.WorkerGui;
+import market.interfaces.Customer;
 
 /**
  * Restaurant Waiter Agent
@@ -23,11 +24,11 @@ public class WorkerAgent extends Agent {
 	int num;
 		
 	class MyOrder {
-		CustomerAgent c;
+		Customer c;
 		String item;
 		int quantity;
 		boolean virtual;
-		MyOrder(CustomerAgent cust, String i, int q, boolean v) { c = cust; item = i; quantity = q; virtual = v; }
+		MyOrder(Customer cust, String i, int q, boolean v) { c = cust; item = i; quantity = q; virtual = v; }
 	}
 	
 	public WorkerGui workerGui = null;
@@ -81,7 +82,7 @@ public class WorkerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgGoGetItem(CustomerAgent cust, String c, int quantity, boolean virtual) { // from customer
+	public void msgGoGetItem(Customer cust, String c, int quantity, boolean virtual) { // from customer
 		print("rcvd msgGoGetItem");
 		orders.add(new MyOrder(cust, c, quantity, virtual));
 		stateChanged();

@@ -1,10 +1,13 @@
 package market;
 
 import agent.Agent;
+import housing.test.mock.LoggedEvent;
+import housing.test.mock.EventLog;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import market.interfaces.Customer;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 
@@ -15,14 +18,14 @@ public class CashierAgent extends Agent {
 	public List<Bill> marketBills = Collections.synchronizedList(new ArrayList<Bill>());
 	
 	private PersonAgent person;
-	private CustomerAgent customer;
+	private Customer customer;
 	private Restaurant rest;
 	private Market market;
 	
 	enum State {idle, rcvdPayment};
 	State state = State.idle;
 	
-//	public EventLog log = new EventLog();
+	public EventLog log = new EventLog();
 
 	/**
 	 * Constructor for CashierAgent class
@@ -49,14 +52,15 @@ public class CashierAgent extends Agent {
 
 	// Messages
 	
-	public void msgHereIsBill(CustomerAgent c, double amount){ // from worker
+	public void msgHereIsBill(Customer c, double amount){ // from worker
+		log.add(new LoggedEvent("Received msgHereIsBill"));
 		print("rcvd bill");
 		marketBills.add(new Bill(c, amount));
 		stateChanged();
 	}
 	
-	public void msgHereIsMoney(CustomerAgent c, double amount){ // from customer
-//		log.add(new LoggedEvent("Received msgHereIsMoney"));
+	public void msgHereIsMoney(Customer c, double amount){ // from customer
+		log.add(new LoggedEvent("Received msgHereIsMoney"));
 		customer = c;
 		amt = amount;
 		state = State.rcvdPayment;
@@ -97,9 +101,9 @@ public class CashierAgent extends Agent {
 	}
 	
 	public class Bill {
-		CustomerAgent cust;
+		Customer cust;
 		double amt;
-		Bill(CustomerAgent c, double a){
+		Bill(Customer c, double a){
 			cust = c;
 			amt = a;
 		}

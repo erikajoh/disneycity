@@ -3,6 +3,7 @@ package market;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import market.interfaces.Customer;
 import simcity.PersonAgent;
 import agent.Agent;
 
@@ -24,11 +25,11 @@ public class ManagerAgent extends Agent {
 	private List<Order> myOrders = new ArrayList<Order>();
 	
 	class Order {
-		CustomerAgent c;
+		Customer c;
 		String choice;
 		int quantity;
 		boolean virtual;
-		Order(CustomerAgent cust, String ch, int q, boolean v) { c = cust; choice = ch; quantity = q; virtual = v; }
+		Order(Customer cust, String ch, int q, boolean v) { c = cust; choice = ch; quantity = q; virtual = v; }
 	}
 	
 	public ManagerAgent(String name) {
@@ -56,7 +57,7 @@ public class ManagerAgent extends Agent {
 		return name;
 	}
 	
-	public void msgWantToOrder(CustomerAgent c, String choice, int quantity, boolean virtual) { // from customer
+	public void msgWantToOrder(Customer c, String choice, int quantity, boolean virtual) { // from customer
 		myOrders.add(new Order(c, choice, quantity, virtual));
     	stateChanged();
     }

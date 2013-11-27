@@ -10,8 +10,7 @@ import junit.framework.*;
 
 /**
  * 
- * This class is a JUnit test class to unit test the RenterAgent's basic interaction
- * with the OwnerAgent and Building.
+ * This class is a JUnit test class to unit test the ResidentAgent's basic interactions.
  *
  * @author Erika Johnson
  */

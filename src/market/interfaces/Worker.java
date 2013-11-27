@@ -1,5 +1,11 @@
 package market.interfaces;
 
-public class Worker {
+import market.CustomerAgent;
 
+public interface Worker {
+	public void msgAnimationDeliveredFinished();
+	
+	public void msgAnimationFinished();
+	
+	public void msgGoGetItem(CustomerAgent cust, String c, int quantity, boolean virtual);
 }
