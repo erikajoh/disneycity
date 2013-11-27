@@ -3,8 +3,7 @@ package transportation.Test;
 import AnimationTools.AnimationModule;
 import junit.framework.*;
 
-public class AnimationTest extends TestCase
-{
+public class AnimationTest extends TestCase {
 	//these are instantiated for each test separately via the setUp() method.
 	AnimationModule animModule1, animModule2, animModule3, animModule4;
 	/**
@@ -12,349 +11,170 @@ public class AnimationTest extends TestCase
 	 * for your agent and mocks, etc.
 	 */
 	public void setUp() throws Exception{
-		super.setUp();		
-		animModule1 = new AnimationModule("Waiter", "WalkUp", 30);
+		super.setUp();
+		animModule1 = new AnimationModule("Waiter", "WalkUp", 10);
 		animModule2 = new AnimationModule("Chocobus", "Left");
 		animModule3 = new AnimationModule("Relm");
 		animModule4 = new AnimationModule();
 	}	
-	
-	public void constructorTest() {
-		
+
+	//Tests 4 different types of contructors to ensure variables are being set properly
+	public void testConstructors(){
+		//animModule1
 		assertTrue("First Animation Module should have a character of \"Waiter\". Instead it is: " + animModule1.character, animModule1.character.equals("Waiter"));
 		assertTrue("First Animation Module should have an animation of \"WalkUp\". Instead it is: " + animModule1.animation, animModule1.animation.equals("WalkUp"));
-		assertEquals("First Animation Module should have ")
-		
-		assertTrue("Cashier's bills list should empty. It isn't", cashier.bills.isEmpty());
-		assertEquals("Cashier should have $40.00. He has " + String.valueOf(cashier.money), 40.00, cashier.money);
-		assertEquals("Market1's log should be empty. Instead it reads: " + market1.log.toString(), market1.log.size(), 0);
-		
-		assertFalse("Cashier should have nothing to do.", cashier.pickAndExecuteAnAction());
-		cashier.msgYourBillIs(market1, 10.00f);
-		
-		assertEquals("Cashier's bill list should have 1 bill. It has " + cashier.bills.size(), 1, cashier.bills.size());
-		assertEquals("The bill's state should be \"Outstanding\". It isn't", BillState.Outstanding, cashier.bills.get(0).state);
-		
-		assertTrue("Cashier should pay the bill in full", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockMarket should have logged a \"Cashier Payed Full\", but didn't. His log reads instead: " 
-				+ market1.log.getLastLoggedEvent().toString(), market1.log.containsString("Cashier Payed Full"));
-		
-		assertEquals("Bills list should now be size 0. It is " + String.valueOf(cashier.bills.size()), 0, cashier.bills.size());
-		assertFalse("Cashier should now not have anything to do", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier should have $30.00 left. He has " + String.valueOf(cashier.money), 30.00, cashier.money);
-	}
-	
-	public void testTwoMarketBillsPayedFull() {
-		assertTrue("Cashier's bills list should empty. It isn't", cashier.bills.isEmpty());
-		assertEquals("Cashier should have $40.00. He has " + String.valueOf(cashier.money), 40.00, cashier.money);
-		assertEquals("Market1's log should be empty. Instead it reads: " + market1.log.toString(), market1.log.size(), 0);
-		assertEquals("Market2's log should be empty. Instead it reads: " + market2.log.toString(), market2.log.size(), 0);
-		
-		assertFalse("Cashier should have nothing to do.", cashier.pickAndExecuteAnAction());
-		cashier.msgYourBillIs(market1, 10.00f);
-		
-		assertEquals("Cashier's bill list should have 1 bill. It has " + cashier.bills.size(), 1, cashier.bills.size());
-		assertEquals("The bill's state should be \"Outstanding\". It isn't", BillState.Outstanding, cashier.bills.get(0).state);
-		
-		cashier.msgYourBillIs(market2, 4.87f);
-		
-		assertEquals("Cashier's bill list should have 2 bills. It has " + cashier.bills.size(), 2, cashier.bills.size());
-		assertEquals("The bill's state should be \"Outstanding\". It isn't", BillState.Outstanding, cashier.bills.get(1).state);
-		
-		assertTrue("Cashier should pay bill 1 in full", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockMarket should have logged a \"Cashier Payed Full\", but didn't. His log reads instead: " 
-				+ market1.log.getLastLoggedEvent().toString(), market1.log.containsString("Cashier Payed Full"));
-		
-		assertEquals("Bills list should now be size 1. It is " + String.valueOf(cashier.bills.size()), 1, cashier.bills.size());
-		
-		assertEquals("Cashier should have $30.00 left. He has " + String.valueOf(cashier.money), 30.00, cashier.money);
-		
-		assertTrue("Cashier should pay bill 2 in full", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockMarket should have logged a \"Cashier Payed Full\", but didn't. His log reads instead: " 
-				+ market2.log.getLastLoggedEvent().toString(), market2.log.containsString("Cashier Payed Full"));
-		
-		assertEquals("Bills list should now be size 0. It is " + String.valueOf(cashier.bills.size()), 0, cashier.bills.size());
-		
-		assertFalse("Cashier should now not have anything to do", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier should have $25.13 left. He has " + String.valueOf(cashier.money), 25.13, cashier.money);
-	}
-	
-	public void testOneMarketBillPayedPart() {
-		assertTrue("Cashier's bills list should empty. It isn't", cashier.bills.isEmpty());
-		assertEquals("Cashier should have $40.00. He has " + String.valueOf(cashier.money), 40.00, cashier.money);
-		assertEquals("Market1's log should be empty. Instead it reads: " + market1.log.toString(), market1.log.size(), 0);
-		
-		assertFalse("Cashier should have nothing to do.", cashier.pickAndExecuteAnAction());
-		cashier.msgYourBillIs(market1, 50.00f);
-		
-		assertEquals("Cashier's bill list should have 1 bill. It has " + cashier.bills.size(), 1, cashier.bills.size());
-		assertEquals("The bill's state should be \"Outstanding\". It isn't", BillState.Outstanding, cashier.bills.get(0).state);
-		
-		assertTrue("Cashier should pay the bill in part", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockMarket should have logged a \"Cashier Payed Part\", but didn't. His log reads instead: " 
-				+ market1.log.getLastLoggedEvent().toString(), market1.log.containsString("Cashier Payed Part"));
-		
-		assertEquals("Bills list should now be size 1. It is " + String.valueOf(cashier.bills.size()), 1, cashier.bills.size());
-		assertEquals("The bill's state should be \"PayASAP\". It isn't", BillState.PayASAP, cashier.bills.get(0).state);
-		assertFalse("Cashier should now not have anything to do", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier should have $0.00 left. He has " + String.valueOf(cashier.money), 0.00, cashier.money);
-		assertEquals("Bill should now be 10.00 more for a total of 20.00. It is " + String.valueOf(cashier.bills.get(0).bill), 20.00, cashier.bills.get(0).bill); 
-		
-		cashier.money = 5.00f;
-		
-		assertTrue("If cashier gets more money, he should now pay part of the bill.", cashier.pickAndExecuteAnAction());
-		assertTrue("MockMarket should have logged a \"Cashier Made Payment On Debt\", but didn't. His log reads instead: " 
-				+ market1.log.getLastLoggedEvent().toString(), market1.log.containsString("Cashier Made Payment"));
-		assertEquals("Cashier should have $0.00 left. He has " + String.valueOf(cashier.money), 0.00, cashier.money);
-		
-		cashier.money = 20.00f;
-		assertTrue("If cashier gets more money, he should now pay the rest of the bill.", cashier.pickAndExecuteAnAction());
-		assertTrue("MockMarket should have logged a \"Cashier Payed Off Debt\", but didn't. His log reads instead: " 
-				+ market1.log.getLastLoggedEvent().toString(), market1.log.containsString("Cashier Payed Off Debt"));
-		assertEquals("Cashier should have $5.00 left. He has " + String.valueOf(cashier.money), 5.00, cashier.money);
-	}
-	
-	public void testPayingMarketBillAfterCustomerPays() {
-		assertTrue("Cashier's bills list should empty. It isn't", cashier.bills.isEmpty());
-		assertEquals("Cashier should have $40.00. He has " + String.valueOf(cashier.money), 40.00, cashier.money);
-		assertEquals("Market1's log should be empty. Instead it reads: " + market1.log.toString(), market1.log.size(), 0);
-		
-		assertFalse("Cashier should have nothing to do.", cashier.pickAndExecuteAnAction());
-		cashier.msgYourBillIs(market1, 45.00f);
-		
-		assertEquals("Cashier's bill list should have 1 bill. It has " + cashier.bills.size(), 1, cashier.bills.size());
-		assertEquals("The bill's state should be \"Outstanding\". It isn't", BillState.Outstanding, cashier.bills.get(0).state);
-		
-		assertTrue("Cashier should pay the bill in part", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockMarket should have logged a \"Cashier Payed Part\", but didn't. His log reads instead: " 
-				+ market1.log.getLastLoggedEvent().toString(), market1.log.containsString("Cashier Payed Part"));
-		
-		assertEquals("Bills list should now be size 1. It is " + String.valueOf(cashier.bills.size()), 1, cashier.bills.size());
-		assertEquals("The bill's state should be \"PayASAP\". It isn't", BillState.PayASAP, cashier.bills.get(0).state);
-		assertFalse("Cashier should now not have anything to do", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier should have $0.00 left. He has " + String.valueOf(cashier.money), 0.00, cashier.money);
-		
-		//Customer Scenario now runs
-		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIscheck is called. Instead, the Cashier's event log reads: "
-						+ cashier.log.toString(), 0, cashier.log.size());
-		
-		//step 1 of the test
-		cashier.msgNeedCheck(waiter, "steak", customer);//send the message from a waiter
+		assertEquals("First Animation Module should have a frame delay of 10. Intead it is: " + String.valueOf(animModule1.frameDelay), animModule1.frameDelay, 10);
 
-		//check postconditions for step 1 and preconditions for step 2
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-		
-		assertEquals("Cashier should have 1 check in it. It doesn't.", cashier.checks.size(), 1);
-		
-		assertEquals("The price of the check should be 15.99. It is: " + cashier.checks.get(0).price, cashier.checks.get(0).price, 15.99);
-		
-		assertEquals("MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-		
-		assertTrue("Cashier's scheduler should have returned true and gives the waiter a check.", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockWaiter should have logged a \"Received check\", but didn't. His log reads instead: " 
-					+ waiter.log.getLastLoggedEvent().toString(), waiter.log.containsString("Received check"));
-		
-		assertEquals("MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
-					+ customer.log.toString(), 0, customer.log.size());
-		
-		//Waiter sends check to customer
-		customer.msgHereIsCheck(waiter.check, cashier);
-		
-		assertTrue("MockCustomer should have logged a \"Received check\", but didn't. His log reads instead: "
-					+ customer.log.getLastLoggedEvent().toString(), customer.log.containsString("received check"));
-		
-		//Customer pays for food
-		
-		assertEquals("Check in market should be set to CheckState.WithWaiter. It isn't", CheckState.WithWaiter, cashier.checks.get(0).s);
-		assertTrue("Cashier's scheduler should have returned false.", !cashier.pickAndExecuteAnAction());
-		
-		cashier.msgHereIsPayment(customer, cashier.checks.get(0).price);
-		
-		assertEquals("Check should have payment equal to price. Instead it is: " + String.valueOf(cashier.checks.get(0).payment), cashier.checks.get(0).payment, cashier.checks.get(0).price);
-		assertEquals("Check in market should be set to CheckState.Payed. It isn't", CheckState.Payed, cashier.checks.get(0).s);
-		
-		//Cashier should now pay off the bill
-		assertEquals("Cashier should now have money equal to a steak 15.99. He has " + cashier.money, 15.99, cashier.money);
-		assertTrue("Cashier now pays off the outstanding bill to the market", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier should now have money equal to 0.99. He has " + cashier.money, 0.99, cashier.money);
-		
-		assertTrue("MockMarket should have logged a \"Cashier Payed Off Debt\", but didn't. His log reads instead: " 
-				+ market1.log.getLastLoggedEvent().toString(), market1.log.containsString("Cashier Payed Off"));
-		
-		assertEquals("Cashier's bills size shouldbe 0. It is: " + cashier.bills.size(), 0, cashier.bills.size());
-		
-		assertTrue("Cashier's schedule should return true and delete the payed check", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier's checks size shouldbe 0. It is: " + cashier.checks.size(), 0, cashier.checks.size());
-		
-		assertFalse("Cashier should have nothing left to do", cashier.pickAndExecuteAnAction());
-	}
-	
-	/**
-	 * This tests the cashier under very simple terms: one customer is ready to pay the exact check.
-	 */
-	public void testOneNormalCustomerScenario()
-	{
-		//setUp() runs first before this test!
-		
-		customer.cashier = cashier;//You can do almost anything in a unit test.			
-		
-		//check preconditions
-		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIscheck is called. Instead, the Cashier's event log reads: "
-						+ cashier.log.toString(), 0, cashier.log.size());
-		
-		//step 1 of the test
-		cashier.msgNeedCheck(waiter, "steak", customer);//send the message from a waiter
+		//animModule2
+		assertTrue("Second Animation Module should have a character of \"Chocobus\". Instead it is: " + animModule2.character, animModule2.character.equals("Chocobus"));
+		assertTrue("Second Animation Module should have an animation of \"Left\". Instead it is: " + animModule2.animation, animModule2.animation.equals("Left"));
+		assertEquals("Second Animation Module should have a frame delay of 30. Intead it is: " + String.valueOf(animModule2.frameDelay), animModule2.frameDelay, 30);
 
-		//check postconditions for step 1 and preconditions for step 2
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-		
-		assertEquals("Cashier should have 1 check in it. It doesn't.", cashier.checks.size(), 1);
-		
-		assertEquals("The price of the check should be 15.99. It is: " + cashier.checks.get(0).price, cashier.checks.get(0).price, 15.99);
-		
-		assertEquals("MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-		
-		assertTrue("Cashier's scheduler should have returned true and gives the waiter a check.", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockWaiter should have logged a \"Received check\", but didn't. His log reads instead: " 
-					+ waiter.log.getLastLoggedEvent().toString(), waiter.log.containsString("Received check"));
-		
-		assertEquals("MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
-					+ customer.log.toString(), 0, customer.log.size());
-		
-		//Waiter sends check to customer
-		customer.msgHereIsCheck(waiter.check, cashier);
-		
-		assertTrue("MockCustomer should have logged a \"Received check\", but didn't. His log reads instead: "
-					+ customer.log.getLastLoggedEvent().toString(), customer.log.containsString("received check"));
-		
-		//Customer pays for food
-		
-		assertEquals("Check in market should be set to CheckState.WithWaiter. It isn't", CheckState.WithWaiter, cashier.checks.get(0).s);
-		assertTrue("Cashier's scheduler should have returned false.", !cashier.pickAndExecuteAnAction());
-		
-		cashier.msgHereIsPayment(customer, cashier.checks.get(0).price);
-		
-		assertEquals("Check should have payment equal to price. Instead it is: " + String.valueOf(cashier.checks.get(0).payment), cashier.checks.get(0).payment, cashier.checks.get(0).price);
-		assertEquals("Check in market should be set to CheckState.Payed. It isn't", CheckState.Payed, cashier.checks.get(0).s);
-		
-		assertTrue("Cashier's schedule should return true and delete the payed check", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier's checks size shouldbe 0. It is: " + cashier.checks.size(), 0, cashier.checks.size());
-		
-		assertFalse("Cashier should have nothing left to do", cashier.pickAndExecuteAnAction());
-	}//end one normal customer scenario
-	
-	public void testTwoCustomersPaying() {
-		customer.cashier = cashier;//You can do almost anything in a unit test.	
-		customer2.cashier = cashier;
-		
-		//check preconditions
-		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIscheck is called. Instead, the Cashier's event log reads: "
-						+ cashier.log.toString(), 0, cashier.log.size());
-		
-		//step 1 of the test
-		cashier.msgNeedCheck(waiter, "steak", customer);//send the message from a waiter
-		cashier.msgNeedCheck(waiter, "pizza", customer2);//send the message from a waiter
-		
+		//animModule3
+		assertTrue("Third Animation Module should have a character of \"Relm\". Instead it is: " + animModule3.character, animModule3.character.equals("Relm"));
+		assertTrue("Third Animation Module should have an animation of \"WalkDown\". Instead it is: " + animModule3.animation, animModule3.animation.equals("WalkDown"));
+		assertEquals("Third Animation Module should have a frame delay of 30. Intead it is: " + String.valueOf(animModule3.frameDelay), animModule3.frameDelay, 30);
 
-		//check postconditions for step 1 and preconditions for step 2
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-		
-		assertEquals("Cashier should have 2 checks in it. It doesn't.", cashier.checks.size(), 2);
-		
-		assertEquals("The price of the first check should be 15.99. It is: " + cashier.checks.get(0).price, cashier.checks.get(0).price, 15.99);
-		assertEquals("The price of the other check should be 8.99. It is: " + cashier.checks.get(1).price, cashier.checks.get(1).price, 8.99);
-		
-		assertEquals("MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-		
-		assertTrue("Cashier's scheduler should have returned true and gives the waiter a check.", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockWaiter should have logged a \"Received check\", but didn't. His log reads instead: " 
-					+ waiter.log.getLastLoggedEvent().toString(), waiter.log.containsString("Received check"));
-		
-		assertEquals("MockWaiter's log should be 1 entry long. It is: " + String.valueOf(waiter.log.size()), waiter.log.size(), 1);
-		
-		assertTrue("Cashier's scheduler should have returned true and gives the waiter a check.", cashier.pickAndExecuteAnAction());
-		
-		assertTrue("MockWaiter should have logged a \"Received check\", but didn't. His log reads instead: " 
-					+ waiter.log.getLastLoggedEvent().toString(), waiter.log.containsString("Received check"));
-		
-		assertEquals("MockWaiter's log should be 2 entries long. It is: " + String.valueOf(waiter.log.size()), waiter.log.size(), 2);
-		
-		assertEquals("MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
-					+ customer.log.toString(), 0, customer.log.size());
-		
-		assertEquals("MockCustomer2 should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
-				+ customer2.log.toString(), 0, customer2.log.size());
-		
-		//Waiter sends check to customer
-		customer.msgHereIsCheck(waiter.check, cashier);
-		
-		assertTrue("MockCustomer should have logged a \"Received check\", but didn't. His log reads instead: "
-					+ customer.log.getLastLoggedEvent().toString(), customer.log.containsString("received check"));
-		
-		//Customer pays for food
-		
-		assertEquals("Check in cashier should be set to CheckState.WithWaiter. It isn't", CheckState.WithWaiter, cashier.checks.get(0).s);
-		assertTrue("Cashier's scheduler should have returned false.", !cashier.pickAndExecuteAnAction());
-		
-		cashier.msgHereIsPayment(customer, cashier.checks.get(0).price);
-		
-		assertEquals("Check should have payment equal to price. Instead it is: " + String.valueOf(cashier.checks.get(0).payment), cashier.checks.get(0).payment, cashier.checks.get(0).price);
-		assertEquals("Check in market should be set to CheckState.Payed. It isn't", CheckState.Payed, cashier.checks.get(0).s);
-		
-		assertTrue("Cashier's schedule should return true and delete the payed check", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier's checks size shouldbe 1. It is: " + cashier.checks.size(), 1, cashier.checks.size());
-		
-		assertFalse("Cashier should have nothing left to do", cashier.pickAndExecuteAnAction());
-		
-		//Second customer pays and doesn't have enough to pay
-		customer2.msgHereIsCheck(waiter.check, cashier);
-		
-		assertTrue("MockCustomer should have logged a \"Received check\", but didn't. His log reads instead: "
-					+ customer2.log.getLastLoggedEvent().toString(), customer2.log.containsString("received check"));
-		
-		assertTrue("The only check in cashier should be customer2's check", customer2.getName().equals(cashier.checks.get(0).c.getName()));
-		
-		assertEquals("The check's payment should be 0.00. It is " + String.valueOf(cashier.checks.get(0).payment), 0.00, cashier.checks.get(0).payment);
-		
-		assertEquals("Check in cashier should be set to CheckState.WithWaiter. It isn't", CheckState.WithWaiter, cashier.checks.get(0).s);
-		assertTrue("Cashier's scheduler should have returned false.", !cashier.pickAndExecuteAnAction());
-		
-		cashier.msgHereIsPayment(customer2, cashier.checks.get(0).price - 2.00f);
-		
-		assertEquals("Check should have payment equal to 6.99. Instead it is: " + String.valueOf(cashier.checks.get(0).payment), 6.99, cashier.checks.get(0).payment);
-		assertEquals("Check in market should be set to CheckState.Payed. It isn't", CheckState.Payed, cashier.checks.get(0).s);
-		
-		assertTrue("Cashier's schedule should return true and delete the payed check", cashier.pickAndExecuteAnAction());
-		
-		assertEquals("Cashier's checks size shouldbe 0. It is: " + cashier.checks.size(), 0, cashier.checks.size());
-		
-		assertFalse("Cashier should have nothing left to do", cashier.pickAndExecuteAnAction());
-		//Customer tries to pay for food
+		//animModule4
+		assertTrue("Fourth Animation Module should have a character of \"Edgar\". Instead it is: " + animModule4.character, animModule4.character.equals("Edgar"));
+		assertTrue("Fourth Animation Module should have an animation of \"WalkDown\". Instead it is: " + animModule4.animation, animModule4.animation.equals("WalkDown"));
+		assertEquals("Fourth Animation Module should have a frame delay of 30. Intead it is: " + String.valueOf(animModule4.frameDelay), animModule4.frameDelay, 30);
 	}
-	
+
+	//Tests the find Frame Count utility
+	public void testFrameCountFinder() {
+		assertEquals("First Animation Module should find 4 frames. Instead it finds " + String.valueOf(animModule1.findFrameCount()), animModule1.findFrameCount(), 4);
+
+		assertEquals("Second Animation Module should find 8 frames. Instead it finds " + String.valueOf(animModule1.findFrameCount()), animModule2.findFrameCount(), 8);
+	}
+
+	//Tests updateAnimation Utility for a couple changes of frame and then a change of animation
+	public void testUpdateAnimationChange() {
+		//Pre Conditions
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be null. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals(""));
+
+		animModule1.updateAnimation();//previous animation should change
+
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 0. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 0, animModule1.frameDelayCounter);
+
+		animModule1.changeAnimation("WalkDown");
+
+		assertTrue("Current Animation should be WalkDown. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkDown"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 0. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 0, animModule1.frameDelayCounter);
+
+		animModule1.updateAnimation();
+		assertTrue("Current Animation should be WalkDown. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkDown"));
+		assertTrue("Previous Animation should be WalkDown. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkDown"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 0. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 0, animModule1.frameDelayCounter);
+
+		//Now the frames should start changing
+		for(int i = 1; i <= 10; i++) {
+			animModule1.updateAnimation();
+
+			assertTrue("Current Animation should be WalkDown. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkDown"));
+			assertTrue("Previous Animation should be WalkDown. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkDown"));
+
+			assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+			assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+			assertEquals("Frame Delay counter should be " + String.valueOf(i) + "Instead it is " + String.valueOf(animModule1.frameDelayCounter), i, animModule1.frameDelayCounter);
+		}
+
+		//Now the frame should change
+		animModule1.updateAnimation();
+
+		assertTrue("Current Animation should be WalkDown. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkDown"));
+		assertTrue("Previous Animation should be WalkDown. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkDown"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 2. Instead it is " + String.valueOf(animModule1.currentFrame), 2, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 0. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 0, animModule1.frameDelayCounter);
+	}
+
+	//Testing to ensure that the frame gets reset after changing animation
+	public void testChangeAnimationAfterAFewFrames() {
+		//Pre Conditions
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be null. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals(""));
+
+		animModule1.updateAnimation();//previous animation should change
+
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 0. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 0, animModule1.frameDelayCounter);
+
+		for(int i = 1; i <= 27; i++) {//2 frames and delay counter of 5 (delay counter resets on 2 of the updateAnimation calls
+			animModule1.updateAnimation();
+		}
+
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 3. Instead it is " + String.valueOf(animModule1.currentFrame), 3, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 5. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 5, animModule1.frameDelayCounter);
+
+		animModule1.changeAnimation("WalkRight");
+
+		assertTrue("Current Animation should be WalkRight. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkRight"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		animModule1.updateAnimation();
+
+		assertTrue("Current Animation should be WalkRight. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkRight"));
+		assertTrue("Previous Animation should be WalkRight. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkRight"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 5. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 5, animModule1.frameDelayCounter);
+	}
+
+	public void testResetFrames() {//Loops frame back to 1 after all frames have been gone though
+		//Pre Conditions
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be null. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals(""));
+		
+		animModule1.updateAnimation();//previous animation should change
+
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 0. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 0, animModule1.frameDelayCounter);
+		
+		for(int i = 1; i <= 43; i++) {//Should be one update away from resetting frame
+			animModule1.updateAnimation();
+		}
+		
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 4. Instead it is " + String.valueOf(animModule1.currentFrame), 4, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 10. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 10, animModule1.frameDelayCounter);
+		
+		animModule1.updateAnimation();//reset the frame to 1
+		assertTrue("Current Animation should be WalkUp. Instead it is " + animModule1.animation, animModule1.animation.equals("WalkUp"));
+		assertTrue("Previous Animation should be WalkUp. Instead it is " + animModule1.previousAnimation, animModule1.previousAnimation.equals("WalkUp"));
+
+		assertEquals("Frame Delay should be 10. Instead it is " + String.valueOf(animModule1.frameDelay), 10, animModule1.frameDelay);
+		assertEquals("Frame should be 1. Instead it is " + String.valueOf(animModule1.currentFrame), 1, animModule1.currentFrame);
+		assertEquals("Frame Delay counter should be 0. Instead it is " + String.valueOf(animModule1.frameDelayCounter), 0, animModule1.frameDelayCounter);
+	}
 }
