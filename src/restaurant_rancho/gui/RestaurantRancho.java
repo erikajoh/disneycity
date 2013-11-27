@@ -13,9 +13,10 @@ import simcity.RestMenu;
 import simcity.Restaurant;
 import restaurant_rancho.ProducerConsumerMonitor;
 import restaurant_rancho.WaiterAgentPC;
-import javax.swing.*;
-import restaurant_rancho.WaiterAgentNorm;
 
+import javax.swing.*;
+
+import restaurant_rancho.WaiterAgentNorm;
 import market.Market;
 
 import java.awt.*;
@@ -305,6 +306,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	@Override
 	public void msgHereIsBill(Market m, double amount) {
 		cashier.msgHereIsMarketBill(m, amount);
-	} 
+	}
+
+
 
 }

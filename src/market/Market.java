@@ -9,6 +9,7 @@ import market.gui.WorkerGui;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
+import simcity.interfaces.Market_Douglass;
 import transportation.Transportation;
 import restaurant_rancho.CookAgent;
 
@@ -25,7 +26,7 @@ import java.util.Random;
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class Market {
+public class Market implements Market_Douglass {
 
     /**
 	 * 

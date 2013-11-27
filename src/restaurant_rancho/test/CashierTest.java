@@ -9,7 +9,7 @@ import restaurant_rancho.test.mock.MockCustomer;
 import restaurant_rancho.test.mock.MockMarket;
 import restaurant_rancho.test.mock.MockWaiter;
 import restaurant_rancho.gui.RestaurantRancho;
-
+import simcity.Restaurant;
 /**
  * 
  * This class is a JUnit test class to unit test the CashierAgent's basic interaction
@@ -26,7 +26,7 @@ public class CashierTest extends TestCase
 	MockCustomer customer;
 	MockWaiter waiter2;
 	MockCustomer customer2;
-	
+	Restaurant restaurant;
 	
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
@@ -34,7 +34,7 @@ public class CashierTest extends TestCase
 	 */
 	public void setUp() throws Exception{
 		super.setUp();		
-		cashier = new CashierAgent("cashier");		
+		cashier = new CashierAgent("cashier", restaurant);		
 		customer = new MockCustomer("mockcustomer");
 		customer2 = new MockCustomer("mockcustomer2");
 		waiter = new MockWaiter("mockwaiter");
@@ -269,7 +269,7 @@ public class CashierTest extends TestCase
 		
 	}
 	
-	public void testFiveOneMarket() {
+	public void testFiveNewMarket() {
 		MockMarket market = new MockMarket ("mockmarket");
 		
 		assertFalse("Cashier's scheduler should return false before MarketBill is added, but it doesn't", cashier.pickAndExecuteAnAction() );

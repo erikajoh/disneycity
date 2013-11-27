@@ -9,6 +9,7 @@ import simcity.PersonAgent;
 import simcity.RestMenu;
 import simcity.Restaurant;
 import simcity.interfaces.*;
+import simcity.RestMenu;
 
 public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant {
 
@@ -34,27 +35,30 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	@Override
 	public String getType() { return type; }
 
-	@Override
 	public RestMenu getMenu() {
 		RestMenu theMenu = new RestMenu();
+		Set<String> keySet = menu.keySet();
+		for(String key : keySet)
+			theMenu.addItem(key, menu.get(key));
+		return theMenu;
 	}
 
 	@Override
-	public void msgPersonAs(PersonAgent personAgent, String personType,
-			String name, double moneyOnHand, String foodPreference) {
+	public void personAs(PersonAgent personAgent, String personType,
+			String name, double moneyOnHand) {
 		log.add(new LoggedEvent("Received msgPersonAs: "
 				+ "name = " + name + "; "
 				+ "money = " + moneyOnHand));
 		if(personType.equals("Customer")) {
-			MyCustomer newCustomer = new MyCustomer(name, moneyOnHand, foodPreference);
+			MyCustomer newCustomer = new MyCustomer(name, moneyOnHand, "");
 			waitingCustomers.add(newCustomer);
 		}
 		final PersonAgent finalPerson = personAgent; 
-		double finalMoney = moneyOnHand; 
+		final double finalMoney = moneyOnHand; 
 		timer.schedule(new TimerTask() {
 			public void run() {
 				finalPerson.setIsNourished(true);
-				finalPerson.msgDoneEating(true, finalMoney - 5);
+				finalPerson.msgDoneEating(true, finalMoney);
 			}
 	    }, Constants.SECOND / 2);
 	}
@@ -83,14 +87,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	}
 
 	@Override
-	public void personAs(PersonAgent p, String type, String name, double money) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void addPerson(PersonAgent p, String type, String name, double money) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -108,6 +105,18 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 
 	@Override
 	public void msgEndOfShift() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setBank(Bank b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMarket(Market m) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -2,6 +2,7 @@ package simcity;
 
 import agent.Agent;
 import bank.gui.Bank;
+import simcity.interfaces.Person;
 
 import java.util.*;
 
@@ -11,7 +12,7 @@ import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
 import transportation.Transportation;
 
-public class PersonAgent extends Agent {
+public class PersonAgent extends Agent implements Person {
 	
 	// ************************* DATA ***********************************
 	
