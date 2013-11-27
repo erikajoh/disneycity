@@ -185,5 +185,24 @@ public class PersonTest extends TestCase
 	// TEST #4
 	// Person: start at house, needs to go to work, walks to work, arrives successfully,
 	// finishes work, gets paid, walks home, done
+	
+	
+	// TEST #5
+	//
+	
+	// TEST #6
+	//
+
+	// TEST #7
+	//
+
+	// TEST #8
+	//
+
+	// TEST #9
+	//	
+	
+	// TEST #10
+	// 
 }
 

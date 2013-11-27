@@ -39,9 +39,15 @@ Kelsey Rose <br>
 	+ The truck goes to an idle position next to the market.
 	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
 + Dylan (Bank): 
-	+ 
+	+ Banks handle money transactions with people, markets, and restaurants
+	+ Tellers handle the transactions; bank customer agents walk up to them and perform a desired action: create account, withdraw, deposit
+	+ If bank customer desires more money than they have, they automatically requst a loan
+	+ Banks have ability to track loans and keep a rudimentary "credit score" - if loans are not paid off in full for too long, no more money can be withdrawwn
+	+ Interacts with the bank in terms of handling depositing/withdrawl if bank has surplus or depleted cash reserves
 + Erika (Markets, Housing): 
-	+ 
+	+ Markets supply food to 
+	+ Employees in markets run to shelves and give appropriate items to Person (who has spawned a customer agent on his behalf - see design philosophy for Person"
+	+ Food deliveries by truck are to restaurants only for now; deliveries to person are from market to house
 + Kelsey (Restaurants, Front-end design): 
 	+ 
 

@@ -3,7 +3,6 @@ package transportation;
 import market.Market;
 import simcity.PersonAgent;
 import simcity.Restaurant;
-import transportation.Agents.TruckAgent;
 
 public interface Transportation {
 	public abstract void msgWantToGo(String startLocation, String endLocation, PersonAgent person, String mover, String character);

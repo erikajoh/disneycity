@@ -2,11 +2,15 @@ package simcity.test.mock;
 
 import java.util.*;
 
+import market.Market;
+import bank.gui.Bank;
 import agent.Constants;
 import simcity.PersonAgent;
+import simcity.RestMenu;
+import simcity.Restaurant;
 import simcity.interfaces.*;
 
-public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant_Douglass {
+public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant {
 
 	public EventLog log;
 	public Timer timer;
@@ -31,7 +35,9 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	public String getType() { return type; }
 
 	@Override
-	public Map<String, Double> getMenu() { return menu; }
+	public RestMenu getMenu() {
+		RestMenu theMenu = new RestMenu();
+	}
 
 	@Override
 	public void msgPersonAs(PersonAgent personAgent, String personType,
@@ -44,25 +50,15 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 			waitingCustomers.add(newCustomer);
 		}
 		final PersonAgent finalPerson = personAgent; 
+		double finalMoney = moneyOnHand; 
 		timer.schedule(new TimerTask() {
 			public void run() {
 				finalPerson.setIsNourished(true);
-				finalPerson.msgDoneEating(true);
+				finalPerson.msgDoneEating(true, finalMoney - 5);
 			}
 	    }, Constants.SECOND / 2);
 	}
 	
-	/*
-	@Override
-	public void msgHereIsBill(double amount, boolean lastBillFulfilled) {
-		if(lastBillFulfilled) {
-			log.add(new LoggedEvent("msgHereIsBill from cashier: valid payment"));
-		}
-		else {
-			log.add(new LoggedEvent("msgHereIsBill from cashier: invalid payment"));
-		}
-	}
-	*/
 	class MyCustomer {
 		String name;
 		double moneyOnHand;
@@ -72,5 +68,47 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 			moneyOnHand = money;
 			foodPreference = food;
 		}
+	}
+
+	@Override
+	public String getRestaurantName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isOpen() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void personAs(PersonAgent p, String type, String name, double money) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addPerson(PersonAgent p, String type, String name, double money) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsBill(Market m, double amt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsOrder(String food, int quantity, int ID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndOfShift() {
+		// TODO Auto-generated method stub
+		
 	}
 }
