@@ -300,7 +300,7 @@ public class CashierTest extends TestCase
 		
 	}
 	
-	public void testSixLowBalance() {
+	public void testSixLowBalanceAndNoAccount() {
 		assertFalse("Cashier's scheduler should return false before MarketBill is added, but it doesn't", cashier.pickAndExecuteAnAction() );
 		cashier.setBank(bank);
 		
@@ -350,8 +350,115 @@ public class CashierTest extends TestCase
 		//cannot test any more because bank does not integrate with my restaurant due to team member's lack of effort and commitment to integrating
 	}
 	
-	public void testEightMarket() {
+	public void testEightBankDepositAndHasAccount() {
+
+		assertFalse("Cashier's scheduler should return false before check is added , but it doesn't", cashier.pickAndExecuteAnAction() );
 		
+		assertTrue("Cashier should have no checks", cashier.checks.size()==0);
+		
+		Check check = new Check(customer, waiter, "Pizza", 450.0);
+		
+		check.cs = checkState.notComplete;
+		
+		cashier.checks.add(check);
+		
+		cashier.setBank(bank);
+		
+		cashier.setAcctNum(1010);
+		
+		assertTrue("Cashier should have one check", cashier.checks.size()==1);
+		
+		assertTrue("Cashier's scheduler should return true after check is added and money is set high, but it doesn't", cashier.pickAndExecuteAnAction() );
+		
+		cashier.msgHereIsMoney(customer,450);
+		
+		assertTrue("Cashier's scheduler should return true again after check is added and money is set high because it has multiple things to do, but it doesn't", cashier.pickAndExecuteAnAction() );
+		
+		assertTrue("Cashier's balance should be high now (above 400), but it isn't", cashier.money >400);
+		
+		assertTrue("Bank's event log should have \"Received msg Request Deposit\" in it, but it doesn't", bank.log.containsString("Received msg Request Deposit"));
+		
+		assertTrue("Cashier's balance should be high still (below 400), but it isn't", cashier.money >400);
+		
+		assertTrue("Cashier's scheduler should return true again after stateChanged is called, but it doesn't", cashier.pickAndExecuteAnAction() );
+		
+		assertFalse("Cashier's scheduler should return false after it has asked the bank to deposit and is waiting for the bank to respond, but it doesn't", cashier.pickAndExecuteAnAction() );
+	}
+	
+	
+	
+	public void testNineMarket() {
+		//cook is low so cook messages market a new order
+		assertFalse("Cashier's scheduler should return false since it has not bill yet, but it doesn't ", cashier.pickAndExecuteAnAction());
+		
+		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.checks.size(), 0);	
+		
+		market.personAs(restaurant, "Mexican", 7, 1);
+		
+		assertTrue("Market's event log should have \"Received msg personAs from rest\" in it, but it doesn't, instead it reads: " + market.log.toString(), market.log.containsString("Received msg personAs from rest"));
+		
+		assertFalse("Cashier's scheduler should return false since it has not bill yet, but it doesn't ", cashier.pickAndExecuteAnAction());
+		
+		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.checks.size(), 0);	
+		
+		//cashier will get market bill from restaurant 
+		
+		cashier.msgHereIsMarketBill(market, 1); 
+		
+		assertTrue("Cashier's event log should read \"Received Market Bill.\" since it has a bill now, but it doesn't ", cashier.log.containsString("Received Market Bill."));
+		
+		assertTrue("Cashier's scheduler should return true since it has a bill now, but it doesn't ", cashier.pickAndExecuteAnAction());
+		
+		assertTrue("Cashier should now have 0  bill in its bill list, but it doesn't", cashier.bills.size() == 0);
+		
+		assertTrue("Market's event log should have \"Received msg Here Is Payment from rest\" in it, but it doesn't, instead it reads: " + market.log.toString(), market.log.containsString("Received msg Here Is Payment from rest"));
+		
+		
+		
+	}
+	
+	public void testTenMultipleMarketOrders() {
+
+		assertFalse("Cashier's scheduler should return false since it has not bill yet, but it doesn't ", cashier.pickAndExecuteAnAction());
+		
+		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.checks.size(), 0);	
+		
+		market.personAs(restaurant, "Mexican", 7, 1);
+		
+		market.personAs(restaurant, "Mexican", 8, 2);
+		
+		assertTrue("Market's event log should have \"Received msg personAs from rest\" in it, but it doesn't, instead it reads: " + market.log.toString(), market.log.containsString("Received msg personAs from rest"));
+		
+		assertFalse("Cashier's scheduler should return false since it has no bill yet, but it doesn't ", cashier.pickAndExecuteAnAction());
+		
+		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.checks.size(), 0);	
+		
+		//cashier will get market bill from restaurant 
+		
+		cashier.msgHereIsMarketBill(market, 15); 
+		
+		assertTrue("Cashier's event log should read \"Received Market Bill.\" since it has a bill now, but it doesn't ", cashier.log.containsString("Received Market Bill."));
+		
+		cashier.msgHereIsMarketBill(market,  15);
+		
+		
+		assertTrue("Cashier's event log should read \"Received Market Bill.\" since it has a bill now, but it doesn't ", cashier.log.containsString("Received Market Bill."));
+		
+		assertTrue("Cashier's scheduler should return true since it has a bill now, but it doesn't ", cashier.pickAndExecuteAnAction());
+		
+		assertTrue("Cashier should now have 1  bill in its bill list, but it doesn't", cashier.bills.size() == 1);
+		
+		cashier.msgHereIsMarketBill(market,  15);
+		
+		assertTrue("Cashier's event log should read \"Received Market Bill.\" since it has a bill now, but it doesn't ", cashier.log.containsString("Received Market Bill."));
+		
+		assertTrue("Cashier's market bill should be from market mockmarket", cashier.bills.get(0).market.getName().equals(("mockmarket")));
+		
+		assertTrue("Market's event log should have \"Received msg Here Is Payment from rest\" in it, but it doesn't, instead it reads: " + market.log.toString(), market.log.containsString("Received msg Here Is Payment from rest"));
+		
+		assertTrue("Cashier should now have 2  bills in its bill list, but it doesn't", cashier.bills.size() == 2);
+		
+		assertTrue("Cashier's scheduler should return true since it has bills in it, but it doesn't ", cashier.pickAndExecuteAnAction());
 		
 		
 	}
