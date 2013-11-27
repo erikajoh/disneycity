@@ -52,7 +52,7 @@ Kelsey Rose <br>
 	+ **Issues:** see below after instructions
 
 + **_Erika (Markets, Housing):_** 
-	+ + Designed and implemented the Housing and Market components, incl. related agents, animations, graphics and tests; took over the Market component when a team member dropped out of the class a few days into the project.
+	+ Designed and implemented the Housing and Market components, incl. related agents, animations, graphics and tests; took over the Market component when a team member dropped out of the class a few days into the project.
 	+ Housing serves as the "default" location for the Person, so it is unique in that it passes the control back to the Person each time it completes a task. Thus, the Person has control over the ResidentAgent's actions by sending messages to the Housing class. Housing provides a choice between a "house" which accomodates one Person, or an "apartment" which accomodates up to four Persons.
 	+ Markets can serve in-person customers, "virtual" (i.e. home delivery) customers, and restaurant delivery customers. When Markets receive an in-person order, the Worker brings the item(s) to the Cashier station to give to the Customer. When Markets receive "virtual"/delivery orders, the Worker brings the item(s) to the truck loading zone, and the Market's truck is sent to deliver the item(s).
 	+ Debugged the Bank component and fixed issues such as multiple bank customers being spawned.
