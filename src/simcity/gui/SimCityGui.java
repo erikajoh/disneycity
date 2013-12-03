@@ -22,6 +22,7 @@ import restaurant_pizza.gui.PizzaAnimationPanel;
 import restaurant_haus.gui.HausAnimationPanel;
 import restaurant_haus.gui.RestaurantHaus;
 import simcity.PersonAgent;
+import simcity.gui.trace.TracePanel;
 import transportation.TransportationPanel;
 import restaurant_cafe.gui.CafeAnimationPanel;
 import restaurant_cafe.gui.RestaurantCafe;
@@ -29,11 +30,12 @@ import restaurant_cafe.gui.RestaurantCafe;
 public class SimCityGui extends JFrame  {
 
 	public static final int WINDOWX = 800;
-	public static final int WINDOWY = 600;
+	public static final int WINDOWY = 800;
 	
 	String name;
 	
 	SimCityPanel simCityPanel;
+	TracePanel tracePanel = new TracePanel();
 	
 	JPanel cards;
 				
@@ -82,12 +84,15 @@ public class SimCityGui extends JFrame  {
 	TransportationPanel cityAniPanel = new TransportationPanel(this);
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
+	private JPanel logBanner = new JPanel();
 	private JPanel cityAnimation = new JPanel();
 	private JPanel zoomAnimation = new JPanel();
 	private JPanel cityPanel = new JPanel();
 	private JPanel zoomPanel = new JPanel();
+	private JPanel logPanel = new JPanel();
 	private JLabel cityLabel = new JLabel("Disney City View                                          ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
+	private JLabel logLabel = new JLabel("Logger");
 		
 	public static ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	
@@ -153,65 +158,82 @@ public class SimCityGui extends JFrame  {
 		c1.weightx = .5;
 		c1.gridx = 0;
 		c1.gridy = 0; 
-		c1.gridwidth = 3;
+//		c1.gridwidth = 1;
 		cityBanner.setBorder(BorderFactory.createTitledBorder("City Banner"));
 		cityBanner.add(cityLabel);
 		add(cityBanner, c1);
+		
 		GridBagConstraints c3 = new GridBagConstraints();
 		c3.fill = GridBagConstraints.BOTH;
 		c3.weightx = .5; 
-		c3.gridx = 5;
+		c3.gridx = 1;
 		c3.gridy = 0;
-		c3.gridwidth = 5;
+//		c3.gridwidth = 1;
 		zoomBanner.setBorder(BorderFactory.createTitledBorder("Zoom Banner"));
 		zoomBanner.add(zoomLabel);
 		add(zoomBanner, c3);
+		
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.fill = GridBagConstraints.BOTH;
 		c2.weightx = .5;
-		c2.weighty = .32;
+		c2.weighty = .12;
 		c2.gridx = 0;
 		c2.gridy = 1;
-		c2.gridwidth = 3;
-		c2.gridheight = 3;
+		c2.gridwidth = 1;
+//		c2.gridheight = 2;
 		cityAnimation.setLayout(new BoxLayout(cityAnimation, BoxLayout.Y_AXIS));
 		cityAnimation.add(cityAniPanel);
 		//cityAnimation.setBorder(BorderFactory.createTitledBorder("City Animation"));
 		add(cityAnimation, c2);
+		
 		GridBagConstraints c4 = new GridBagConstraints();
 		c4.fill = GridBagConstraints.BOTH;
 		c4.weightx = .5;
-		c4.weighty=.32;
-		c4.gridx = 3;
+		c4.weighty=.12;
+		c4.gridx = 1;
 		c4.gridy=1;
-		c4.gridwidth = GridBagConstraints.REMAINDER;
-		c4.gridheight = 3;
+		c4.gridwidth = 1;
+//		c4.gridheight = 2;
 		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
 		zoomAnimation.add(cards);
 //		ranchoAniPanel.setVisible(false);
 //		zoomAnimation.add(housAniPanel);
 		//zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c4);
+		
 		GridBagConstraints c5 = new GridBagConstraints();
 		c5.fill = GridBagConstraints.BOTH;
 		c5.weightx= .5;
-		c5.weighty = .18;
+		c5.weighty = .06;
 		c5.gridx=0;
-		c5.gridy=5;
-		c5.gridwidth = 3;
+		c5.gridy=4;
+		c5.gridwidth = 1;
 		c5.gridheight = 2;
 		cityPanel.setBorder(BorderFactory.createTitledBorder("City Panel"));
 		add(cityPanel, c5);
+		
 		GridBagConstraints c6 = new GridBagConstraints();
 		c6.fill = GridBagConstraints.BOTH;
 		c6.weightx= 0;
-		c6.weighty = .18;
-		c6.gridx=3;
-		c6.gridy=5;
-		c6.gridwidth = GridBagConstraints.REMAINDER;
+		c6.weighty = .06;
+		c6.gridx=1;
+		c6.gridy=4;
+		c6.gridwidth = 1;
 		c6.gridheight =2;
 		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom Panel"));
-		add(zoomPanel, c6);			
+		add(zoomPanel, c6);	
+		
+		GridBagConstraints c7 = new GridBagConstraints();
+		c7.fill = GridBagConstraints.BOTH;
+		c7.weightx = 3; 
+		c7.weighty = .04;
+		c7.gridx = 0;
+		c7.gridy = 6;
+		c7.gridwidth = 3;
+		logPanel.setBorder(BorderFactory.createTitledBorder("Logger"));
+		logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.Y_AXIS));
+		logPanel.add(tracePanel);
+		add(logPanel, c7);
 	}
 	
 	public static void main(String[] args) {
