@@ -1,6 +1,7 @@
 package transportation.Test.mocks;
 
 import bank.gui.Bank;
+import simcity.interfaces.Bank_Douglass;
 import simcity.interfaces.Person;
 
 public class mockPerson_Daron implements Person {
@@ -99,7 +100,6 @@ public class mockPerson_Daron implements Person {
 		
 	}
 
-	@Override
 	public void msgLeftBank(Bank theBank, int accountNumber, double change,
 			double loanAmount, int loanTime) {
 		// TODO Auto-generated method stub
@@ -114,6 +114,12 @@ public class mockPerson_Daron implements Person {
 
 	@Override
 	public void msgHereIsOrder(String order, int quantity) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void msgLeftBank(Bank_Douglass theBank, int accountNumber,
+			double change, double loanAmount, int loanTime) {
 		// TODO Auto-generated method stub
 		
 	}
