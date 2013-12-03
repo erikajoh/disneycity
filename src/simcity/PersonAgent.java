@@ -99,6 +99,7 @@ public class PersonAgent extends Agent implements Person {
 		switch(commute) {
 			case 'W': preferredCommute = PreferredCommute.Walk; break;
 			case 'B': preferredCommute = PreferredCommute.Bus; break;
+			case 'C': preferredCommute = PreferredCommute.Car; break;
 		}
 		
 		this.foodPreference = foodPreference;

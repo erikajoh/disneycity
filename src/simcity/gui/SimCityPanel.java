@@ -292,7 +292,7 @@ public class SimCityPanel extends JPanel{
 	private static final long EVENING			= WORK_TWO_START + 160;//721
 	private static final long WORK_TWO_END		= EVENING + 160;//881
 	private static final long NIGHT				= WORK_TWO_END + 60;//921
-	private static final long END_OF_DAY		= NIGHT + 350;//1271
+	private static final long END_OF_DAY		= NIGHT + 800;//1271
 	// length of day 1231
 	
 	// for setting random delay for eating

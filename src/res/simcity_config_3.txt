@@ -1,0 +1,30 @@
+4
+Narwhal Prime|Haunted Mansion|40|Mexican|false|OwnerResident|B
+Narwhal Secundus|Main St Apartments #1|40|Mexican|false|OwnerResident|B
+One|Main St Apartments #1|35|Mexican|false|OwnerResident|B
+Two|Main St Apartments #2|35|Mexican|false|OwnerResident|B
+3
+Haunted Mansion|Narwhal Prime|Narwhal Prime
+Main St Apartments #1|Narwhal Secundus|Narwhal Secundus|One
+Main St Apartments #2|Two|Two
+20
+Narwhal Prime|Rancho Del Zocalo|Customer|0
+Narwhal Prime|Blue Bayou|Customer|0
+Narwhal Prime|Pizza Port|Waiter|1
+Narwhal Prime|Village Haus|Customer|0
+Narwhal Prime|Carnation Cafe|Customer|0
+Narwhal Secundus|Rancho Del Zocalo|Customer|0
+Narwhal Secundus|Blue Bayou|Customer|0
+Narwhal Secundus|Pizza Port|Waiter|2
+Narwhal Secundus|Village Haus|Customer|0
+Narwhal Secundus|Carnation Cafe|Customer|0
+One|Rancho Del Zocalo|Customer|0
+One|Blue Bayou|Customer|0
+One|Pizza Port|Customer|0
+One|Village Haus|Customer|0
+One|Carnation Cafe|Customer|0
+Two|Rancho Del Zocalo|Customer|0
+Two|Blue Bayou|Customer|0
+Two|Pizza Port|Customer|0
+Two|Village Haus|Customer|0
+Two|Carnation Cafe|Customer|0
