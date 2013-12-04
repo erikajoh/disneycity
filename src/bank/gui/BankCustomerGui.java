@@ -16,59 +16,78 @@ public class BankCustomerGui implements Gui{
 
 	private int windowX, windowY;
 	private int xPos, yPos;
+	private int fallCount = 0;
 	private int xDestination, yDestination;
-	private String drawString = "";
-	private String initial;
-	private enum Command {noCommand, GoToTeller, LeaveBank}; //shortened to noCommand and walking?
-	private enum Direction{left, right, up, down};
+	private enum Command {noCommand, GoToTeller, FailRobbery, LeaveBank}; //shortened to noCommand and walking?
+	private enum Direction{up, down, left, right, fall};
 	private Direction direction = Direction.up;
 	private Command command=Command.noCommand;
 	private boolean isInBank = false;
-	private AnimationModule animModule = new AnimationModule();
+	private AnimationModule animModule;
 
 
-	public BankCustomerGui(BankCustomerAgent c, SimCityGui gui, boolean present, int wx, int wy){ //HostAgent m) {
+	public BankCustomerGui(BankCustomerAgent c, SimCityGui gui, boolean present, boolean isThief, int wx, int wy){ //HostAgent m) {
 		agent = c;
 		windowX = wx;
 		windowY = wy;
+		
+		if(isThief == false){
+			 animModule = new AnimationModule();
+		}
+		else {
+			 animModule = new AnimationModule("WarioThief");
+		}
+		
 		isPresent = present;
 		xPos = windowX/2-10;
 		yPos = windowY-25;
 		xDestination = xPos;
 		yDestination = yPos;
-		initial = c.toString().substring(9, 10);
 		isPresent = true;
 		this.gui = gui;
 	}
 
 	public void updatePosition() {
-		if (xPos < xDestination){
-			xPos++;
-			direction = Direction.right;
-		}
-		else if (xPos > xDestination){
-			xPos--;
-			direction = Direction.left;
-		}
-		if (yPos < yDestination){
-			yPos++;
-			direction = Direction.down;
-		}
-		else if (yPos > yDestination){
-			yPos--;
-			direction = Direction.up;
-		}
-		
-
-		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToTeller) {
-				agent.msgAnimationFinishedGoToTeller();
+		if(command == Command.FailRobbery){
+			if(fallCount < 5){
+				fallCount++;
 			}
-			else if (command==Command.LeaveBank) {
+			else{
+				fallCount = 0;
+				command = command.noCommand;
+				xDestination = windowX/2-10;
+				yDestination = windowY+40;
 				agent.msgAnimationFinishedLeavingBank();
-				isInBank = false;
 			}
-			command=Command.noCommand;
+		}
+		else{
+			if (xPos < xDestination){
+				xPos++;
+				direction = Direction.right;
+			}
+			else if (xPos > xDestination){
+				xPos--;
+				direction = Direction.left;
+			}
+			if (yPos < yDestination){
+				yPos++;
+				direction = Direction.down;
+			}
+			else if (yPos > yDestination){
+				yPos--;
+				direction = Direction.up;
+			}
+
+			if (xPos == xDestination && yPos == yDestination) {
+				if (command==Command.GoToTeller) {
+					agent.msgAnimationFinishedGoToTeller();
+				}
+				else if (command==Command.LeaveBank) {
+					agent.msgAnimationFinishedLeavingBank();
+					isInBank = false;
+				}
+				command=Command.noCommand;
+			}
 		}
 		
 		switch(direction){
@@ -80,6 +99,8 @@ public class BankCustomerGui implements Gui{
 			animModule.changeAnimation("WalkUp"); break;
 			case down:
 			animModule.changeAnimation("WalkDown"); break;
+			case fall:
+			animModule.changeAnimation("Fall"); break;
 		}
 	}
 
@@ -115,6 +136,12 @@ public class BankCustomerGui implements Gui{
 		xDestination = windowX/2-10;
 		yDestination = windowY+40;
 		command = Command.LeaveBank;
+	}
+	
+	public void DoFailRobbery() {
+		xDestination = windowX/2-10;
+		yDestination = windowY/2;
+		command = Command.FailRobbery;
 	}
 	
 	public void setWindow(int wx, int wy){

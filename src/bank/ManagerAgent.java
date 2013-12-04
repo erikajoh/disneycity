@@ -45,7 +45,7 @@ public class ManagerAgent extends Agent implements Manager {
 
 		List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
 		enum State{entered, waiting, leaving, busy, idle};
-		enum Action{none, newAccount, deposit, withdraw};
+		enum Action{none, rob, newAccount, deposit, withdraw};
 		
 		List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
@@ -84,8 +84,7 @@ public class ManagerAgent extends Agent implements Manager {
 	}
 
 	
-	// Messages
-	
+	// Messages	
 	public void msgTellerFree(Teller teller, BankCustomer bankCustomer){
 		synchronized(tellers){
 		    for(MyTeller t : tellers){
@@ -120,6 +119,22 @@ public class ManagerAgent extends Agent implements Manager {
 		    waitingCustomers.add(new WaitingCustomer(bca));
 		}
 	}
+	
+	public void msgThief(BankCustomer bc, double amount){
+		synchronized(waitingCustomers){
+			print("THIEF");
+		   for(WaitingCustomer wc : waitingCustomers){
+			   if(wc.bankCustomer == bc){
+				   wc.setAccountNum(-1);
+				   wc.setRequestAmt(amount);
+				   wc.action = Action.rob;
+				   break;
+			   }
+		   }
+		}
+		stateChanged();
+	}
+	
 
 	public void msgRequestAccount(BankCustomer bc, double amount){
 		synchronized(waitingCustomers){
@@ -232,6 +247,10 @@ public class ManagerAgent extends Agent implements Manager {
 			print("RA: "+wc.requestAmt);
 			wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
 		}
+		else if(wc.action == Action.rob){
+			wc.bankCustomer.msgThief(wc.requestAmt);
+		}
+
 
 		wc.state = State.idle;
 		mt.teller.msgNewCustomer(wc.bankCustomer);

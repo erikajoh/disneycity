@@ -123,7 +123,7 @@ public class DemoLauncher extends JFrame {
 			}
 		}
 
-		ArrayList<Thing> things = new ArrayList<>();
+		ArrayList<Thing> things = new ArrayList<Thing>();
 
 		Rectangle redArea;
 		Rectangle blueArea;

@@ -54,27 +54,28 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		manager.addTeller(t);
     		t.startThread();
         }
-        /*
-        String name = "Dylan";
-		Person p = new Person(name);
-		p.setBank(this);
-		p.msgArrive(-1);
-		customers.add(p);
-		p.startThread();*/
+    }
+    
+    public void msgThief(Person person, double reqAmt, boolean present){
+    	BankCustomer bca = createBankCustomer(person, present, true);
+    	manager.msgThief(bca, reqAmt);
     }
     
     public void msgRequestAccount(Person person, double reqAmt, boolean present){
-    	BankCustomer bca = createBankCustomer(person, present);
+    	//hack to force trigger thief
+    	/*msgThief(person, reqAmt, present);
+    	return;*/
+    	BankCustomer bca = createBankCustomer(person, present, false);
     	manager.msgRequestAccount(bca, reqAmt);
     }
     
     public void msgRequestDeposit(Person person, int accountNum, double reqAmt, boolean present){
-    	BankCustomer bca = createBankCustomer(person, present);
+    	BankCustomer bca = createBankCustomer(person, present, false);
     	manager.msgRequestDeposit(bca, accountNum, reqAmt);
     }
     
     public void msgRequestWithdrawal(Person person, int accountNum, double reqAmt, boolean present){
-    	BankCustomer bca = createBankCustomer(person, present);
+    	BankCustomer bca = createBankCustomer(person, present, false);
     	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
     }
 	
@@ -84,10 +85,10 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 		person.msgLeftBank(this, accountNum, change, loanAmt, loanTime);
 	}
     
-    public BankCustomer createBankCustomer(Person person, boolean present){
+    public BankCustomer createBankCustomer(Person person, boolean present, boolean isThief){
     	 customers.add(person);
    	  	 BankCustomerAgent bca = new BankCustomerAgent(person.getName(), manager, gui);
-	     BankCustomerGui g = new BankCustomerGui(bca, gui, present, 400, 330);
+	     BankCustomerGui g = new BankCustomerGui(bca, gui, present, isThief, 400, 330);
 	     gui.bankAniPanel.addGui(g);// dw
 	     bca.setGui(g);
 	     bca.startThread();

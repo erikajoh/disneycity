@@ -32,7 +32,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private Teller teller = null;
 	
 	public enum State
-	{deciding, goingToTeller, openingAccount, depositing, withdrawing, leaving, left, idle};
+	{deciding, goingToTeller, openingAccount, depositing, withdrawing, robbing, leaving, failedRobbery, left, idle};
 	State state = State.idle;
 
 	public enum AnimState{go, walking, idle};
@@ -81,6 +81,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.withdrawing;
 		stateChanged();
 	}
+	
+	public void	msgThief(double ra){
+		requestAmt = ra;
+		print("ROBBING: "+requestAmt);
+		state = State.robbing;
+		stateChanged();
+	}
 
 	public void msgGoToTeller(Teller t){
 		teller = t;
@@ -111,6 +118,19 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		change = amountWithdrawn;
 		loanAmount = loanAmt;
 		loanTime = lt;
+		stateChanged();
+	}
+	
+	public void msgRobbedBank(double cash, boolean success){
+		balance += cash;
+		print("GOT CASH "+ cash);
+		if(success == true){
+			state = State.leaving;
+		}
+		else {
+			state = State.failedRobbery;
+		}
+		
 		stateChanged();
 	}
 	
@@ -150,8 +170,16 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			   withdrawCash();
 			   return true;
 		    }
+		   else if(state == State.robbing){
+			   robBank();
+			   return true;
+		    }
 		   else if(state == State.leaving){
 			   leaveBank();
+			   return true;
+		   }
+		   else if(state == State.failedRobbery){
+			   tryToLeaveBank();
 			   return true;
 		   }
 		  else if(state == State.left){
@@ -190,10 +218,20 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.idle;
 		stateChanged();
 	}
+	private void robBank(){
+		teller.msgRobBank(requestAmt);
+		state = State.idle;
+		stateChanged();
+	}
 	private void leaveBank(){
 		animState = AnimState.walking;
 		state = State.idle;
 		personGui.DoLeaveBank();
+	}
+	private void tryToLeaveBank(){
+		animState = AnimState.walking;
+		state = State.idle;
+		personGui.DoFailRobbery();
 	}
 	
 	private void leftBank(){

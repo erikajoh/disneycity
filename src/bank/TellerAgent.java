@@ -16,16 +16,19 @@ import java.util.*;
 
 public class TellerAgent extends Agent implements Teller {
 	Manager manager;
+	  private Random robberySuccess = new Random();
+
 	
-	enum State {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
+	enum State {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
 
 	class Customer {
 	  BankCustomer bankCustomer;
 	  Account account;
 	  double requestAmt;
+	  boolean success;
 	  
 	  State state;
-	  
+
 	  public Customer(BankCustomer p){
 		  bankCustomer = p;
 		  int accountNumber = p.getAccountNum();
@@ -136,6 +139,14 @@ public class TellerAgent extends Agent implements Teller {
 		stateChanged();
 	}
 	
+	public void msgRobBank(double cash){
+		print("ROB BANK");
+		customer.requestAmt = cash;
+		customer.state = State.robbingBank; 
+		stateChanged();
+	}
+
+	
 	public void	msgLeavingBank(){
 		print("LEAVING");
 		customer.state = State.leaving;
@@ -162,6 +173,10 @@ public class TellerAgent extends Agent implements Teller {
 		    }
 		   else if(customer.state == State.withdrawingCash){
 			   withdrawCash();
+			   return true;
+		    }
+		   else if(customer.state == State.robbingBank){
+			   robBank();
 			   return true;
 		    }
 		  else if(customer.state == State.leaving){
@@ -241,6 +256,15 @@ public class TellerAgent extends Agent implements Teller {
 		customer.bankCustomer.msgMoneyWithdrawn(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
 		customer.state = State.deciding;
 	}
+	
+	private void robBank(){
+		double cash = customer.requestAmt;
+		customer.success = robberySuccess.nextBoolean();
+		print("ROBBED BANK "+ customer.success);
+		customer.bankCustomer.msgRobbedBank(cash, customer.success);
+		customer.state = State.deciding;
+	}
+	
 	
 	private void customerLeaving(){
 		customer.state = State.idle;
