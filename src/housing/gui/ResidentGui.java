@@ -74,8 +74,13 @@ public class ResidentGui implements Gui{
 		
 		// special animation states
 		standing = xPos == xDestination && yPos == yDestination;
-		sleeping = Math.abs(xPos - (int)(hWidth*0.7)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
-		
+		if(type == "house") sleeping = Math.abs(xPos - (int)(hWidth*0.7)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
+		else if(type == "apt") {
+			if(roomNo == 0) sleeping = Math.abs(xPos - (int)(hWidth*0.16)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
+			else if(roomNo == 1) sleeping = Math.abs(xPos - (int)(hWidth*0.48)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
+			else if(roomNo == 2) sleeping = Math.abs(xPos - (int)(hWidth*0.79)) < 2 && Math.abs(yPos - (int)(hHeight*0.15)) < 2;
+			else if(roomNo == 3) sleeping = Math.abs(xPos - (int)(hWidth*0.2)) < 2 && Math.abs(yPos - (int)(hHeight*0.71)) < 2;
+		}
 		
 		// animation rules
 		if(sleeping) {
@@ -375,8 +380,19 @@ public class ResidentGui implements Gui{
 			xDestination = (int)(hWidth*0.8);
 			yDestination = (int)(hHeight*0.7);
 		} else if (type == "apt"){
-			xDestination = (int)(hWidth*0.88);
-			yDestination = (int)(hHeight*0.7);
+			if(roomNo == 0){
+				xDestination = (int)(hWidth*0.64);
+				yDestination = (int)(hHeight*0.7);
+			}else if(roomNo == 1){
+				xDestination = (int)(hWidth*0.88);
+				yDestination = (int)(hHeight*0.7);
+			}else if(roomNo == 2){
+				xDestination = (int)(hWidth*0.88);
+				yDestination = (int)(hHeight*0.7);
+			}else if(roomNo == 3){
+				xDestination = (int)(hWidth*0.88);
+				yDestination = (int)(hHeight*0.7);
+			}
 			command = Command.HelperMove;
 			try {
 				moving.acquire();
@@ -416,6 +432,16 @@ public class ResidentGui implements Gui{
 			xDestination = (int)(hWidth*0.23);
 			yDestination = (int)(hHeight*0.92);
 		} else if (type == "apt") {
+			if(xPos <= (int)(hWidth*0.64)){
+				yDestination = (int)(hHeight*0.52);
+				command = Command.HelperMove;
+				try {
+					moving.acquire();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (roomNo == 2) {
 				yDestination = (int)(hHeight*0.56);
 			} else {
