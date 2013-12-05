@@ -135,8 +135,19 @@ public class ResidentGui implements Gui{
 			yDestination = (int)(hHeight*0.65);
 		}
 		if(type == "apt"){
-			xDestination = (int)(hWidth*0.74);
-			yDestination = (int)(hHeight*0.59);
+			if(roomNo==0){
+				xDestination = (int)(hWidth*0.64);
+				yDestination = (int)(hHeight*0.59);
+			}else if(roomNo==1){
+				xDestination = (int)(hWidth*0.74);
+				yDestination = (int)(hHeight*0.59);
+			}else if(roomNo==2){
+				xDestination = (int)(hWidth*0.69);
+				yDestination = (int)(hHeight*0.52);
+			}else if(roomNo==3){
+				xDestination = (int)(hWidth*0.69);
+				yDestination = (int)(hHeight*0.66);
+			}
 		}
 		command = Command.EnterHouse;
 		try {
@@ -256,8 +267,19 @@ public class ResidentGui implements Gui{
 			xDestination = (int)(hWidth*0.23);
 			yDestination = (int)(hHeight*0.6);
 		} else if (type == "apt") {
-			xDestination = (int)(hWidth*0.74);
-			yDestination = (int)(hHeight*0.59);
+			if(roomNo==0){
+				xDestination = (int)(hWidth*0.64);
+				yDestination = (int)(hHeight*0.59);
+			}else if(roomNo==1){
+				xDestination = (int)(hWidth*0.74);
+				yDestination = (int)(hHeight*0.59);
+			}else if(roomNo==2){
+				xDestination = (int)(hWidth*0.69);
+				yDestination = (int)(hHeight*0.52);
+			}else if(roomNo==3){
+				xDestination = (int)(hWidth*0.69);
+				yDestination = (int)(hHeight*0.66);
+			}
 		}
 		command = Command.GoToTable;
 		try {
