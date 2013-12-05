@@ -210,6 +210,8 @@ public class SimCityGui extends JFrame  {
 		c5.gridwidth = 1;
 		c5.gridheight = 2;
 		cityPanel.setBorder(BorderFactory.createTitledBorder("City Panel"));
+		cityPanel.setLayout(new BoxLayout(cityPanel, BoxLayout.Y_AXIS));
+		cityPanel.add(simCityPanel);
 		add(cityPanel, c5);
 		
 		GridBagConstraints c6 = new GridBagConstraints();

@@ -20,13 +20,15 @@ import bank.gui.Bank;
 import market.Market;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.Timer;
 
-public class SimCityPanel extends JPanel{
+public class SimCityPanel extends JPanel implements ActionListener{
 	
 	Timer timer;
 	Timer animationTimer;
@@ -59,6 +61,17 @@ public class SimCityPanel extends JPanel{
 	public SimCityPanel(SimCityGui gui) {
 		
 		this.gui = gui;
+		
+		JPanel selection = new JPanel();
+		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 4", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
+		//Create the combo box, select item at index 0.
+		JComboBox scenarioList = new JComboBox(scenarios);
+		scenarioList.setSelectedIndex(0);
+		scenarioList.addActionListener(this);
+		selection.setLayout(new FlowLayout());
+		selection.add(new JLabel("Choose a scenario:"));
+		selection.add(scenarioList);
+		add(selection);
 		
 		String foodPreferenceMexican = "Mexican";
 		String foodPreferenceItalian = "Italian";
@@ -346,5 +359,11 @@ public class SimCityPanel extends JPanel{
 			if(!people.get(i).getBodyState().equals("Asleep"))
 				return false;
 		return true;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+//		JComboBox cb = (JComboBox)e.getSource();
+//        String scenarioName = (String)cb.getSelectedItem();
 	}
 }
