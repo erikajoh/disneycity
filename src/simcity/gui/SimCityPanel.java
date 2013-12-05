@@ -8,6 +8,8 @@ import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_rancho.gui.RestaurantRancho;
 import simcity.PersonAgent;
 import simcity.Restaurant;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Transportation_Douglass;
 import simcity.test.mock.MockTransportation_Douglass;
 import transportation.Transportation;
@@ -363,7 +365,8 @@ public class SimCityPanel extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		JComboBox cb = (JComboBox)e.getSource();
-//        String scenarioName = (String)cb.getSelectedItem();
+		JComboBox cb = (JComboBox)e.getSource();
+        String scenarioName = (String)cb.getSelectedItem();
+		AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Changed to "+scenarioName);
 	}
 }
