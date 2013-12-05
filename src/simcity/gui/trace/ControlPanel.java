@@ -72,7 +72,7 @@ public class ControlPanel extends JPanel {
 				//This works the same way as AlertLevels, only you're using tags instead.
 				//In this demo, I generate message with tag BANK_CUSTOMER when you click in the 
 				//AnimationPanel somewhere.
-				tracePanel.showAlertsWithTag(AlertTag.BANK_CUSTOMER);
+				tracePanel.showAlertsWithTag(AlertTag.BANK);
 				//================================================================================
 			}
 		});
@@ -81,7 +81,7 @@ public class ControlPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				//============================ TUTORIAL ==========================================
 				//This works the same way as AlertLevels, only you're using tags instead.
-				tracePanel.hideAlertsWithTag(AlertTag.BANK_CUSTOMER);
+				tracePanel.hideAlertsWithTag(AlertTag.BANK);
 				//================================================================================
 			}
 		});

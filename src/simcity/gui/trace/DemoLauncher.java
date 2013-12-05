@@ -78,9 +78,9 @@ public class DemoLauncher extends JFrame {
 		tracePanel.hideAlertsWithLevel(AlertLevel.DEBUG);
 		
 		tracePanel.showAlertsWithTag(AlertTag.PERSON);
-		tracePanel.showAlertsWithTag(AlertTag.BANK_CUSTOMER);
+		tracePanel.showAlertsWithTag(AlertTag.BANK);
 		
-		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
+		tracePanel.hideAlertsWithTag(AlertTag.TRANSPORTATION);
 		//
 		//You will have to add your own AlertTag types to the AlertTag enum for your project.
 		//There are two helper methods that enable all AlertLevels and all AlertTags that you can use
@@ -197,7 +197,7 @@ public class DemoLauncher extends JFrame {
 				//Note that we are using the logMessage() method to specify that this is an INFO message,
 				//as opposed to a normal message, or an ERROR/WARNING.  Here we are telling it to log with the 
 				//tag: BANK_CUSTOMER from a sender called "Mouse".
-				AlertLog.getInstance().logInfo(AlertTag.BANK_CUSTOMER, "Mouse", "You clicked the RED ZONE!");
+				AlertLog.getInstance().logInfo(AlertTag.BANK, "Mouse", "You clicked the RED ZONE!");
 				//================================================================================
 			}
 			if(blueArea.contains(e.getPoint())) {
@@ -207,7 +207,7 @@ public class DemoLauncher extends JFrame {
 				//tag: BANK_CUSTOMER from a sender called "Mouse".
 				//Notice the different methods to log different Levels of messages.  There are methods to 
 				//logError, logWarning, logInfo, logMessage, and logDebug that you should use. 
-				AlertLog.getInstance().logError(AlertTag.BANK_CUSTOMER, "Mouse", "You clicked the blue zone");
+				AlertLog.getInstance().logError(AlertTag.BANK, "Mouse", "You clicked the blue zone");
 				//================================================================================
 			}
 		}

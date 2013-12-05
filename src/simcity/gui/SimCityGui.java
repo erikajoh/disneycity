@@ -104,12 +104,16 @@ public class SimCityGui extends JFrame  {
 		tracePanel.showAlertsWithLevel(AlertLevel.INFO);		//THESE PRINT BLUE
 		tracePanel.showAlertsWithLevel(AlertLevel.MESSAGE);		//THESE SHOULD BE THE MOST COMMON AND PRINT BLACK
 		tracePanel.hideAlertsWithLevel(AlertLevel.DEBUG);
-		tracePanel.showAlertsWithTag(AlertTag.GENERAL_CITY);
+		tracePanel.showAlertsWithTag(AlertTag.CITY);
 		tracePanel.showAlertsWithTag(AlertTag.PERSON);
-		tracePanel.showAlertsWithTag(AlertTag.BANK_CUSTOMER);
-		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
+		tracePanel.showAlertsWithTag(AlertTag.BANK);
+		tracePanel.showAlertsWithTag(AlertTag.MARKET);
+		tracePanel.showAlertsWithTag(AlertTag.HOUSING);
+		tracePanel.showAlertsWithTag(AlertTag.TRANSPORTATION);
+		tracePanel.showAlertsWithTag(AlertTag.RESTAURANT);
+//		tracePanel.hideAlertsWithTag(AlertTag.CITY);
 		AlertLog.getInstance().addAlertListener(tracePanel);
-		AlertLog.getInstance().logMessage(AlertTag.GENERAL_CITY, "GUI", "SimCity Disneyland created");
+		AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "SimCity Disneyland created");
 						
 		cards = new JPanel(new CardLayout());
 		cards.add(housAniPanel7, "Haunted Mansion");
