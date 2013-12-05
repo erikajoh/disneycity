@@ -176,7 +176,7 @@ public class SimCityGui extends JFrame  {
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.fill = GridBagConstraints.BOTH;
 		c2.weightx = .5;
-		c2.weighty = .12;
+		c2.weighty = .14;
 		c2.gridx = 0;
 		c2.gridy = 1;
 		c2.gridwidth = 1;
@@ -189,7 +189,7 @@ public class SimCityGui extends JFrame  {
 		GridBagConstraints c4 = new GridBagConstraints();
 		c4.fill = GridBagConstraints.BOTH;
 		c4.weightx = .5;
-		c4.weighty=.12;
+		c4.weighty=.14;
 		c4.gridx = 1;
 		c4.gridy=1;
 		c4.gridwidth = 1;
