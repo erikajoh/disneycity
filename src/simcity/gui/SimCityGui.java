@@ -22,6 +22,9 @@ import restaurant_pizza.gui.PizzaAnimationPanel;
 import restaurant_haus.gui.HausAnimationPanel;
 import restaurant_haus.gui.RestaurantHaus;
 import simcity.PersonAgent;
+import simcity.gui.trace.AlertLevel;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.gui.trace.TracePanel;
 import transportation.TransportationPanel;
 import restaurant_cafe.gui.CafeAnimationPanel;
@@ -35,7 +38,7 @@ public class SimCityGui extends JFrame  {
 	String name;
 	
 	SimCityPanel simCityPanel;
-	TracePanel tracePanel = new TracePanel();
+	TracePanel tracePanel;
 	
 	JPanel cards;
 				
@@ -84,7 +87,6 @@ public class SimCityGui extends JFrame  {
 	TransportationPanel cityAniPanel = new TransportationPanel(this);
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
-	private JPanel logBanner = new JPanel();
 	private JPanel cityAnimation = new JPanel();
 	private JPanel zoomAnimation = new JPanel();
 	private JPanel cityPanel = new JPanel();
@@ -92,12 +94,23 @@ public class SimCityGui extends JFrame  {
 	private JPanel logPanel = new JPanel();
 	private JLabel cityLabel = new JLabel("Disney City View                                          ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
-	private JLabel logLabel = new JLabel("Logger");
 		
 	public static ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	
 	public SimCityGui(String name) {
-				
+			
+		tracePanel = new TracePanel();
+		tracePanel.showAlertsWithLevel(AlertLevel.ERROR);		//THESE PRINT RED, WARNINGS PRINT YELLOW on a black background... :/
+		tracePanel.showAlertsWithLevel(AlertLevel.INFO);		//THESE PRINT BLUE
+		tracePanel.showAlertsWithLevel(AlertLevel.MESSAGE);		//THESE SHOULD BE THE MOST COMMON AND PRINT BLACK
+		tracePanel.hideAlertsWithLevel(AlertLevel.DEBUG);
+		tracePanel.showAlertsWithTag(AlertTag.GENERAL_CITY);
+		tracePanel.showAlertsWithTag(AlertTag.PERSON);
+		tracePanel.showAlertsWithTag(AlertTag.BANK_CUSTOMER);
+		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
+		AlertLog.getInstance().addAlertListener(tracePanel);
+		AlertLog.getInstance().logMessage(AlertTag.GENERAL_CITY, "GUI", "SimCity Disneyland created");
+						
 		cards = new JPanel(new CardLayout());
 		cards.add(housAniPanel7, "Haunted Mansion");
 		cards.add(housAniPanel1, "Main St Apartments #1");
@@ -146,8 +159,9 @@ public class SimCityGui extends JFrame  {
 		pirateBank = new Bank(this, "Pirate Bank");
 		//ManagerAgent manager = new ManagerAgent("Manager", pirateBank, this);
 		//pirateBank.setManager(manager);		
-		simCityPanel = new SimCityPanel(this);
 		//manager.startThread();
+		
+		simCityPanel = new SimCityPanel(this);
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
@@ -236,6 +250,7 @@ public class SimCityGui extends JFrame  {
 		logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.Y_AXIS));
 		logPanel.add(tracePanel);
 		add(logPanel, c7);
+
 	}
 	
 	public static void main(String[] args) {

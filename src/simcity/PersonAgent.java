@@ -2,6 +2,8 @@ package simcity;
 
 import agent.Agent;
 import bank.gui.Bank;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Bank_Douglass;
 import simcity.interfaces.Housing_Douglass;
 import simcity.interfaces.Person;
@@ -503,6 +505,10 @@ public class PersonAgent extends Agent implements Person {
 				+ "; currentLocationState = " + currentLocationState.toString()
 				+ "; bodyState = " + bodyState
 				+ "; personEvent = " + event);
+//		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Nothing to do for now: isNourished = " + isNourished
+//				+ "; currentLocationState = " + currentLocationState.toString()
+//				+ "; bodyState = " + bodyState
+//				+ "; personEvent = " + event);
 		return false;
 	}
 
@@ -510,10 +516,12 @@ public class PersonAgent extends Agent implements Person {
 
 	private void checkGoingToWork(int workPeriod) {
 		print("Is it time for me to work? Time period: " + workPeriod);
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Is it time for me to work? Time period: " + workPeriod);
 		MyRestaurant workplace = findWorkplace(workPeriod); // TODO only restaurants are workplaces now
 		if(workplace != null) {
 			restState = RestaurantState.WantToWork;
 			print("I am going to work at restaurant");
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I am going to work at restaurant");
 			targetLocation = workplace.name;
 			this.workplace = workplace;
 		}
@@ -522,6 +530,7 @@ public class PersonAgent extends Agent implements Person {
 	//House actions
 	private void enterHouse() {
 		print("Entering house, adding items");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Entering house, adding items");
 		Map<String, Integer> copyOfItems = new HashMap<String, Integer>();
 		
 		Set<String> keySet = itemsOnHand.keySet();
@@ -537,12 +546,14 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void prepareToCookAtHome() {
 		print("I'm hungry and I want to cook at home");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm hungry and I want to cook at home");
 		myHome.housing.msgPrepareToCookAtHome(this, foodPreference);
 	}
 	
 	private void getRentMoneyFromBank() {
 		print("I need rent money");
 		log.add(new LoggedEvent("Need to pay rent; not enough money"));
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I need rent money");
 		moneyWanted += rentToPay;
 		bankState = BankState.NeedTransaction;
 		MyBank targetBank = chooseBank();
@@ -551,6 +562,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void hungryToMarket() {
 		print("I'm hungry and I want to buy food at market and cook at home");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm hungry and I want to buy food at market and cook at home");
 		MyMarket targetMarket = chooseMarket();
 		double price = targetMarket.theMarket.getPrice(foodPreference);
 		if(moneyOnHand < price) {
@@ -562,11 +574,13 @@ public class PersonAgent extends Agent implements Person {
 			return;
 		}
 		print("I have enough money to buy food from market");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have enough money to buy food from market");
 		targetLocation = targetMarket.name;
 	}
 	
 	private void haveMoneyToDeposit() {
 		print("I have excess money to deposit");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have excess money to deposit");
 		moneyToDeposit = moneyOnHand - MONEY_ON_HAND_LIMIT;
 		bankState = BankState.NeedTransaction;
 		MyBank targetBank = chooseBank();
@@ -575,28 +589,33 @@ public class PersonAgent extends Agent implements Person {
 
 	private void doMaintenance() {
 		print("Performing maintenance");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Performing maintenance");
 		myHome.housing.msgDoMaintenance();
 	}
 	
 	private void payRent(double amount) {
 		print("Paying rent");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Paying rent");
 		moneyOnHand -= amount;
 		myHome.housing.msgHereIsRent(this, amount);
 	}
 	
 	private void leaveHouse() {
 		print("Leaving house");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Leaving house");
 		myHome.housing.msgIAmLeaving(this);
 	}
 	
 	private void goToSleep() {
 		print("Going to sleep");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Going to sleep");
 		myHome.housing.msgGoToBed(this);
 	}
 	
 	//Restaurant actions
 	private void hungryToRestaurant() {
 		print("I'm hungry and I want to eat at restaurant");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
 		// TODO: Added this in case no restaurants available; need to test this works
 		if(targetRestaurant == null)
@@ -620,6 +639,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void enterRestaurant() {
 		print("Entering restaurant");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Entering restaurant");
 		MyRestaurant myRest = (MyRestaurant)currentMyObject;
 		if (myRest.personType == "Waiter" ) print("going to restaurant as waiter " + " i am " + this.getName());
 		myRest.restaurant.personAs(this, myRest.personType, name, moneyOnHand);
@@ -629,11 +649,13 @@ public class PersonAgent extends Agent implements Person {
 	private void goToTransportation() {
 		print("Going from " + currentLocation + " to " + targetLocation);
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Going from " + currentLocation + " to " + targetLocation);
 		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name(), "Edgar");
 	}
 	
 	private void goHome() {
 		print("Going home");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Going home");
 		log.add(new LoggedEvent("Going home"));
 		targetLocation = myHome.name;
 		goToTransportation();
@@ -641,6 +663,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void payFare() {
 		print("Paying fare");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Paying fare");
 		// TODO transportation paying fare message
 		transportation.msgPayFare(this, (float)fareToPay);
 	}
@@ -648,13 +671,16 @@ public class PersonAgent extends Agent implements Person {
 	//Bank actions
 	private void requestNewAccount() {
 		print("Request new account");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Request new account");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Creating account"));
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Creating account");
 		myBank.bank.msgRequestAccount(this, moneyToDeposit, true); // pointer to myself, money, present
 	}
 	
 	private void requestWithdrawal() {
 		print("Request withdrawal");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Request withdrawal");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Want to withdraw " + moneyWanted + " from " + myBank.name));
 		myBank.bank.msgRequestWithdrawal(this, myPersonalBankAccount.accountNumber, moneyWanted, true);
@@ -662,6 +688,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void requestDeposit() {
 		print("Request deposit");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Request deposit");
 		MyBank myBank = (MyBank)currentMyObject;
 		log.add(new LoggedEvent("Want to deposit " + moneyToDeposit + " from " + myBank.name));
 		myBank.bank.msgRequestDeposit(this, myPersonalBankAccount.accountNumber, moneyToDeposit, true);
@@ -670,6 +697,7 @@ public class PersonAgent extends Agent implements Person {
 	//Market actions
 	private void enterMarket() {
 		print("Entering market");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Entering market");
 		MyMarket myMarket = (MyMarket)currentMyObject;
 		myMarket.theMarket.personAs(this, name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
 	}
