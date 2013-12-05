@@ -63,7 +63,7 @@ public class SimCityPanel extends JPanel implements ActionListener{
 		this.gui = gui;
 		
 		JPanel selection = new JPanel();
-		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 4", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
+		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
 		//Create the combo box, select item at index 0.
 		JComboBox scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
