@@ -5,12 +5,13 @@ import bank.ManagerAgent;
 import simcity.PersonAgent;
 import bank.TellerAgent;
 import bank.interfaces.BankCustomer;
-
 import simcity.interfaces.Person;
 
 import javax.swing.*;
 
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Bank_Douglass;
 
 import java.awt.event.*;
@@ -72,7 +73,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void msgRequestWithdrawal(Person person, int accountNum, double reqAmt, boolean present){
-    	//hack to force trigger thief
+    	//hack to force trigger thief 
     	/*msgThief(person, reqAmt, present);
     	return;*/
     	BankCustomer bca = createBankCustomer(person, present, false);
@@ -81,6 +82,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	
 	public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime){
 		Person person = (Person)spawns.get(bc);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Person leaving");
 		System.out.println(bc.toString());
 		person.msgLeftBank(this, accountNum, change, loanAmt, loanTime);
 	}

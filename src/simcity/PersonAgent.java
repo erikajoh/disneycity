@@ -277,7 +277,7 @@ public class PersonAgent extends Agent implements Person {
 	// from Bank
 	public void msgLeftBank(Bank_Douglass theBank, int accountNumber, double change, double loanAmount, int loanTime) {
 		log.add(new LoggedEvent("Leaving bank"));
-		if(myPersonalBankAccount == null) {
+		if(myPersonalBankAccount == null && accountNumber != -1) {
 			myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
 		}
 		else {
