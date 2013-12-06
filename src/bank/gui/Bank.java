@@ -62,9 +62,6 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void msgRequestAccount(Person person, double reqAmt, boolean present){
-    	//hack to force trigger thief
-    	/*msgThief(person, reqAmt, present);
-    	return;*/
     	BankCustomer bca = createBankCustomer(person, present, false);
     	manager.msgRequestAccount(bca, reqAmt);
     }
@@ -75,6 +72,9 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void msgRequestWithdrawal(Person person, int accountNum, double reqAmt, boolean present){
+    	//hack to force trigger thief
+    	/*msgThief(person, reqAmt, present);
+    	return;*/
     	BankCustomer bca = createBankCustomer(person, present, false);
     	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
     }
