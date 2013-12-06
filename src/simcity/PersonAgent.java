@@ -281,11 +281,11 @@ public class PersonAgent extends Agent implements Person {
 			myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
 		}
 		else {
-			myPersonalBankAccount.amount -= change;
+			myPersonalBankAccount.amount += change;
 			myPersonalBankAccount.loanNeeded += loanAmount;
 			myPersonalBankAccount.loanTime = loanTime;
 		}
-		moneyOnHand += change;
+		moneyOnHand -= change;
 		event = PersonEvent.makingDecision;
 		bankState = BankState.None;
 		stateChanged();

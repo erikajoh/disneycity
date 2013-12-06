@@ -30,12 +30,15 @@ import java.net.URL;
 import java.util.*;
 import java.util.Timer;
 
-public class SimCityPanel extends JPanel implements ActionListener{
+public class SimCityPanel extends JPanel implements ActionListener {
 	
+	// Timer variables
 	Timer timer;
 	Timer animationTimer;
-	
+
+	// GUI and building variables
 	SimCityGui gui = null;
+
 	RestaurantRancho restRancho;
 	RestaurantPizza restPizza;
 	RestaurantBayou restBayou;
@@ -50,23 +53,31 @@ public class SimCityPanel extends JPanel implements ActionListener{
 	Housing mainStApts5;
 	Housing mainStApts6;
 	
-	public final static int NEW_DAY_DELAY = 3000;
-	 	 
+	Bank pirateBank;
+	
+	Market mickeysMarket;
+
+	Transportation transportation;
+	
+	public final static int NEW_DAY_DELAY = 3000;	 
+	public final static int NUM_RESTAURANTS = 5;
+
+	// lists to hold all the different buildings
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
 	ArrayList<Restaurant> restaurants = new ArrayList<Restaurant>();
 	ArrayList<Housing> housings = new ArrayList<Housing>();
 	ArrayList<Market> markets = new ArrayList<Market>();
-	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	
-	Transportation transportation;
+	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	 
 	public SimCityPanel(SimCityGui gui) {
 		
 		this.gui = gui;
 		
+		/* Scenario panel */
 		JPanel selection = new JPanel();
 		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
-		//Create the combo box, select item at index 0.
+		// Create the combo box, select item at index 0.
 		JComboBox scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
 		scenarioList.addActionListener(this);
@@ -75,8 +86,11 @@ public class SimCityPanel extends JPanel implements ActionListener{
 		selection.add(scenarioList);
 		add(selection);
 		
-		String foodPreferenceMexican = "Mexican";
-		String foodPreferenceItalian = "Italian";
+		String foodPrefMexican = "Mexican";
+		String foodPrefItalian = "Italian";
+		String foodPrefSouthern = "Southern";
+		String foodPrefAmerican = "American";
+		String foodPrefGerman = "German";
 
 		restRancho = gui.restRancho;
 		restPizza = gui.restPizza;
@@ -96,84 +110,124 @@ public class SimCityPanel extends JPanel implements ActionListener{
 		mainStApts4 = gui.mainStApts4;
 		mainStApts5 = gui.mainStApts5;
 		mainStApts6 = gui.mainStApts6;
-		Market firstMarket = gui.mickeysMarket;
-		Bank firstBank = gui.pirateBank;
+		housings.add(hauntedMansion);
+		housings.add(mainStApts1);
+		housings.add(mainStApts2);
+		housings.add(mainStApts3);
+		housings.add(mainStApts4);
+		housings.add(mainStApts5);
+		housings.add(mainStApts6);
 		
-		animationPanelsList = gui.animationPanelsList;
+		pirateBank = gui.pirateBank;
+		mickeysMarket = gui.mickeysMarket;
 		transportation = gui.cityAniPanel.getTransportation();
 		
-		// All PersonAgents are instantiated here. Upon instantiation, we must pass
-		// all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
+		animationPanelsList = gui.animationPanelsList;
 		
-		try {
-			URL fileURL = getClass().getResource("/res/simcity_config.txt");
-			URI fileURI = fileURL.toURI();
-			BufferedReader br = new BufferedReader(new FileReader(new File(fileURI)));
-			String what = br.readLine();
-			int numRecords = Integer.parseInt(what);
-			for(int i = 0; i < numRecords; i++) {
-				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
-				String st_Name = st.nextToken();
-				String st_HousingName = st.nextToken();
-				double st_Money = Double.parseDouble(st.nextToken());
-				String st_FoodPref = st.nextToken();
-				String st_AtHome = st.nextToken();
-					boolean st_preferAtHome = st_AtHome.charAt(0) == 't' ? true : false;
-				String st_HousingRelation = st.nextToken();
-				String st_Commute = st.nextToken();
-				
-				Housing st_Housing = mapStringToHousing(st_HousingName);
-				PersonAgent personToAdd = new PersonAgent(
-						st_Name, st_Housing, st_Money, st_FoodPref, st_preferAtHome,
-						st_HousingRelation, transportation, st_Commute.charAt(0));
-				personToAdd.startThread();
-				people.add(personToAdd);
-			}
-			numRecords = Integer.parseInt(br.readLine());
-			for(int i = 0; i < numRecords; i++) {
-				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
-				String st_HousingName = st.nextToken();
-				Housing st_Housing = mapStringToHousing(st_HousingName);
-				String st_OwnerName = st.nextToken();
-				PersonAgent st_Owner = mapStringToPerson(st_OwnerName);
-				
-				st_Housing.setOwner(st_Owner);
-				while(st.hasMoreTokens()) {
-					String st_RenterName = st.nextToken();
-					PersonAgent st_Renter = mapStringToPerson(st_RenterName);
-					st_Housing.addRenter(st_Renter);
-				}
-			}
-			numRecords = Integer.parseInt(br.readLine());
-			for(int i = 0; i < numRecords; i++) {
-				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
-				String st_PersonName = st.nextToken();
-				String st_RestName = st.nextToken();
-				String st_RelationName = st.nextToken();
-				int st_session = Integer.parseInt(st.nextToken());
-				
-				PersonAgent st_Person = mapStringToPerson(st_PersonName);
-				Restaurant r = mapStringToRestaurant(st_RestName);
-				st_Person.addRestaurant(r, st_RelationName, st_session);
-			}
-			
-			for(int i = 0; i < people.size(); i++) {
-				PersonAgent currPerson = people.get(i);
-				
-				currPerson.addMarket(firstMarket, "Customer");
-				currPerson.addBank(firstBank, "Customer");
-				
-				currPerson.startThread();
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		initializeFromConfigFile("simcity_config.txt");
 		
 	    setLayout(new GridLayout());
 	
 		/* timing */
 	    newDay();
+	}
+	
+	// Configuration file parsing
+	// Upon instantiation, pass all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
+	public void initializeFromConfigFile(String fileName) {
+		resetAllElements(); // are we using this?
+		
+		try {			
+			// begin new parser
+			// from CSCI 201 website
+			// Step 1: get all the names of the people so that:
+				// a) the person knows which housing he lives
+				// b) we know which properties files to use
+			URI mainFileURI = getClass().getResource("/res/simcity_config_v2_main.txt").toURI(); 
+			BufferedReader br = new BufferedReader(new FileReader(new File(mainFileURI)));
+			int numPeople = Integer.parseInt(br.readLine());
+			for(int i = 0; i < numPeople; i++) {
+				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
+				String theName = st.nextToken();
+				String theHousingOwned = st.nextToken();
+				String theRelationToHousing = st.nextToken();
+				
+				Properties props = new Properties();
+				try {
+					// TODO: test more people later: this is hacked
+					URI personFileURI = getClass().getResource("/res/person-"+theName+".properties").toURI();
+				    FileInputStream in = new FileInputStream(new File(personFileURI));
+				    props.load(in);
+				    in.close();
+				} catch(IOException e) {
+				    e.printStackTrace();
+				} catch(IllegalArgumentException iae) {
+				    iae.printStackTrace();
+				}
+			        
+		        // Step 2: here goes the construction of person
+					// a) basic person properties from top half of properties file
+					// b) parse each restaurant and market
+				// NOTE: owner of a building who doesn't live in said building -> person doesn't know he is owner, essentially!
+		        String st_Name				= props.getProperty("name");
+		        String st_HousingName		= theHousingOwned;
+				double st_Money				= Double.parseDouble(props.getProperty("money"));
+				String st_FoodPref			= props.getProperty("foodPreference");
+				boolean st_PreferAtHome		= Boolean.parseBoolean(props.getProperty("preferAtHome"));
+				String st_HousingRelation	= theRelationToHousing;
+				char st_Commute				= props.getProperty("preferredCommute").charAt(0);
+				
+				Housing st_Housing = mapStringToHousing(st_HousingName);
+				PersonAgent personToAdd = new PersonAgent(
+						st_Name, st_Housing, st_Money, st_FoodPref, st_PreferAtHome,
+						st_HousingRelation, transportation, st_Commute);
+				
+				// parsing restaurants now
+				for(int restInd = 1; restInd <= NUM_RESTAURANTS; restInd++) {
+					String restName = props.getProperty("rest" + restInd + "_name");
+					String restRole = props.getProperty("rest" + restInd + "_role");
+					int restShift = Integer.parseInt(props.getProperty("rest" + restInd + "_shift"));
+					
+					Restaurant r = mapStringToRestaurant(restName);
+					personToAdd.addRestaurant(r, restRole, restShift); // key step
+				}
+				
+				people.add(personToAdd);
+			}
+				
+			int numRecords = Integer.parseInt(br.readLine());
+			for(int recordInd = 0; recordInd < numRecords; recordInd++) {
+				StringTokenizer st = new StringTokenizer(br.readLine(), "|");
+				String st_HousingName = st.nextToken();
+				String st_OwnerName = st.nextToken();
+
+				Housing st_Housing = mapStringToHousing(st_HousingName);
+				PersonAgent st_Owner = mapStringToPerson(st_OwnerName);
+				st_Housing.setOwner(st_Owner); // key step
+				
+				while(st.hasMoreTokens()) {
+					String st_RenterName = st.nextToken();
+					PersonAgent st_Renter = mapStringToPerson(st_RenterName);
+					st_Housing.addRenter(st_Renter); // key step
+				}
+			}
+
+			// TODO do markets in the same away as above. Below is hack
+			for(int personInd = 0; personInd < people.size(); personInd++) {
+				PersonAgent currPerson = people.get(personInd);
+				currPerson.addMarket(mickeysMarket, "Customer");
+				currPerson.addBank(pirateBank, "Customer");				
+				currPerson.startThread();
+			}
+			// end new parser
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// TODO reset all elements
+	public void resetAllElements() {
+		
 	}
 	
 	public Housing mapStringToHousing(String houseName) {
