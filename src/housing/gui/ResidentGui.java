@@ -112,7 +112,7 @@ public class ResidentGui implements Gui{
 			walls.add( new Wall( (int)(hWidth*0.73), (int)(hWidth*0.73), (int)(hHeight*0.53), (int)(hHeight*0.65) ) );
 			
 			//entrance/exit wall
-			walls.add( new Wall( (int)(hWidth*0.86), (int)(hWidth*0.86), (int)(hHeight*0.57), hHeight ) );
+//			walls.add( new Wall( (int)(hWidth*0.92), (int)(hWidth*0.92), (int)(hHeight*0.57), hHeight ) );
 
 			if(roomNo == 0){
 				xTable = (int)(hWidth*0.64);
@@ -506,7 +506,7 @@ public class ResidentGui implements Gui{
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}    
 	}
 	
 	public void setPanel(HousingAnimationPanel p) {
