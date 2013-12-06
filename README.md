@@ -77,19 +77,11 @@ Kelsey Rose <br>
 + Locate the SimCityGui.java file in the simcity.gui package, and execute it as a Java Application in Eclipse by right-clicking the file and selecting Run As > Java Application.
 
 ###How to use configuration file
-+ simcity_config.txt, located in src/res
-+ Though the configuration system is not fully optimized, it nonetheless allows great flexibility with setting the initial properties of the city.
-	+ There are three sections ot the file, each of which is headed by an integer N on each section. All other lines are essentially different properties separated by vertical bar '|' characters.
-	+ First section: N = number of people in the city
-		+ PersonName|HousingName|StartMoney|FoodPreference|PreferEatingAtHomeAtStart|HousingRelationWithSpecifiedHousing|PreferredTransportationMethodAsSingleChar
-	+ Second section: N = number of housing relatiosn in the city
-		+ HousingName|Owner|Renter[|OptionalAdditionalRenter|...]
-	+ Third section: N = 5 (# of restaurants) * P (# of people), for specifying jobs
-		+ PersonName|RestaurantName|RelationWithRestaurant|WorkSession
+// TODO: Configuration file system has been revamped to use a main configuration file and several properties files. Each properties-file contains information about one person except any housing-related properties, and the main configuration file is responsible for assigning people to their homes and who owns what housings.
 
 ###Scenarios
 + Important: The basic time unit of the city is a "tick", or 1/8 of a second. In this version the day length is specified to at least 1200 ticks. Thus, if the simulation ever seems frozen, wait until the day ends. By then the people should be sleeping in their houses. The current # of ticks passed in the day should be displayed in console.
-+ The simcity_config.txt file located in src/res is the configuration file to modify initial people. The 2nd and 3rd line are important: they initialize the people with various parameters that may be modified.
++ Different scenarioes can be loaded from configuration files located in src/res. See the above section on more information.
 
 ###Issues/problems
 + Currently we only have one restaurant (#14 in the city map) that has near complete job functionality - more specifically, they can enter, stay, and get paid, and if all necessary workers are there, they should be able to run the restaurant as normal. The problem currently is that the PersonAgent is released, but their spawned WaiterAgent role is not released when they leave (an issue that we are confident that we can resolve quickly after this due date). Over time we can not only make this restaurant fully functional but finish implementing the same feature in the others.
