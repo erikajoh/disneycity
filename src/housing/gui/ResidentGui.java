@@ -3,6 +3,7 @@ package housing.gui;
 import housing.ResidentAgent;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.ImageIcon;
@@ -23,14 +24,40 @@ public class ResidentGui implements Gui{
 	private boolean isPresent = false;
 	private String text = "";
 	private int roomNo;
+		
+	private HousingAnimationPanel panel;
 
-	private int xPos, yPos;
-	private int xDestination, yDestination;
+	private int xPos, yPos, xDestination, yDestination, xDestNext, yDestNext, xDestFinal, yDestFinal;
+	private int xTable, yTable, xBed, yBed, xKitchen, yKitchen, xEntrance, yEntrance;
+	
+	private enum Dir { x, y, all, none }; // to decide which direction to move first
+	Dir dir = Dir.all;
+	
+	private class Wall {
+		int xStart, xEnd, yStart, yEnd;
+		Wall(int xs, int xe, int ys, int ye) { xStart = xs; xEnd = xe; yStart = ys; yEnd = ye; }
+		boolean hitsHorizontally(int xPos, int yPos) {
+			if (yPos == yStart && yPos == yEnd && xPos >= xStart && xPos <= xEnd) {
+				//implication: should walk horizontally, i.e. x first
+				return true;
+			}
+			return false;
+		}
+		boolean hitsVertically(int xPos, int yPos) {
+			if (xPos == xStart && xPos == xEnd && yPos >= yStart && yPos <= yEnd) {
+				//implication: should walk vertically, i.e. y first
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	ArrayList<Wall> walls = new ArrayList<Wall>();
+	
 	private enum Command {noCommand, EnterHouse, GoToBed, GoToTable, GoToKitchen, HelperMove, DoneMaintenance, LeaveHouse};
 	private Command command=Command.noCommand;
 	
 	private Semaphore moving = new Semaphore(0, true);
-	private boolean inBedroom = false;
 	
 	String type;
 
@@ -38,39 +65,164 @@ public class ResidentGui implements Gui{
 	public static final int hHeight = 360;
 
 	public ResidentGui(ResidentAgent r, String t, int n){
+		xDestNext = -1;
+		yDestNext = -1;
 		animModule = new AnimationModule();
 		agent = r;
 		agent.setGui(this);
 		type = t;
 		roomNo = n;
 		if(type == "house"){
-			xPos = (int)(hWidth*0.23);
-			yPos = (int)(hHeight*0.92);
-		} else if(type == "apt"){
-			xPos = (int)(hWidth);
-			yPos = (int)(hHeight*0.56);
+			xPos = xEntrance = (int)(hWidth*0.23);
+			yPos = yEntrance = (int)(hHeight*0.92);
+			xTable = (int)(hWidth*0.23);
+			yTable = (int)(hHeight*0.65);
+			xBed = (int)(hWidth*0.7);
+			yBed = (int)(hHeight*0.15);
+			xKitchen = (int)(hWidth*0.8);
+			yKitchen = (int)(hHeight*0.7);
+//			walls.add(0);
+		} else if(type == "apt"){			
+			xPos = xEntrance = (int)(hWidth);
+			yPos = yEntrance = (int)(hHeight*0.56);
+			
+			//horizontal apartment walls from left to right
+			if(roomNo == 0) walls.add( new Wall( 0, (int)(hWidth*0.24), (int)(hHeight*0.48), (int)(hHeight*0.48) ) );
+			else if(roomNo == 1) walls.add( new Wall( (int)(hWidth*0.30), (int)(hWidth*0.55), (int)(hHeight*0.48), (int)(hHeight*0.48) ) );
+			else if(roomNo == 2) walls.add( new Wall( (int)(hWidth*0.62), hWidth, (int)(hHeight*0.48), (int)(hHeight*0.48) ) );
+			else if(roomNo == 3) {
+				walls.add( new Wall( 0, (int)(hWidth*0.58), (int)(hHeight*0.53), (int)(hHeight*0.53) ) );
+				walls.add( new Wall( (int)(hWidth*0.4), (int)(hWidth*0.69), (int)(hHeight*0.66), (int)(hHeight*0.66) ) );
+			}
+			//horizontal apartment table sides
+			walls.add( new Wall( (int)(hWidth*0.65), (int)(hWidth*0.73), (int)(hHeight*0.53), (int)(hHeight*0.53) ) );
+			walls.add( new Wall( (int)(hWidth*0.65), (int)(hWidth*0.73), (int)(hHeight*0.65), (int)(hHeight*0.65) ) );
+			
+			//vertical apartment walls from left to right
+			if(roomNo == 0) walls.add( new Wall( (int)(hWidth*0.25), (int)(hWidth*0.25), (int)(hHeight*0.13), (int)(hHeight*0.52) ) );
+			else if(roomNo == 1) walls.add( new Wall( (int)(hWidth*0.56), (int)(hWidth*0.56), (int)(hHeight*0.13), (int)(hHeight*0.52) ) );
+//			else if(roomNo == 2) {
+//				walls.add( new Wall( (int)(hWidth*0.24), (int)(hWidth*0.24), (int)(hHeight*0.13), (int)(hHeight*0.7) ) );
+//				walls.add( new Wall( (int)(hWidth*0.24), (int)(hWidth*0.24), (int)(hHeight*0.13), (int)(hHeight*0.7) ) );
+//			}
+//			else if(roomNo == 3) walls.add( new Wall( (int)(hWidth*0.58), (int)(hWidth*0.58), (int)(hHeight*0.13), (int)(hHeight*0.7) ) );
+			
+			//vertical apartment table sides
+			walls.add( new Wall( (int)(hWidth*0.64), (int)(hWidth*0.64), (int)(hHeight*0.53), (int)(hHeight*0.65) ) );
+			walls.add( new Wall( (int)(hWidth*0.73), (int)(hWidth*0.73), (int)(hHeight*0.53), (int)(hHeight*0.65) ) );
+			
+			//entrance/exit wall
+			walls.add( new Wall( (int)(hWidth*0.86), (int)(hWidth*0.86), (int)(hHeight*0.57), hHeight ) );
+
+			if(roomNo == 0){
+				xTable = (int)(hWidth*0.64);
+				yTable = (int)(hHeight*0.59);
+				xBed = (int)(hWidth*0.16);
+				yBed = (int)(hHeight*0.15);
+				xKitchen = (int)(hWidth*0.59);
+				yKitchen = (int)(hHeight*0.7);
+			}else if(roomNo == 1){
+				xTable = (int)(hWidth*0.74);
+				yTable = (int)(hHeight*0.59);
+				xBed = (int)(hWidth*0.48);
+				yBed = (int)(hHeight*0.15);
+				xKitchen = (int)(hWidth*0.65);
+				yKitchen = (int)(hHeight*0.7);
+			}else if(roomNo == 2){
+				xTable = (int)(hWidth*0.69);
+				yTable = (int)(hHeight*0.52);
+				xBed = (int)(hWidth*0.79);
+				yBed = (int)(hHeight*0.15);
+				xKitchen = (int)(hWidth*0.71);
+				yKitchen = (int)(hHeight*0.7);
+			}else if(roomNo == 3){
+				xTable = (int)(hWidth*0.69);
+				yTable = (int)(hHeight*0.66);
+				xBed = (int)(hWidth*0.2);
+				yBed = (int)(hHeight*0.71);
+				xKitchen = (int)(hWidth*0.77);
+				yKitchen = (int)(hHeight*0.7);
+			}
 		}
 	}
 
 	public void updatePosition() {
-		
+				
 		// general animation states
-		if (xPos < xDestination) {
-			xPos++;
-			currDir = Direction.RIGHT;
+		for (Wall w : walls) {
+			if (w.hitsHorizontally(xPos,  yPos)) {
+				if(currDir == Direction.UP || currDir == Direction.DOWN) {
+//					System.out.println("hit a horizontal wall");
+					// go x first
+					if (xPos == xDestination) {
+						if (xDestNext == -1) {
+//							System.out.println("changed xDest from "+xDestination+" to "+w.xEnd);
+							xDestNext = xDestination;
+							xDestination = w.xEnd;
+						} else {
+//							System.out.println("changed xDest from "+xDestination+" to "+xDestNext);
+							xDestination = xDestNext;
+						}
+					}
+					dir = Dir.x;
+					break;
+				}	
+			}
+			if (w.hitsVertically(xPos, yPos)) {
+//				System.out.println("hit a vertical wall");
+				// go y first
+//				System.out.println("ypos: "+yPos+" ydest: "+yDestination);
+				if (yPos == yDestination) {
+					if (yDestNext == -1) {
+						yDestNext = yDestination;
+						yDestination = w.yEnd;
+					} else {
+						yDestination = yDestNext;
+					}
+				}
+				dir = Dir.y;
+				break;
+			}
 		}
-		else if (xPos > xDestination) {
-			xPos--;
-			currDir = Direction.LEFT;
+		
+		if (dir == Dir.x) {
+			if (xPos < xDestination) {
+				xPos++;
+				currDir = Direction.RIGHT;
+			}
+			else if (xPos > xDestination) {
+				xPos--;
+				currDir = Direction.LEFT;
+			}
+		} else if (dir == Dir.y) {
+			if (yPos < yDestination) {
+				yPos++;
+				currDir = Direction.DOWN;
+			}
+			else if (yPos > yDestination) {
+				yPos--;
+				currDir = Direction.UP;
+			}
+		} else if (dir == Dir.all) {
+			if (xPos < xDestination) {
+				xPos++;
+				currDir = Direction.RIGHT;
+			}
+			else if (xPos > xDestination) {
+				xPos--;
+				currDir = Direction.LEFT;
+			}
+			else if (yPos < yDestination) {
+				yPos++;
+				currDir = Direction.DOWN;
+			}
+			else if (yPos > yDestination) {
+				yPos--;
+				currDir = Direction.UP;
+			}
 		}
-		else if (yPos < yDestination) {
-			yPos++;
-			currDir = Direction.DOWN;
-		}
-		else if (yPos > yDestination) {
-			yPos--;
-			currDir = Direction.UP;
-		}
+		
+		dir = Dir.all;
 		
 		// special animation states
 		standing = xPos == xDestination && yPos == yDestination;
@@ -103,10 +255,17 @@ public class ResidentGui implements Gui{
 		}
 		
 		if (xPos == xDestination && yPos == yDestination) {
+			if (xDestNext != -1) xDestination = xDestNext;
+			if (yDestNext != -1) yDestination = yDestNext;
+		}
+		
+		if (xPos == xDestFinal && yPos == yDestFinal) {
 			
 			if (command != Command.noCommand) moving.release();
 			
-			if (command == Command.LeaveHouse) agent.msgAnimationLeavingFinished();
+			if (command == Command.LeaveHouse) {
+				agent.msgAnimationLeavingFinished();
+			}
 			else if (command == Command.DoneMaintenance) agent.msgMaintenanceAnimationFinished();
 			else if (command != Command.noCommand && command != Command.HelperMove) agent.msgAnimationFinished();
 			
@@ -133,27 +292,12 @@ public class ResidentGui implements Gui{
 	}
 	
 	public void DoEnterHouse() {
+		xDestNext = -1;
+		yDestNext = -1;
 		System.out.println("Entering house");
 		setPresent(true);
-		if(type == "house"){
-			xDestination = (int)(hWidth*0.23);
-			yDestination = (int)(hHeight*0.65);
-		}
-		if(type == "apt"){
-			if(roomNo==0){
-				xDestination = (int)(hWidth*0.64);
-				yDestination = (int)(hHeight*0.59);
-			}else if(roomNo==1){
-				xDestination = (int)(hWidth*0.74);
-				yDestination = (int)(hHeight*0.59);
-			}else if(roomNo==2){
-				xDestination = (int)(hWidth*0.69);
-				yDestination = (int)(hHeight*0.52);
-			}else if(roomNo==3){
-				xDestination = (int)(hWidth*0.69);
-				yDestination = (int)(hHeight*0.66);
-			}
-		}
+		xDestFinal = xDestination = xTable;
+		yDestFinal = yDestination = yTable;
 		command = Command.EnterHouse;
 		try {
 			moving.acquire();
@@ -163,74 +307,40 @@ public class ResidentGui implements Gui{
 		}
 	}
 	
-	public void DoLeaveBedroom() {
-		if (type == "house") {
-			xDestination = (int)(hWidth*0.57);
-			yDestination = (int)(hHeight*0.65);
-		} else if (type == "apt") {
-			if (roomNo == 0) {
-				xDestination = (int)(hWidth*0.22);
-				yDestination = (int)(hHeight*0.52);
-			} else if (roomNo == 1) {
-				xDestination = (int)(hWidth*0.54);
-				yDestination = (int)(hHeight*0.52);
-			} else if (roomNo == 2) {
-				xDestination = (int)(hWidth*0.85);
-				yDestination = (int)(hHeight*0.52);
-			} else if (roomNo == 3) {
-				yDestination = (int)(hHeight*0.65);
-			}
-		}
-		command = Command.HelperMove;
-		try {
-			moving.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public void DoLeaveBedroom() {
+//		if (type == "house") {
+//			xDestination = (int)(hWidth*0.57);
+//			yDestination = (int)(hHeight*0.65);
+//		} else if (type == "apt") {
+//			if (roomNo == 0) {
+//				xDestination = (int)(hWidth*0.22);
+//				yDestination = (int)(hHeight*0.52);
+//			} else if (roomNo == 1) {
+//				xDestination = (int)(hWidth*0.54);
+//				yDestination = (int)(hHeight*0.52);
+//			} else if (roomNo == 2) {
+//				xDestination = (int)(hWidth*0.85);
+//				yDestination = (int)(hHeight*0.52);
+//			} else if (roomNo == 3) {
+//				yDestination = (int)(hHeight*0.65);
+//			}
+//		}
+//		command = Command.HelperMove;
+//		try {
+//			moving.acquire();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 		
 	public void DoGoToBed() {
-		if (type == "house") {
-			for (int i=0; i<2; i++) {
-				GoTowardBed(i);
-			}
-		} else if (type == "apt") {
-			GoToAptRoom();
-			if(roomNo == 0){
-				xDestination = (int)(hWidth*0.16);
-				yDestination = (int)(hHeight*0.15);
-			}else if(roomNo == 1){
-				xDestination = (int)(hWidth*0.48);
-				yDestination = (int)(hHeight*0.15);
-			}else if(roomNo == 2){
-				xDestination = (int)(hWidth*0.79);
-				yDestination = (int)(hHeight*0.15);
-			}else if(roomNo == 3){
-				xDestination = (int)(hWidth*0.2);
-				yDestination = (int)(hHeight*0.71);
-			}
-			command = Command.GoToBed;
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private void GoTowardBed(int i) {
-		if (i == 0) {
-			xDestination = (int)(hWidth*0.57);
-			yDestination = (int)(hHeight*0.15);
-			command = Command.HelperMove;
-			inBedroom = true;
-		} else {
-			xDestination = (int)(hWidth*0.7);
-			yDestination = (int)(hHeight*0.15);
-			command = Command.GoToBed;
-		}
+		xDestNext = -1;
+		yDestNext = -1;
+		System.out.println("Going to bed");
+		xDestFinal = xDestination = xBed;
+		yDestFinal = yDestination = yBed;
+		command = Command.GoToBed;
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
@@ -239,53 +349,54 @@ public class ResidentGui implements Gui{
 		}
 	}
 	
-	private void GoToAptRoom() {
-		if(roomNo == 0){
-			xDestination = (int)(hWidth*0.22);
-			yDestination = (int)(hHeight*0.4);
-		}else if(roomNo == 1){
-			xDestination = (int)(hWidth*0.54);
-			yDestination = (int)(hHeight*0.4);
-		}else if(roomNo == 2){
-			xDestination = (int)(hWidth*0.85);
-			yDestination = (int)(hHeight*0.4);
-		}else if(roomNo == 3){
-			xDestination = (int)(hWidth*0.56);
-			yDestination = (int)(hHeight*0.65);
-		}
-		command = Command.HelperMove;
-		try {
-			moving.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		inBedroom = true;
-	}
+//	private void GoTowardBed(int i) {
+//		if (i == 0) {
+//			xDestination = (int)(hWidth*0.57);
+//			yDestination = (int)(hHeight*0.15);
+//			command = Command.HelperMove;
+//			inBedroom = true;
+//		} else {
+//			xDestination = (int)(hWidth*0.7);
+//			yDestination = (int)(hHeight*0.15);
+//			command = Command.GoToBed;
+//		}
+//		try {
+//			moving.acquire();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+	
+//	private void GoToAptRoom() {
+//		if(roomNo == 0){
+//			xDestination = (int)(hWidth*0.22);
+//			yDestination = (int)(hHeight*0.38);
+//		}else if(roomNo == 1){
+//			xDestination = (int)(hWidth*0.54);
+//			yDestination = (int)(hHeight*0.38);
+//		}else if(roomNo == 2){
+//			xDestination = (int)(hWidth*0.85);
+//			yDestination = (int)(hHeight*0.38);
+//		}else if(roomNo == 3){
+//			xDestination = (int)(hWidth*0.56);
+//			yDestination = (int)(hHeight*0.65);
+//		}
+//		command = Command.HelperMove;
+//		try {
+//			moving.acquire();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		inBedroom = true;
+//	}
 	
 	public void DoGoToTable() {
-		if (inBedroom) {
-			DoLeaveBedroom();
-			inBedroom = false;
-		}
-		if (type == "house") {
-			xDestination = (int)(hWidth*0.23);
-			yDestination = (int)(hHeight*0.6);
-		} else if (type == "apt") {
-			if(roomNo==0){
-				xDestination = (int)(hWidth*0.64);
-				yDestination = (int)(hHeight*0.59);
-			}else if(roomNo==1){
-				xDestination = (int)(hWidth*0.74);
-				yDestination = (int)(hHeight*0.59);
-			}else if(roomNo==2){
-				xDestination = (int)(hWidth*0.69);
-				yDestination = (int)(hHeight*0.52);
-			}else if(roomNo==3){
-				xDestination = (int)(hWidth*0.69);
-				yDestination = (int)(hHeight*0.66);
-			}
-		}
+		xDestNext = -1;
+		yDestNext = -1;
+		xDestFinal = xDestination = xTable;
+		yDestFinal = yDestination = yTable;
 		command = Command.GoToTable;
 		try {
 			moving.acquire();
@@ -296,10 +407,9 @@ public class ResidentGui implements Gui{
 	}
 	
 	public void DoMaintenance() {
-		if (inBedroom) {
-			DoLeaveBedroom();
-			inBedroom = false;
-		}
+		xDestNext = -1;
+		yDestNext = -1;
+		DoGoToTable();
 		if (type == "house"){
 			for (int i=0; i<6; i++) {
 				MaintainArea(i);
@@ -372,48 +482,10 @@ public class ResidentGui implements Gui{
 	}
 	
 	public void DoGoToKitchen() {
-		if (inBedroom) {
-			DoLeaveBedroom();
-			inBedroom = false;
-		}
-		if (type == "house"){	
-			xDestination = (int)(hWidth*0.8);
-			yDestination = (int)(hHeight*0.7);
-		} else if (type == "apt"){
-			if(roomNo == 0){
-				xDestination = (int)(hWidth*0.64);
-				yDestination = (int)(hHeight*0.7);
-			}else if(roomNo == 1){
-				xDestination = (int)(hWidth*0.88);
-				yDestination = (int)(hHeight*0.7);
-			}else if(roomNo == 2){
-				xDestination = (int)(hWidth*0.88);
-				yDestination = (int)(hHeight*0.7);
-			}else if(roomNo == 3){
-				xDestination = (int)(hWidth*0.88);
-				yDestination = (int)(hHeight*0.7);
-			}
-			command = Command.HelperMove;
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(roomNo == 0){
-				xDestination = (int)(hWidth*0.59);
-				yDestination = (int)(hHeight*0.7);
-			}else if(roomNo == 1){
-				xDestination = (int)(hWidth*0.65);
-				yDestination = (int)(hHeight*0.7);
-			}else if(roomNo == 2){
-				xDestination = (int)(hWidth*0.71);
-				yDestination = (int)(hHeight*0.7);
-			}else if(roomNo == 3){
-				xDestination = (int)(hWidth*0.77);
-				yDestination = (int)(hHeight*0.7);
-			}
-		}
+		xDestNext = -1;
+		yDestNext = -1;
+		xDestFinal = xDestination = xKitchen;
+		yDestFinal = yDestination = yKitchen;
 		command = Command.GoToKitchen;
 		try {
 			moving.acquire();
@@ -424,40 +496,10 @@ public class ResidentGui implements Gui{
 	}
 
 	public void DoLeaveHouse() {
-		if (inBedroom) {
-			DoLeaveBedroom();
-			inBedroom = false;
-		}
-		if (type == "house") {
-			xDestination = (int)(hWidth*0.23);
-			yDestination = (int)(hHeight*0.92);
-		} else if (type == "apt") {
-			if(xPos <= (int)(hWidth*0.64)){
-				yDestination = (int)(hHeight*0.52);
-				command = Command.HelperMove;
-				try {
-					moving.acquire();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (roomNo == 2) {
-				yDestination = (int)(hHeight*0.56);
-			} else {
-				xDestination = (int)(hWidth*0.78);
-				yDestination = (int)(hHeight*0.56);
-			}
-			command = Command.HelperMove;
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			xDestination = (int)(hWidth);
-			yDestination = (int)(hHeight*0.56);
-		}
+		xDestNext = -1;
+		yDestNext = -1;
+		xDestFinal = xDestination = xEntrance;
+		yDestFinal = yDestination = yEntrance;
 		command = Command.LeaveHouse;
 		try {
 			moving.acquire();
@@ -465,6 +507,10 @@ public class ResidentGui implements Gui{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void setPanel(HousingAnimationPanel p) {
+		panel = p;
 	}
 	
 	public void setText(String t) {
