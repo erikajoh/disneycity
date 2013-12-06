@@ -33,7 +33,7 @@ import restaurant_cafe.gui.RestaurantCafe;
 public class SimCityGui extends JFrame  {
 
 	public static final int WINDOWX = 800;
-	public static final int WINDOWY = 736;
+	public static final int WINDOWY = 730;
 	
 	String name;
 	
