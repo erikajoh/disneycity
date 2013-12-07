@@ -30,15 +30,22 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	int selectedMktItemIndex = 0;
 	String[] marketInventory;
 	
+	String selectedMktWorker = "";
+	int selectedMktWorkerIndex = 0;
+	String[] marketWorkers;
+	
 	enum WorkplaceType{Market, Restaurant, Bank};
 	WorkplaceType type;
 	
 	JComboBox workplaceList;
 	JComboBox inventoryList;
+	JComboBox mktWorkersList;
 	
 	JPanel properties = new JPanel();
 	JPanel inventory = new JPanel();
 	JPanel editInventory = new JPanel();
+	JPanel swapMktWorkers = new JPanel();
+
 	JPanel tellers = new JPanel();
 	JPanel restaurants = new JPanel();
 	
@@ -93,6 +100,17 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   JSpinner spinner = new JSpinner(model);
 		   editInventory.add(spinner);
 		   properties.add(editInventory);
+		   
+		   swapMktWorkers = new JPanel();
+		   swapMktWorkers.setLayout(new FlowLayout());
+		   swapMktWorkers.add(new JLabel("Swap workers: "));
+		   marketWorkers = SimCityGui.mickeysMarket.getWorkers();
+		   mktWorkersList = new JComboBox(marketWorkers);
+		   mktWorkersList.setSelectedIndex(selectedMktWorkerIndex);
+		   mktWorkersList.addActionListener(this);
+		   swapMktWorkers.add(mktWorkersList);
+		   properties.add(swapMktWorkers);
+		   
 		}
 		else if(type == WorkplaceType.Bank){
 			tellers = new JPanel();
@@ -129,6 +147,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	public void clear(){
 		properties.remove(inventory);
 		properties.remove(editInventory);
+		properties.remove(swapMktWorkers);
 		properties.remove(tellers);
 		properties.remove(restaurants);
 		properties.revalidate();
@@ -172,6 +191,17 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     }
 	     }
       }
+    else if(cb == mktWorkersList){
+	     for(int i = 0; i<marketWorkers.length; i++){
+		     if(marketWorkers[i].equals(name)){
+			     selectedMktWorker = name;
+			     selectedMktWorkerIndex = i;
+			     clear();
+			     updateGui();
+			     break;
+		     }
+	     }
+     }
 	}
 
 }

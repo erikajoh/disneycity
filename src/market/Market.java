@@ -9,6 +9,8 @@ import market.gui.WorkerGui;
 import simcity.PersonAgent;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Market_Douglass;
 import transportation.Transportation;
 import restaurant_rancho.CookAgent;
@@ -215,6 +217,17 @@ public class Market implements Market_Douglass {
     public String[] getInventory(){
     	Set<String> inventoryList = inventory.keySet(); 
     	return inventoryList.toArray(new String[0]);
+    }
+    
+    public String[] getWorkers(){
+    	if(cashier == null){
+    		AlertLog.getInstance().logMessage(AlertTag.MARKET, "Market", "Cashier is null");
+    		if(workers.size() == 0){
+        		AlertLog.getInstance().logMessage(AlertTag.MARKET, "Market", "No workers");
+    		}
+    	}
+    	String [] mktWorkers = new String[]{"Cashier: "/*+cashier.getName()*/, "Worker: "/*+workers.get(0).getName()*/, "Worker: "/*+workers.get(1).getName()*/};
+    	return mktWorkers;
     }
     
     public int getItemQty(String item) {
