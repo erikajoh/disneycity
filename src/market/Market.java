@@ -216,5 +216,9 @@ public class Market implements Market_Douglass {
     	Set<String> inventoryList = inventory.keySet(); 
     	return inventoryList.toArray(new String[0]);
     }
+    
+    public int getItemQty(String item) {
+    	return inventory.get(item);
+    }
 
 }
