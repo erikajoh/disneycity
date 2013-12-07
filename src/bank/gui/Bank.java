@@ -83,7 +83,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	public void msgLeave(BankCustomer bc, int accountNum, double change, double loanAmt, int loanTime){
 		Person person = (Person)spawns.get(bc);
 		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Person leaving");
-		System.out.println(bc.toString());
+		System.out.println("NEW INFO: "+accountNum + ", "+ change + ", "+ loanAmt + ", "+loanTime);
 		person.msgLeftBank(this, accountNum, change, loanAmt, loanTime);
 	}
     
