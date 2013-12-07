@@ -32,12 +32,13 @@ import restaurant_cafe.gui.RestaurantCafe;
 
 public class SimCityGui extends JFrame  {
 
-	public static final int WINDOWX = 1000;
+	public static final int WINDOWX = 1180;
 	public static final int WINDOWY = 730;
 	
 	String name;
 	
 	SimCityPanel simCityPanel;
+	WorkplacePropertyPanel workplacePropertyPanel;
 	TracePanel tracePanel;
 	
 	JPanel cards;
@@ -165,6 +166,8 @@ public class SimCityGui extends JFrame  {
 		pirateBank = new Bank(this, "Pirate Bank");
 		
 		simCityPanel = new SimCityPanel(this);
+		workplacePropertyPanel = new WorkplacePropertyPanel(this);
+		
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
@@ -192,24 +195,26 @@ public class SimCityGui extends JFrame  {
 		
 		GridBagConstraints c3 = new GridBagConstraints();
 		c3.fill = GridBagConstraints.BOTH;
-		c3.weightx = .8; 
+		c3.weightx = .1; 
 		c3.weighty = .6;
 		c3.gridx = 6;
 		c3.gridy = 0;
-		c3.gridwidth = 4;
+		c3.gridwidth = 3;
 		c3.gridheight = 3;
 		personPanel.setBorder(BorderFactory.createTitledBorder("Person Properties"));
 		add(personPanel, c3);
 		
 		GridBagConstraints c4 = new GridBagConstraints();
 		c4.fill = GridBagConstraints.BOTH;
-		c4.weightx = .8; 
+		c4.weightx = .1; 
 		c4.weighty = .4;
 		c4.gridx = 6;
 		c4.gridy = 4;
-		c4.gridwidth = 4;
+		c4.gridwidth = 3;
 		c4.gridheight = 4;
 		workplacePanel.setBorder(BorderFactory.createTitledBorder("Workplace Properties"));
+		workplacePanel.setLayout(new BoxLayout(workplacePanel, BoxLayout.Y_AXIS));
+		workplacePanel.add(workplacePropertyPanel);
 		add(workplacePanel, c4);
 		
 		GridBagConstraints c5 = new GridBagConstraints();
