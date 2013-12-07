@@ -121,6 +121,23 @@ public class PersonAgent extends Agent implements Person {
 	public String	getCurrLocation()		{ return currentLocation; }
 	public String	getCurrLocationState()	{ return currentLocationState.name(); }
 	public String	getBodyState()			{ return bodyState.toString(); }
+	public boolean	isWorking()				{ return workplace != null; }
+	public boolean	hasJob() {
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++) {
+			if(myObjectsArray[i] instanceof MyRestaurant) {
+				MyRestaurant temp = (MyRestaurant)myObjectsArray[i];
+				if(temp.workSession != 0)
+					return true;
+			}
+			else if(myObjectsArray[i] instanceof MyMarket) {
+				MyMarket temp = (MyMarket)myObjectsArray[i];
+				if(temp.workSession != 0)
+					return true;
+			}
+		}
+		return false;
+	}
 
 	public void		setIsNourished(boolean full)	{ isNourished = full; }
 	public void		setMoney(double money)			{ moneyOnHand = money; }
@@ -149,8 +166,8 @@ public class PersonAgent extends Agent implements Person {
 		myObjects.add(tempMyRestaurant);
 	}
 	
-	public void	addMarket(Market m, String personType) {
-		MyMarket tempMyMarket = new MyMarket(m, m.getName(), personType);
+	public void	addMarket(Market m, String personType, int workSession) {
+		MyMarket tempMyMarket = new MyMarket(m, m.getName(), personType, workSession);
 		myObjects.add(tempMyMarket);
 	}
 	
@@ -865,13 +882,14 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	private class MyMarket extends MyObject {
-		
 		Market theMarket;
 		String personType;
-		public MyMarket(Market m, String name, String type) {
+		int workSession;
+		public MyMarket(Market m, String name, String type, int workSession) {
 			theMarket = m;
 			this.name = name;
 			personType = type;
+			this.workSession = workSession;
 		}
 	}
 	
