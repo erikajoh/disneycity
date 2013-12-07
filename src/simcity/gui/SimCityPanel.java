@@ -346,6 +346,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	}
 	
 	/* all time-related variables and methods */
+	// TODO: initialize these in main config file
 	public enum DayOfTheWeek { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
 	public DayOfTheWeek currentDay = DayOfTheWeek.Thursday;
 	public long numTicks = 0;

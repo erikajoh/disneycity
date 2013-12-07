@@ -212,9 +212,11 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	public void msgRentIsDue(double amount) {
-		log.add(new LoggedEvent("msgRentisDue() called"));
-		actionQueue.add(new Action(ActionString.payRent, 1, amount));
-		stateChanged();
+		if(myHome.occupantType.equals("Renter")) {
+			log.add(new LoggedEvent("msgRentisDue() called"));
+			actionQueue.add(new Action(ActionString.payRent, 1, amount));
+			stateChanged();
+		}
 	}
 	
 	public void msgHereIsRent(double amount) {
@@ -384,11 +386,17 @@ public class PersonAgent extends Agent implements Person {
 					event = PersonEvent.onHold;
 				}
 				if(rentToPay > 0) {
-					if(moneyOnHand >= rentToPay) {
-						payRent(rentToPay);
+					if(bankState == BankState.NeedTransaction) {
+						leaveHouse();
+						event = PersonEvent.onHold;
 					}
 					else {
-						getRentMoneyFromBank();
+						if(moneyOnHand >= rentToPay) {
+							payRent(rentToPay);
+						}
+						else {
+							getRentMoneyFromBank();
+						}
 					}
 					print("returning true because rentToPay > 0");
 					return true;
@@ -597,8 +605,9 @@ public class PersonAgent extends Agent implements Person {
 	
 	private void payRent(double amount) {
 		print("Paying rent");
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Paying rent");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Paying rent: " + rentToPay);
 		moneyOnHand -= amount;
+		rentToPay = 0;
 		myHome.housing.msgHereIsRent(this, amount);
 	}
 	
