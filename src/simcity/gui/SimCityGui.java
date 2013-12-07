@@ -38,7 +38,7 @@ public class SimCityGui extends JFrame  {
 	String name;
 	
 	SimCityPanel simCityPanel;
-	WorkplacePropertyPanel workplacePropertyPanel;
+	public WorkplacePropertyPanel workplacePropertyPanel;
 	TracePanel tracePanel;
 	
 	JPanel cards;
@@ -286,11 +286,12 @@ public class SimCityGui extends JFrame  {
 	
 	public static void main(String[] args) {
 		SimCityGui gui = new SimCityGui("Sim City Disneyland");
-		PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", null, 'c');
 		gui.setTitle("SimCity Disneyland");
 		gui.setVisible(true);
 		gui.setResizable(false);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", null, 'c');
 		restRancho.setMarket(mickeysMarket);
 		restRancho.setBank(pirateBank);
 		restRancho.addPerson(null, "Cook", "cook", 50);
@@ -332,7 +333,7 @@ public class SimCityGui extends JFrame  {
 		mickeysMarket.addPerson(null, "Cashier", "Kapow");
 		mickeysMarket.addPerson(null, "Worker", "Bleep");
 		mickeysMarket.addPerson(null, "Worker", "Meep");
-
+		
 	}
 	
 	public void showPanel(String panel) {

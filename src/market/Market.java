@@ -185,7 +185,7 @@ public class Market implements Market_Douglass {
     			}
     		}
     	}
-    	else if (type.equals("Cashier")) {
+    	else if (type.equals("Cashier")) {    		
     		if (cashier == null) {
     			cashier = new CashierAgent(name, 100);
     			cashier.setPerson(p);
@@ -193,6 +193,7 @@ public class Market implements Market_Douglass {
     			cashier.startThread();
     		}
     	}	
+    	gui.workplacePropertyPanel.updateGui();
     }
     
     public double getPrice(String f) {
@@ -220,13 +221,20 @@ public class Market implements Market_Douglass {
     }
     
     public String[] getWorkers(){
-    	if(cashier == null){
-    		AlertLog.getInstance().logMessage(AlertTag.MARKET, "Market", "Cashier is null");
-    		if(workers.size() == 0){
-        		AlertLog.getInstance().logMessage(AlertTag.MARKET, "Market", "No workers");
-    		}
+
+        List<String> marketWorkers = new ArrayList<String>();
+        
+    	if(cashier != null){
+    		String cashierName = "Cashier: "+cashier.getName();
+    		marketWorkers.add(cashierName);
     	}
-    	String [] mktWorkers = new String[]{"Cashier: "/*+cashier.getName()*/, "Worker: "/*+workers.get(0).getName()*/, "Worker: "/*+workers.get(1).getName()*/};
+    	for(WorkerAgent worker : workers){
+    		String workerName = "Worker: "+worker.getName();
+    		marketWorkers.add(workerName);
+    	}
+    	String[] mktWorkers = new String[marketWorkers.size()];
+    	mktWorkers = marketWorkers.toArray(mktWorkers);
+   
     	return mktWorkers;
     }
     
