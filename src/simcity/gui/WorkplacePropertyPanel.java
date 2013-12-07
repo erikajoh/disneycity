@@ -1,5 +1,6 @@
 package simcity.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -33,16 +34,24 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		// workplace panel 
 		JPanel selection = new JPanel();
 		
+		
 		String[] workplaces = { "1) Mickey's Market", "2) Carnation Cafe", "4) Blue Bayou", "8) Pirate Bank", "9) Rancho Del Zocalo", "12) Village Haus", "14) Pizza Port" };
 		// Create the combo box, select item at index 0.
 		JComboBox workplaceList = new JComboBox(workplaces);
 		workplaceList.setSelectedIndex(0);
 		workplaceList.addActionListener(this);
-		selection.setLayout(new FlowLayout());
+		selection.setLayout(new BorderLayout());
 		selection.add(new JLabel("Choose a workplace:"));
-		selection.add(workplaceList);
-		add(selection);
 		
+		String[] inventory = SimCityGui.mickeysMarket.getInventory();
+		JComboBox inventoryList = new JComboBox(inventory);
+		inventoryList.setSelectedIndex(0);
+		inventoryList.addActionListener(this);
+
+		selection.add(workplaceList);
+		selection.add(inventoryList);
+		add(selection);
+				
 	    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 	}
 

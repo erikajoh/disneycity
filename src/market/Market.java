@@ -17,10 +17,12 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -209,5 +211,10 @@ public class Market implements Market_Douglass {
 			return getAmt;
 		} else return 0;
 	}
+    
+    public String[] getInventory(){
+    	Set<String> inventoryList = inventory.keySet(); 
+    	return inventoryList.toArray(new String[0]);
+    }
 
 }
