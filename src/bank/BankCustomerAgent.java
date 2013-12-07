@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class BankCustomerAgent extends Agent implements BankCustomer {
 	private String name;
-	private double balance = 25.00;
+	private double balance;
 	private double change;
 	
 	private double loanAmount;
