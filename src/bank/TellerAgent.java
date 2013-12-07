@@ -16,7 +16,8 @@ import java.util.*;
 
 public class TellerAgent extends Agent implements Teller {
 	Manager manager;
-	  private Random robberySuccess = new Random();
+	final static double amountPerDay = 25.00;
+	private Random robberySuccess = new Random();
 
 	
 	enum State {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
@@ -125,7 +126,7 @@ public class TellerAgent extends Agent implements Teller {
 	}
 	
 	public void	msgWithdrawCash(int accountNum, double cash){
-		print("DEPOSIT CASH ");
+		print("WITHDRAW CASH ");
 		customer.requestAmt = cash;
 		List<Account> accounts = manager.getAccounts();
 		synchronized(accounts){
@@ -203,7 +204,7 @@ public class TellerAgent extends Agent implements Teller {
 
 	private void depositCash(){
 		if(customer.account.loanTime <= 0 && customer.account.loanAmount > 0){
-			customer.account.loanAmount += ((-customer.account.loanTime+1)*25); //accounts for the extra day about to be decremented
+			customer.account.loanAmount += ((-customer.account.loanTime+1)*amountPerDay); //accounts for the extra day about to be decremented
 		}
 		
 		if(customer.account.loanAmount > 0){
