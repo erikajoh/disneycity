@@ -32,7 +32,7 @@ import restaurant_cafe.gui.RestaurantCafe;
 
 public class SimCityGui extends JFrame  {
 
-	public static final int WINDOWX = 800;
+	public static final int WINDOWX = 1000;
 	public static final int WINDOWY = 730;
 	
 	String name;
@@ -91,6 +91,8 @@ public class SimCityGui extends JFrame  {
 	private JPanel zoomAnimation = new JPanel();
 	private JPanel cityPanel = new JPanel();
 	private JPanel zoomPanel = new JPanel();
+	private JPanel personPanel = new JPanel();
+	private JPanel workplacePanel = new JPanel();
 	private JPanel logPanel = new JPanel();
 	private JLabel cityLabel = new JLabel("Disney City View                                          ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
@@ -161,44 +163,63 @@ public class SimCityGui extends JFrame  {
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
 		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
 		pirateBank = new Bank(this, "Pirate Bank");
-		//ManagerAgent manager = new ManagerAgent("Manager", pirateBank, this);
-		//pirateBank.setManager(manager);		
-		//manager.startThread();
 		
 		simCityPanel = new SimCityPanel(this);
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
-		GridBagConstraints c = new GridBagConstraints();
+		//GridBagConstraints c = new GridBagConstraints();
 		//c.fill = GridBagConstraints.BOTH;
 		GridBagConstraints c1 = new GridBagConstraints();
 		c1.fill = GridBagConstraints.BOTH;
-		c1.weightx = .5;
+		c1.weightx = .3;
 		c1.gridx = 0;
 		c1.gridy = 0; 
-//		c1.gridwidth = 1;
+		c1.gridwidth = 3;
 		cityBanner.setBorder(BorderFactory.createTitledBorder("City Banner"));
 		cityBanner.add(cityLabel);
 		add(cityBanner, c1);
 		
 		GridBagConstraints c3 = new GridBagConstraints();
 		c3.fill = GridBagConstraints.BOTH;
-		c3.weightx = .5; 
-		c3.gridx = 1;
+		c3.weightx = .3; 
+		c3.gridx = 3;
 		c3.gridy = 0;
-//		c3.gridwidth = 1;
+		c3.gridwidth = 3;
 		zoomBanner.setBorder(BorderFactory.createTitledBorder("Zoom Banner"));
 		zoomBanner.add(zoomLabel);
 		add(zoomBanner, c3);
 		
+		GridBagConstraints c7 = new GridBagConstraints();
+		c7.fill = GridBagConstraints.BOTH;
+		c7.weightx = .8; 
+		c7.weighty = .6;
+		c7.gridx = 6;
+		c7.gridy = 0;
+		c7.gridwidth = 4;
+		c7.gridheight = 3;
+		personPanel.setBorder(BorderFactory.createTitledBorder("Person Properties"));
+		add(personPanel, c7);
+		
+		GridBagConstraints c8 = new GridBagConstraints();
+		c8.fill = GridBagConstraints.BOTH;
+		c8.weightx = .8; 
+		c8.weighty = .4;
+		c8.gridx = 6;
+		c8.gridy = 4;
+		c8.gridwidth = 4;
+		c8.gridheight = 4;
+		workplacePanel.setBorder(BorderFactory.createTitledBorder("Workplace Properties"));
+		add(workplacePanel, c8);
+		
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.fill = GridBagConstraints.BOTH;
-		c2.weightx = .5;
-		c2.weighty = .14;
+		c2.weightx = .3;
+		c2.weighty = .8;
 		c2.gridx = 0;
 		c2.gridy = 1;
-		c2.gridwidth = 1;
-//		c2.gridheight = 2;
+		c2.gridwidth = 3;
+		c2.gridheight = 4;
 		cityAnimation.setLayout(new BoxLayout(cityAnimation, BoxLayout.Y_AXIS));
 		cityAnimation.add(cityAniPanel);
 		//cityAnimation.setBorder(BorderFactory.createTitledBorder("City Animation"));
@@ -206,12 +227,12 @@ public class SimCityGui extends JFrame  {
 		
 		GridBagConstraints c4 = new GridBagConstraints();
 		c4.fill = GridBagConstraints.BOTH;
-		c4.weightx = .5;
-		c4.weighty=.14;
-		c4.gridx = 1;
+		c4.weightx = .3;
+		c4.weighty= .8;
+		c4.gridx = 3;
 		c4.gridy=1;
-		c4.gridwidth = 1;
-//		c4.gridheight = 2;
+		c4.gridwidth = 3;
+		c4.gridheight = 4;
 		zoomAnimation.setLayout(new BoxLayout(zoomAnimation, BoxLayout.Y_AXIS));
 		zoomAnimation.add(cards);
 //		ranchoAniPanel.setVisible(false);
@@ -221,12 +242,12 @@ public class SimCityGui extends JFrame  {
 		
 		GridBagConstraints c5 = new GridBagConstraints();
 		c5.fill = GridBagConstraints.BOTH;
-		c5.weightx= .5;
+		c5.weightx= .3;
 		c5.weighty = .05;
 		c5.gridx=0;
-		c5.gridy=4;
-		c5.gridwidth = 1;
-		c5.gridheight = 2;
+		c5.gridy = 6;
+		c5.gridwidth = 3;
+		c5.gridheight = 1;
 		cityPanel.setBorder(BorderFactory.createTitledBorder("City Panel"));
 		cityPanel.setLayout(new BoxLayout(cityPanel, BoxLayout.Y_AXIS));
 		cityPanel.add(simCityPanel);
@@ -234,26 +255,27 @@ public class SimCityGui extends JFrame  {
 		
 		GridBagConstraints c6 = new GridBagConstraints();
 		c6.fill = GridBagConstraints.BOTH;
-		c6.weightx= 0;
+		c6.weightx= .3;
 		c6.weighty = .05;
-		c6.gridx=1;
-		c6.gridy=4;
-		c6.gridwidth = 1;
-		c6.gridheight =2;
+		c6.gridx= 3;
+		c6.gridy= 6;
+		c6.gridwidth = 3;
+		c6.gridheight = 1;
 		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom Panel"));
 		add(zoomPanel, c6);	
 		
-		GridBagConstraints c7 = new GridBagConstraints();
-		c7.fill = GridBagConstraints.BOTH;
-		c7.weightx = 3; 
-		c7.weighty = .01;
-		c7.gridx = 0;
-		c7.gridy = 6;
-		c7.gridwidth = 3;
+		GridBagConstraints c9 = new GridBagConstraints();
+		c9.fill = GridBagConstraints.BOTH;
+		c9.weightx = .8; 
+		c9.weighty = .01;
+		c9.gridx = 0;
+		c9.gridy = 7;
+		c9.gridwidth = 8;
+		c9.gridheight = 1;
 		logPanel.setBorder(BorderFactory.createTitledBorder("Logger"));
 		logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.Y_AXIS));
 		logPanel.add(tracePanel);
-		add(logPanel, c7);
+		add(logPanel, c9);
 
 	}
 	
