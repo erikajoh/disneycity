@@ -143,7 +143,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// Step 1: get all the names of the people so that:
 				// a) the person knows which housing he lives
 				// b) we know which properties files to use
-			URI mainFileURI = getClass().getResource("/res/simcity_config_v2_main.txt").toURI(); 
+			URL mainFileURL = getClass().getResource("/res/simcity_config_v2_main.txt");
+			URI mainFileURI = mainFileURL.toURI(); 
 			BufferedReader br = new BufferedReader(new FileReader(new File(mainFileURI)));
 			int numPeople = Integer.parseInt(br.readLine());
 			for(int i = 0; i < numPeople; i++) {
@@ -155,7 +156,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				Properties props = new Properties();
 				try {
 					// TODO: test more people later: this is hacked
-					URI personFileURI = getClass().getResource("/res/person-"+theName+".properties").toURI();
+					URL personFileURL = getClass().getResource("/res/person-"+theName+".properties");
+					URI personFileURI = personFileURL.toURI();
 				    FileInputStream in = new FileInputStream(new File(personFileURI));
 				    props.load(in);
 				    in.close();
@@ -353,15 +355,15 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	// these are start times for each of the day phases
 	private static final long START_OF_DAY		= 1;
-	private static final long MORNING			= START_OF_DAY + 40; //41
-	private static final long WORK_ONE_START	= MORNING + 160;//201
-	private static final long NOON				= WORK_ONE_START + 160;//361
-	private static final long WORK_ONE_END		= NOON + 160;//521
-	private static final long WORK_TWO_START	= WORK_ONE_END + 60;//561
-	private static final long EVENING			= WORK_TWO_START + 160;//721
-	private static final long WORK_TWO_END		= EVENING + 160;//881
-	private static final long NIGHT				= WORK_TWO_END + 60;//921
-	private static final long END_OF_DAY		= NIGHT + 800;//1271
+	private static final long MORNING			= START_OF_DAY		+ 40; //41
+	private static final long WORK_ONE_START	= MORNING			+ 160;//201
+	private static final long NOON				= WORK_ONE_START	+ 200;//361
+	private static final long WORK_ONE_END		= NOON				+ 160;//521
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 100;//561
+	private static final long EVENING			= WORK_TWO_START	+ 160;//721
+	private static final long WORK_TWO_END		= EVENING			+ 160;//881
+	private static final long NIGHT				= WORK_TWO_END		+ 60;//921
+	private static final long END_OF_DAY		= NIGHT				+ 850;//1271
 	// length of day 1231
 	
 	// for setting random delay for eating

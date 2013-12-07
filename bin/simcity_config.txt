@@ -1,0 +1,16 @@
+2
+Two|Main St Apartments #2|0|Mexican|false|OwnerResident|W
+Three|Main St Apartments #2|0|Mexican|false|OwnerResident|W
+1
+Main St Apartments #2|Two|Two|Three
+10
+Two|Rancho Del Zocalo|Customer|0
+Two|Blue Bayou|Customer|0
+Two|Pizza Port|Customer|0
+Two|Village Haus|Customer|0
+Two|Carnation Cafe|Customer|0
+Three|Rancho Del Zocalo|Customer|0
+Three|Blue Bayou|Customer|0
+Three|Pizza Port|Customer|0
+Three|Village Haus|Customer|0
+Three|Carnation Cafe|Customer|0

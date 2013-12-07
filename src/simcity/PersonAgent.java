@@ -288,7 +288,8 @@ public class PersonAgent extends Agent implements Person {
 		moneyOnHand += change;
 		event = PersonEvent.makingDecision;
 		bankState = BankState.None;
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Just left the bank: new money = " + moneyOnHand); 
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Just left the bank: change, loanAmount, loanTime: "
+				+ change + ", " + loanAmount + ", " + loanTime); 
 		stateChanged();
 	}
 	
