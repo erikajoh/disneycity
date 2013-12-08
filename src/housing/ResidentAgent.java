@@ -32,7 +32,7 @@ public class ResidentAgent extends Agent {
 	
 	State state = State.idle;
 	
-	State prevState; //hack
+//	State prevState; //hack
 	
 	/**
 	 * Constructor for RenterAgent class
@@ -45,8 +45,8 @@ public class ResidentAgent extends Agent {
 		this.type = type;
 		this.roomNo = roomNo;
 		building = new Building(type);
-		state = State.enteringHouse; //hack
-		foodPreference = "American"; //hack
+//		state = State.enteringHouse; //hack
+//		foodPreference = "American"; //hack
 	}
 
 	public String getCustomerName() {
@@ -57,9 +57,9 @@ public class ResidentAgent extends Agent {
 	
 	public void msgAnimationFinished(){ //from animation
 		moving.release();
-		if (prevState == State.enteringHouse) state = State.readyToCook; //hack
-		else if (prevState == State.foodDone) state = State.goingToBed; //hack
-		else if (prevState == State.goingToBed) state = State.leavingHouse; //hack
+//		if (prevState == State.enteringHouse) state = State.readyToCook; //hack
+//		else if (prevState == State.foodDone) state = State.goingToBed; //hack
+//		else if (prevState == State.goingToBed) state = State.leavingHouse; //hack
 		stateChanged();
 	}
 	
@@ -114,7 +114,7 @@ public class ResidentAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
-		prevState = state; //hack
+//		prevState = state; //hack
 		if(state == State.enteringHouse){
 			log.add(new LoggedEvent("Entering house"));
 			state = State.idle;

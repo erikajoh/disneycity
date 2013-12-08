@@ -30,7 +30,7 @@ public class ResidentGui implements Gui{
 	private int xPos, yPos, xDestination, yDestination, xDestNext, yDestNext, xDestFinal, yDestFinal;
 	private int xTable, yTable, xBed, yBed, xKitchen, yKitchen, xEntrance, yEntrance;
 	
-	private enum Dir { x, y, all, none }; // to decide which direction to move first
+	private enum Dir { x, y, all }; // to decide which direction to move first
 	Dir dir = Dir.all;
 	
 	private class Wall {
@@ -40,8 +40,8 @@ public class ResidentGui implements Gui{
 			xEnd = (int)(hWidth*xe);
 			yStart = (int)(hHeight*ys);
 			yEnd = (int)(hHeight*ye);
-			panel.addLine(xStart, xEnd, yStart, yEnd);
-			}
+//			panel.addLine(xStart, xEnd, yStart, yEnd); // for testing
+		}
 		boolean hitsHfromBelow(int xPos, int yPos) {
 			if (yStart == yEnd && yPos == yStart+1 && xPos >= xStart && xPos <= xEnd) {
 				//implication: should walk horizontally, i.e. x first
@@ -92,7 +92,7 @@ public class ResidentGui implements Gui{
 		agent = r;
 		agent.setGui(this);
 		type = t;
-		roomNo = 1;
+		roomNo = n;
 		if(type == "house"){
 			xPos = xEntrance = (int)(hWidth*0.23);
 			yPos = yEntrance = (int)(hHeight*0.92);
@@ -106,38 +106,42 @@ public class ResidentGui implements Gui{
 			xPos = xEntrance = (int)(hWidth);
 			yPos = yEntrance = (int)(hHeight*0.56);
 			//horizontal apartment walls from left to right	        
-			walls.add(new Wall(0,0.22,0.48,0.48));
-			if (roomNo == 0) walls.add(new Wall(0.29,1,0.48,0.48));
+			walls.add(new Wall(0,0.22,0.51,0.51));
+			if (roomNo == 0) walls.add(new Wall(0.29,1,0.5,0.5));
 			if (roomNo == 1) {
-				walls.add(new Wall(0.29,0.55,0.48,0.48));
-				walls.add(new Wall(0.6,1,0.48,0.48));
+				walls.add(new Wall(0.29,0.54,0.5,0.5));
+				walls.add(new Wall(0.6,1,0.5,0.5));
+			}
+			if (roomNo == 2) {
+				walls.add(new Wall(0,0.84,0.5,0.5));
+				walls.add(new Wall(0.93,1,0.5,0.5));
+			}
+			if (roomNo == 3) {
+				walls.add(new Wall(0,0.55,0.63,0.63));
 			}
 			//horizontal apartment table sides
-			walls.add(new Wall(0.68,0.76,0.56,0.56));
-			walls.add(new Wall(0.68,0.76,0.67,0.67));
+			walls.add(new Wall(0.69,0.75,0.59,0.59));
+			walls.add(new Wall(0.69,0.75,0.69,0.69));
 			//vertical apartment walls from left to right
-			walls.add(new Wall(0.3,0.3,0,0.48));
-			walls.add(new Wall(0.61,0.61,0,0.48));
-//			else if(roomNo == 2) {
-//				walls.add(new Wall(0.24,0.24,0.13,0.7));
-//				walls.add(new Wall(0.24,0.24,0.13,0.7));
-//			}
-//			else if(roomNo == 3) walls.add(new Wall(0.58,0.58,0.13,0.7));
+			walls.add(new Wall(0.29,0.29,0,0.5));
+			walls.add(new Wall(0.6,0.6,0,0.5));
+			walls.add(new Wall(0.93,0.93,0,0.5));
+			walls.add(new Wall(0.54,0.54,0.69,1));
 			//vertical apartment table sides
-			walls.add(new Wall(0.68,0.68,0.56,0.67));
-			walls.add(new Wall(0.76,0.76,0.56,0.67));
+			walls.add(new Wall(0.69,0.69,0.56,0.69));
+			walls.add(new Wall(0.75,0.75,0.56,0.69));
 			//entrance/exit wall
 			walls.add(new Wall(0.92,0.92,0.64,1));
 
 			if(roomNo == 0){
-				xTable = (int)(hWidth*0.64);
+				xTable = (int)(hWidth*0.63);
 				yTable = (int)(hHeight*0.59);
 				xBed = (int)(hWidth*0.16);
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.59);
 				yKitchen = (int)(hHeight*0.7);
 			}else if(roomNo == 1){
-				xTable = (int)(hWidth*0.74);
+				xTable = (int)(hWidth*0.76);
 				yTable = (int)(hHeight*0.59);
 				xBed = (int)(hWidth*0.48);
 				yBed = (int)(hHeight*0.15);
@@ -145,14 +149,14 @@ public class ResidentGui implements Gui{
 				yKitchen = (int)(hHeight*0.7);
 			}else if(roomNo == 2){
 				xTable = (int)(hWidth*0.69);
-				yTable = (int)(hHeight*0.52);
+				yTable = (int)(hHeight*0.51);
 				xBed = (int)(hWidth*0.79);
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.71);
 				yKitchen = (int)(hHeight*0.7);
 			}else if(roomNo == 3){
 				xTable = (int)(hWidth*0.69);
-				yTable = (int)(hHeight*0.66);
+				yTable = (int)(hHeight*0.67);
 				xBed = (int)(hWidth*0.2);
 				yBed = (int)(hHeight*0.71);
 				xKitchen = (int)(hWidth*0.77);
@@ -170,11 +174,11 @@ public class ResidentGui implements Gui{
 				System.out.println("hit a horizontal wall from above");
 				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
 				xDestNext = xDestination;
-				if (xDestination < w.xStart || w.xEnd == hWidth) {
+				if (xDestination < xPos || xDestination < w.xStart || w.xEnd == hWidth) {
 					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
-					xDestination = w.xStart-24;
+					xDestination = w.xStart-16;
 				}
-				else if (xDestination > w.xEnd) {
+				else if (xDestination > xPos || xDestination > w.xEnd) {
 					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
 					xDestination = w.xEnd+1;
 				}
@@ -188,17 +192,17 @@ public class ResidentGui implements Gui{
 				System.out.println("hit a horizontal wall from below");
 				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
 				xDestNext = xDestination;
-				if (xDestination < w.xStart) {
+				if (xDestination < xPos || xDestination < w.xStart) {
 					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
-					xDestination = w.xStart-24;
+					xDestination = w.xStart-16;
 				}
-				else if (xDestination > w.xEnd || w.xStart == 0) {
+				else if (xDestination > xPos || xDestination > w.xEnd || w.xStart == 0) {
 					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
 					xDestination = w.xEnd+1;
 				}
 				else {
 					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
-					xDestination = w.xStart-24;
+					xDestination = w.xStart-16;
 				}
 				dir = Dir.x;
 				break;
@@ -206,11 +210,11 @@ public class ResidentGui implements Gui{
 				System.out.println("hit a vertical wall from the left");
 				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
 				yDestNext = yDestination;
-				if (yDestination < w.yStart || w.yEnd == hHeight) {
+				if (yDestination < yPos || yDestination < w.yStart || w.yEnd == hHeight) {
 					System.out.println("changing yDest to "+(w.yStart-24));
-					yDestination = w.yStart-24;
+					yDestination = w.yStart-16;
 				}
-				else if (yDestination > w.yEnd) {
+				else if (yDestination > yPos || yDestination > w.yEnd) {
 					System.out.println("changing yDest to "+(w.yEnd+1));
 					yDestination = w.yEnd+1;
 				}
@@ -224,17 +228,17 @@ public class ResidentGui implements Gui{
 				System.out.println("hit a vertical wall from the right");
 				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
 				yDestNext = yDestination;
-				if (yDestination < w.yStart) {
+				if (yDestination < yPos || yDestination < w.yStart) {
 					System.out.println("changing yDest to "+(w.yStart-24));
-					yDestination = w.yStart-24;
+					yDestination = w.yStart-16;
 				}
-				else if (yDestination > w.yEnd || w.yStart == 0) {
+				else if (yDestination > yPos || yDestination > w.yEnd || w.yStart == 0) {
 					System.out.println("changing yDest to "+(w.yEnd+1));
 					yDestination = w.yEnd+1;
 				}
 				else {
 					System.out.println("changing yDest to "+(w.yStart-24));
-					yDestination = w.yStart-24;
+					yDestination = w.yStart-16;
 				}
 				dir = Dir.y;
 				break;
@@ -331,16 +335,25 @@ public class ResidentGui implements Gui{
 				System.out.println("changing xDestination back to: "+xDestNext);
 				xDestination = xDestNext;
 				xDestNext = -1;
+				dir = Dir.y;
 			}
 			if (yDestNext != -1) {
 				System.out.println("changing yDestination back to: "+yDestNext);
 				yDestination = yDestNext;
 				yDestNext = -1;
+				dir = Dir.x;
 			}
 		} else if (xPos == xDestination) {
 			dir = Dir.y;
 		} else if (yPos == yDestination) {
 			dir = Dir.x;
+		}
+		
+		if (xPos == xDestination && xDestNext == -1 && xDestination != xDestFinal) {
+			xDestination = xDestFinal;
+		}
+		if (yPos == yDestination && yDestNext == -1 && yDestination != yDestFinal) {
+			yDestination = yDestFinal;
 		}
 		
 	}
@@ -411,15 +424,15 @@ public class ResidentGui implements Gui{
 		xDestNext = -1;
 		yDestNext = -1;
 		DoGoToTable();
-		if (type == "house"){
-			for (int i=0; i<6; i++) {
-				MaintainArea(i);
-			}
-		} else if (type == "apt"){
-			for (int i=0; i<4; i++) {
-				MaintainApt(i);
-			}
-		}
+//		if (type == "house"){
+//			for (int i=0; i<6; i++) {
+//				MaintainArea(i);
+//			}
+//		} else if (type == "apt"){
+//			for (int i=0; i<4; i++) {
+//				MaintainApt(i);
+//			}
+//		}
 	}
 	
 	private void MaintainApt(int i) {
