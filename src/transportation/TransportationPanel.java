@@ -30,6 +30,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 	MouseEvent previousPosition;
 	Point offset;
+	int buffer;
 
 	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	Timer timer;
@@ -51,6 +52,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 	public TransportationPanel(SimCityGui gui) {
 		offset = new Point(0,0);
+		buffer = 30;
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 
@@ -95,23 +97,24 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		//offset changing
 		if(previousPosition != null) {
 			//Move Camera Up
-			if(previousPosition.getY() >= 0 && previousPosition.getY() <= 20)
+			if(previousPosition.getY() >= 0 && previousPosition.getY() <= buffer)
 				offset.y -= 1;
 
 			//Move Camera Down
-			if(previousPosition.getY() >= 310 && previousPosition.getY() <= 330)
+			if(previousPosition.getY() >= WINDOWX - buffer && previousPosition.getY() <= WINDOWX)
 				offset.y += 1;
 
 			//Move Camera Left
-			if(previousPosition.getX() >= 0 && previousPosition.getX() <= 20)
+			if(previousPosition.getX() >= 0 && previousPosition.getX() <= buffer)
 				offset.x -= 1;
 
 			//Move Camera Right
-			if(previousPosition.getX() >= 380 && previousPosition.getY() <= 400)
+			if(previousPosition.getX() >= WINDOWY - buffer && previousPosition.getY() <= WINDOWY)
 				offset.x += 1;
 		}
 
 		//offset clamping
+		//TODO: Set this to actual values once we know the size of the city
 		if(offset.x < -20) {
 			offset.x = -20;
 		}
