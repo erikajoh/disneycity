@@ -43,6 +43,22 @@ public class MovementTile extends Semaphore{
 		this.type = type;
 	}
 	
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+	
+	public void setDown(boolean down) {
+		this.down = down;
+	}
+	
+	public void setRight(boolean Right) {
+		this.right = right;
+	}
+	
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
+	
 	public void setMovementType(MovementType type) {
 		this.type = type;
 	}
