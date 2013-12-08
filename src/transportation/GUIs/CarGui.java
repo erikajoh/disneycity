@@ -53,7 +53,7 @@ public class CarGui implements Gui{
 			animModule.changeAnimation("Up");
 		}
 		
-		if(Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed && !reachedHalfway) {
+		if((Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed) && !reachedHalfway) {
 			agent.msgHalfway();
 			reachedHalfway = true;
 		}
