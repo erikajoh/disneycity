@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
+import simcity.RestMenu;
 
 
 public class WorkplacePropertyPanel extends JPanel implements ActionListener {
@@ -43,11 +44,18 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	
 	JPanel properties = new JPanel();
 	JPanel inventory = new JPanel();
-	JPanel editInventory = new JPanel();
+	JPanel editInventory;
+	JPanel setInventory;
+	JPanel setInventory1;
+	JPanel setInventory2;
+	JPanel setInventory3;
+	JPanel setInventory4;
 	JPanel swapMktWorkers = new JPanel();
 
 	JPanel tellers = new JPanel();
 	JPanel restaurants = new JPanel();
+	
+	RestMenu menu;
 	
 public WorkplacePropertyPanel(SimCityGui gui) {
 		
@@ -138,6 +146,62 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	        d.width = 80;  
 	        spinner.setPreferredSize(d);
 			restaurants.add(spinner);
+			
+		/*	if (workplaceList.getSelectedItem().toString().contains("Bayou"))
+				menu = SimCityGui.restBayou.getMenu();
+			else if (workplaceList.getSelectedItem().toString().contains("Cafe"))
+				menu = SimCityGui.restCafe.getMenu();
+			else if (workplaceList.getSelectedItem().toString().contains("Haus"))
+				menu = SimCityGui.restHaus.getMenu();
+			else if (workplaceList.getSelectedItem().toString().contains("Pizza"))
+				menu = SimCityGui.restPizza.getMenu();
+			else if (workplaceList.getSelectedItem().toString().contains("Rancho"))
+				menu = SimCityGui.restRancho.getMenu();
+			
+			setInventory = new JPanel();
+			setInventory1 = new JPanel();
+			setInventory2 = new JPanel();
+			setInventory3 = new JPanel();
+			if (menu.menuList.size() > 4) setInventory4 = new JPanel();
+			
+			setInventory.setLayout(new FlowLayout());
+			setInventory1.setLayout(new FlowLayout());
+			setInventory2.setLayout(new FlowLayout());
+			setInventory3.setLayout(new FlowLayout());
+			if (menu.menuList.size() > 4) setInventory4.setLayout(new FlowLayout());
+			
+			JLabel food0 = new JLabel(menu.menuList.get(0));
+			setInventory.add(food0);
+			JLabel food1 = new JLabel(menu.menuList.get(1));
+			setInventory1.add(food1);
+			JLabel food2 = new JLabel(menu.menuList.get(2));
+			setInventory2.add(food2);
+			JLabel food3 = new JLabel(menu.menuList.get(3));
+			setInventory3.add(food3);
+			if (menu.menuList.size() > 4) {
+				JLabel food4 = new JLabel(menu.menuList.get(4));
+				setInventory4.add(food4);
+			}
+			
+			SpinnerModel foodModel = new SpinnerNumberModel(10.00, 0.00, 50.00, 1);
+		    JSpinner spinner0 = new JSpinner(model);
+			JSpinner spinner1 = new JSpinner(model);
+			JSpinner spinner2 = new JSpinner(model);
+		    JSpinner spinner3 = new JSpinner(model);
+		    if (menu.menuList.size() > 4) {
+		    	JSpinner spinner4 = new JSpinner(model);
+			}
+			JSpinner.NumberEditor editor1 = (JSpinner.NumberEditor)spinner.getEditor();  
+		    DecimalFormat format1 = editor.getFormat();  
+		    format.setMinimumFractionDigits(2);  
+		    editor.getTextField().setHorizontalAlignment(SwingConstants.CENTER);  
+	        Dimension d1 = spinner.getPreferredSize();  
+	        d.width = 80;  
+	        spinner.setPreferredSize(d);
+	      
+			*/
+				
+			
 			properties.add(restaurants);
 		}
 		
@@ -146,7 +210,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
 	}
-	
+
 	public void clear(){
 		properties.remove(inventory);
 		properties.remove(editInventory);
