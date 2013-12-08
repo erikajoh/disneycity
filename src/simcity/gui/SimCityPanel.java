@@ -10,6 +10,7 @@ import simcity.PersonAgent;
 import simcity.Restaurant;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
+import simcity.interfaces.Housing_Douglass;
 import simcity.interfaces.Transportation_Douglass;
 import transportation.Transportation;
 import transportation.TransportationPanel;
@@ -135,6 +136,29 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 		/* timing */
 	    newDay();
+	}
+	
+	public void addPerson(String aName, String housingName, double startMoney, String foodPreference,
+			boolean preferEatAtHome, char commute) {
+		
+		Housing h = mapStringToHousing(housingName);		
+		PersonAgent personToAdd = new PersonAgent( aName, h, startMoney, foodPreference, preferEatAtHome,
+			"Renter", transportation, commute);
+		h.addRenter(personToAdd);
+		
+		for(int restInd = 0; restInd < NUM_RESTAURANTS; restInd++) {
+			Restaurant r = restaurants.get(restInd);
+			personToAdd.addRestaurant(r, "Customer", 0);
+		}
+		
+		for(int marketInd = 0; marketInd < NUM_MARKETS; marketInd++) {
+			Market m = markets.get(marketInd);
+			personToAdd.addMarket(m, "Customer", 0);
+		}
+		System.out.println("Starting new person thread from GUI");
+		people.add(personToAdd);
+		personToAdd.startThread();
+		personToAdd.msgWakeUp();
 	}
 	
 	// Configuration file parsing
