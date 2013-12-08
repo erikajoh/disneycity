@@ -76,14 +76,14 @@ public class WalkerTraversal extends GraphTraversal {
 			if (inPath(next,path) || grid[nextX][nextY].type != grid[x][y].type) {
 				continue;
 			}
-			
+
 			if (recalculate && !next.open(grid))
 				continue;
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
-			
-			
+
+
 			//update distance travelled
 			nodeTemp.setDistTravelled(node.getDistTravelled()+pos.distance(next));
 			//update approximate total distance to destination
@@ -128,7 +128,7 @@ public class WalkerTraversal extends GraphTraversal {
 			expandedNodes.add(nodeTemp);//could have just added
 			//them directly to nodelist 
 		}
-		
+
 		return expandedNodes;
 	}//end expandFunc
 	private boolean inPath (Position pos, List<Position> path){

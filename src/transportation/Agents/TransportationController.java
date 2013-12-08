@@ -323,10 +323,11 @@ public class TransportationController extends Agent implements Transportation{
 
 	private void spawnMover(Mover mover) {
 		//Try to spawn mover
-		TransportationTraversal aStar = new TransportationTraversal(grid);
+		//TransportationTraversal aStar = new TransportationTraversal(grid);
 		if(mover.method.equals("Car")){
 			log.add(new LoggedEvent("Spawning Car"));
 			if(grid[directory.get(mover.startingLocation).vehicleTile.getX()][directory.get(mover.startingLocation).vehicleTile.getY()].tryAcquire()) {
+				CarTraversal aStar = new CarTraversal(grid);
 				mover.transportationState = TransportationState.MOVING;
 				CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
 				CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
@@ -342,6 +343,7 @@ public class TransportationController extends Agent implements Transportation{
 		else if(mover.method.equals("Walk")){
 			log.add(new LoggedEvent("Spawning Walker"));
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
+				WalkerTraversal aStar = new WalkerTraversal(grid);
 				mover.transportationState = TransportationState.MOVING;
 				WalkerAgent walker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar);
 				WalkerGui walkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), walker);
@@ -365,6 +367,7 @@ public class TransportationController extends Agent implements Transportation{
 				return;
 			}
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
+				WalkerTraversal aStar = new WalkerTraversal(grid);
 				WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
 				WalkerGui busWalkerGui = new WalkerGui(directory.get(mover.startingLocation).walkingTile.getX(), directory.get(mover.startingLocation).walkingTile.getY(), busWalker);
 				if(master != null)

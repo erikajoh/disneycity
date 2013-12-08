@@ -18,10 +18,10 @@ public class CarAgent extends MobileAgent{
 	TransportationController master;
 	boolean arrived;
 	CarGui gui = null;
-	TransportationTraversal aStar;
+	CarTraversal aStar;
 	Semaphore animSem;
 	
-	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
+	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, CarTraversal aStar) {
 		this.driver = person;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;

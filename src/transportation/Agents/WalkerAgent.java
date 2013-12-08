@@ -18,13 +18,13 @@ public class WalkerAgent extends MobileAgent{
 	TransportationController master;
 	WalkerGui gui;
 	boolean arrived;
-	TransportationTraversal aStar;
+	WalkerTraversal aStar;
 	
 	Semaphore animSem;
 	BusStop beginBusStop, endBusStop;
 	String building;
 
-	public WalkerAgent(Person walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
+	public WalkerAgent(Person walker, Position currentPosition, Position endPosition, TransportationController master, WalkerTraversal aStar) {
 		this.walker = walker;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
@@ -38,7 +38,7 @@ public class WalkerAgent extends MobileAgent{
 		building = null;
 	}
 	
-	public WalkerAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
+	public WalkerAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, WalkerTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
 		this.walker = person;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
