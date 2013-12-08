@@ -71,8 +71,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	}
 
 	public void updateGui(){
-	    clear();
-		properties.removeAll();
+	    //clear();
+		//properties.removeAll();
 		properties.setLayout(new GridLayout(4, 1));
 		JLabel label;
 		
