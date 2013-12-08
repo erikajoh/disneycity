@@ -31,7 +31,7 @@ public class PersonAgent extends Agent implements Person {
 	private boolean isNourished;
 	private double moneyOnHand;
 	private Map<String, Integer> itemsOnHand;
-	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
+	private enum PersonType {Normal, Deadbeat, Crook};
 	private PersonType myPersonality;
 	private enum PreferredCommute {Walk, Bus, Car};
 	private PreferredCommute preferredCommute;
@@ -145,8 +145,6 @@ public class PersonAgent extends Agent implements Person {
 	public void	setPersonality(String type) {
 		if(type.equals("Normal"))
 			myPersonality = PersonType.Normal;
-		else if(type.equals("Wealthy"))
-			myPersonality = PersonType.Wealthy;
 		else if(type.equals("Deadbeat"))
 			myPersonality = PersonType.Deadbeat;
 		else if(type.equals("Crook"))
