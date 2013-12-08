@@ -11,7 +11,6 @@ import simcity.Restaurant;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Transportation_Douglass;
-import simcity.test.mock.MockTransportation_Douglass;
 import transportation.Transportation;
 import transportation.TransportationPanel;
 import housing.Housing;
@@ -62,6 +61,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
 	public final static int NUM_MARKETS = 1;
+	
+	public final static String MAIN_CONFIG_FILE = "simcity_config_v2_main.txt";
 
 	// lists to hold all the different buildings
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
@@ -139,7 +140,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	// Configuration file parsing
 	// Upon instantiation, pass all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 	public void initializeFromConfigFile(String fileName) {
-		resetAllElements(); // are we using this?
+		resetAllElements(); // TODO: are we using this?
 		
 		try {			
 			// begin new parser
@@ -147,7 +148,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// Step 1: get all the names of the people so that:
 				// a) the person knows which housing he lives
 				// b) we know which properties files to use
-			URL mainFileURL = getClass().getResource("/res/simcity_config_v2_main.txt");
+			URL mainFileURL = getClass().getResource("/res/" + MAIN_CONFIG_FILE);
 			URI mainFileURI = mainFileURL.toURI(); 
 			BufferedReader br = new BufferedReader(new FileReader(new File(mainFileURI)));
 			int numPeople = Integer.parseInt(br.readLine());
@@ -431,6 +432,28 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				}
 			}, NEW_DAY_DELAY);
 		}
+	}
+	
+	/* methods for accessing */
+	
+	public String[] getAllPeople() {
+		ArrayList<String> names = new ArrayList<String>();
+		for(int i = 0; i < people.size(); i++) {
+			PersonAgent p = people.get(i);
+			names.add(p.getName());
+		}
+		String[] namesArray = names.toArray(new String[0]);
+		return namesArray;
+	}
+	
+	public String[] getAllHousing() {
+		ArrayList<String> locationNames = new ArrayList<String>();
+		for(int i = 0; i < housings.size(); i++) {
+			Housing h = housings.get(i);
+			locationNames.add(h.getName());
+		}
+		String[] locationsArray = locationNames.toArray(new String[0]);
+		return locationsArray;
 	}
 	
 	public String[] getAllUnemployedPeople() {
