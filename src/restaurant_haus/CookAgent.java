@@ -81,6 +81,10 @@ public class CookAgent extends Agent {
 		person = p;
 	}
 	
+	public void setAmount(String choice, int amount) {
+	   	
+	}
+	
 	private enum InventoryState {Steady, Low, Ordered, Delivered, marketEmtpy, CanOrder, marketQueried, OrderAgain, OrderAnother};
 	private final int SAFEFOODQUANTITY = 10;
 	private final int DANGERFOODQUANTITY = 5;

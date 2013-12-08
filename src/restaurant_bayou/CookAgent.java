@@ -38,7 +38,7 @@ public class CookAgent extends Agent {
 		this.name = name;
 	    menu.addItem("Filet Mignon", 42.99);
 	    menu.addItem("Pan-Seared Salmon", 33.99);
-	    menu.addItem("Portobello Mushroom and Couscous Macque Choux", 29.99);
+	    menu.addItem("Surf and Turf", 45.99);
 	    menu.addItem("Seafood Jambalaya", 31.99);
 		for (String item: menu.menuList) {
 			i.add(item, 8);
@@ -54,6 +54,9 @@ public class CookAgent extends Agent {
 		this.cashier = c;
 	}
 	
+	public void setAmount(String food, int am) {
+		
+	}
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table){
 		orders.add(new Order(w, choice, table));
 //		if (!waiters.contains(w)) waiters.add(w);

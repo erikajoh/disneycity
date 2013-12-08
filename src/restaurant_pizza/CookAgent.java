@@ -76,6 +76,10 @@ public class CookAgent extends Agent {
 		person = p;
 	}
 	
+	 public void setAmount(String choice, int amount) {
+	    	
+	 }
+	
 	public void initializeMaps() throws Exception {
 		URL fileURL = getClass().getResource("/res/MenuTextFile.txt");
 		URI fileURI = fileURL.toURI();

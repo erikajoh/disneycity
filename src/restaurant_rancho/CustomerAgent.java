@@ -310,13 +310,11 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	private void GiveOrder() {
 		Random rand = new Random();
-		if (name.equals("Zero")) cash = 0;
-		if (name.equals("Four")) cash = 4;
-		if (name.equals("SteakTen")) cash = 10;
 		if (menu.menuList.size() == 0 || canPay() ==0) {
 			if (canPay() == 0) {
 				print("Everything on menu is too expensive");
 			}
+			print("menuList is empty");
 			eatingSuccess = false;
 			state = AgentState.Paying;
 			event = AgentEvent.paid;
@@ -324,9 +322,7 @@ public class CustomerAgent extends Agent implements Customer{
 			return;
 		}
 		int choiceIndex = (rand.nextInt(menu.menuList.size()));
-		if (canPay() == 1 && menu.menuList.contains("Latte")) choice = "Latte";
-		else if (name.equals("Latte") && menu.menuList.contains("Latte")) choice = "Latte" ;
-		else if (name.equals("SteakTen")) choice = "Steak";
+		if (canPay() == 1 && menu.menuList.contains("Chicken Tortilla Soup")) choice = "Chicken Tortilla Soup";
 		else choice = menu.getItemAt(choiceIndex);
 		waiter.msgHereIsMyOrder(this, choice);
 		customerGui.setText(choice.substring(0,3) + "?");
@@ -369,7 +365,7 @@ public class CustomerAgent extends Agent implements Customer{
 	private int canPay() {
 		int count = 0;
 		for (String food : menu.menuList) {
-			if (cash>menu.menuItems.get(food)) {
+			if (cash>=menu.menuItems.get(food)) {
 				count ++;
 			}
 		}

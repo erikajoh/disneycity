@@ -90,6 +90,10 @@ public class CookAgent extends Agent implements Cook {
 		return tables;
 	}
 	
+	public void setAmount(String food, int am) {
+		
+	}
+	
 	// Messages
 	public void msgHereIsOrder(Waiter w, String choice, Integer table){
 		print("table "+table+" ordered "+choice);

@@ -15,6 +15,7 @@ import simcity.gui.SimCityGui;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 import simcity.interfaces.Bank_Douglass;
+
 import javax.swing.*;
 
 import market.Market;
@@ -161,6 +162,11 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     
     public boolean isOpen() {
     	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
+    }
+    
+    public void setFoodAmount(String choice, int amount) {
+    	if (cook!=null) 
+    		cook.setAmount(choice, amount);
     }
     
     public LinkedList<Agent> getAllAgents() {

@@ -14,9 +14,10 @@ import simcity.Restaurant;
 import restaurant_rancho.ProducerConsumerMonitor;
 import restaurant_rancho.WaiterAgentPC;
 import simcity.interfaces.Market_Douglass;
-import javax.swing.*;
-import simcity.interfaces.Person;
 
+import javax.swing.*;
+
+import simcity.interfaces.Person;
 import restaurant_rancho.WaiterAgentNorm;
 import market.Market;
 
@@ -24,6 +25,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
 import simcity.interfaces.Bank_Douglass;
 
 /**
@@ -173,6 +175,12 @@ public class RestaurantRancho extends JPanel implements Restaurant {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
+    
+    public void setFoodAmount(String choice, int amount) {
+    	if (cook!=null) 
+    		cook.setAmount(choice, amount);
+    }
+    
     public void addPerson(Person p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {

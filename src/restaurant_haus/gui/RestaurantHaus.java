@@ -21,6 +21,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 
@@ -155,6 +156,11 @@ public class RestaurantHaus extends JPanel implements Restaurant{
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
+    
+    public void setFoodAmount(String choice, int amount) {
+    	if (cook!=null) 
+    		cook.setAmount(choice, amount);
+    }
     public void addPerson(Person p, String type, String name, double money) {
 
     	if (type.equals("Customer")) {

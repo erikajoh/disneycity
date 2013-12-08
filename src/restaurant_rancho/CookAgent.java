@@ -47,9 +47,9 @@ public class CookAgent extends Agent implements Cook{
 		cookTimes = new Hashtable<String, Integer>();
 		foods = Collections.synchronizedList(new ArrayList<Food>());
 		waiters = Collections.synchronizedList(new ArrayList<WaiterAgent>());
-		foods.add(new Food("Citrus Fire-Grilled Chicken", 0, 0, 6, 7000));
-		foods.add(new Food("Red Chile Enchilada Platter", 0, 0, 6, 6000));
-		foods.add(new Food("Soft Tacos Monterrey", 0, 0, 6, 4000));
+		foods.add(new Food("Citrus Fire-Grilled Chicken", 7, 0, 6, 7000));
+		foods.add(new Food("Red Chile Enchilada Platter", 7, 0, 6, 6000));
+		foods.add(new Food("Soft Tacos Monterrey", 7, 0, 6, 4000));
 		foods.add(new Food("Burrito Sonora", 7, 0, 6, 7000));
 		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 6, 2500));
 		cookTimes.put("Citrus Fire-Grilled Chicken", 7000);
@@ -81,6 +81,11 @@ public class CookAgent extends Agent implements Cook{
 	}
 	public List getOrders() {
 		return orders;
+	}
+	
+	public void setAmount(String choice, int am) {
+		Food f = findFood(choice);
+		f.amount = am;
 	}
 	
 

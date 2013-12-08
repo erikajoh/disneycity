@@ -66,19 +66,10 @@ public class RestaurantBayou extends JPanel implements Restaurant{
        
         menu.addItem("Filet Mignon", 42.99);
         menu.addItem("Pan-Seared Salmon", 33.99);
-        menu.addItem("Portobello Mushroom and Couscous Macque Choux", 29.99);
+        menu.addItem("Surf and Turf", 45.99);
         menu.addItem("Seafood Jambalaya", 31.99);
 
         market = new MarketAgent("Market", menu);
-       /* initRestLabel();
-        add(restLabel);
-        
-        add(customerPanel);
-        add(waiterPanel);
-        add(marketPanel);
-        */
-        
-//        add(group);
     }
     
     public void setBank(Bank_Douglass b) {
@@ -153,6 +144,12 @@ public class RestaurantBayou extends JPanel implements Restaurant{
             }
         }
     }*/
+    
+    public void setFoodAmount(String choice, int amount) {
+    	if (cook!=null) {
+    		cook.setAmount(choice, amount);
+    	}
+    }
     
     public void personAs(Person p, String type, String name, double money) {
     	addPerson(p, type, name, money);
