@@ -19,6 +19,7 @@ public class TruckAgent extends MobileAgent{
 	Position currentPosition;
 	Position marketPosition;
 	Position deliveryPosition;
+	Position homePosition;
 	TransportationController master;
 	TruckGui gui = null;
 	FlyingTraversal aStar;
@@ -74,10 +75,11 @@ public class TruckAgent extends MobileAgent{
 	
 	List<deliveryOrder> orders;
 	
-	public TruckAgent(Position marketPosition, TransportationController master, FlyingTraversal aStar) {
+	public TruckAgent(Position marketPosition, TransportationController master, FlyingTraversal aStar, int homeX, int homeY) {
 		this.currentPosition = marketPosition;
 		this.marketPosition = marketPosition;
 		this.master = master;
+		homePosition = new Position(homeX, homeY);
 		
 		animSem = new Semaphore(0, true);
 		this.aStar = aStar;
@@ -224,7 +226,7 @@ public class TruckAgent extends MobileAgent{
 	}
 	
 	private void idle() {
-		goToPosition(new Position (11, 11), null);
+		goToPosition(new Position (homePosition.getX(), homePosition.getY()), null);
 		gui.doIdle();
 	}
 	

@@ -243,7 +243,7 @@ public class TransportationController extends Agent implements Transportation{
 		bus.startThread();
 
 		//Spawning Delivery Truck
-		truck = new TruckAgent(new Position(11, 10), this, new FlyingTraversal(grid));
+		truck = new TruckAgent(new Position(10, 10), this, new FlyingTraversal(grid), 11, 11);
 		TruckGui truckGui = new TruckGui(11, 10, truck);
 		if(master != null)
 			master.addGui(truckGui);
