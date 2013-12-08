@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import simcity.interfaces.Person;
 import simcity.interfaces.Market_Douglass;
 import simcity.PersonAgent;
@@ -241,6 +242,10 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	public RestMenu getMenu() {
 		return menu2;
 	}
+	
+    public String[] getFoodNames(){
+    	return menu2.menuList.toArray(new String[0]);
+    }
 
 	public String getRestaurantName() {
 		return name;

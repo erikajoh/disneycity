@@ -47,7 +47,11 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JComboBox inventoryList;
 	JComboBox mktWorkersList;
 	JComboBox peopleForMktList;
+	JButton setMktQuantity = new JButton("Set");
 	JButton swapMktJobs = new JButton("Swap");
+	JButton setTellerAmt = new JButton("Set");
+	JButton setRestBalance = new JButton("Set");
+
 	
 	JPanel properties = new JPanel();
 	JPanel inventory = new JPanel();
@@ -130,6 +134,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   JSpinner spinner = new JSpinner(model);
 		   spinner.setFont(spinner.getFont().deriveFont(12.0f));
 		   editInventory.add(spinner);
+		   setMktQuantity.setFont(setMktQuantity.getFont().deriveFont(12.0f));
+		   editInventory.add(setMktQuantity);
 		   properties.add(editInventory);
 		   
 		   swapMktWorkers = new JPanel();
@@ -169,6 +175,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			JSpinner spinner = new JSpinner(model);
 			spinner.setFont(spinner.getFont().deriveFont(12.0f));
 			tellers.add(spinner);
+			setTellerAmt.setFont(setTellerAmt.getFont().deriveFont(12.0f));
+			tellers.add(setTellerAmt);
 			properties.add(tellers);
 		}
 		else if(type == WorkplaceType.Restaurant){
@@ -188,8 +196,11 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	        d.width = 80;  
 	        spinner.setPreferredSize(d);
 			restaurants.add(spinner);
+			setRestBalance.setFont(setRestBalance.getFont().deriveFont(12.0f));
+			restaurants.add(setRestBalance);
+
 			
-		/*	if (workplaceList.getSelectedItem().toString().contains("Bayou"))
+			if (workplaceList.getSelectedItem().toString().contains("Bayou"))
 				menu = SimCityGui.restBayou.getMenu();
 			else if (workplaceList.getSelectedItem().toString().contains("Cafe"))
 				menu = SimCityGui.restCafe.getMenu();
@@ -199,7 +210,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 				menu = SimCityGui.restPizza.getMenu();
 			else if (workplaceList.getSelectedItem().toString().contains("Rancho"))
 				menu = SimCityGui.restRancho.getMenu();
-			
+		
+			/*
 			setInventory = new JPanel();
 			setInventory1 = new JPanel();
 			setInventory2 = new JPanel();
@@ -240,8 +252,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	        Dimension d1 = spinner.getPreferredSize();  
 	        d.width = 80;  
 	        spinner.setPreferredSize(d);
-	      
-			*/
+	      */
+			
 				
 			
 			properties.add(restaurants);

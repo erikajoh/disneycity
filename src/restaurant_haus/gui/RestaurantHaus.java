@@ -269,6 +269,10 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	public RestMenu getMenu() {
 		return menu;
 	}
+	
+    public String[] getFoodNames(){
+    	return menu.menuList.toArray(new String[0]);
+    }
 
 	@Override
 	public String getRestaurantName() {

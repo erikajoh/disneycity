@@ -160,6 +160,10 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	return menu;
     }
     
+    public String[] getFoodNames(){
+    	return menu.menuList.toArray(new String[0]);
+    }
+    
     public boolean isOpen() {
     	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
     }

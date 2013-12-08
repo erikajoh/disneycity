@@ -22,6 +22,7 @@ import java.awt.event.*;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
+
 import simcity.interfaces.Person;
 import simcity.interfaces.Market_Douglass;
 
@@ -86,6 +87,10 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     
     public RestMenu getMenu() {
     	return menu;
+    }
+    
+    public String[] getFoodNames(){
+    	return menu.menuList.toArray(new String[0]);
     }
 
     /**
