@@ -92,7 +92,7 @@ public class ResidentGui implements Gui{
 		agent = r;
 		agent.setGui(this);
 		type = t;
-		roomNo = 3;
+		roomNo = n;
 		if(type == "house"){
 			xPos = xEntrance = (int)(hWidth*0.23);
 			yPos = yEntrance = (int)(hHeight*0.92);
