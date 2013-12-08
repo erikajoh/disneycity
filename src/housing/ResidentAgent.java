@@ -156,7 +156,7 @@ public class ResidentAgent extends Agent {
 			state = State.idle;
 			Do("Maintenance done");
 			housing.msgFinishedMaintenance(this);
-			state = State.goingToBed; //hack
+//			state = State.goingToBed; //hack
 			return true;
 		}
 		else if(state == State.goingToBed){

@@ -28,7 +28,7 @@ public class ResidentGui implements Gui{
 	private HousingAnimationPanel panel;
 
 	private int xPos, yPos, xDestination, yDestination, xDestNext, yDestNext, xDestFinal, yDestFinal;
-	private int xTable, yTable, xBed, yBed, xKitchen, yKitchen, xEntrance, yEntrance;
+	private int xTable, yTable, xBed, yBed, xKitchen, yKitchen, xEntrance, yEntrance, xMaintenance, yMaintenance;
 	
 	private enum Dir { x, y, all }; // to decide which direction to move first
 	Dir dir = Dir.all;
@@ -92,7 +92,7 @@ public class ResidentGui implements Gui{
 		agent = r;
 		agent.setGui(this);
 		type = t;
-		roomNo = n;
+		roomNo = 3;
 		if(type == "house"){
 			xPos = xEntrance = (int)(hWidth*0.23);
 			yPos = yEntrance = (int)(hHeight*0.92);
@@ -102,6 +102,8 @@ public class ResidentGui implements Gui{
 			yBed = (int)(hHeight*0.15);
 			xKitchen = (int)(hWidth*0.8);
 			yKitchen = (int)(hHeight*0.7);
+			xMaintenance = (int)(hWidth*0.23);
+			yMaintenance = (int)(hHeight*0.2);
 			walls.add(new Wall(0.17,0.17,0.45,0.64));
 			walls.add(new Wall(0.35,0.35,0.45,0.64));
 			walls.add(new Wall(0.17,0.35,0.49,0.49));
@@ -148,6 +150,8 @@ public class ResidentGui implements Gui{
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.59);
 				yKitchen = (int)(hHeight*0.7);
+				xMaintenance = (int)(hWidth*0.1);
+				yMaintenance = (int)(hHeight*0.3);
 			}else if(roomNo == 1){
 				xTable = (int)(hWidth*0.76);
 				yTable = (int)(hHeight*0.59);
@@ -155,6 +159,8 @@ public class ResidentGui implements Gui{
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.65);
 				yKitchen = (int)(hHeight*0.7);
+				xMaintenance = (int)(hWidth*0.42);
+				yMaintenance = (int)(hHeight*0.3);
 			}else if(roomNo == 2){
 				xTable = (int)(hWidth*0.69);
 				yTable = (int)(hHeight*0.51);
@@ -162,6 +168,8 @@ public class ResidentGui implements Gui{
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.71);
 				yKitchen = (int)(hHeight*0.7);
+				xMaintenance = (int)(hWidth*0.84);
+				yMaintenance = (int)(hHeight*0.3);
 			}else if(roomNo == 3){
 				xTable = (int)(hWidth*0.69);
 				yTable = (int)(hHeight*0.67);
@@ -169,6 +177,8 @@ public class ResidentGui implements Gui{
 				yBed = (int)(hHeight*0.71);
 				xKitchen = (int)(hWidth*0.77);
 				yKitchen = (int)(hHeight*0.7);
+				xMaintenance = (int)(hWidth*0.35);
+				yMaintenance = (int)(hHeight*0.74);
 			}
 		}
 	}
@@ -432,69 +442,18 @@ public class ResidentGui implements Gui{
 		xDestNext = -1;
 		yDestNext = -1;
 		DoGoToTable();
-//		if (type == "house"){
-//			for (int i=0; i<6; i++) {
-//				MaintainArea(i);
-//			}
-//		} else if (type == "apt"){
-//			for (int i=0; i<4; i++) {
-//				MaintainApt(i);
-//			}
-//		}
-	}
-	
-	private void MaintainApt(int i) {
-		if (i == 0) {
-			xDestination = (int)(hWidth*0.85);
-			yDestination = (int)(hHeight*0.5);
-			command = Command.HelperMove;
-		} else if (i == 1) {
-			xDestination = (int)(hWidth*0.58);
-			yDestination = (int)(hHeight*0.5);
-			command = Command.HelperMove;
-		} else if (i == 2) {
-			xDestination = (int)(hWidth*0.58);
-			yDestination = (int)(hHeight*0.7);
-			command = Command.HelperMove;
-		} else if (i == 3) {
-			xDestination = (int)(hWidth*0.85);
-			yDestination = (int)(hHeight*0.5);
-			command = Command.DoneMaintenance;
-		}
+		xDestFinal = xDestination = xMaintenance;
+		yDestFinal = yDestination = yMaintenance;
+		command = Command.HelperMove;
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	private void MaintainArea(int i) {
-		if (i == 0) {
-			xDestination = (int)(hWidth*0.65);
-			yDestination = (int)(hHeight*0.47);
-			command = Command.HelperMove;
-		} else if (i == 1) {
-			xDestination = (int)(hWidth*0.05);
-			yDestination = (int)(hHeight*0.47);
-			command = Command.HelperMove;
-		} else if (i == 2) {
-			xDestination = (int)(hWidth*0.05);
-			yDestination = (int)(hHeight*0.25);
-			command = Command.HelperMove;
-		} else if (i == 3) {
-			xDestination = (int)(hWidth*0.4);
-			yDestination = (int)(hHeight*0.25);
-			command = Command.HelperMove;
-		} else if (i == 4) {
-			xDestination = (int)(hWidth*0.4);
-			yDestination = (int)(hHeight*0.65);
-			command = Command.HelperMove;
-		} else {
-			xDestination = (int)(hWidth*0.23);
-			yDestination = (int)(hHeight*0.65);
-			command = Command.DoneMaintenance;
-		}		
+		xDestFinal = xDestination = xTable;
+		yDestFinal = yDestination = yTable;
+		command = Command.DoneMaintenance;
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
