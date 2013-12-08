@@ -61,6 +61,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
+	public final static int NUM_MARKETS = 1;
 
 	// lists to hold all the different buildings
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
@@ -119,7 +120,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		housings.add(mainStApts6);
 		
 		pirateBank = gui.pirateBank;
+		
 		mickeysMarket = gui.mickeysMarket;
+		markets.add(mickeysMarket);
+		
 		transportation = gui.cityAniPanel.getTransportation();
 		
 		animationPanelsList = gui.animationPanelsList;
@@ -184,7 +188,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 						st_Name, st_Housing, st_Money, st_FoodPref, st_PreferAtHome,
 						st_HousingRelation, transportation, st_Commute);
 				
-				// parsing restaurants now
+				// parsing restaurants
 				for(int restInd = 1; restInd <= NUM_RESTAURANTS; restInd++) {
 					String restName = props.getProperty("rest" + restInd + "_name");
 					String restRole = props.getProperty("rest" + restInd + "_role");
@@ -192,6 +196,16 @@ public class SimCityPanel extends JPanel implements ActionListener {
 					
 					Restaurant r = mapStringToRestaurant(restName);
 					personToAdd.addRestaurant(r, restRole, restShift); // key step
+				}
+				
+				// parsing markets
+				for(int marketInd = 1; marketInd <= NUM_MARKETS; marketInd++) {
+					String marketName = props.getProperty("market" + marketInd + "_name");
+					String marketRole = props.getProperty("market" + marketInd + "_role");
+					int marketShift = Integer.parseInt(props.getProperty("market" + marketInd + "_shift"));
+					
+					Market m = mapStringToMarket(marketName);
+					personToAdd.addMarket(m, marketRole, marketShift); // key step
 				}
 				
 				people.add(personToAdd);
@@ -214,10 +228,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				}
 			}
 
-			// TODO do markets in the same away as above. Below is hack
+			// Only one bank so that's added in directly
 			for(int personInd = 0; personInd < people.size(); personInd++) {
 				PersonAgent currPerson = people.get(personInd);
-				currPerson.addMarket(mickeysMarket, "Customer");
 				currPerson.addBank(pirateBank, "Customer");				
 				currPerson.startThread();
 			}
@@ -268,6 +281,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		for(int i = 0; i < restaurants.size(); i++)
 			if(restName.equals(restaurants.get(i).getRestaurantName()))
 				return restaurants.get(i);
+		return null;
+	}
+	
+	public Market mapStringToMarket(String marketName) {
+		for(int i = 0; i < markets.size(); i++)
+			if(marketName.equals(markets.get(i).getName()))
+				return markets.get(i);
 		return null;
 	}
 	
@@ -411,6 +431,17 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				}
 			}, NEW_DAY_DELAY);
 		}
+	}
+	
+	public String[] getAllUnemployedPeople() {
+		ArrayList<String> names = new ArrayList<String>();
+		for(int i = 0; i < people.size(); i++) {
+			PersonAgent p = people.get(i);
+			if(p.hasJob())
+				names.add(p.getName());
+		}
+		String[] namesArray = names.toArray(new String[0]);
+		return namesArray;
 	}
 	
 	public boolean allPeopleSleeping() {

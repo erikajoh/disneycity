@@ -56,6 +56,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	}
 
 	public void updateGui(){
+	    clear();
 		properties.removeAll();
 		properties.setLayout(new GridLayout(4, 1));
 
@@ -106,7 +107,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   swapMktWorkers.add(new JLabel("Swap workers: "));
 		   marketWorkers = SimCityGui.mickeysMarket.getWorkers();
 		   mktWorkersList = new JComboBox(marketWorkers);
-		   mktWorkersList.setSelectedIndex(selectedMktWorkerIndex);
+		   if(mktWorkersList.getItemCount() != 0){
+		       mktWorkersList.setSelectedIndex(selectedMktWorkerIndex);
+		   }
 		   mktWorkersList.addActionListener(this);
 		   swapMktWorkers.add(mktWorkersList);
 		   properties.add(swapMktWorkers);
@@ -174,7 +177,6 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     if(workplaces[i].equals(name)){
 		    	 setType(name);
 			     selectedWorkplaceIndex = i;
-			     clear();
 			     updateGui();
 			     break;
 		     }
@@ -185,7 +187,6 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     if(marketInventory[i].equals(name)){
 			     selectedMktItem = name;
 			     selectedMktItemIndex = i;
-			     clear();
 			     updateGui();
 			     break;
 		     }
@@ -196,7 +197,6 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     if(marketWorkers[i].equals(name)){
 			     selectedMktWorker = name;
 			     selectedMktWorkerIndex = i;
-			     clear();
 			     updateGui();
 			     break;
 		     }
