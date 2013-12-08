@@ -4,11 +4,6 @@ Two|Main St Apartments #2|Renter
 1
 Main St Apartments #2|One|One|Two
 
-1
-One|Main St Apartments #2|OwnerResident
-1
-Main St Apartments #2|One|One
-
 5
 Narwhal_Prime|Haunted Mansion|OwnerResident
 One|Main St Apartments #2|Renter

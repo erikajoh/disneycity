@@ -39,6 +39,7 @@ public class SimCityGui extends JFrame  {
 	
 	static SimCityPanel simCityPanel;
     WorkplacePropertyPanel workplacePropertyPanel;
+    PersonPropertyPanel personPropertyPanel;
 	TracePanel tracePanel;
 	
 	JPanel cards;
@@ -167,7 +168,8 @@ public class SimCityGui extends JFrame  {
 		
 		simCityPanel = new SimCityPanel(this);
 		workplacePropertyPanel = new WorkplacePropertyPanel(this);
-		
+		// TODO: still need to implement this
+		personPropertyPanel = new PersonPropertyPanel(this);
 		
 		setLayout(new GridBagLayout());
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
@@ -202,6 +204,8 @@ public class SimCityGui extends JFrame  {
 		c3.gridwidth = 3;
 		c3.gridheight = 3;
 		personPanel.setBorder(BorderFactory.createTitledBorder("Person Properties"));
+		//personPanel.setLayout(new BoxLayout(workplacePanel, BoxLayout.Y_AXIS));
+		personPanel.add(personPropertyPanel);
 		add(personPanel, c3);
 		
 		GridBagConstraints c4 = new GridBagConstraints();

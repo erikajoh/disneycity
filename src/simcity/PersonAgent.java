@@ -26,7 +26,7 @@ public class PersonAgent extends Agent implements Person {
 	// Unit testing
 	public EventLog log = new EventLog();
 	
-	// Inherent data - simple variables
+	// Inherent data of the person
 	private String name;
 	private boolean isNourished;
 	private double moneyOnHand;
@@ -37,8 +37,6 @@ public class PersonAgent extends Agent implements Person {
 	private PreferredCommute preferredCommute;
 	private enum BodyState {Asleep, Active, Tired};
 	private BodyState bodyState;
-	
-	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
 	
 	private final static double MONEY_ON_HAND_LIMIT = 80.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
@@ -52,7 +50,7 @@ public class PersonAgent extends Agent implements Person {
 	private LocationState currentLocationState;
 	private String currentLocation;
 	
-	// Variables with intention to update
+	// Other constantly changing, state-based variables
 	private double moneyWanted = 0.0;
 	private double moneyToDeposit = 0.0;
 	private double rentToPay = 0.0;
@@ -60,13 +58,13 @@ public class PersonAgent extends Agent implements Person {
 	private MyRestaurant workplace = null;
 	private String targetLocation;
 	private enum RestaurantState		{ None, WantToEat, WantToWork }
-	private enum MarketState			{ None, WantToBuy };
+	private enum MarketState			{ None, WantToBuy, WantToWork };
 	private enum BankState				{ None, NeedTransaction };
 	private enum TransportationState	{ None, NeedToPayFare };
 	private RestaurantState restState = RestaurantState.None;
-	private MarketState marketState;
-	private BankState bankState;
-	private TransportationState transportationState;
+	private MarketState marketState = MarketState.None;
+	private BankState bankState = BankState.None;
+	private TransportationState transportationState = TransportationState.None;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -82,6 +80,7 @@ public class PersonAgent extends Agent implements Person {
 	public PriorityQueue<Action> actionQueue = new PriorityQueue<Action>();
 	public enum PersonEvent {makingDecision, makingDecisionAtRestaurant, onHold, onHoldInTransportation, onHoldInTransportationPayFare, onHoldAtRestaurant,
 		onHoldInMarket, onHoldInBank};
+	private enum ActionString { becomeHungry, wakeUp, goToSleep, goToWork, payRent, receiveRent, needMaintenance };
 	public PersonEvent event = PersonEvent.makingDecision;
 	
 	// ************************* SETUP ***********************************
@@ -113,16 +112,17 @@ public class PersonAgent extends Agent implements Person {
 		itemsOnHand = new HashMap<String, Integer>();
 	}
 
-	// get/set methods
-	
+	// accessor/modifier methods
 	public String	getName()				{ return name; }
 	public boolean	getIsNourished()		{ return isNourished; }
 	public double	getMoney()				{ return moneyOnHand; }
 	public String	getCurrLocation()		{ return currentLocation; }
 	public String	getCurrLocationState()	{ return currentLocationState.name(); }
+	public String	getPersonalityType()	{ return myPersonality.name(); }
 	public String	getBodyState()			{ return bodyState.toString(); }
 	public boolean	isWorking()				{ return workplace != null; }
-	public boolean	hasJob() {
+	
+	public boolean hasJob() {
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++) {
 			if(myObjectsArray[i] instanceof MyRestaurant) {
@@ -142,6 +142,17 @@ public class PersonAgent extends Agent implements Person {
 	public void		setIsNourished(boolean full)	{ isNourished = full; }
 	public void		setMoney(double money)			{ moneyOnHand = money; }
 	
+	public void	setPersonality(String type) {
+		if(type.equals("Normal"))
+			myPersonality = PersonType.Normal;
+		else if(type.equals("Wealthy"))
+			myPersonality = PersonType.Wealthy;
+		else if(type.equals("Deadbeat"))
+			myPersonality = PersonType.Deadbeat;
+		else if(type.equals("Crook"))
+			myPersonality = PersonType.Crook;
+	}
+
 	public void	setFoodPreference(String type, boolean atHome) {
 		foodPreference = type;
 		preferEatAtHome = atHome;
@@ -161,7 +172,6 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	public void	addRestaurant(Restaurant r, String personType, int workSession) {
-		// TODO Hacked in restaurant type
 		MyRestaurant tempMyRestaurant = new MyRestaurant(r, r.getRestaurantName(), r.getType(), personType, r.getMenu().menuItems, workSession);
 		myObjects.add(tempMyRestaurant);
 	}
@@ -177,8 +187,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	// ************************* MESSAGES ***********************************
 
-	// from main class
-	// TODO: handle sleeping/waking in scheduler
+	// from main class: action queue messages
 	public void msgWakeUp() {
 		log.add(new LoggedEvent("Must wake up"));
 		print("Must wake up");
@@ -213,8 +222,7 @@ public class PersonAgent extends Agent implements Person {
 	public void msgStopWork(double amount) {
 		log.add(new LoggedEvent("Stopping work; got paid " + amount));
 		print("Stopping work; got paid " + amount);
-		moneyOnHand += amount;
-		// TODO what other states need to be changed such that he can go home? 
+		moneyOnHand += amount; 
 		restState = RestaurantState.None;
 		workplace = null;
 		event = PersonEvent.makingDecision;
@@ -377,12 +385,11 @@ public class PersonAgent extends Agent implements Person {
 			return true;
 		}
 		
-		// if no emergenices, proceed with normal decision rules
+		// if no urgent actions and not asleep, proceed with normal decision rules
 		if(event == PersonEvent.makingDecision && bodyState != BodyState.Asleep) {
 			
 			if(currentLocationState == LocationState.Home) { // at home
 				if(!insideHouse) { // if not inside house (i.e., at the doorstep), enter it
-					print("Not inside my house");
 					if(currentLocation.equals(targetLocation) && workplace == null) {
 						enterHouse();
 						insideHouse = true;
@@ -395,7 +402,7 @@ public class PersonAgent extends Agent implements Person {
 						event = PersonEvent.onHoldInTransportation;
 					}
 					log.add(new LoggedEvent("Returning true because !insideHouse"));
-					print("Returning true because !insideHouse");
+					print("Returning true because !insideHouse was true");
 					return true;
 				}
 				if(workplace != null) {
@@ -462,9 +469,8 @@ public class PersonAgent extends Agent implements Person {
 				}
 			}
 			if(currentLocationState == LocationState.Bank) { // at bank
-				
 				switch(bankState) {
-					case NeedTransaction:
+					case NeedTransaction: // Has business at the bank
 						if(myPersonalBankAccount == null) {
 							requestNewAccount();
 							event = PersonEvent.onHoldInBank;
@@ -478,8 +484,7 @@ public class PersonAgent extends Agent implements Person {
 							event = PersonEvent.onHoldInBank;
 						}
 						break;
-					case None:
-						// Done at bank, time to transition
+					case None: // Done at bank, time to transition
 						if(!currentLocation.equals(targetLocation)) {
 							goToTransportation();
 							event = PersonEvent.onHoldInTransportation;
@@ -498,7 +503,8 @@ public class PersonAgent extends Agent implements Person {
 				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
-				if((!isNourished && !preferEatAtHome) || (restState == RestaurantState.WantToWork) && currentLocation.equals(workplace.name)) {
+				if( (!isNourished && !preferEatAtHome)
+						|| ((restState == RestaurantState.WantToWork) && currentLocation.equals(workplace.name)) ) {
 					enterRestaurant();
 					event = PersonEvent.onHoldAtRestaurant;
 				}
@@ -523,6 +529,9 @@ public class PersonAgent extends Agent implements Person {
 						enterMarket();
 						event = PersonEvent.onHoldInMarket;
 						break;
+					case WantToWork:
+						// TODO handle going to work at market
+						break;
 				}
 				print("Market: event onHold set");
 				return true;
@@ -532,10 +541,6 @@ public class PersonAgent extends Agent implements Person {
 				+ "; currentLocationState = " + currentLocationState.toString()
 				+ "; bodyState = " + bodyState
 				+ "; personEvent = " + event);
-//		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Nothing to do for now: isNourished = " + isNourished
-//				+ "; currentLocationState = " + currentLocationState.toString()
-//				+ "; bodyState = " + bodyState
-//				+ "; personEvent = " + event);
 		return false;
 	}
 
@@ -752,6 +757,7 @@ public class PersonAgent extends Agent implements Person {
 		}
 	}
 	
+	// updates the currentMyObject variable, which denotes what place the person is currently at
 	private void updateCurrentMyObject(String location) {
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++) {

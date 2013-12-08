@@ -48,6 +48,14 @@ public class Housing implements Housing_Douglass {
 		return name;
 	}
 	
+	public boolean isApartment() {
+		return type.equals("apt");
+	}
+	
+	public int getNumResidents() {
+		return renters.size();
+	}
+	
 	public void setOwner(PersonAgent op) {
 		ownerPerson = op;
 	}
