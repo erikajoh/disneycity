@@ -181,6 +181,8 @@ public class BusAgent extends MobileAgent{
 		route.add(route.poll());
 		
 	}
+	
+	
 
 	public void createRoute(Queue<Position> route) {
 		this.route = route;
@@ -193,5 +195,9 @@ public class BusAgent extends MobileAgent{
 	@Override
 	public String getType() {
 		return "bus";
+	}
+
+	public Queue<Position> getRoute() {
+		return route;
 	}
 }

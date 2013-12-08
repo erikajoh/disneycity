@@ -366,6 +366,11 @@ public class TransportationController extends Agent implements Transportation{
 				spawnMover(mover);
 				return;
 			}
+			if(easierToWalk(directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, directory.get(mover.startingLocation).closestBusStop.getAssociatedTile(), directory.get(mover.endingLocation).closestBusStop.getAssociatedTile())) {
+				mover.method = "Walk";
+				spawnMover(mover);
+				return;
+			}
 			if(grid[directory.get(mover.startingLocation).walkingTile.getX()][directory.get(mover.startingLocation).walkingTile.getY()].tryAcquire()) {
 				WalkerTraversal aStar = new WalkerTraversal(grid);
 				WalkerAgent busWalker = new WalkerAgent(mover.person, directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, this, aStar, directory.get(mover.startingLocation).closestBusStop, directory.get(mover.endingLocation).closestBusStop, mover.endingLocation);
@@ -378,6 +383,60 @@ public class TransportationController extends Agent implements Transportation{
 			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
 			}
+		}
+	}
+
+	private boolean easierToWalk(Position start, Position end, Position startStop, Position endStop) {
+		float walkingDistance = 0.00f;
+		float busDistance = 0.00f;
+		
+		walkingDistance += abs((start.getY() - end.getY()));
+		walkingDistance += abs((start.getX() - end.getX()));
+		
+		busDistance += abs((start.getX() - startStop.getX()));
+		busDistance += abs((start.getY() - startStop.getY()));
+		busDistance += abs((end.getX() - endStop.getX()));
+		busDistance += abs((end.getY() - endStop.getY()));
+		
+		//iterate through a generic bus route and find how long the bus would require
+		//Multiply it by 0.25 to encourage bus taking.
+		Queue<Position> route = new LinkedList<Position>();
+		createRoute(route);
+		
+		while(route.peek().getX() != startStop.getX() && route.peek().getY() != startStop.getY()) {
+			route.add(route.poll());
+		}
+		
+		while(route.peek().getX() != endStop.getX() && route.peek().getY() != endStop.getY()) {
+			route.add(route.poll());
+			busDistance += 0.25;
+		}
+		
+		if(walkingDistance <= busDistance)
+			return true;
+		return false;
+	}
+	
+	private int abs(int integer) {
+		if(integer < 0) {
+			return -integer;
+		}
+		return integer;
+	}
+	
+	public void createRoute(Queue<Position> route) {//Hack for one route
+		//SPAWN BUS AT {4, 4}
+		for(int i = 5; i <= 8; i++) {
+			route.add(new Position(4, i));
+		}
+		for(int i = 5; i <= 11; i++) {
+			route.add(new Position(i, 8));
+		}
+		for(int i = 7; i>=4; i--) {
+			route.add(new Position(11, i));
+		}
+		for(int i = 10; i >= 4; i--) {
+			route.add(new Position(i, 4));
 		}
 	}
 
