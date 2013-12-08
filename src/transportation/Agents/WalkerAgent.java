@@ -96,7 +96,10 @@ public class WalkerAgent extends MobileAgent{
 			//Try and get lock for the next step.
 			int attempts    = 1;
 			
-			while(master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType() == MovementTile.MovementType.TRAFFICCROSSROAD) {
+			MovementTile.MovementType temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
+			while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
+				if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+					break;
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
 			}
@@ -111,7 +114,10 @@ public class WalkerAgent extends MobileAgent{
 				//Wait for 1sec and try again to get lock.
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
-				while(master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType() == MovementTile.MovementType.TRAFFICCROSSROAD) {
+				
+				while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
+					if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+						break;
 					try { Thread.sleep(1000); }
 					catch (Exception e){}
 				}

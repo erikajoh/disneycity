@@ -12,6 +12,7 @@ public class MovementTile extends Semaphore{
 		CROSSWALK,
 		TRAFFICCROSSWALK,
 		TRAFFICCROSSROAD,
+		TRAFFICCROSSNONE,
 		FLYING
 	};
 

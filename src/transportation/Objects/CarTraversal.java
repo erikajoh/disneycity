@@ -75,6 +75,7 @@ public class CarTraversal extends GraphTraversal {
 					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
 					grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
 				continue;
 			}
@@ -116,6 +117,7 @@ public class CarTraversal extends GraphTraversal {
 					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
 					grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
 				continue;
 			}

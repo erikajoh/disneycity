@@ -65,17 +65,18 @@ public class WalkerTraversal extends GraphTraversal {
 			if ((nextX+1>grid.length || nextY+1>grid[0].length) ||
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
-			
+
 			if(ignore != null) {
 				if(nextX == ignore.getX() && nextY == ignore.getY())
 					continue;
 			}
-			
+
 			//System.out.println("considering"+next);
 			if (inPath(next,path) ||
 					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
 					grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
 				continue;
 			}
@@ -108,6 +109,7 @@ public class WalkerTraversal extends GraphTraversal {
 					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
 					grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
 				continue;
 			}
