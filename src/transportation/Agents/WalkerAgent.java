@@ -69,10 +69,10 @@ public class WalkerAgent extends MobileAgent{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		if(beginBusStop != null) {
-			goToPosition(beginBusStop.getAssociatedTile(), false);
+			goToPosition(beginBusStop.getAssociatedTile(), null);
 		}
 		if(!arrived) {
-			goToPosition(endPosition, false);
+			goToPosition(endPosition, null);
 		}
 		if(arrived) {
 			tauntAndLeave();
@@ -80,8 +80,8 @@ public class WalkerAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToPosition(Position goal, boolean recalculate) {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, recalculate);
+	public void goToPosition(Position goal, Position ignore) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, ignore);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -95,6 +95,11 @@ public class WalkerAgent extends MobileAgent{
 
 			//Try and get lock for the next step.
 			int attempts    = 1;
+			
+			while(master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType() == MovementTile.MovementType.TRAFFICCROSSROAD) {
+				try { Thread.sleep(1000); }
+				catch (Exception e){}
+			}
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 			
 			Random random = new Random();
@@ -106,7 +111,10 @@ public class WalkerAgent extends MobileAgent{
 				//Wait for 1sec and try again to get lock.
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
-
+				while(master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType() == MovementTile.MovementType.TRAFFICCROSSROAD) {
+					try { Thread.sleep(1000); }
+					catch (Exception e){}
+				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 				attempts ++;
 			}
@@ -114,7 +122,7 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToPosition(goal, true);
+				goToPosition(goal, tmpPath);
 				break;
 			}
 

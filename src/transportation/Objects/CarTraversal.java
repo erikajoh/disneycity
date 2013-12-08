@@ -47,7 +47,7 @@ public class CarTraversal extends GraphTraversal {
 		//System.out.print("createStartNode"); n.printNode();
 		return n;
 	}
-	public List<Node> expandFunc(Node n, boolean recalculate) {
+	public List<Node> expandFunc(Node n, Position ignore) {
 		AStarNode node = (AStarNode) n;
 		//loop computes the positions you can get to from node
 		List<Node> expandedNodes = new ArrayList<Node>();
@@ -59,11 +59,11 @@ public class CarTraversal extends GraphTraversal {
 		//from pos.
 		for(int i = -1; i <= 1; i++) {//increment for x direction
 			//create the potential next position
-				if(!grid[x][y].left && i == -1) {
-					continue;
-				}
-				if(!grid[x][y].right && i == 1)
-					continue;
+			if(!grid[x][y].left && i == -1) {
+				continue;
+			}
+			if(!grid[x][y].right && i == 1)
+				continue;
 			int nextX=x+i;
 			int nextY=y;
 			//make sure next point is on the grid
@@ -71,17 +71,23 @@ public class CarTraversal extends GraphTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !(grid[nextX][nextY].type == MovementTile.MovementType.CROSSWALK || grid[nextX][nextY].type == MovementTile.MovementType.CROSSROAD || grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
+			if (inPath(next,path) ||
+					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
 				continue;
 			}
-			
-			if (recalculate && !next.open(grid))
-				continue;
+
+			if(ignore != null) {
+				if(nextX == ignore.getX() && nextY == ignore.getY())
+					continue;
+			}
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
-			
-			
+
+
 			//update distance travelled
 			nodeTemp.setDistTravelled(node.getDistTravelled()+pos.distance(next));
 			//update approximate total distance to destination
@@ -94,10 +100,10 @@ public class CarTraversal extends GraphTraversal {
 			//them directly to nodelist 
 		}
 		for (int j = -1; j <= 1; j++) {//increment for y direction
-				if(!grid[x][y].up && j == -1)
-					continue;
-				if(!grid[x][y].down && j == 1)
-					continue;
+			if(!grid[x][y].up && j == -1)
+				continue;
+			if(!grid[x][y].down && j == 1)
+				continue;
 			//create the potential next position
 			int nextX=x;
 			int nextY=y+j;
@@ -106,8 +112,16 @@ public class CarTraversal extends GraphTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !(grid[nextX][nextY].type == MovementTile.MovementType.CROSSWALK || grid[nextX][nextY].type == MovementTile.MovementType.CROSSROAD || grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
+			if (inPath(next,path) ||
+					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
 				continue;
+			}
+			if(ignore != null) {
+				if(nextX == ignore.getX() && nextY == ignore.getY())
+					continue;
 			}
 			//printCurrentList();
 			//System.out.println("available"+next);
@@ -126,7 +140,7 @@ public class CarTraversal extends GraphTraversal {
 			expandedNodes.add(nodeTemp);//could have just added
 			//them directly to nodelist 
 		}
-		
+
 		return expandedNodes;
 	}//end expandFunc
 	private boolean inPath (Position pos, List<Position> path){

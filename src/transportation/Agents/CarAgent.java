@@ -9,6 +9,7 @@ import simcity.interfaces.Person;
 import transportation.GUIs.CarGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
+import transportation.Objects.MovementTile.MovementType;
 
 public class CarAgent extends MobileAgent{
 	
@@ -45,7 +46,7 @@ public class CarAgent extends MobileAgent{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		if(!arrived) {
-			goToEndPosition(false);
+			goToEndPosition(null);
 		}
 		if(arrived) {
 			tauntAndLeave();
@@ -53,8 +54,8 @@ public class CarAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToEndPosition(boolean recalculate) {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, endPosition, recalculate);
+	public void goToEndPosition(Position ignore) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, endPosition, ignore);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -68,6 +69,10 @@ public class CarAgent extends MobileAgent{
 
 			//Try and get lock for the next step.
 			int attempts    = 1;
+			while(master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType() == MovementTile.MovementType.TRAFFICCROSSWALK) {
+				try { Thread.sleep(1000); }
+				catch (Exception e){}
+			}
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 			
 			//Did not get lock. Lets make n attempts.
@@ -77,15 +82,18 @@ public class CarAgent extends MobileAgent{
 				//Wait for 1sec and try again to get lock.
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
-
+				while(master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType() == MovementTile.MovementType.TRAFFICCROSSWALK) {
+					try { Thread.sleep(1000); }
+					catch (Exception e){}
+				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-				attempts ++;
+					attempts ++;
 			}
 
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToEndPosition(false);
+				goToEndPosition(tmpPath);
 				break;
 			}
 

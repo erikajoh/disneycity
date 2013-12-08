@@ -47,7 +47,7 @@ public class WalkerTraversal extends GraphTraversal {
 		//System.out.print("createStartNode"); n.printNode();
 		return n;
 	}
-	public List<Node> expandFunc(Node n, boolean recalculate) {
+	public List<Node> expandFunc(Node n, Position ignore) {
 		AStarNode node = (AStarNode) n;
 		//loop computes the positions you can get to from node
 		List<Node> expandedNodes = new ArrayList<Node>();
@@ -65,13 +65,20 @@ public class WalkerTraversal extends GraphTraversal {
 			if ((nextX+1>grid.length || nextY+1>grid[0].length) ||
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
+			
+			if(ignore != null) {
+				if(nextX == ignore.getX() && nextY == ignore.getY())
+					continue;
+			}
+			
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !(grid[nextX][nextY].type == MovementTile.MovementType.CROSSWALK || grid[nextX][nextY].type == MovementTile.MovementType.CROSSROAD || grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
+			if (inPath(next,path) ||
+					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
 				continue;
 			}
-
-			if (recalculate && !next.open(grid))
-				continue;
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
@@ -97,8 +104,16 @@ public class WalkerTraversal extends GraphTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !(grid[nextX][nextY].type == MovementTile.MovementType.CROSSWALK || grid[nextX][nextY].type == MovementTile.MovementType.CROSSROAD || grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
+			if (inPath(next,path) ||
+					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
 				continue;
+			}
+			if(ignore != null) {
+				if(nextX == ignore.getX() && nextY == ignore.getY())
+					continue;
 			}
 			//printCurrentList();
 			//System.out.println("available"+next);

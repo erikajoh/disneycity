@@ -2,13 +2,16 @@ package transportation.Objects;
 
 import java.util.concurrent.Semaphore;
 
+import transportation.Objects.MovementTile.MovementType;
+
 public class MovementTile extends Semaphore{
 	public enum MovementType {
 		UNTYPED,
 		WALKWAY,
 		ROAD,
 		CROSSWALK,
-		CROSSROAD,
+		TRAFFICCROSSWALK,
+		TRAFFICCROSSROAD,
 		FLYING
 	};
 
@@ -53,5 +56,9 @@ public class MovementTile extends Semaphore{
 
 	public BusStop getBusStop() {
 		return busStop;
+	}
+
+	public MovementType getMovementType() {
+		return type;
 	}
 }

@@ -47,7 +47,7 @@ public class FlyingTraversal extends GraphTraversal {
 		//System.out.print("createStartNode"); n.printNode();
 		return n;
 	}
-	public List<Node> expandFunc(Node n, boolean recalculate) {
+	public List<Node> expandFunc(Node n, Position ignore) {
 		AStarNode node = (AStarNode) n;
 		//loop computes the positions you can get to from node
 		List<Node> expandedNodes = new ArrayList<Node>();
@@ -69,9 +69,10 @@ public class FlyingTraversal extends GraphTraversal {
 			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type == MovementTile.MovementType.UNTYPED || grid[nextX][nextY].type == MovementTile.MovementType.ROAD) {
 				continue;
 			}
-			
-			if (recalculate && !next.open(grid))
-				continue;
+			if(ignore != null) {
+				if(nextX == ignore.getX() && nextY == ignore.getY())
+					continue;
+			}
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
