@@ -51,7 +51,7 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	
 	JPanel properties = new JPanel();
 	JPanel inventory = new JPanel();
-	JPanel editInventory;
+	JPanel editInventory = new JPanel();
 	JPanel setInventory;
 	JPanel setInventory1;
 	JPanel setInventory2;
@@ -116,7 +116,6 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			   selectedMktItem = inventoryList.getSelectedItem().toString();
 		   }
 		
-		   editInventory = new JPanel();
 		   editInventory.setMaximumSize(panelDim);
 		   editInventory.setLayout(new FlowLayout());
 		   label = new JLabel("Current Quantity: "+SimCityGui.mickeysMarket.getItemQty(selectedMktItem)+"   ");
