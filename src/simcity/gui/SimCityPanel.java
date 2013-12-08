@@ -139,7 +139,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	}
 	
 	public void addPerson(String aName, String housingName, double startMoney, String foodPreference,
-			boolean preferEatAtHome, char commute) {
+			boolean preferEatAtHome, char commute, String personality) {
 		
 		Housing h = mapStringToHousing(housingName);
 		if(h.getNumResidents() >= 4 && h.isApartment() || h.getNumResidents() >= 1 && !h.isApartment())
@@ -160,6 +160,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				Market m = markets.get(marketInd);
 				personToAdd.addMarket(m, "Customer", 0);
 			}
+			
+			personToAdd.setPersonality(personality);
 			people.add(personToAdd);
 			personToAdd.startThread();
 			personToAdd.msgWakeUp();
@@ -258,6 +260,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 					st_Housing.addRenter(st_Renter); // key step
 				}
 			}
+			
+			// Extra setup variables at the end of file
+			String theDay = br.readLine();
+			setDay(theDay);
 
 			// Only one bank so that's added in directly
 			for(int personInd = 0; personInd < people.size(); personInd++) {
@@ -399,7 +405,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	/* all time-related variables and methods */
 	// TODO: initialize these in main config file
 	public enum DayOfTheWeek { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
-	public DayOfTheWeek currentDay = DayOfTheWeek.Thursday;
+	public DayOfTheWeek currentDay = DayOfTheWeek.Thursday; // default start day
 	public long numTicks = 0;
 	
 	/* Time intervals */
@@ -408,14 +414,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	// these are start times for each of the day phases
 	private static final long START_OF_DAY		= 1;
 	private static final long MORNING			= START_OF_DAY		+ 40; //41
-	private static final long WORK_ONE_START	= MORNING			+ 160;//201
-	private static final long NOON				= WORK_ONE_START	+ 200;//361
-	private static final long WORK_ONE_END		= NOON				+ 160;//521
-	private static final long WORK_TWO_START	= WORK_ONE_END		+ 100;//561
-	private static final long EVENING			= WORK_TWO_START	+ 160;//721
-	private static final long WORK_TWO_END		= EVENING			+ 160;//881
-	private static final long NIGHT				= WORK_TWO_END		+ 60;//921
-	private static final long END_OF_DAY		= NIGHT				+ 850;//1271
+	private static final long WORK_ONE_START	= MORNING			+ 150;//191
+	private static final long NOON				= WORK_ONE_START	+ 150;//341
+	private static final long WORK_ONE_END		= NOON				+ 150;//491
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 100;//591
+	private static final long EVENING			= WORK_TWO_START	+ 150;//741
+	private static final long WORK_TWO_END		= EVENING			+ 150;//891
+	private static final long NIGHT				= WORK_TWO_END		+ 100;//991
+	private static final long END_OF_DAY		= NIGHT				+ 800;//1791
 	// length of day 1231
 	
 	// for setting random delay for eating
@@ -442,6 +448,23 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			case Saturday:
 				currentDay = DayOfTheWeek.Sunday; break;
 		}
+	}
+
+	public void setDay(String day) {
+		if(day.equals("Sunday"))
+			currentDay = DayOfTheWeek.Sunday;
+		if(day.equals("Monday"))
+			currentDay = DayOfTheWeek.Monday;
+		if(day.equals("Tuesday"))
+			currentDay = DayOfTheWeek.Tuesday;
+		if(day.equals("Wednesday"))
+			currentDay = DayOfTheWeek.Wednesday;
+		if(day.equals("Thursday"))
+			currentDay = DayOfTheWeek.Thursday;
+		if(day.equals("Friday"))
+			currentDay = DayOfTheWeek.Friday;
+		if(day.equals("Saturday"))
+			currentDay = DayOfTheWeek.Saturday;
 	}
 	
 	public long getNumTicks() {
