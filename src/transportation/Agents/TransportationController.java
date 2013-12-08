@@ -235,7 +235,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[5][8].setBusStop(busStops.get(2));
 
 		//Spawning Bus
-		bus = new BusAgent(this);
+		bus = new BusAgent(this, new Position(4, 4));
 		BusGui busGui = new BusGui(4, 4, bus);
 		if(master != null)
 			master.addGui(busGui);

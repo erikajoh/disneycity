@@ -28,13 +28,13 @@ public class BusAgent extends MobileAgent{
 
 	TransportationController master;
 
-	public BusAgent(TransportationController master) {
+	public BusAgent(TransportationController master, Position position) {
 		collectedFare = 0;
 		currentBusStop = null;
 		busRiders = Collections.synchronizedList(new ArrayList<BusRider>());
 		route = new LinkedList<Position>();
 		this.master = master;
-		currentPosition = new Position(4, 4);
+		currentPosition = position;
 		try {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].acquire();
 		} catch (InterruptedException e) {
@@ -173,6 +173,13 @@ public class BusAgent extends MobileAgent{
 		for(int i = 10; i >= 4; i--) {
 			route.add(new Position(i, 4));
 		}
+		
+		//Iterate through bus route until you find the position you're currently at
+		while(route.peek().getX() != currentPosition.getX() && route.peek().getY() != currentPosition.getY()) {
+			route.add(route.poll());
+		}
+		route.add(route.poll());
+		
 	}
 
 	public void createRoute(Queue<Position> route) {
