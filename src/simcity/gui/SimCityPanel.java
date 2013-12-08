@@ -141,24 +141,30 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public void addPerson(String aName, String housingName, double startMoney, String foodPreference,
 			boolean preferEatAtHome, char commute) {
 		
-		Housing h = mapStringToHousing(housingName);		
-		PersonAgent personToAdd = new PersonAgent( aName, h, startMoney, foodPreference, preferEatAtHome,
-			"Renter", transportation, commute);
-		h.addRenter(personToAdd);
-		
-		for(int restInd = 0; restInd < NUM_RESTAURANTS; restInd++) {
-			Restaurant r = restaurants.get(restInd);
-			personToAdd.addRestaurant(r, "Customer", 0);
+		Housing h = mapStringToHousing(housingName);
+		if(h.getNumResidents() >= 4 && h.isApartment() || h.getNumResidents() >= 1 && !h.isApartment())
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Failed to create person; that housing has no more empty spots!");
+		else if(nameExists(aName))
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Failed to create person; person name already exists!");
+		else {
+			PersonAgent personToAdd = new PersonAgent( aName, h, startMoney, foodPreference, preferEatAtHome,
+				"Renter", transportation, commute);
+			h.addRenter(personToAdd);
+			
+			for(int restInd = 0; restInd < NUM_RESTAURANTS; restInd++) {
+				Restaurant r = restaurants.get(restInd);
+				personToAdd.addRestaurant(r, "Customer", 0);
+			}
+			
+			for(int marketInd = 0; marketInd < NUM_MARKETS; marketInd++) {
+				Market m = markets.get(marketInd);
+				personToAdd.addMarket(m, "Customer", 0);
+			}
+			people.add(personToAdd);
+			personToAdd.startThread();
+			personToAdd.msgWakeUp();
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Created person: " + aName);
 		}
-		
-		for(int marketInd = 0; marketInd < NUM_MARKETS; marketInd++) {
-			Market m = markets.get(marketInd);
-			personToAdd.addMarket(m, "Customer", 0);
-		}
-		System.out.println("Starting new person thread from GUI");
-		people.add(personToAdd);
-		personToAdd.startThread();
-		personToAdd.msgWakeUp();
 	}
 	
 	// Configuration file parsing
@@ -459,6 +465,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	}
 	
 	/* methods for accessing */
+	
+	public boolean nameExists(String name) {
+		String[] people = getAllPeople();
+		for(int i = 0; i < people.length; i++)
+			if(people[i].equals(name))
+				return true;
+		return false;
+	}
 	
 	public String[] getAllPeople() {
 		ArrayList<String> names = new ArrayList<String>();
