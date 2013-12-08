@@ -1,8 +1,8 @@
 package transportation.GUIs;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import AnimationTools.AnimationModule;
-import simcity.gui.*;
 import transportation.Agents.CarAgent;
 
 public class CarGui implements Gui{
@@ -53,7 +53,7 @@ public class CarGui implements Gui{
 			animModule.changeAnimation("Up");
 		}
 		
-		if(Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed && !reachedHalfway) {
+		if((Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed) && !reachedHalfway) {
 			agent.msgHalfway();
 			reachedHalfway = true;
 		}
@@ -66,9 +66,11 @@ public class CarGui implements Gui{
 		}
 	}
 
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, Point offset) {
 		animModule.updateAnimation();
-		g.drawImage(animModule.getImage(), (int)xPos, (int)yPos, null);
+		if(xPos - offset.getX() < -30 || xPos - offset.getX() > 410 || yPos - offset.getY() < -30 || yPos - offset.getY() > 340)
+			return;
+		g.drawImage(animModule.getImage(), (int)xPos - (int)offset.getX(), (int)yPos - (int)offset.getY(), null);
 	}
 
 	public void setDestination (float xDestination, float yDestination) {

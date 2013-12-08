@@ -37,8 +37,8 @@ public class SimCityGui extends JFrame  {
 	
 	String name;
 	
-	SimCityPanel simCityPanel;
-	public WorkplacePropertyPanel workplacePropertyPanel;
+	static SimCityPanel simCityPanel;
+    WorkplacePropertyPanel workplacePropertyPanel;
 	TracePanel tracePanel;
 	
 	JPanel cards;
@@ -339,5 +339,9 @@ public class SimCityGui extends JFrame  {
 	public void showPanel(String panel) {
 		System.out.println("showing " + panel);
 		((CardLayout)(cards.getLayout())).show(cards, panel);
+	}
+	
+	public void updateGui(){
+		workplacePropertyPanel.updateGui();
 	}
 }
