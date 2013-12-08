@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,12 +35,18 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	int selectedMktWorkerIndex = 0;
 	String[] marketWorkers;
 	
+	String selectedPersonForMkt = "";
+	int selectedPersonForMktIndex = 0;
+	String[] peopleForMkt;
+	
 	enum WorkplaceType{Market, Restaurant, Bank};
 	WorkplaceType type;
 	
 	JComboBox workplaceList;
 	JComboBox inventoryList;
 	JComboBox mktWorkersList;
+	JComboBox peopleForMktList;
+	JButton swapMktJobs = new JButton("Swap");
 	
 	JPanel properties = new JPanel();
 	JPanel inventory = new JPanel();
@@ -68,9 +75,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		    if(type == null){
 			    setType(workplaceList.getSelectedItem().toString());
 		    }
-		    
-		AlertLog.getInstance().logMessage(AlertTag.CITY, "WPP", ""+type);
-		
+		    		
 		workplaceList.setSelectedIndex(selectedWorkplaceIndex);
 		workplaceList.addActionListener(this);
 		workplace.setLayout(new FlowLayout());
@@ -104,7 +109,6 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   
 		   swapMktWorkers = new JPanel();
 		   swapMktWorkers.setLayout(new FlowLayout());
-		   swapMktWorkers.add(new JLabel("Swap workers: "));
 		   marketWorkers = SimCityGui.mickeysMarket.getWorkers();
 		   mktWorkersList = new JComboBox(marketWorkers);
 		   if(mktWorkersList.getItemCount() != 0){
@@ -112,6 +116,16 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   }
 		   mktWorkersList.addActionListener(this);
 		   swapMktWorkers.add(mktWorkersList);
+		   swapMktWorkers.add(new JLabel("and"));
+		   
+		   peopleForMkt = SimCityGui.simCityPanel.getAllUnemployedPeople();
+		   peopleForMktList = new JComboBox(peopleForMkt);
+		   if(peopleForMktList.getItemCount() != 0){
+		       peopleForMktList.setSelectedIndex(selectedPersonForMktIndex);
+		   }
+		   peopleForMktList.addActionListener(this);
+		   swapMktWorkers.add(peopleForMktList);
+		   swapMktWorkers.add(swapMktJobs);
 		   properties.add(swapMktWorkers);
 		   
 		}
@@ -202,6 +216,17 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     }
 	     }
      }
+    else if(cb == peopleForMktList){
+	     for(int i = 0; i<peopleForMkt.length; i++){
+		     if(peopleForMkt[i].equals(name)){
+			     selectedPersonForMkt = name;
+			     selectedPersonForMktIndex = i;
+			     updateGui();
+			     break;
+		     }
+	     }
+    }
+    
 	}
 
 }

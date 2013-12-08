@@ -437,7 +437,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		ArrayList<String> names = new ArrayList<String>();
 		for(int i = 0; i < people.size(); i++) {
 			PersonAgent p = people.get(i);
-			if(p.hasJob())
+			if(!p.hasJob())
 				names.add(p.getName());
 		}
 		String[] namesArray = names.toArray(new String[0]);

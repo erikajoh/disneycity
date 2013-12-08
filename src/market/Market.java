@@ -193,7 +193,7 @@ public class Market implements Market_Douglass {
     			cashier.startThread();
     		}
     	}	
-    	gui.workplacePropertyPanel.updateGui();
+    	gui.updateGui();
     }
     
     public double getPrice(String f) {
