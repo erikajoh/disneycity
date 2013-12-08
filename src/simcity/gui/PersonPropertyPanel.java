@@ -115,7 +115,6 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == addPersonButton) {
 			String personName = nameField.getText();
-			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Created person: " + personName);
 			gui.simCityPanel.addPerson(personName, (String)housingList.getSelectedItem(), 
 					(double)moneySpinner.getValue(), (String)foodPreferenceList.getSelectedItem(),
 					preferAtHomeCheckBox.isSelected(), ((String)transportationList.getSelectedItem()).charAt(0));
