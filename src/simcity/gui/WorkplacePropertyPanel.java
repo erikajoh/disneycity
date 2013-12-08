@@ -66,11 +66,13 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	    clear();
 		properties.removeAll();
 		properties.setLayout(new GridLayout(4, 1));
+		JLabel label;
 
 		JPanel workplace = new JPanel();
 		
 		workplaces = new String[]{ "1) Mickey's Market", "2) Carnation Cafe", "4) Blue Bayou", "8) Pirate Bank", "9) Rancho Del Zocalo", "12) Village Haus", "14) Pizza Port" };
 		workplaceList = new JComboBox(workplaces);
+		workplaceList.setFont(workplaceList.getFont().deriveFont(12.0f));
 
 		    if(type == null){
 			    setType(workplaceList.getSelectedItem().toString());
@@ -79,7 +81,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		workplaceList.setSelectedIndex(selectedWorkplaceIndex);
 		workplaceList.addActionListener(this);
 		workplace.setLayout(new FlowLayout());
-		workplace.add(new JLabel("Choose a workplace:"));
+		label = new JLabel("Choose a workplace:");
+		label.setFont(label.getFont().deriveFont(12.0f));
+		workplace.add(label);
 		workplace.add(workplaceList);
 		properties.add(workplace);
 		
@@ -87,10 +91,13 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   inventory = new JPanel();
 		   marketInventory = SimCityGui.mickeysMarket.getInventory();
 		   inventoryList = new JComboBox(marketInventory);
+		   inventoryList.setFont(inventoryList.getFont().deriveFont(12.0f));
 		   inventoryList.setSelectedIndex(selectedMktItemIndex);
 		   inventoryList.addActionListener(this);
 		
-		   inventory.add(new JLabel("Choose an inventory item:"));
+		   label = new JLabel("Choose an inventory item:");
+		   label.setFont(label.getFont().deriveFont(12.0f));
+		   inventory.add(label);
 		   inventory.add(inventoryList);
 		   properties.add(inventory);
 		
@@ -100,10 +107,15 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		
 		   editInventory = new JPanel();
 		   editInventory.setLayout(new FlowLayout());
-		   editInventory.add(new JLabel("Current Quantity: "+SimCityGui.mickeysMarket.getItemQty(selectedMktItem)+"   "));
-		   editInventory.add(new JLabel("Set Quantity:"));
+		   label = new JLabel("Current Quantity: "+SimCityGui.mickeysMarket.getItemQty(selectedMktItem)+"   ");
+		   label.setFont(label.getFont().deriveFont(12.0f));
+		   editInventory.add(label);
+		   label = new JLabel("Set Quantity:");
+		   label.setFont(label.getFont().deriveFont(12.0f));
+		   editInventory.add(label);
 		   SpinnerModel model = new SpinnerNumberModel(SimCityGui.mickeysMarket.getItemQty(selectedMktItem), 0, 100, 1);     
 		   JSpinner spinner = new JSpinner(model);
+		   spinner.setFont(spinner.getFont().deriveFont(12.0f));
 		   editInventory.add(spinner);
 		   properties.add(editInventory);
 		   
@@ -111,20 +123,25 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   swapMktWorkers.setLayout(new FlowLayout());
 		   marketWorkers = SimCityGui.mickeysMarket.getWorkers();
 		   mktWorkersList = new JComboBox(marketWorkers);
+		   mktWorkersList.setFont(mktWorkersList.getFont().deriveFont(12.0f));
 		   if(mktWorkersList.getItemCount() != 0){
 		       mktWorkersList.setSelectedIndex(selectedMktWorkerIndex);
 		   }
 		   mktWorkersList.addActionListener(this);
 		   swapMktWorkers.add(mktWorkersList);
-		   swapMktWorkers.add(new JLabel("and"));
+		   label = new JLabel("and");
+		   label.setFont(label.getFont().deriveFont(12.0f));
+		   swapMktWorkers.add(label);
 		   
 		   peopleForMkt = SimCityGui.simCityPanel.getAllUnemployedPeople();
 		   peopleForMktList = new JComboBox(peopleForMkt);
+		   peopleForMktList.setFont(peopleForMktList.getFont().deriveFont(12.0f));
 		   if(peopleForMktList.getItemCount() != 0){
 		       peopleForMktList.setSelectedIndex(selectedPersonForMktIndex);
 		   }
 		   peopleForMktList.addActionListener(this);
 		   swapMktWorkers.add(peopleForMktList);
+		   swapMktJobs.setFont(swapMktJobs.getFont().deriveFont(12.0f));
 		   swapMktWorkers.add(swapMktJobs);
 		   properties.add(swapMktWorkers);
 		   
@@ -132,18 +149,24 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		else if(type == WorkplaceType.Bank){
 			tellers = new JPanel();
 			tellers.setLayout(new FlowLayout());
-			tellers.add(new JLabel("Set Teller Amount:"));
+			label = new JLabel("Set Teller Amount:");
+		    label.setFont(label.getFont().deriveFont(12.0f));
+			tellers.add(label);
 			SpinnerModel model = new SpinnerNumberModel(4, 1, 4, 1);     
 			JSpinner spinner = new JSpinner(model);
+			spinner.setFont(spinner.getFont().deriveFont(12.0f));
 			tellers.add(spinner);
 			properties.add(tellers);
 		}
 		else if(type == WorkplaceType.Restaurant){
 			restaurants = new JPanel();
 			restaurants.setLayout(new FlowLayout());
-			restaurants.add(new JLabel("Set Balance:"));
+			label = new JLabel("Set Balance:");
+			label.setFont(label.getFont().deriveFont(12.0f));
+			restaurants.add(label);
 			SpinnerModel model = new SpinnerNumberModel(100.00, 0.00, 999.99, 5);     
 			JSpinner spinner = new JSpinner(model);
+			spinner.setFont(spinner.getFont().deriveFont(12.0f));
 			JSpinner.NumberEditor editor = (JSpinner.NumberEditor)spinner.getEditor();  
 		    DecimalFormat format = editor.getFormat();  
 		    format.setMinimumFractionDigits(2);  
