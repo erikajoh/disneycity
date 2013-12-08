@@ -19,7 +19,7 @@ public class WalkerAgent extends MobileAgent{
 	WalkerGui gui;
 	boolean arrived;
 	WalkerTraversal aStar;
-	
+
 	Semaphore animSem;
 	BusStop beginBusStop, endBusStop;
 	String building;
@@ -31,13 +31,13 @@ public class WalkerAgent extends MobileAgent{
 		this.master = master;
 		arrived = false;
 		this.aStar = aStar;
-		
+
 		animSem = new Semaphore(0, true);
 		beginBusStop = null;
 		endBusStop = null;
 		building = null;
 	}
-	
+
 	public WalkerAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, WalkerTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
 		this.walker = person;
 		this.currentPosition = currentPosition;
@@ -45,17 +45,17 @@ public class WalkerAgent extends MobileAgent{
 		this.master = master;
 		arrived = false;
 		this.aStar = aStar;
-		
+
 		animSem = new Semaphore(0, true);
 		this.beginBusStop = beginBusStop;
 		this.endBusStop= endBusStop;
 		this.building = building;
 	}
-	
+
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-			
+
 		}
 		//System.out.println("Releasing " + currentPosition.toString());
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
@@ -95,7 +95,7 @@ public class WalkerAgent extends MobileAgent{
 
 			//Try and get lock for the next step.
 			int attempts    = 1;
-			
+
 			MovementTile.MovementType temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 			while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
 				if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
@@ -104,7 +104,7 @@ public class WalkerAgent extends MobileAgent{
 				catch (Exception e){}
 			}
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-			
+
 			Random random = new Random();
 			int attemptsToMake = random.nextInt(3) + 3;
 			//Did not get lock. Lets make n attempts.
@@ -114,7 +114,7 @@ public class WalkerAgent extends MobileAgent{
 				//Wait for 1sec and try again to get lock.
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
-				
+
 				while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
 					if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
 						break;
@@ -128,7 +128,10 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToPosition(goal, tmpPath);
+				if(tmpPath == goal)
+					goToPosition(goal, null);
+				else
+					goToPosition(goal, tmpPath);
 				break;
 			}
 
@@ -146,7 +149,7 @@ public class WalkerAgent extends MobileAgent{
 			}
 			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
 		}
-		
+
 		arrived = true;
 	}
 

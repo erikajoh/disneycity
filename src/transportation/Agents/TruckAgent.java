@@ -176,7 +176,10 @@ public class TruckAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToPosition(goal, tmpPath);
+				if(tmpPath == goal)
+					goToPosition(goal, null);
+				else
+					goToPosition(goal, tmpPath);
 				break;
 			}
 

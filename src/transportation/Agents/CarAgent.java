@@ -98,7 +98,10 @@ public class CarAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToEndPosition(tmpPath);
+				if(tmpPath == endPosition)
+					goToEndPosition(null);
+				else
+					goToEndPosition(tmpPath);
 				break;
 			}
 
