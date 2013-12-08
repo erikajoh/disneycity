@@ -67,6 +67,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		properties.removeAll();
 		properties.setLayout(new GridLayout(4, 1));
 		JLabel label;
+		
+        Dimension panelDim = new Dimension(354,50);  
 
 		JPanel workplace = new JPanel();
 		
@@ -89,6 +91,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		
 		if(type == WorkplaceType.Market){
 		   inventory = new JPanel();
+	       inventory.setMaximumSize(panelDim);
 		   marketInventory = SimCityGui.mickeysMarket.getInventory();
 		   inventoryList = new JComboBox(marketInventory);
 		   inventoryList.setFont(inventoryList.getFont().deriveFont(12.0f));
@@ -106,6 +109,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   }
 		
 		   editInventory = new JPanel();
+		   editInventory.setMaximumSize(panelDim);
 		   editInventory.setLayout(new FlowLayout());
 		   label = new JLabel("Current Quantity: "+SimCityGui.mickeysMarket.getItemQty(selectedMktItem)+"   ");
 		   label.setFont(label.getFont().deriveFont(12.0f));
