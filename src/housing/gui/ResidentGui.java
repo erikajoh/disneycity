@@ -102,6 +102,14 @@ public class ResidentGui implements Gui{
 			yBed = (int)(hHeight*0.15);
 			xKitchen = (int)(hWidth*0.8);
 			yKitchen = (int)(hHeight*0.7);
+			walls.add(new Wall(0.17,0.17,0.45,0.64));
+			walls.add(new Wall(0.35,0.35,0.45,0.64));
+			walls.add(new Wall(0.17,0.35,0.49,0.49));
+			walls.add(new Wall(0.17,0.35,0.64,0.64));
+			walls.add(new Wall(0.53,0.53,0,0.5));
+			walls.add(new Wall(0.66,1,0.46,0.46));
+			walls.add(new Wall(0.01,0.1,0.9,0.9));
+			walls.add(new Wall(0.2,0.98,0.9,0.9));
 		} else if(type == "apt"){			
 			xPos = xEntrance = (int)(hWidth);
 			yPos = yEntrance = (int)(hHeight*0.56);
@@ -272,8 +280,7 @@ public class ResidentGui implements Gui{
 			else if (xPos > xDestination) {
 				xPos--;
 				currDir = Direction.LEFT;
-			}
-			else if (yPos < yDestination) {
+			} else if (yPos < yDestination) {
 				yPos++;
 				currDir = Direction.DOWN;
 			}
@@ -281,6 +288,7 @@ public class ResidentGui implements Gui{
 				yPos--;
 				currDir = Direction.UP;
 			}
+			
 		}
 				
 		// special animation states
