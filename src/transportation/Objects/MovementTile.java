@@ -8,26 +8,29 @@ public class MovementTile extends Semaphore{
 		WALKWAY,
 		ROAD,
 		CROSSWALK,
+		CROSSROAD,
 		FLYING
 	};
-	
+
 	MovementType type;
 	public boolean up, down, left, right;
 	BusStop busStop;
-	
+	TrafficLight light;
+
 	public MovementTile() {
 		super(1, true);
-		
+
 		up = false;
 		down = false;
 		left = false;
 		right  = false;
-		
+
 		type = MovementType.UNTYPED;
-		
+
 		busStop = null;
+		light = null;
 	}
-	
+
 	public void setMovement(boolean up, boolean down, boolean left, boolean right, MovementType type) {
 		this.up = up;
 		this.down = down;
@@ -36,10 +39,18 @@ public class MovementTile extends Semaphore{
 		this.type = type;
 	}
 	
+	public void setMovementType(MovementType type) {
+		this.type = type;
+	}
+	
+	public void setTrafficLight(TrafficLight light) {
+		this.light = light;
+	}
+
 	public void setBusStop(BusStop busStop) {
 		this.busStop = busStop;
 	}
-	
+
 	public BusStop getBusStop() {
 		return busStop;
 	}
