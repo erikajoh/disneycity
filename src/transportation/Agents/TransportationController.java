@@ -310,7 +310,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[29][28].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[28][29].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[29][29].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
-		
+
 		//Time for some CROSSWALKS
 		//Houses first again since they're multidirectional and only two
 		grid[9][2].setMovement(true, true, false, false, MovementTile.MovementType.CROSSWALK);
@@ -318,68 +318,68 @@ public class TransportationController extends Agent implements Transportation{
 
 		grid[30][6].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
 		grid[31][6].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
-		
+
 		grid[2][10].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
 		grid[3][10].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
-		
+
 		grid[30][19].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
 		grid[31][19].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
-		
+
 		grid[11][22].setMovement(true, true, false, false, MovementTile.MovementType.CROSSWALK);
 		grid[11][23].setMovement(true, true, false, false, MovementTile.MovementType.CROSSWALK);
-		
+
 		grid[2][24].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
 		grid[3][24].setMovement(false, false, true, true, MovementTile.MovementType.CROSSWALK);
-		
+
 		//Square CrossWalks
 		setCrossWalk(6, 4, true);
 		setCrossWalk(14, 4, true);
 		setCrossWalk(18, 4, true);
 		setCrossWalk(26, 4, true);
-		
+
 		setCrossWalk(16, 6, false);
-		
+
 		setCrossWalk(4, 12, false);
 		setCrossWalk(28, 12, false);
-		
+
 		setCrossWalk(6, 14, true);
 		setCrossWalk(26, 14, true);
-		
+
 		setCrossWalk(4, 16, false);
 		setCrossWalk(28, 16, false);
-		
+
 		setCrossWalk(16, 22, false);
-		
+
 		setCrossWalk(6, 24, true);
 		setCrossWalk(14, 24, true);
 		setCrossWalk(18, 24, true);
 		setCrossWalk(26, 24, true);
-		
+
 		//Driveways that double as crosswalks
 		setCrossWalk(12, 2, false);//Northern Market
 		setCrossWalk(20, 2, false);//Rancho
 		setCrossWalk(24, 2, false);//Apt #1
-		
+
 		setCrossWalk(2, 6, true);//Apt #2
-		
+
 		setCrossWalk(30, 10, true);//Haus
-		
+
 		setCrossWalk(24, 12, false);//Bank
-		
+
 		setCrossWalk(10, 18, false);//Pizza and Apt #4
 		setCrossWalk(22, 18, false);//Southern Market
-		
+
 		setCrossWalk(19, 2, true);//Apt #3 and Apt #5
-		
+
 		setCrossWalk(24, 22, false);//Cafe
-		
+
 		setCrossWalk(30, 24, true);//Apt #6 and Apt #7
-		
+
 		setCrossWalk(4, 28, false);//Apt #8
 		setCrossWalk(10, 28, false);//Apt #9 and Bayou
 		setCrossWalk(22, 28, false);//Apt #10
 		setCrossWalk(28, 28, false);//Apt #11
-		
+
 		//Traffic light
 		trafficLight = new TrafficLight(new Position(16, 14), grid);
 
@@ -395,31 +395,72 @@ public class TransportationController extends Agent implements Transportation{
 		//++++++++++++++++++++++BEGIN CREATION OF BUS STOPS++++++++++++++++++++++
 		busStops = new ArrayList<BusStop>();
 
-		BusStop tempBusStop = new BusStop("Bus Stop 0");//Top Left Bus Stop
-		tempBusStop.associateWalkTile(new Position(7, 3));
+		BusStop tempBusStop = new BusStop("Bus Stop 0");//Left Top Bus Stop
+		tempBusStop.associateWalkTile(new Position(11, 3));
 		busStops.add(tempBusStop);
-		tempBusStop.addNearbyBuilding("Pirate Bank");
-		tempBusStop.addNearbyBuilding("Rancho Del Zocalo");
-		tempBusStop.addNearbyBuilding("Main St Apartments #1");
-		tempBusStop.addNearbyBuilding("Main St Apartments #4");
+		grid[11][4].setBusStop(busStops.get(0));
+		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("");
 
 		tempBusStop = new BusStop("Bus Stop 1");//Left Center Bus Stop
-		tempBusStop.addNearbyBuilding("Main St Apartments #2");
-		tempBusStop.addNearbyBuilding("Haunted Mansion");
-		tempBusStop.addNearbyBuilding("The Blue Bayou");
-		tempBusStop.addNearbyBuilding("Main St Apartments #6");
-		tempBusStop.addNearbyBuilding("Carnation Cafe");
-		tempBusStop.associateWalkTile(new Position(12, 6));
+		tempBusStop.associateWalkTile(new Position(3, 11));
 		busStops.add(tempBusStop);
+		grid[4][11].setBusStop(busStops.get(1));
+		tempBusStop.addNearbyBuilding("Main St Apartments #2");
+		tempBusStop.addNearbyBuilding("");
+		//		tempBusStop.addNearbyBuilding("Haunted Mansion");
 
-		tempBusStop = new BusStop("Bus Stop 2");//Bottom Left Bus
+		tempBusStop = new BusStop("Bus Stop 2");//Left Bottom Bus
+		tempBusStop.associateWalkTile(new Position(3, 23));
+		busStops.add(tempBusStop);
+		grid[4][23].setBusStop(busStops.get(2));
+		tempBusStop.addNearbyBuilding("Main St Apartments #3");
 		tempBusStop.addNearbyBuilding("Main St Apartments #4");
 		tempBusStop.addNearbyBuilding("Main St Apartments #5");
-		tempBusStop.addNearbyBuilding("Village Haus");
+		tempBusStop.addNearbyBuilding("Main St Apartments #8");
 		tempBusStop.addNearbyBuilding("Pizza Port");
-		tempBusStop.addNearbyBuilding("Mickey's Market");
-		tempBusStop.associateWalkTile(new Position(5, 9));
+		tempBusStop.addNearbyBuilding("");
+		//		tempBusStop.addNearbyBuilding("Mickey's Market");
+		
+		tempBusStop = new BusStop("Bus Stop 3");//Bottom Left Bus
+		tempBusStop.associateWalkTile(new Position(9, 26));
 		busStops.add(tempBusStop);
+		grid[9][25].setBusStop(busStops.get(3));
+		tempBusStop.addNearbyBuilding("Main St Apartments #9");
+		tempBusStop.addNearbyBuilding("The Blue Bayou");
+		tempBusStop.addNearbyBuilding("");
+		
+		tempBusStop = new BusStop("Bus Stop 4");//Bottom Right Bus
+		tempBusStop.associateWalkTile(new Position(24, 26));
+		busStops.add(tempBusStop);
+		grid[24][25].setBusStop(busStops.get(4));
+		tempBusStop.addNearbyBuilding("Main St Apartments #10");
+		tempBusStop.addNearbyBuilding("Main St Apartments #11");
+		tempBusStop.addNearbyBuilding("Carnation Cafe");
+		
+		tempBusStop = new BusStop("Bus Stop 5");//Center Right Bus
+		tempBusStop.associateWalkTile(new Position(30, 18));
+		busStops.add(tempBusStop);
+		grid[29][18].setBusStop(busStops.get(5));
+		tempBusStop.addNearbyBuilding("Main St Apartments #6");
+		tempBusStop.addNearbyBuilding("Main St Apartments #7");
+		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("");
+		
+		tempBusStop = new BusStop("Bus Stop 6");//Right Top Bus
+		tempBusStop.associateWalkTile(new Position(30, 8));
+		busStops.add(tempBusStop);
+		grid[29][8].setBusStop(busStops.get(6));
+		tempBusStop.addNearbyBuilding("Pirate Bank");
+		tempBusStop.addNearbyBuilding("Village Haus");
+		tempBusStop.addNearbyBuilding("");
+		
+		tempBusStop = new BusStop("Bus Stop 7");//Top Right Bus
+		tempBusStop.associateWalkTile(new Position(23, 3));
+		busStops.add(tempBusStop);
+		grid[23][4].setBusStop(busStops.get(7));
+		tempBusStop.addNearbyBuilding("Main St Apartments #1");
+		tempBusStop.addNearbyBuilding("Rancho Del Zocalo");
 		//+++++++++++++++++++++++END CREATION OF BUS STOPS+++++++++++++++++++++++
 
 
@@ -463,11 +504,6 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		//+++++++++++++++++++++++END CREATION OF DIRECTORY+++++++++++++++++++++++
 
-		//Connecting bus stops to tiles
-		grid[7][4].setBusStop(busStops.get(0));
-		grid[11][6].setBusStop(busStops.get(1));
-		grid[5][8].setBusStop(busStops.get(2));
-
 		//Spawning Bus
 		bus = new BusAgent(this, new Position(4, 4));
 		BusGui busGui = new BusGui(4, 4, bus);
@@ -495,14 +531,14 @@ public class TransportationController extends Agent implements Transportation{
 			grid[x][y+1].setMovement(false, false, true, true, MovementType.CROSSWALK);
 			grid[x+1][y+1].setMovement(false, false, true, true, MovementType.CROSSWALK);
 		}
-		
+
 		else {
 			grid[x][y].setMovement(true, true, false, false, MovementType.CROSSWALK);
 			grid[x+1][y].setMovement(true, true, false, false, MovementType.CROSSWALK);
 			grid[x][y+1].setMovement(true, true, false, false, MovementType.CROSSWALK);
 			grid[x+1][y+1].setMovement(true, true, false, false, MovementType.CROSSWALK);
 		}
-		
+
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
