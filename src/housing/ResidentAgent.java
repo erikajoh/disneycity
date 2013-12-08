@@ -58,7 +58,7 @@ public class ResidentAgent extends Agent {
 	public void msgAnimationFinished(){ //from animation
 		moving.release();
 //		if (prevState == State.enteringHouse) state = State.readyToCook; //hack
-//		else if (prevState == State.foodDone) state = State.wantsMaintenance; //hack
+//		else if (prevState == State.foodDone) state = State.goingToBed; //hack
 //		else if (prevState == State.goingToBed) state = State.leavingHouse; //hack
 		stateChanged();
 	}
