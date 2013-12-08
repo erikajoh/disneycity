@@ -18,6 +18,9 @@ import simcity.interfaces.Person;
 import simcity.mock.LoggedEvent;
 import simcity.*;
 
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
+
 public class TransportationController extends Agent implements Transportation{
 
 	TransportationPanel master;
@@ -335,6 +338,7 @@ public class TransportationController extends Agent implements Transportation{
 					master.addGui(carGui);
 				driver.setGui(carGui);
 				driver.startThread();
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Spawning Car for " + mover.person.getName() + ".");
 			}
 			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
@@ -351,6 +355,7 @@ public class TransportationController extends Agent implements Transportation{
 					master.addGui(walkerGui);
 				walker.setGui(walkerGui);
 				walker.startThread();
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Spawning Walker for " + mover.person.getName() + ".");
 			}
 			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
@@ -379,6 +384,7 @@ public class TransportationController extends Agent implements Transportation{
 					master.addGui(busWalkerGui);
 				busWalker.setGui(busWalkerGui);
 				busWalker.startThread();
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Spawning Bus Walker for " + mover.person.getName() + ".");
 			}
 			else {
 				mover.transportationState = TransportationState.WAITINGTOSPAWN;
@@ -442,8 +448,10 @@ public class TransportationController extends Agent implements Transportation{
 
 	private void despawnMover(Mover mover) {
 		log.add(new LoggedEvent("Deleting mover"));
-		if(!mover.method.equals("Bus"))
+		if(!mover.method.equals("Bus")) {
 			mover.person.msgReachedDestination(mover.endingLocation);
+			AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", mover.person.getName() + " reached their destination.");
+		}
 		movingObjects.remove(mover);
 	}
 
