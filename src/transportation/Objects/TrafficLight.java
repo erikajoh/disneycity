@@ -34,12 +34,16 @@ public class TrafficLight implements ActionListener{
 			grid[location.getX()+1][location.getY()+i].setMovement(true, false, false, false, MovementTile.MovementType.TRAFFICCROSSNONE);
 			grid[location.getX()+i][location.getY()].setMovement(false, false, true, false, MovementTile.MovementType.TRAFFICCROSSNONE);
 			grid[location.getX()+i][location.getY()+1].setMovement(false, false, false, true, MovementTile.MovementType.TRAFFICCROSSNONE);
-
-			changeCrossWalk(0, -2, MovementTile.MovementType.TRAFFICCROSSROAD);
-			changeCrossWalk(0, 2, MovementTile.MovementType.TRAFFICCROSSROAD);
-			changeCrossWalk(-2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
-			changeCrossWalk(2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
 		}
+		changeCrossWalk(0, -2, MovementTile.MovementType.TRAFFICCROSSROAD);
+		changeCrossWalk(0, 2, MovementTile.MovementType.TRAFFICCROSSROAD);
+		changeCrossWalk(-2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
+		changeCrossWalk(2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
+		
+		grid[location.getX()][location.getY()].setMovement(false, true, true, false, MovementTile.MovementType.TRAFFICCROSSROAD);
+		grid[location.getX()+1][location.getY()].setMovement(true, false, true, false, MovementTile.MovementType.TRAFFICCROSSROAD);
+		grid[location.getX()][location.getY()+1].setMovement(false, true, false, true, MovementTile.MovementType.TRAFFICCROSSROAD);
+		grid[location.getX()+1][location.getY()+1].setMovement(true, false, false, true, MovementTile.MovementType.TRAFFICCROSSROAD);
 	}
 
 	@Override
