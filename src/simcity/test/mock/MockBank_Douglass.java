@@ -63,6 +63,6 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 	@Override
 	public void msgLeave(BankCustomer bc, int accountNum, double change,
 			double loanAmt, int loanTime) {
-		return; /* here, I managed leaving cases separately above */
+		return;
 	}
 }

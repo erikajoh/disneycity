@@ -81,8 +81,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 
 	@Override
 	public boolean isOpen() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

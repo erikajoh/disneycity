@@ -303,14 +303,16 @@ public class PersonAgent extends Agent implements Person {
 	// from Bank
 	public void msgLeftBank(Bank_Douglass theBank, int accountNumber, double change, double loanAmount, int loanTime) {
 		log.add(new LoggedEvent("Leaving bank"));
-		if(myPersonalBankAccount == null && accountNumber != -1) {
+		if(myPersonalBankAccount == null) {
 			myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
 		}
-		else {
-			myPersonalBankAccount.amount -= change;
-			myPersonalBankAccount.loanNeeded += loanAmount;
-			myPersonalBankAccount.loanTime = loanTime;
-		}
+		if(change > 0)
+			moneyWanted -= change;
+		else
+			moneyToDeposit = -change;
+		myPersonalBankAccount.amount += -change;
+		myPersonalBankAccount.loanNeeded = loanAmount;
+		myPersonalBankAccount.loanTime = loanTime;
 		moneyOnHand += change;
 		event = PersonEvent.makingDecision;
 		bankState = BankState.None;
@@ -454,6 +456,9 @@ public class PersonAgent extends Agent implements Person {
 						print("returning true because haveMoneyToDeposit()");
 						return true;
 					}
+					if(moneyOnHand > getPersonalLoans()) {
+						// TODO: Have enough money to pay off loans in personal bank account						
+					}
 				}
 				else {
 					leaveHouse();
@@ -471,16 +476,16 @@ public class PersonAgent extends Agent implements Person {
 				switch(bankState) {
 					case NeedTransaction: // Has business at the bank
 						if(myPersonalBankAccount == null) {
-							requestNewAccount();
 							event = PersonEvent.onHoldInBank;
+							requestNewAccount();
 						}
 						else if(moneyWanted > 0) {
-							requestWithdrawal();
 							event = PersonEvent.onHoldInBank;
+							requestWithdrawal();
 						}
 						else if(moneyToDeposit > 0) {
-							requestDeposit();
 							event = PersonEvent.onHoldInBank;
+							requestDeposit();
 						}
 						break;
 					case None: // Done at bank, time to transition
@@ -492,7 +497,7 @@ public class PersonAgent extends Agent implements Person {
 							if(!isNourished && !preferEatAtHome) {
 								hungryToRestaurant();
 							}
-							else if(preferEatAtHome) {
+							else {
 								goHome();
 								event = PersonEvent.onHoldInTransportation;
 							}
@@ -502,13 +507,18 @@ public class PersonAgent extends Agent implements Person {
 				return true;
 			}
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
-				if( (!isNourished && !preferEatAtHome)
+				if( (!isNourished && !preferEatAtHome && restState == RestaurantState.WantToEat)
 						|| ((restState == RestaurantState.WantToWork) && currentLocation.equals(workplace.name)) ) {
 					enterRestaurant();
 					event = PersonEvent.onHoldAtRestaurant;
 				}
 				else {
-					goHome();
+					if(workplace != null) {
+						targetLocation = workplace.name;
+						goToTransportation();
+					}
+					else
+						goHome();
 					event = PersonEvent.onHoldInTransportation;
 				}
 				print("Restaurant: setting on hold");
@@ -777,6 +787,10 @@ public class PersonAgent extends Agent implements Person {
 		return pricesArray[0].doubleValue();
 	}
 	
+	private double getPersonalLoans() {
+		return myPersonalBankAccount.loanNeeded;
+	}
+	
 	private MyRestaurant chooseRestaurant() {
 		// TODO: refine criteria for choosing restaurant:
 		/*
@@ -804,7 +818,7 @@ public class PersonAgent extends Agent implements Person {
 				if(isOpen) {
 					if(isPreferred && isAffordable)
 						return tempRest;
-					if(!isAffordable && isBankOpen) {
+					if(isAffordable || (!isAffordable && isBankOpen)) {
 						chosenRestaurant = tempRest;
 					}
 				}

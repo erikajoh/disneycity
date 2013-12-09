@@ -228,7 +228,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 					int restShift = Integer.parseInt(props.getProperty("rest" + restInd + "_shift"));
 					
 					Restaurant r = mapStringToRestaurant(restName);
-					personToAdd.addRestaurant(r, restRole, restShift); // key step
+					if(r != null)
+						personToAdd.addRestaurant(r, restRole, restShift); // key step
 				}
 				
 				// parsing markets
@@ -238,7 +239,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 					int marketShift = Integer.parseInt(props.getProperty("market" + marketInd + "_shift"));
 					
 					Market m = mapStringToMarket(marketName);
-					personToAdd.addMarket(m, marketRole, marketShift); // key step
+					if(m != null)
+						personToAdd.addMarket(m, marketRole, marketShift); // key step
 				}
 				
 				people.add(personToAdd);
@@ -264,6 +266,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// Extra setup variables at the end of file
 			String theDay = br.readLine();
 			setDay(theDay);
+			
+			
 
 			// Only one bank so that's added in directly
 			for(int personInd = 0; personInd < people.size(); personInd++) {
@@ -349,9 +353,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			
 			// hunger signals
 			// there are three day phases: morning, noon, and evening.
-			// Once each one passes, the person would eat.
+			// At noon and evening, the person would eat.
 			// The exact delay between change in day phase and becoming hungry is randomized as demonstrated below.
-			if(currTicks == MORNING || currTicks == NOON || currTicks == EVENING) {
+			if(currTicks == NOON || currTicks == EVENING) {
 				timer.schedule(new TimerTask() {
 					public void run() {
 						System.out.println("Setting person to be hungry");
@@ -409,7 +413,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public long numTicks = 0;
 	
 	/* Time intervals */
-	private static final int TICK_DELAY = 125; // every 1/8 second = one clock tick
+	private static final int TICK_DELAY = 125; // one tick = 1/8 second
 	
 	// these are start times for each of the day phases
 	private static final long START_OF_DAY		= 1;
@@ -417,12 +421,12 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	private static final long WORK_ONE_START	= MORNING			+ 150;//191
 	private static final long NOON				= WORK_ONE_START	+ 150;//341
 	private static final long WORK_ONE_END		= NOON				+ 150;//491
-	private static final long WORK_TWO_START	= WORK_ONE_END		+ 100;//591
-	private static final long EVENING			= WORK_TWO_START	+ 150;//741
-	private static final long WORK_TWO_END		= EVENING			+ 150;//891
-	private static final long NIGHT				= WORK_TWO_END		+ 100;//991
-	private static final long END_OF_DAY		= NIGHT				+ 800;//1791
-	// length of day 1231
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 160;//651
+	private static final long EVENING			= WORK_TWO_START	+ 150;//801
+	private static final long WORK_TWO_END		= EVENING			+ 150;//951
+	private static final long NIGHT				= WORK_TWO_END		+ 160;//1111
+	private static final long END_OF_DAY		= NIGHT				+ 800;//1911
+	// length of day 1911 = appx. 4 minutes
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 25;

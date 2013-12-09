@@ -14,7 +14,8 @@ public class PersonTest extends TestCase
 {
 	// instantiated in the setUp() method
 	PersonAgent person;
-	MockHousing_Douglass mockHousing;
+	PersonAgent dummyHost, dummyWaiter, dummyCook, dummyCashier;
+	MockHousing_Douglass mockHousing1, mockHousing2;
 	MockBank_Douglass mockBank;
 	MockRestaurant_Douglass mockRestaurant;
 	MockTransportation_Douglass mockTransportation;
@@ -30,25 +31,36 @@ public class PersonTest extends TestCase
 		menu.put("Orange chicken", 13.00);
 		menu.put("Hot and sour soup", 8.00);
 		
-		mockHousing = new MockHousing_Douglass("Mock House 1");
+		mockHousing1 = new MockHousing_Douglass("Mock House 1");
+		mockHousing2 = new MockHousing_Douglass("Mock House 2");
+		
 		mockBank = new MockBank_Douglass("Mock Bank 1");
 		mockRestaurant = new MockRestaurant_Douglass("Mock Restaurant 1", "Chinese", menu);
 		mockTransportation = new MockTransportation_Douglass("Mock Transportation");
 
-		person = new PersonAgent("Narwhal Prime", mockHousing, 0, "Chinese", false, "OwnerResident", mockTransportation, 'W');
+		dummyHost = new PersonAgent("Dummy Host", mockHousing2, 0, "Italian", false, "OwnerResident", mockTransportation, 'W');
+		dummyWaiter = new PersonAgent("Dummy Waiter", mockHousing2, 0, "Italian", false, "Renter", mockTransportation, 'W');
+		dummyCook = new PersonAgent("Dummy Cook", mockHousing2, 0, "Italian", false, "Renter", mockTransportation, 'W');
+		dummyCashier = new PersonAgent("Dummy Cashier", mockHousing2, 0, "Italian", false, "Renter", mockTransportation, 'W');
+		mockRestaurant.personAs(dummyHost, "Host", "Dummy Host", 0);
+		mockRestaurant.personAs(dummyWaiter, "Waiter", "Dummy Waiter", 0);
+		mockRestaurant.personAs(dummyCook, "Coook", "Dummy Cook", 0);
+		mockRestaurant.personAs(dummyCashier, "Cashier", "Dummy Cashier", 0);
+		
+		person = new PersonAgent("Narwhal Prime", mockHousing1, 0, "Chinese", false, "OwnerResident", mockTransportation, 'W');
 	}	
 	
 	// TEST #1
 	// Person: leave house, walk to bank, withdraw money, walk to restaurant,
-	// run restaurant scenario (successfully eat and pay)
-	public void testNormative_HomeBankRestaurant() {
+	// run restaurant scenario (successfully eat and pay), return home
+	public void testNormative_HomeBankRestaurantHome() {
 		
 		// setup
 		person.setMoney(5);
 		person.setFoodPreference("Chinese", false);
 		person.setIsNourished(false);
 		person.addBank(mockBank, "BankCustomer");
-		person.addHousing(mockHousing, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
+		person.addHousing(mockHousing1, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
 		person.addRestaurant(mockRestaurant, "Customer", 0);
 		
 		// step 1 pre-conditions
@@ -89,8 +101,6 @@ public class PersonTest extends TestCase
 				person.pickAndExecuteAnAction());
 		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		assertEquals("Person: 6 event logs",
-				6, person.log.size());
 		assertTrue("Contains log: want to go to restaurant but not enough money",
 				person.log.containsString("returning true because !isNourished"));
 		assertTrue("Contains log: want to go to restaurant but not enough money",
@@ -109,18 +119,9 @@ public class PersonTest extends TestCase
 		
 		assertFalse("Call scheduler, in transit, on hold, scheduler returns false",
 				person.pickAndExecuteAnAction());
+		assertEquals("Mock House 1", person.getCurrLocation());
 		
-		mockTransportation.msgWantToGo(person.getCurrLocation(), "Mock Bank 1", person, "method", "Edgar");
-		assertEquals("Received msgWantToGo: "
-				+ "startLocation = " + "Mock House 1" + "; "
-				+ "endLocation = " + "Mock Bank 1" + "; "
-				+ "person = " + "Narwhal Prime" + "; "
-				+ "method = method",
-				"Received msgWantToGo: "
-				+ "startLocation = " + person.getCurrLocation() + "; "
-				+ "endLocation = " + "Mock Bank 1" + "; "
-				+ "person = " + person.getName() + "; "
-				+ "method = method");
+		//mockTransportation.msgWantToGo(person.getCurrLocation(), "Mock Bank 1", person, "method", "Edgar");
 		long startTime = System.currentTimeMillis();
 		while(System.currentTimeMillis() - startTime < 2000);
 
@@ -130,36 +131,38 @@ public class PersonTest extends TestCase
 			// step 2b: after brief delay, bank messages that withdrawal approved
 			// step 2c: person receives money, gets released
 		
-		assertTrue("Call scheduler, arrive at bank successfully, scheduler returns true",
-				person.pickAndExecuteAnAction());
-		assertEquals("Person: 13 event logs",
-				13, person.log.size());
+		assertEquals("Mock Bank 1", person.getCurrLocation());
+		assertEquals("Transportation: 1 event log",
+				1, mockTransportation.log.size());
 		assertTrue("", person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
+		
+		assertTrue("Call scheduler, enter bank to create account, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		
 		assertTrue("Person: creates account",
 				person.log.containsString("Creating account"));
 		
-		assertEquals("Transportation: 2 event log",
-				2, mockTransportation.log.size());
-		
-		assertTrue("Call scheduler, nothing to do here, scheduler returns false",
-				!person.pickAndExecuteAnAction());
+		assertTrue("Call scheduler, now realizes need to withdraw money, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		assertTrue("Call scheduler, the actual withdraw money action, scheduler returns true",
+				person.pickAndExecuteAnAction());
 
+		// step 2 post-conditions and step 3 pre-conditions
+		
 		assertEquals("Person: currentLocation = Mock Bank 1",
 				"Mock Bank 1", person.getCurrLocation());
 		assertEquals("Person: currentLocationState = Bank",
 				"Bank", person.getCurrLocationState());
-		assertTrue("Person: event = onHoldInBank", 
-				person.event.toString().equals("onHoldInBank"));
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
 		
-		mockBank.msgRequestWithdrawal(person, 1, 8.00 - person.getMoney(), true);
+		assertEquals("Person: 15 event logs",
+				15, person.log.size());
 		
-		// step 2 post-conditions and step 3 pre-conditions
-		assertEquals("Person: 14 event logs",
-				14, person.log.size());
 		assertEquals("Person: has 8 dollars", 
 				8.00, person.getMoney());
 		assertTrue("Bank log: Received msgRequestWithdrawal(): amount = 3.0",
-				mockBank.log.containsString("Received msgRequestWithdrawal(): amount"));
+				mockBank.log.containsString("Received msgRequestWithdrawal(): amount = 3.0"));
 		
 		assertEquals("Bank: 1 event log",
 				1, mockBank.log.size());
@@ -172,16 +175,32 @@ public class PersonTest extends TestCase
 		// step 3: person now goes to restaurant
 		assertTrue("Call scheduler, go to restaurant, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		 
-		// step 3 post-conditions and step 4 pre-conditions
 		
-		assertTrue("Call scheduler, time to go home",
-				person.pickAndExecuteAnAction());
-		assertEquals("Person: 15 event logs",
-				15, person.log.size());
 		startTime = System.currentTimeMillis();
 		while(System.currentTimeMillis() - startTime < 2000);
 		
+		assertEquals("Person: currentLocation = Mock Restaurant 1",
+				"Mock Restaurant 1", person.getCurrLocation());
+		assertEquals("Person: currentLocationState = Restaurant",
+				"Restaurant", person.getCurrLocationState());
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
+		 
+		// step 3 post-conditions and step 4 pre-conditions
+		
+		// step 4: going home
+		
+		assertTrue("Call scheduler, time to go home",
+				person.pickAndExecuteAnAction());
+		startTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - startTime < 2000);
+		
+		assertEquals("Person: currentLocation = Mock House 1",
+				"Mock House 1", person.getCurrLocation());
+		assertEquals("Person: currentLocationState = Home",
+				"Home", person.getCurrLocationState());
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
 	}
 	
 	// TEST #2
@@ -191,7 +210,7 @@ public class PersonTest extends TestCase
 		person.setMoney(500);
 		person.setIsNourished(true);
 		person.addBank(mockBank, "BankCustomer");
-		person.addHousing(mockHousing, "OwnerResident");
+		person.addHousing(mockHousing1, "OwnerResident");
 		
 		assertEquals("Person: 500 dollars at start",
 				500.00, person.getMoney());
@@ -212,5 +231,15 @@ public class PersonTest extends TestCase
 		
 		// step 2: transportation
 		mockTransportation.msgWantToGo("Mock House 1", "Mock Bank 1", person, "method", "Edgar");
+	}
+	
+	// TEST #3
+	// Person: start with surplus money, go to market, deposit
+	public void testNormative_HomeBankMarketHome() {
+		
+	}
+	
+	public void testNormative_HomeMaintenance() {
+		
 	}
 }

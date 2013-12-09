@@ -1,7 +1,8 @@
 1
-Narwhal_Prime|Main St Apartments #2|OwnerResident
+Narwhal_Secundus|Main St Apartments #2|OwnerResident
 1
-Main St Apartments #2|Narwhal_Prime|Narwhal_Prime
+Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus
+Friday
 
 5
 Narwhal_Prime|Haunted Mansion|OwnerResident
