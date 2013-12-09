@@ -65,11 +65,8 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void msgRequestAccount(Person person, double reqAmt, boolean present){
-    	msgThief(person, reqAmt, present);
-    	return;
-    	/*
     	BankCustomer bca = createBankCustomer(person, present, false);
-    	manager.msgRequestAccount(bca, reqAmt);*/
+    	manager.msgRequestAccount(bca, reqAmt);
     }
     
     public void msgRequestDeposit(Person person, int accountNum, double reqAmt, boolean present){
