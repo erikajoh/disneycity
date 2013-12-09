@@ -8,6 +8,7 @@ import restaurant_cafe.gui.CookGui;
 import restaurant_cafe.gui.Food;
 import restaurant_cafe.gui.HostGui;
 import restaurant_cafe.gui.Order;
+import restaurant_cafe.gui.RestaurantCafe;
 import restaurant_cafe.interfaces.Cook;
 import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Market;
@@ -41,11 +42,14 @@ public class CookAgent extends Agent implements Cook {
 	//Later we will see how it is implemented
 	private String name;
 	Timer timer = new Timer();
+	Timer standTimer = new Timer();
+	RestaurantCafe restaurant;
 	
-	public CookAgent(String name, Collection<Food> fds) {
+	public CookAgent(String name, RestaurantCafe rest, Collection<Food> fds) {
 		super();
 
 		this.name = name;
+		restaurant = rest;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));
 		synchronized(tables){
@@ -79,6 +83,10 @@ public class CookAgent extends Agent implements Cook {
 	public void msgHereIsOrder(Waiter w, String choice, Integer table){
 		print("table "+table+" ordered "+choice);
 		orders.add(new Order(w, choice, (int)table));
+		stateChanged();
+	}
+	public void msgAddOrder(Order o){
+		orders.add(o);
 		stateChanged();
 	}
 	public void msgFulfilledOrder(Food food, int amount){
@@ -138,7 +146,15 @@ public class CookAgent extends Agent implements Cook {
 			  }
 		  }
 		}
-		
+		Order newOrder = restaurant.orderStand.remove();
+		if (newOrder!=null) {
+			orders.add(newOrder);
+			print("order stand not empty, got order for "+ newOrder.food.getName()); 
+			return true;
+		}
+		else {
+			waitTimer();
+		}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -146,6 +162,16 @@ public class CookAgent extends Agent implements Cook {
 	}
 
 	// Actions
+	
+	private void waitTimer() {
+		standTimer.schedule(new TimerTask() {
+			public void run() {
+				stateChanged();
+			}
+		},
+		5000);
+	}
+	
 	private void cookIt(final Order o){
 		print("COOK " + o.food.getName() + " " + o.food.getAmount());
 		cookGui.DoGrilling(o.food.getName());

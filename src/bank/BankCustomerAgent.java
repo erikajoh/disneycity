@@ -70,7 +70,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	public void	msgRequestDeposit(double ra, int accNum){
 		print("REQ DEPOSIT");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank Customer", "DepositMsg");
 		requestAmt = ra;
 		accountNum = accNum;
 		state = State.depositing;
@@ -106,7 +105,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	public void msgMoneyDeposited(double amountAdded, double loanAmt, int lt){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank Customer", "DepositedMsg");
 		balance += amountAdded;
 		change = amountAdded;
 		print("MONEY DEPOSITED "+ balance);
@@ -237,12 +235,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		animState = AnimState.walking;
 		state = State.idle;
 		customerGui.DoFailRobbery();
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "BC", "FAILED TO ROB BANK");
 	}
 	
 	private void leftBank(){
 		state = State.idle;
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "BC", "LEFT BANK");
 		teller.msgLeavingBank();
 		stateChanged();
 	}

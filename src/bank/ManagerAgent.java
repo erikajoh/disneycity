@@ -154,7 +154,6 @@ public class ManagerAgent extends Agent implements Manager {
 	}
 	
 	public void msgRequestDeposit(BankCustomer bc, int accountNumber, double amount){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "Manager", "DepositMsg");
 		WaitingCustomer waitingCustomer = null;
 		synchronized(waitingCustomers){
 		   for(WaitingCustomer wc : waitingCustomers){
