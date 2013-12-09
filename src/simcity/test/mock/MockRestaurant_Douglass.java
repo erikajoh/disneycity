@@ -91,6 +91,11 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	}
 
 	@Override
+	public void msgStartOfShift() {
+		// TODO Auto-generated method stub (not really :P)
+	}
+	
+	@Override
 	public void msgEndOfShift() {
 		// TODO Auto-generated method stub
 		
