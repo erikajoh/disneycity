@@ -9,6 +9,7 @@ import transportation.Transportation;
 import transportation.TransportationPanel;
 import transportation.GUIs.BusGui;
 import transportation.GUIs.CarGui;
+import transportation.GUIs.CrashGui;
 import transportation.GUIs.TruckGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
@@ -100,12 +101,28 @@ public class TransportationController extends Agent implements Transportation{
 		MobileAgent agent1;
 		MobileAgent agent2;
 		Position position;
+		CrashState state;
+		CrashGui gui;
 		
 		public Crash(MobileAgent agent1, MobileAgent agent2, Position position) {
 			this.agent1 = agent1;
 			this.agent2 = agent2;
 			this.position = position;
+			
+			if(agent1 instanceof CarAgent && agent2 instanceof CarAgent) {
+				gui = new CrashGui(position, false);
+			}
+			else {
+				gui = new CrashGui(position, true);
+			}
+			state = CrashState.ONGOING;
+			master.addGui(gui);
 		}
+	}
+	
+	enum CrashState {
+		ONGOING,
+		DONE
 	}
 	
 	List<Crash> crashes;
