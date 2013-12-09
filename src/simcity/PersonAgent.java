@@ -211,6 +211,11 @@ public class PersonAgent extends Agent implements Person {
 			stateChanged();
 		}
 	}
+	
+	public void msgSetBanksOpen(boolean open) {
+		log.add(new LoggedEvent("Banks are now closed"));
+		isBankOpen = open;
+	}
 
 	public void msgGoToWork(int i) {
 		log.add(new LoggedEvent("Going to work: work period #" + i));

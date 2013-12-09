@@ -5,7 +5,10 @@ import restaurant_pizza.CookAgent;
 import restaurant_pizza.CustomerAgent;
 import restaurant_pizza.HostAgent;
 import restaurant_pizza.MarketAgent;
+import restaurant_pizza.ProducerConsumerMonitor;
 import restaurant_pizza.WaiterAgent;
+import restaurant_pizza.WaiterAgent_Normal;
+import restaurant_pizza.WaiterAgent_PC;
 import restaurant_pizza.interfaces.Customer;
 import restaurant_pizza.interfaces.Waiter;
 import bank.gui.Bank;
@@ -72,6 +75,10 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
     private SimCityGui gui; //reference to main gui
+    
+    //For new producer-consumer requirement
+    public ProducerConsumerMonitor revolvingStand = new ProducerConsumerMonitor();
+    private boolean spawnNormalWaiter = true;
     
     public RestaurantPizza(SimCityGui gui, String name) {
     	
@@ -225,31 +232,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	return agentList;
     }
 
-    /**
-     * When a customer or waiter is clicked, this function calls
-     * updatedInfoPanel() from the main gui so that person's information
-     * will be shown
-     *
-     * @param type indicates whether the person is a customer or waiter
-     * @param name name of person
-     */
-  /*  public void showInfo(String type, String name) {
-        if (type.equals("Customer")) {
-            for (int i = 0; i < customers.size(); i++) {
-                CustomerAgent temp = customers.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-        if (type.equals("Waiter")) {
-            for (int i = 0; i < waiters.size(); i++) {
-                WaiterAgent temp = waiters.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-    }
-  */  
     public void personAs(Person p, String type, String name, double money){
     	addPerson(p, type, name, money);
     }
@@ -284,7 +266,15 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		//}
     	}
     	else if (type.equals("Waiter")) {
-    		WaiterAgent newWaiter = new WaiterAgent(name);	
+    		WaiterAgent newWaiter;
+    		
+    		// alterante spawning normal and Producer-Consumer waiter
+    		if(spawnNormalWaiter)
+    			newWaiter = new WaiterAgent_Normal(name);
+    		else
+    			newWaiter = new WaiterAgent_PC(name);
+    		spawnNormalWaiter = !spawnNormalWaiter;
+    		
     		WaiterGui newWaiterGui = new WaiterGui(newWaiter, WAITER_X_START, WAITER_Y_START);
     		WAITER_X_START += newWaiterGui.mySize;
     		if (p!=null) { newWaiter.setPerson(p);}
@@ -298,6 +288,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		waiterGuis.add(newWaiterGui);
     		waiters.add(newWaiter);
     		if (host!=null) host.msgAddWaiter(newWaiter);
+    		newWaiter.setRestaurant(this);
     		newWaiter.startThread();
     	}
     	else if (type.equals("Host")) {
@@ -322,6 +313,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     			w.setCook(cook);
     		}
     		cook.setMarkets(markets);
+    		cook.setRestaurant(this);
     		cook.startThread();
     	}
     	else if (type.equals("Cashier")) {

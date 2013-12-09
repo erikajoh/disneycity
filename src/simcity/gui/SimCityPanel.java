@@ -424,6 +424,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				theRestaurant.msgEndOfShift();
 			}
 		}
+		
+		//handle ticks for banks
 	}
 	
 	/* all time-related variables and methods */

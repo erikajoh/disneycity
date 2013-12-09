@@ -1,6 +1,7 @@
 package restaurant_pizza;
 
 import agent_pizza.Agent;
+import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_pizza.gui.WaiterGui;
 import restaurant_pizza.interfaces.Cashier;
 import restaurant_pizza.interfaces.Customer;
@@ -17,16 +18,16 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class WaiterAgent extends Agent implements Waiter {
+public abstract class WaiterAgent extends Agent implements Waiter {
 	
 	// ***** DATA*****
 	
 	private LinkedList<MyCustomer> myCustomers = new LinkedList<MyCustomer>();
 	private LinkedList<Check> checks = new LinkedList<Check>();
 	
-	private String name;
+	protected String name;
 	private String orderToPickUp = "";
-	private Semaphore atTable = new Semaphore(0, true);
+	protected Semaphore atTable = new Semaphore(0, true);
 	private Semaphore atNextCheckAction = new Semaphore(0, true);
 	
 	public enum AgentState {Working, WorkingAndWantBreak, FinishingUp, OnBreak};
@@ -46,7 +47,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	public RestMenu menu = new RestMenu();
 	Person person;
 	boolean shiftDone = false;
-
+	public RestaurantPizza restaurant;
 
 	public WaiterAgent(String name) {
 		super();
@@ -60,6 +61,10 @@ public class WaiterAgent extends Agent implements Waiter {
     	menu.addItem("Pepperoni Pizza",  6.99);
     	menu.addItem("Celestial Caesar Chicken Salad", 8.49);
     	menu.addItem("Bread Sticks", 4.99);
+	}
+	
+	public void setRestaurant(RestaurantPizza rest) {
+		restaurant = rest;
 	}
 	
 	public void setHost(HostAgent aHost) {
@@ -370,24 +375,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		}
 	}
 
-	private void goToCook(MyCustomer mc) {
-		int tableNum = mc.table;
-		String order = mc.order;
-		print("Calling action goToCook");
-		DoGoToCook();
-		try {
-			atTable.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		cook.msgNewOrder(this, tableNum, order);
-		DoGoToHomePosition();
-		try {
-			atTable.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+	protected abstract void goToCook(MyCustomer mc);
 	
 	private void goToTableToGiveFood(CustomerAgent customer, int tableNumber) {
 		print("Calling action goToTableToGiveFood");
@@ -487,12 +475,12 @@ public class WaiterAgent extends Agent implements Waiter {
 		waiterGui.DoGoToTable(tableNum);
 	}
 	
-	private void DoGoToHomePosition() {
+	protected void DoGoToHomePosition() {
 		print("Going to my home position");
 		waiterGui.DoGoToHomePosition();
 	}
 	
-	private void DoGoToCook() {
+	protected void DoGoToCook() {
 		print("Going to cook");
 		waiterGui.DoGoToCook();
 	}
@@ -522,7 +510,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		return waiterGui;
 	}
 	
-	private class MyCustomer {
+	protected class MyCustomer {
 		CustomerAgent c;
 		int table;
 		String order;
