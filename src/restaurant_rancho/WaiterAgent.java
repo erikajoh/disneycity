@@ -156,7 +156,7 @@ import java.util.concurrent.Semaphore;
 
 		// rules 
 			try{
-			if (customers.size() == 0 && shiftDone) {person.msgStopWork(10);}
+			if (customers.size() == 0 && shiftDone) {person.msgStopWork(10); }
 			for (MyCustomer c : customers) {
 				if (c.cs == customerState.leaving) {
 					notifyHostFreeTable(c);

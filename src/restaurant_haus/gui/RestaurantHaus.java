@@ -348,6 +348,26 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	@Override
 	public void msgEndOfShift() {
 		isOpen = false;
+		System.out.println("RESTAURANT GOT END OF SHIFT");
+
+		if (host!=null) {
+			host.msgShiftDone();
+			for (int i = 0; i < waiters.size(); i++) {
+				if (cashier!=null) cashier.subtract(10);
+			}
+		}
+		else {
+			if (cashier!=null) { cashier.msgShiftDone(); cashier.subtract(10); }
+			for (int i = 0; i < waiters.size(); i++) {
+				WaiterAgent w = waiters.get(i);
+				w.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+			if (cook!=null) {
+				cook.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+		}
 		
 	}
 

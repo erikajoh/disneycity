@@ -36,6 +36,11 @@ public class Housing implements Housing_Douglass {
     	else if (name.contains("Main St Apartments")) type = "apt";
     	
     	if (name == "Haunted Mansion") panel.setBackground("res/hauntedmansion.png");
+    	if (name == "Cinderella Castle") panel.setBackground("res/cinderellacastle.png");
+    	if (name == "Rabbit Hole") panel.setBackground("res/rabbithole.png");
+    	if (name == "Tiki Hut") panel.setBackground("res/tikihut.png");
+    	if (name == "Space Mountain") panel.setBackground("res/spacemountain.png");
+    	if (name == "Pirate's Suite") panel.setBackground("res/piratesuite.png");
     	if (name == "Main St Apartments #1") panel.setBackground("res/mainstapts1.png");
     	if (name == "Main St Apartments #2") panel.setBackground("res/mainstapts2.png");
     	if (name == "Main St Apartments #3") panel.setBackground("res/mainstapts3.png");

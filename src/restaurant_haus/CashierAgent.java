@@ -24,6 +24,7 @@ public class CashierAgent extends Agent implements Cashier{
 	private String name;
 	public double money;
 	public Person person;
+	boolean shiftDone = false;
 
 
 	Menu m;
@@ -77,6 +78,11 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 
 	// Messages
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (!pickAndExecuteAnAction()) {person.msgStopWork(10);}
+	}
 
 	public void msgNeedCheck (Waiter w, String choice, Customer c) {
 		checks.add(new Check(w, choice, c));
@@ -95,6 +101,10 @@ public class CashierAgent extends Agent implements Cashier{
 			}
 		}
 		stateChanged();
+	}
+	
+	public void subtract(double amount) {
+		money -= amount;
 	}
 
 	public void msgYourBillIs(Market market, double bill) {
