@@ -267,9 +267,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			String theDay = br.readLine();
 			setDay(theDay);
 			
-			
-
-			// Only one bank so that's added in directly
+			// TODO: Need two banks
 			for(int personInd = 0; personInd < people.size(); personInd++) {
 				PersonAgent currPerson = people.get(personInd);
 				currPerson.addBank(pirateBank, "Customer");				
@@ -344,8 +342,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	public void handleTick() {
 		long currTicks = getNumTicks();
-		if(currTicks % 20 == 0)
+
+		if(currTicks % 20 == 0) {
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
+		}
+		
+		if(currTicks % 10 == 0) {
+			gui.updateDayInfo(currentDay.toString(), getDayPhase());
+		}
 		
 		// handle ticks for people
 		for(int i = 0; i < people.size(); i++) {
@@ -503,6 +507,44 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		return false;
 	}
 	
+	public String getDayPhase() {
+		if(numTicks >= END_OF_DAY)
+			return "End of day";
+		if(numTicks >= NIGHT)
+			return "Night";
+		if(numTicks >= WORK_TWO_END)
+			return "End of Work Phase 2";
+		if(numTicks >= EVENING)
+			return "evening";
+		if(numTicks >= WORK_TWO_START)
+			return "Work Phase 2";
+		if(numTicks >= WORK_ONE_END)
+			return "End of Work Phase 1";
+		if(numTicks >= NOON)
+			return "noon";
+		if(numTicks >= WORK_ONE_START)
+			return "Work Phase 1";
+		if(numTicks >= MORNING)
+			return "morning";
+		if(numTicks >= START_OF_DAY)
+			return "a new day";
+		return "ERROR";
+	}
+	
+	/*
+	 * 
+	 * private static final long START_OF_DAY		= 1;
+	private static final long MORNING			= START_OF_DAY		+ 40; //41
+	private static final long WORK_ONE_START	= MORNING			+ 150;//191
+	private static final long NOON				= WORK_ONE_START	+ 150;//341
+	private static final long WORK_ONE_END		= NOON				+ 150;//491
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 160;//651
+	private static final long EVENING			= WORK_TWO_START	+ 150;//801
+	private static final long WORK_TWO_END		= EVENING			+ 150;//951
+	private static final long NIGHT				= WORK_TWO_END		+ 160;//1111
+	private static final long END_OF_DAY		= NIGHT				+ 800;//1911
+	 */
+
 	public String[] getAllPeople() {
 		ArrayList<String> names = new ArrayList<String>();
 		for(int i = 0; i < people.size(); i++) {
