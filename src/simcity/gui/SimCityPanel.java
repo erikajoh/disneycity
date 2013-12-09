@@ -418,9 +418,24 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			gui.updateDayInfo(currentDay.toString(), getDayPhase());
 		}
 		
+		if(currTicks == START_OF_DAY) {
+			if(currentDay == DayOfTheWeek.Sunday)
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "It's " + currentDay.name() + "; banks are closed today.");
+		}
+		
 		// handle ticks for people
 		for(int i = 0; i < people.size(); i++) {
 			final PersonAgent person = people.get(i);
+			
+			// closing times
+			// people, not the banks themselves, know about whether banks are open at the start of the day
+			// restaurants themselves will know whether they are open or not
+			if(currTicks == START_OF_DAY) {
+				if(currentDay == DayOfTheWeek.Sunday)
+					person.msgSetBanksOpen(false);
+				else
+					person.msgSetBanksOpen(true);
+			}
 			
 			// hunger signals
 			// there are three day phases: morning, noon, and evening.

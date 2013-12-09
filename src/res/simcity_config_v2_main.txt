@@ -1,3 +1,9 @@
+1
+Narwhal_Prime|Cinderella Castle|OwnerResident
+1
+Cinderella Castle|Narwhal_Prime|Narwhal_Prime
+Friday
+
 5
 Edgar_Prime|Main St Apartments #3|OwnerResident
 RanchoCashier1|Main St Apartments #3|Renter
@@ -7,7 +13,7 @@ Narwhal_Prime|Haunted Mansion|OwnerResident
 2
 Main St Apartments #3|Edgar_Prime|Edgar_Prime|RanchoCashier1|RanchoCook1|RanchoHost1
 Haunted Mansion|Narwhal_Prime|Narwhal_Prime
-Friday
+Sunday
 
 1
 Narwhal_Prime|Haunted Mansion|OwnerResident
