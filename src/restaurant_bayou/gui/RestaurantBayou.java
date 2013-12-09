@@ -12,6 +12,7 @@ import simcity.RestMenu;
 import simcity.gui.SimCityGui;
 import bank.gui.Bank;
 import market.Market;
+import market.WorkerAgent;
 import simcity.interfaces.Bank_Douglass;
 
 import javax.swing.*;
@@ -91,6 +92,31 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     
     public String[] getFoodNames(){
     	return menu.menuList.toArray(new String[0]);
+    }
+    
+    public String[] getWorkers(){
+    	 List<String> restWorkers = new ArrayList<String>();
+         
+     	if(cashier != null){
+     		String cashierName = "Cashier: "+cashier.getName();
+     		restWorkers.add(cashierName);
+     	}
+     	if(cook != null){
+     		String cookName = "Cook: "+cook.getName();
+     		restWorkers.add(cookName);
+     	}
+     	if(host != null){
+     		String hostName = "Host: "+host.getName();
+     		restWorkers.add(hostName);
+     	}
+     	for(WaiterAgent waiter : waiters){
+     		String waiterName = "Waiter: "+waiter.getName();
+     		restWorkers.add(waiterName);
+     	}
+     	String[] workers = new String[restWorkers.size()];
+     	workers = restWorkers.toArray(workers);
+    
+     	return workers;	
     }
 
     /**

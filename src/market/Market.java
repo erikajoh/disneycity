@@ -221,7 +221,6 @@ public class Market implements Market_Douglass {
     }
     
     public String[] getWorkers(){
-
         List<String> marketWorkers = new ArrayList<String>();
         
     	if(cashier != null){

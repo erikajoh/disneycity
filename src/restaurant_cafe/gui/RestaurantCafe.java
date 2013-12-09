@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import simcity.interfaces.Person;
@@ -246,6 +247,31 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     public String[] getFoodNames(){
     	return menu2.menuList.toArray(new String[0]);
     }
+    
+    public String[] getWorkers(){
+   	 List<String> restWorkers = new ArrayList<String>();
+        
+    	if(cashier != null){
+    		String cashierName = "Cashier: "+cashier.getName();
+    		restWorkers.add(cashierName);
+    	}
+    	if(cook != null){
+    		String cookName = "Cook: "+cook.getName();
+    		restWorkers.add(cookName);
+    	}
+    	if(host != null){
+    		String hostName = "Host: "+host.getName();
+    		restWorkers.add(hostName);
+    	}
+    	for(WaiterAgent waiter : waiters){
+    		String waiterName = "Waiter: "+waiter.getName();
+    		restWorkers.add(waiterName);
+    	}
+    	String[] workers = new String[restWorkers.size()];
+    	workers = restWorkers.toArray(workers);
+   
+    	return workers;	
+   }
 
 	public String getRestaurantName() {
 		return name;
