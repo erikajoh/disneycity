@@ -82,6 +82,7 @@ public class WaiterGui implements Gui {
     }
     
     public void DoLeave(Person p) {
+    	System.out.println("should only print once, alas");
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;

@@ -68,6 +68,14 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (orders.size() == 0) {
+			//person.msgStopWork(10);
+			cookGui.DoLeave(person);
+		}
+	}
+	
 	public void msgHereIsMoreFood(Market mkt, String f, int amt){
 		if (amt > 0) {
 			Do("Got "+amt+" "+f+" from "+mkt.getName());

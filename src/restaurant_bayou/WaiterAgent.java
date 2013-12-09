@@ -26,6 +26,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	private String name;
 	private HostAgent host;
 	private CookAgent cook;
+	private CashierAgent cashier;
 	private Semaphore atTable = new Semaphore(0, true);
 	private List<CustomerAgent> myCustomers = new ArrayList<CustomerAgent>();
 	private List<Integer> myTables = new ArrayList<Integer>();
@@ -73,12 +74,38 @@ public class WaiterAgent extends Agent implements Waiter {
 		person = p;
 	}
 	
+	public void setCashier(CashierAgent cash) {
+		cashier = cash;
+	}
+	
 	public void setHost(HostAgent h) {
 		host = h;
 	}
 	
 	public void setCook(CookAgent c) {
 		cook = c;
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (myCustomers.size() == 0) {
+			print ("going home!");
+			waiterGui.DoLeave(person);
+			if (cook!=null) { 
+				cook.msgShiftDone(); 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (host!=null) { 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(); 
+				cashier.subtract(20);
+			}
+		}
+		else {
+			print("my shift is done! but I still have customers");
+		}
 	}
 
 	public void msgLeavingTable(CustomerAgent cust) {
@@ -272,6 +299,7 @@ public class WaiterAgent extends Agent implements Waiter {
 				host.msgWantToGoOnBreak(this);
 				return true;
 			}
+			if (shiftDone) {msgShiftDone();}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return false;

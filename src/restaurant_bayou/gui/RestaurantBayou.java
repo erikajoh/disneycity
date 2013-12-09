@@ -237,6 +237,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
         	gui.bayouAniPanel.addGui(waiterGui);
         	if (host!=null) w.setHost(host);
         	if (cook!=null) w.setCook(cook);
+        	if (cashier!=null) w.setCashier(cashier);
         	w.startThread();
     	}
     	else if (type.equals("Host")) {
@@ -349,17 +350,28 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 	@Override
 	public void msgEndOfShift() {
 		isOpen = false;
-	/*	for (int i = 0; i < waiters.size(); i++) {
-			WaiterAgent w = waiters.get(i);
-			w.msgShiftDone();
-			cashier.subtract(10);
+		System.out.println("RESTAURANT BAYOU GOT END OF SHIFT");
+
+		if (host!=null) {
+			host.msgShiftDone();
+			for (int i = 0; i < waiters.size(); i++) {
+				if (cashier!=null) cashier.subtract(10);
+			}
 		}
-		if(cook == null)
-			cook.msgShiftDone();s
-		host.msgShiftDone();
-		cashier.subtract(30);
-		cashier.msgShiftDone();
-	*/}
+		else {
+			if (cashier!=null) { cashier.msgShiftDone(); cashier.subtract(10); }
+			for (int i = 0; i < waiters.size(); i++) {
+				WaiterAgent w = waiters.get(i);
+				w.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+			if (cook!=null) {
+				cook.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+		}
+		
+	}
 	
 	@Override
 	public void msgHereIsBill(Market_Douglass m, double amt) {

@@ -3,6 +3,7 @@ package restaurant_bayou.gui;
 
 import restaurant_bayou.CookAgent;
 import restaurant_bayou.HostAgent;
+import simcity.interfaces.Person;
 
 import java.awt.*;
 
@@ -22,6 +23,9 @@ public class CookGui implements Gui {
     
     public boolean leaving = false;
     public boolean atTable = false;
+    
+    private boolean leavingWork = false;
+    private Person person;
 
     public CookGui() {
         xHome = 320;
@@ -48,6 +52,11 @@ public class CookGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination){
+        	 if (leavingWork) {
+             	if (person!=null) person.msgStopWork(10);
+             	System.out.println("cook going home");
+             	leaving = false; 
+             }
         	if (getting && xDestination == xHome && yDestination == yHome-40){
         		getting = false;
         		agent.msgCookReady();
@@ -77,6 +86,13 @@ public class CookGui implements Gui {
 
     public boolean isPresent() {
         return true;
+    }
+    
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leavingWork = true;
     }
 
     public void DoGetIngredients() {

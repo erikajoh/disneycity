@@ -74,6 +74,17 @@ public class HostAgent extends Agent {
 	public List getWaiters() {
 		return waiters;
 	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (waitingCustomers.size() == 0) {
+			if (person!=null) person.msgStopWork(10);
+			print("host going home");
+			for (WaiterAgent w : waiters) {
+				w.msgShiftDone();
+			}
+		}
+	}
 		
 	public void msgIAmHere(CustomerAgent cust) {
 		print("bayou host got message i am here");
@@ -121,6 +132,8 @@ public class HostAgent extends Agent {
             such that table is unoccupied, customer is waiting, and waiter is ready.
             If so, tell waiter to seat customer at table.
 		 */
+		if (waitingCustomers.size() == 0 && shiftDone == true) {if (person!=null) person.msgStopWork(10); print("host going home");} 
+
 		synchronized(waitingCustomers){
 			for (CustomerAgent c: waitingCustomers) {
 				Collections.sort(waiters, new Comparator<WaiterAgent>() {
