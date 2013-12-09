@@ -209,12 +209,23 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Small Driveway Esque Roads
 		//Houses first which are single tiles
-		grid[9][1].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[32][16].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
-		grid[1][10].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
-		grid[32][19].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
-		grid[11][21].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[1][24].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
+		grid[9][1].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);//Tiki Hut
+		grid[9][4].setUp(true);
+		
+		grid[32][6].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);//Haunted Mansion
+		grid[29][6].setRight(true);
+		
+		grid[1][10].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);//Rabbit Hole
+		grid[4][10].setLeft(true);
+		
+		grid[32][19].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);//Pirate's Suite
+		grid[29][19].setRight(true);
+		
+		grid[11][21].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);//Space Mountain
+		grid[11][24].setUp(true);
+		
+		grid[1][24].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);//Cinderella Castle
+		grid[4][24].setLeft(true);
 
 		//And then others which are loops to prevent traffic jams
 		//North Market
@@ -224,24 +235,28 @@ public class TransportationController extends Agent implements Transportation{
 		grid[12][1].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[13][1].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[14][1].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
+		grid[13][4].setUp(true);
 
 		//Rancho
 		grid[20][0].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[21][0].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[20][1].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[21][1].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[21][4].setUp(true);
 
 		//Apt #1
 		grid[24][0].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[25][0].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[24][1].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[25][1].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[25][4].setUp(true);
 
 		//Apt #2
 		grid[0][6].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[1][6].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[0][7].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[1][7].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
+		grid[4][6].setLeft(true);
 
 		//Bank
 		grid[24][9].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
@@ -250,18 +265,21 @@ public class TransportationController extends Agent implements Transportation{
 		grid[25][10].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[24][11].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[25][11].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[25][14].setUp(true);
 
 		//Haus
 		grid[32][10].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[33][10].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
-		grid[32][10].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
+		grid[32][11].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[33][11].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[29][11].setRight(true);
 
 		//Pizza and Apt #4
 		grid[10][18].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[11][18].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[10][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[11][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[10][15].setDown(true);
 
 		//Southern Market
 		grid[22][18].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
@@ -274,42 +292,49 @@ public class TransportationController extends Agent implements Transportation{
 		grid[1][19].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[0][20].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[1][20].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
+		grid[4][19].setLeft(true);
 
 		//Cafe
 		grid[24][20].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[25][21].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[24][20].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[25][21].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[25][24].setUp(true);
 
 		//Apt #6 and Apt #7
 		grid[32][24].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[33][24].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
 		grid[32][25].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[33][25].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[29][25].setRight(true);
 
 		//Apt #8
 		grid[4][28].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[5][28].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[4][29].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[5][29].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[4][25].setDown(true);
 
 		//Apt #9 and Bayou
 		grid[10][28].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[11][28].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[10][29].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[11][29].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[10][25].setDown(true);
 
 		//Apt #10
 		grid[22][28].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[23][28].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[22][29].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[23][29].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[22][25].setDown(true);
 
 		//Apt #11
 		grid[28][28].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[29][28].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[28][29].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[29][29].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[28][25].setDown(true);
 
 		//Time for some CROSSWALKS
 		//Houses first again since they're multidirectional and only two
@@ -382,6 +407,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Traffic light
 		trafficLight = new TrafficLight(new Position(16, 14), grid);
+		master.addGui(trafficLight);
 
 		//GoGo Pelipper trucks
 		grid[18][1].setMovement(false, true, false, false, MovementTile.MovementType.FLYING);
@@ -515,7 +541,7 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Pizza Port", new Position(8, 17), new Position(10, 19), busStops.get(3));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("Village Haus", new Position(31, 9), new Position(33, 10), busStops.get(6));
+		tempBuilding = new Building("Village Haus", new Position(31, 9), new Position(33, 10), busStops.get(6));//hacked 33, 10
 		directory.put(tempBuilding.name, tempBuilding);
 
 		tempBuilding = new Building("Bus Stop 0", new Position(11, 3), new Position(11, 4), busStops.get(0));

@@ -77,7 +77,7 @@ public class CarAgent extends MobileAgent{
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
 			}
-			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
+			gotPermit = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 			
 			//Did not get lock. Lets make n attempts.
 			while (!gotPermit && attempts < 3) {
