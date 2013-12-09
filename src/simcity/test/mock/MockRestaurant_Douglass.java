@@ -120,4 +120,10 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public String[] getWorkers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
