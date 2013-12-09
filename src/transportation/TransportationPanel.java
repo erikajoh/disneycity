@@ -66,7 +66,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	
 	public TransportationPanel(SimCityGui gui) {
 		offset = new Point(0,0);
-		buffer = 50;
+		buffer = 10;
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 
@@ -97,7 +97,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		
 		
 		buildings.add(new BuildingFinder(500,225,600,300,"Pirate Bank"));
-		buildings.add(new BuildingFinder(375,0,450,0,"Mickey's Market"));
+		buildings.add(new BuildingFinder(375,0,450,50,"Mickey's Market"));
 		buildings.add(new BuildingFinder(500,450,550,525,"Minnie's Market"));
 		
 		buildings.add(new BuildingFinder(550,0,600,50,"Rancho Del Zocalo"));
@@ -126,20 +126,23 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		//offset changing
 		if(previousPosition != null) {
 			//Move Camera Up
-			if(previousPosition.getY() >= 0 && previousPosition.getY() <= buffer)
-				offset.y -= scrollSpeed;
+			int bufferZones = 6;
+			for(int i = 0; i < bufferZones; i++) {
+				if(previousPosition.getY() >= 0 && previousPosition.getY() <= buffer * (bufferZones-i))
+					offset.y -= scrollSpeed;
 
-			//Move Camera Down
-			if(previousPosition.getY() >= getSize().height - buffer && previousPosition.getY() <= getSize().height)
-				offset.y += scrollSpeed;
+				//Move Camera Down
+				if(previousPosition.getY() >= getSize().height - buffer * (bufferZones-i) && previousPosition.getY() <= getSize().height)
+					offset.y += scrollSpeed;
 
-			//Move Camera Left
-			if(previousPosition.getX() >= 0 && previousPosition.getX() <= buffer)
-				offset.x -= scrollSpeed;
+				//Move Camera Left
+				if(previousPosition.getX() >= 0 && previousPosition.getX() <= buffer * (bufferZones-i))
+					offset.x -= scrollSpeed;
 
-			//Move Camera Right
-			if(previousPosition.getX() >= getSize().height - buffer && previousPosition.getY() <= getSize().height)
-				offset.x += scrollSpeed;
+				//Move Camera Right
+				if(previousPosition.getX() >= getSize().height - buffer * (bufferZones-i) && previousPosition.getY() <= getSize().height)
+					offset.x += scrollSpeed;
+			}
 		}
 
 		//offset clamping
