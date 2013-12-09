@@ -95,6 +95,20 @@ public class TransportationController extends Agent implements Transportation{
 	public TruckAgent truckMickey;
 	public TruckAgent truckMinnie;
 	private TrafficLight trafficLight;
+	
+	private class Crash {
+		MobileAgent agent1;
+		MobileAgent agent2;
+		Position position;
+		
+		public Crash(MobileAgent agent1, MobileAgent agent2, Position position) {
+			this.agent1 = agent1;
+			this.agent2 = agent2;
+			this.position = position;
+		}
+	}
+	
+	List<Crash> crashes;
 
 	public TransportationController(TransportationPanel panel) {
 		master = panel;
@@ -105,7 +119,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		for(int i = 0; i < grid.length; i++) {
 			for(int j = 0; j< grid[0].length; j++) {
-				grid[i][j] = new MovementTile(this);
+				grid[i][j] = new MovementTile(this, i, j);
 			}
 		}
 		//Walkways
@@ -657,7 +671,7 @@ public class TransportationController extends Agent implements Transportation{
 			truckMinnie.msgDeliverOrder(person, market, food, quantity, location);
 	}
 
-	public void msgCrash(MobileAgent agent1, MobileAgent agent2) {
+	public void msgCrash(MobileAgent agent1, MobileAgent agent2, Position position) {
 		
 	}
 
