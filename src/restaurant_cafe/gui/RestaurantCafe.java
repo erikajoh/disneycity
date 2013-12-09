@@ -342,7 +342,10 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 		
 	}
 
-
+	@Override
+	public void msgStartOfShift() {
+		isOpen = true;
+	}
 
 	@Override
 	public void msgEndOfShift() {
