@@ -14,6 +14,8 @@ import restaurant_cafe.interfaces.Cashier;
 import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
 
 import java.awt.Point;
@@ -208,6 +210,7 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 	}
 	
 	public void msgOrderDone(String choice, int table){
+		  AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "Waiter msg order done");
 		MyCustomer mc = null;
 		synchronized(customers){
 		  for(MyCustomer customer : customers){
@@ -350,6 +353,7 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 		  for(MyCustomer customer : customers){
 			    if(customer.state == CustomerState.foodCooking){
 				     print("Giving order to cook");
+				     AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "Calling giveOrder from reg scheduler");
 				     giveOrderToCook(customer);
 				     return true;
 			    }
