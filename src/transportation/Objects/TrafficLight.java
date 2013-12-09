@@ -1,13 +1,17 @@
 package transportation.Objects;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import transportation.GUIs.Gui;
 import astar.astar.Position;
 
-public class TrafficLight implements ActionListener{
+public class TrafficLight implements ActionListener, Gui{
 	//ALWAYS PLACE TRAFFIC LIGHT IN THE TOP LEFT GRID IN THE CENTER OF THE INTERSECTION OR THE TRANSPORTATION WILL BREAK HORRIBLY
 	Position location;
 	MovementTile[][] grid;
@@ -23,6 +27,7 @@ public class TrafficLight implements ActionListener{
 
 	public TrafficLight(Position location, MovementTile[][] grid) {
 		timer = new Timer(5000, this);
+		timer.start();
 		this.location = location;
 		this.grid = grid;
 
@@ -105,6 +110,57 @@ public class TrafficLight implements ActionListener{
 				}
 			}
 		}
+		return true;
+	}
+
+	@Override
+	public void updatePosition() {}
+
+	@Override
+	public void draw(Graphics2D g, Point offset) {
+		switch (light) {
+		case UPDOWN:
+			g.setColor(Color.GREEN);
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+4), 16, 16);//up
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+30), 16, 16);//down
+			g.setColor(Color.RED);
+			g.fillOval((int)(400-offset.getX()+2), (int)(350-offset.getY()+17), 16, 16);//left
+			g.fillOval((int)(400-offset.getX()+28), (int)(350-offset.getY()+17), 16, 16);//right
+			break;
+		case UPDOWNCAUTION:
+			g.setColor(Color.YELLOW);
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+4), 16, 16);//up
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+30), 16, 16);//down
+			g.setColor(Color.RED);
+			g.fillOval((int)(400-offset.getX()+2), (int)(350-offset.getY()+17), 16, 16);//left
+			g.fillOval((int)(400-offset.getX()+28), (int)(350-offset.getY()+17), 16, 16);//right
+			break;
+		case LEFTRIGHT:
+			g.setColor(Color.RED);
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+4), 16, 16);//up
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+30), 16, 16);//down
+			g.setColor(Color.GREEN);
+			g.fillOval((int)(400-offset.getX()+2), (int)(350-offset.getY()+17), 16, 16);//left
+			g.fillOval((int)(400-offset.getX()+28), (int)(350-offset.getY()+17), 16, 16);//right
+			break;
+		case LEFTRIGHTCAUTION://change direction
+			g.setColor(Color.RED);
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+4), 16, 16);//up
+			g.fillOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+30), 16, 16);//down
+			g.setColor(Color.YELLOW);
+			g.fillOval((int)(400-offset.getX()+2), (int)(350-offset.getY()+17), 16, 16);//left
+			g.fillOval((int)(400-offset.getX()+28), (int)(350-offset.getY()+17), 16, 16);//right
+			break;
+		}
+		g.setColor(Color.BLACK);
+		g.drawOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+4), 16, 16);//up
+		g.drawOval((int)(400-offset.getX()+15), (int)(350-offset.getY()+30), 16, 16);//down
+		g.drawOval((int)(400-offset.getX()+2), (int)(350-offset.getY()+17), 16, 16);//left
+		g.drawOval((int)(400-offset.getX()+28), (int)(350-offset.getY()+17), 16, 16);//right
+	}
+
+	@Override
+	public boolean isPresent() {
 		return true;
 	}
 }
