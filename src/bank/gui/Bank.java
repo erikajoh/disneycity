@@ -33,18 +33,20 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     private Vector<TellerAgent> tellers = new Vector<TellerAgent>();
 	private Map<BankCustomer, Person> spawns = new HashMap<BankCustomer, Person>();
 
-
+	private int tellerAmt;
+	
     private SimCityGui gui; //reference to main gui
     
     private ManagerAgent manager;
 
-    public Bank(SimCityGui gui, String bankName) {
+    public Bank(SimCityGui gui, String bankName, int ta) {
         this.gui = gui;
         this.bankName = bankName;
         manager = new ManagerAgent("Bank", this, gui);
         manager.startThread();
+        tellerAmt = ta;
         
-        for(int i = 0; i<4; i++){
+        for(int i = 0; i<tellerAmt; i++){
         	String name = "Teller"+i;
         	TellerAgent t = new TellerAgent(name);	
     		TellerGui g = new TellerGui(t, gui, tellers.size());
@@ -74,7 +76,8 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     
     public void msgRequestWithdrawal(Person person, int accountNum, double reqAmt, boolean present){
     	//hack to force trigger thief 
-    	/*msgThief(person, reqAmt, present);
+    	/*
+    	msgThief(person, reqAmt, present);
     	return;*/
     	BankCustomer bca = createBankCustomer(person, present, false);
     	manager.msgRequestWithdrawal(bca, accountNum, reqAmt);
@@ -102,8 +105,6 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     public String getBankName() {
     	return bankName;
     }
- 
-
 
     /**
      * Adds a customer or waiter to the appropriate list
@@ -132,7 +133,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void setTellerAmt(int amount){
-    	
+    	tellerAmt = amount;
     }
     
     public void setManager(ManagerAgent m){

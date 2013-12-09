@@ -18,7 +18,7 @@ public interface Housing_Douglass {
 	
 	public void msgIAmHome(PersonAgent rp, Map<String, Integer> items);
 	
-	public void msgDoMaintenance();
+	public void msgDoMaintenance(PersonAgent rp);
 	
 	public void msgRentDue();
 	

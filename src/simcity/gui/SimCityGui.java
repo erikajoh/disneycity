@@ -72,7 +72,19 @@ public class SimCityGui extends JFrame  {
 	public HousingAnimationPanel housAniPanel6 = new HousingAnimationPanel();
 	
 	public static Housing hauntedMansion;
-	public HousingAnimationPanel housAniPanel7 = new HousingAnimationPanel();	
+	public HousingAnimationPanel housAniPanel7 = new HousingAnimationPanel();
+	
+	public static Housing cinderellaCastle;
+	public HousingAnimationPanel housAniPanel8 = new HousingAnimationPanel();	
+	
+	public static Housing rabbitHole;
+	public HousingAnimationPanel housAniPanel9 = new HousingAnimationPanel();	
+	
+	public static Housing pirateSuite;
+	public HousingAnimationPanel housAniPanel10 = new HousingAnimationPanel();	
+	
+	public static Housing spaceMountain;
+	public HousingAnimationPanel housAniPanel11 = new HousingAnimationPanel();	
 	
 	public static Market mickeysMarket;
 	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
@@ -85,6 +97,8 @@ public class SimCityGui extends JFrame  {
 	
 	public static RestaurantHaus restHaus; 
 	public HausAnimationPanel hausAniPanel = new HausAnimationPanel();
+	
+	private final static int tellerAmt = 4;
 	
 	TransportationPanel cityAniPanel = new TransportationPanel(this);
 	private JPanel cityBanner = new JPanel();
@@ -121,6 +135,10 @@ public class SimCityGui extends JFrame  {
 						
 		cards = new JPanel(new CardLayout());
 		cards.add(housAniPanel7, "Haunted Mansion");
+		cards.add(housAniPanel8, "Cinderella Castle");
+		cards.add(housAniPanel9, "Rabbit Hole");
+		cards.add(housAniPanel10, "Pirate's Suite");
+		cards.add(housAniPanel11, "Space Mountain");
 		cards.add(housAniPanel1, "Main St Apartments #1");
 		cards.add(housAniPanel2, "Main St Apartments #2");
 		cards.add(housAniPanel3, "Main St Apartments #3");
@@ -157,6 +175,10 @@ public class SimCityGui extends JFrame  {
 		restHaus = new RestaurantHaus(this, "Village Haus");
 		restCafe = new RestaurantCafe(this, "Carnation Cafe");
 		hauntedMansion = new Housing(housAniPanel7, "Haunted Mansion");
+		cinderellaCastle = new Housing(housAniPanel8, "Cinderella Castle");
+		rabbitHole = new Housing(housAniPanel9, "Rabbit Hole");
+		pirateSuite = new Housing(housAniPanel10, "Pirate's Suite");
+		spaceMountain = new Housing(housAniPanel11, "Space Mountain");
 		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");
 		mainStApts2 = new Housing(housAniPanel2, "Main St Apartments #2");
 		mainStApts3 = new Housing(housAniPanel3, "Main St Apartments #3");
@@ -164,7 +186,7 @@ public class SimCityGui extends JFrame  {
 		mainStApts5 = new Housing(housAniPanel5, "Main St Apartments #5");
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
 		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
-		pirateBank = new Bank(this, "Pirate Bank");
+		pirateBank = new Bank(this, "Pirate Bank", tellerAmt);
 		
 		simCityPanel = new SimCityPanel(this);
 		workplacePropertyPanel = new WorkplacePropertyPanel(this);

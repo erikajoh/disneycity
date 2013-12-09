@@ -10,6 +10,9 @@ import bank.test.mock.MockTeller.State;
 
 import java.util.*;
 
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
+
 /**
  * bank Host Agent
  */
@@ -261,7 +264,7 @@ public class TellerAgent extends Agent implements Teller {
 	private void robBank(){
 		double cash = customer.requestAmt;
 		customer.success = robberySuccess.nextBoolean();
-		print("ROBBED BANK "+ customer.success);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Teller", "ROBBED BANK "+ customer.success);
 		customer.bankCustomer.msgRobbedBank(cash, customer.success);
 		customer.state = State.deciding;
 	}
