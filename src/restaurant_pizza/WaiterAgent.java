@@ -46,6 +46,8 @@ public class WaiterAgent extends Agent implements Waiter {
 	public RestMenu menu = new RestMenu();
 	Person person;
 	boolean shiftDone = false;
+	boolean alert = false;
+	boolean alertedShift = false;
 
 
 	public WaiterAgent(String name) {
@@ -180,22 +182,28 @@ public class WaiterAgent extends Agent implements Waiter {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(boolean alertOthers) {
 		shiftDone = true;
-		if (myCustomers.size() == 0) {
+		alert = alertOthers;
+		if (myCustomers.size() == 0 && alertOthers) {
+			alertedShift = true;
 			print ("going home!");
 			waiterGui.DoLeave(person);
 			if (cook!=null) { 
 				cook.msgShiftDone(); 
-				if (cashier!=null) cashier.subtract(10); 
+				if (cashier!=null) cashier.subtract(10.0); 
 			}
 			if (host!=null) { 
-				if (cashier!=null) cashier.subtract(10); 
+				if (cashier!=null) cashier.subtract(10.0); 
 			}
 			if (cashier!=null) { 
 				cashier.msgShiftDone(); 
 				cashier.subtract(20);
 			}
+		}
+		else if (myCustomers.size()==0){
+			print ("going home!");
+			waiterGui.DoLeave(person);
 		}
 		else {
 			print("my shift is done! but I still have customers");
@@ -311,7 +319,7 @@ public class WaiterAgent extends Agent implements Waiter {
 					}
 				}
 			}
-			if (shiftDone) {msgShiftDone();}
+			if (shiftDone && !alertedShift) {msgShiftDone(alert); alertedShift = true;}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return true;

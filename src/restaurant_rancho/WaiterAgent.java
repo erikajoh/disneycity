@@ -180,7 +180,6 @@ import java.util.concurrent.Semaphore;
 
 		// rules 
 			try{
-			//if (customers.size() == 0 && shiftDone && hasntLeft) {waiterGui.DoLeave(person); hasntLeft = false; }
 			for (MyCustomer c : customers) {
 				if (c.cs == customerState.leaving) {
 					notifyHostFreeTable(c);

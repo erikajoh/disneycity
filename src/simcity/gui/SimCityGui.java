@@ -372,11 +372,11 @@ public class SimCityGui extends JFrame  {
         //restRancho.addPerson(null, "Host", "Host", 50);
         //restRancho.addPerson(null, "Customer", "Sally", 50);
 		
-		//restPizza.addPerson(null, "Cook", "cook", 50);
-        //restPizza.addPerson(null, "Waiter", "w", 50);
-        //restPizza.addPerson(null, "Cashier", "cash", 50);
-        //restPizza.addPerson(null, "Host", "Host", 50);
-		//restPizza.addPerson(null, "Customer", "Sally", 50);
+		restPizza.addPerson(null, "Cook", "pcook", 50);
+        restPizza.addPerson(null, "Waiter", "pw", 50);
+        restPizza.addPerson(null, "Cashier", "pcash", 50);
+        restPizza.addPerson(null, "Host", "pHost", 50);
+		restPizza.addPerson(null, "Customer", "pSally", 50);
 		
         restBayou.addPerson(null, "Cook", "cook", 50);
         restBayou.addPerson(null, "Waiter", "w", 50);
