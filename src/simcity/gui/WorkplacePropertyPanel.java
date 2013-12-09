@@ -447,6 +447,21 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	  }
 	  else if(b == setFoodQtyAndBalance){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set "+ selectedMenuItem +" quantity to "+(Integer)foodQtySpinner.getValue()+ " and the balance to "+(Double)restBalSpinner.getValue());
+		if (selectedWorkplace.contains("Bayou")){
+			SimCityGui.restBayou.setQuantityAndBalance(selectedMenuItem, (Integer)foodQtySpinner.getValue(), (Double)restBalSpinner.getValue());
+		}
+		else if (selectedWorkplace.contains("Cafe")){
+			SimCityGui.restCafe.setQuantityAndBalance(selectedMenuItem, (Integer)foodQtySpinner.getValue(), (Double)restBalSpinner.getValue());
+		}
+		else if (selectedWorkplace.contains("Haus")){
+			SimCityGui.restHaus.setQuantityAndBalance(selectedMenuItem, (Integer)foodQtySpinner.getValue(), (Double)restBalSpinner.getValue());
+		}
+		else if (selectedWorkplace.contains("Pizza")){
+			SimCityGui.restPizza.setQuantityAndBalance(selectedMenuItem, (Integer)foodQtySpinner.getValue(), (Double)restBalSpinner.getValue());	
+		}
+		else if (selectedWorkplace.contains("Rancho")){
+			SimCityGui.restRancho.setQuantityAndBalance(selectedMenuItem, (Integer)foodQtySpinner.getValue(), (Double)restBalSpinner.getValue());
+		}
 	  }
 	  else if(b == setTellerAmt){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set teller amt to "+(Integer)tellerSpinner.getValue());

@@ -239,7 +239,14 @@ public class CookAgent extends Agent implements Cook {
     	}
     	return 0;
     }
-
+    
+	 public void setQuantity(String name, int num){
+		 for(Food food : foods){
+	    		if(food.getName().equals(name)){
+	    			 food.setAmount(num);
+	    		}
+	    	}
+	 }
 	
 	public Collection<Market> getMarkets(){
 		return markets;

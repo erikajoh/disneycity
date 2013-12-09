@@ -125,6 +125,12 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     	}
     	return 0;
     }
+    
+    public void setQuantityAndBalance(String name, int num, double balance){
+    	if(cook != null){
+    		 cook.setQuantity(name, num);
+    	}
+    }
 
     /**
      * Sets up the restaurant label that includes the menu,

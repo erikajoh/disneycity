@@ -265,6 +265,12 @@ public class CookAgent extends Agent {
 		return i.food.get(name);
 	}
 	
+	
+	 public void setQuantity(String name, int num){
+		 i.food.put(name, num);
+	 }
+
+	
 	public void addMarket(Market m){
 		markets.add(new MyMarket(m));
 		stateChanged();

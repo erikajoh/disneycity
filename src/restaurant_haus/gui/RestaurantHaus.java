@@ -307,6 +307,12 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     	}
     	return 0;
     }
+    
+    public void setQuantityAndBalance(String name, int num, double balance){
+    	if(cook != null){
+    		 cook.setQuantity(name, num);
+    	}
+    }
 
 	@Override
 	public String getRestaurantName() {
