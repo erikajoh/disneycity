@@ -66,7 +66,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	}
 	
 	public TransportationPanel(SimCityGui gui) {
-		offset = new Point(0,0);
+		offset = new Point(400,400);
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 

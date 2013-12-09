@@ -27,7 +27,7 @@ public class TruckGui implements Gui{
 		reachedHalfway = true;
 		reachedDestination = true;
 		
-		animModule = new AnimationModule("Pelipper", "IDLE", 5);
+		animModule = new AnimationModule("Pelipper", "Idle", 5);
 	}
 	
 	public void updatePosition() {

@@ -66,7 +66,7 @@ public class FlyingTraversal extends GraphTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type == MovementTile.MovementType.UNTYPED || grid[nextX][nextY].type == MovementTile.MovementType.ROAD) {
+			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type == MovementTile.MovementType.UNTYPED) {
 				continue;
 			}
 			if(ignore != null) {

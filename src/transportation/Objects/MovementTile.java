@@ -56,9 +56,15 @@ public class MovementTile extends Semaphore{
 		synchronized(occupants) {
 			occupants.add(occupant);
 			if(occupants.size() == 2) {//Notify transportation controller of crash
-				
+				controller.msgCrash(occupants.get(0), occupants.get(1));
+				occupants.remove(1);
+				occupants.remove(0);
 			}
 		}
+	}
+	
+	public void removeOccupant(MobileAgent occupant) {
+		occupants.remove(occupant);
 	}
 	
 	public void setUp(boolean up) {
