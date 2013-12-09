@@ -96,7 +96,7 @@ public class HousingTest extends TestCase
 		ResidentAgent ra = new ResidentAgent("renter", "house", 0);
 		ra.setHousing(housing);
 
-		housing.msgDoMaintenance();
+		housing.msgDoMaintenance(rp);
 		assertTrue("Housing should have logged \"Do maintenance\" but didn't. His log reads instead: " + housing.log.getLastLoggedEvent().toString(), housing.log.containsString("Do maintenance"));
 		
 		housing.msgFinishedMaintenance(ra);
@@ -187,7 +187,7 @@ public class HousingTest extends TestCase
 		ResidentAgent ra = new ResidentAgent("renter", "apt", 0);
 		ra.setHousing(housing);
 
-		housing.msgDoMaintenance();
+		housing.msgDoMaintenance(rp);
 		assertTrue("Housing should have logged \"Do maintenance\" but didn't. His log reads instead: " + housing.log.getLastLoggedEvent().toString(), housing.log.containsString("Do maintenance"));
 		
 		housing.msgFinishedMaintenance(ra);
