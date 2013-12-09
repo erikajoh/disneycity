@@ -89,6 +89,10 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 		System.out.println("NEW INFO: "+accountNum + ", "+ change + ", "+ loanAmt + ", "+loanTime);
 		person.msgLeftBank(this, accountNum, change, loanAmt, loanTime);
 	}
+	
+	public void msgClose(){
+		
+	}
     
     public BankCustomer createBankCustomer(Person person, boolean present, boolean isThief){
     	 customers.add(person);

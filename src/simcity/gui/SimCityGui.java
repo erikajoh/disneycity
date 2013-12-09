@@ -11,6 +11,10 @@ import market.Market;
 import market.gui.MarketAnimationPanel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import restaurant_bayou.gui.BayouAnimationPanel;
@@ -30,7 +34,7 @@ import transportation.TransportationPanel;
 import restaurant_cafe.gui.CafeAnimationPanel;
 import restaurant_cafe.gui.RestaurantCafe;
 
-public class SimCityGui extends JFrame  {
+public class SimCityGui extends JFrame implements ActionListener, WindowListener {
 
 	public static final int WINDOWX = 1180;
 	public static final int WINDOWY = 730;
@@ -43,6 +47,9 @@ public class SimCityGui extends JFrame  {
 	TracePanel tracePanel;
 	
 	JPanel cards;
+	JButton popOutB;
+	
+	public boolean poppedOut = false;
 				
 	public static RestaurantRancho restRancho;
 	public RanchoAnimationPanel ranchoAniPanel = new RanchoAnimationPanel();
@@ -124,7 +131,7 @@ public class SimCityGui extends JFrame  {
 	TransportationPanel cityAniPanel = new TransportationPanel(this);
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
-	private JPanel cityAnimation = new JPanel();
+	private static JPanel cityAnimation = new JPanel();
 	private JPanel zoomAnimation = new JPanel();
 	private JPanel cityPanel = new JPanel();
 	private JPanel zoomPanel = new JPanel();
@@ -133,10 +140,15 @@ public class SimCityGui extends JFrame  {
 	private JPanel logPanel = new JPanel();
 	private JLabel cityLabel = new JLabel("Disney City View                                          ");
 	private JLabel zoomLabel = new JLabel("Click on a Building to see Animation Inside");
+	
+	GridBagConstraints c1, c2, c3, c4, c5, c6, c7, c8, c9;
 		
 	public static ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	
 	public SimCityGui(String name) {
+		
+		popOutB = new JButton("Pop Out");
+		popOutB.addActionListener(this);
 			
 		tracePanel = new TracePanel();
 		tracePanel.showAlertsWithLevel(AlertLevel.ERROR);		//THESE PRINT RED, WARNINGS PRINT YELLOW on a black background... :/
@@ -240,17 +252,17 @@ public class SimCityGui extends JFrame  {
 		setBounds(WINDOWX/20, WINDOWX/20, WINDOWX, WINDOWY);
 		//GridBagConstraints c = new GridBagConstraints();
 		//c.fill = GridBagConstraints.BOTH;
-		GridBagConstraints c1 = new GridBagConstraints();
+		c1 = new GridBagConstraints();
 		c1.fill = GridBagConstraints.BOTH;
 		c1.weightx = .3;
 		c1.gridx = 0;
 		c1.gridy = 0; 
 		c1.gridwidth = 3;
 		cityBanner.setBorder(BorderFactory.createTitledBorder("City Banner"));
-		cityBanner.add(cityLabel);
+		cityBanner.add(popOutB);
 		add(cityBanner, c1);
 		
-		GridBagConstraints c2 = new GridBagConstraints();
+		c2 = new GridBagConstraints();
 		c2.fill = GridBagConstraints.BOTH;
 		c2.weightx = .3; 
 		c2.gridx = 3;
@@ -260,7 +272,7 @@ public class SimCityGui extends JFrame  {
 		zoomBanner.add(zoomLabel);
 		add(zoomBanner, c2);
 		
-		GridBagConstraints c3 = new GridBagConstraints();
+		c3 = new GridBagConstraints();
 		c3.fill = GridBagConstraints.BOTH;
 		c3.weightx = .1; 
 		c3.weighty = .6;
@@ -273,7 +285,7 @@ public class SimCityGui extends JFrame  {
 		personPanel.add(personPropertyPanel);
 		add(personPanel, c3);
 		
-		GridBagConstraints c4 = new GridBagConstraints();
+		c4 = new GridBagConstraints();
 		c4.fill = GridBagConstraints.BOTH;
 		c4.weightx = .1; 
 		c4.weighty = .4;
@@ -286,7 +298,7 @@ public class SimCityGui extends JFrame  {
 		workplacePanel.add(workplacePropertyPanel);
 		add(workplacePanel, c4);
 		
-		GridBagConstraints c5 = new GridBagConstraints();
+		c5 = new GridBagConstraints();
 		c5.fill = GridBagConstraints.BOTH;
 		c5.weightx = .3;
 		c5.weighty = .8;
@@ -299,7 +311,7 @@ public class SimCityGui extends JFrame  {
 		//cityAnimation.setBorder(BorderFactory.createTitledBorder("City Animation"));
 		add(cityAnimation, c5);
 		
-		GridBagConstraints c6 = new GridBagConstraints();
+		c6 = new GridBagConstraints();
 		c6.fill = GridBagConstraints.BOTH;
 		c6.weightx = .3;
 		c6.weighty= .8;
@@ -314,7 +326,7 @@ public class SimCityGui extends JFrame  {
 		//zoomAnimation.setBorder(BorderFactory.createTitledBorder("Zoom Animation"));
 		add(zoomAnimation, c6);
 		
-		GridBagConstraints c7 = new GridBagConstraints();
+		c7 = new GridBagConstraints();
 		c7.fill = GridBagConstraints.BOTH;
 		c7.weightx= .3;
 		c7.weighty = .05;
@@ -327,7 +339,7 @@ public class SimCityGui extends JFrame  {
 		cityPanel.add(simCityPanel);
 		add(cityPanel, c7);
 		
-		GridBagConstraints c8 = new GridBagConstraints();
+		c8 = new GridBagConstraints();
 		c8.fill = GridBagConstraints.BOTH;
 		c8.weightx= .3;
 		c8.weighty = .05;
@@ -338,7 +350,7 @@ public class SimCityGui extends JFrame  {
 		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom Panel"));
 		add(zoomPanel, c8);	
 		
-		GridBagConstraints c9 = new GridBagConstraints();
+		c9 = new GridBagConstraints();
 		c9.fill = GridBagConstraints.BOTH;
 		c9.weightx = .8; 
 		c9.weighty = .01;
@@ -419,7 +431,74 @@ public class SimCityGui extends JFrame  {
 		workplacePropertyPanel.updateGui();
 	}
 	
+	public void popOut() {
+        poppedOut = true;
+		remove(cityAnimation);
+		revalidate();
+		repaint();
+		JFrame frame = new JFrame("City View");
+		frame.setSize(850,750);
+        frame.add(cityAnimation);
+        frame.addWindowListener(this);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+	}
+	
+	public void popIn() {
+        poppedOut = false;
+		add(cityAnimation,c5);
+		cityAnimation.updateUI();
+	}
+	
 	public void updateDayInfo(String day, String phase) {
 		zoomLabel.setText("It is currently " + phase + " on this " + day + ".");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == popOutB) popOut();
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		popIn();
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

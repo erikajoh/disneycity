@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,11 +60,15 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		System.out.println("yay changeDay is called");
 		if(day) {
 			img = Toolkit.getDefaultToolkit().getImage("res/simcitynight.jpg");
+//			if (!gui.poppedOut) img = img.getScaledInstance(400, 330, Image.SCALE_DEFAULT);
 			day = false;
+			updateUI();
 		}
 		else {
 			img = Toolkit.getDefaultToolkit().getImage("res/simcityLarge.jpg");
+//			if (!gui.poppedOut) img = img.getScaledInstance(400, 330, Image.SCALE_DEFAULT);
 			day = true;
+			updateUI();
 		}
 			
 	}
@@ -76,6 +81,8 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		this.gui = gui;
 
 		img = Toolkit.getDefaultToolkit().getImage("res/simcitynight.jpg");	
+//		if (!gui.poppedOut) img = img.getScaledInstance(400, 330, Image.SCALE_DEFAULT);
+		
 		timer = new Timer(20, this );
 		timer.start();
 

@@ -33,6 +33,11 @@ public class Housing implements Housing_Douglass {
 		panel = p;
 		name = n;
     	if (name.contains("Haunted Mansion")) type = "house";
+    	else if (name.contains("Cinderella Castle")) type = "house";
+    	else if (name.contains("Rabbit Hole")) type = "house";
+    	else if (name.contains("Tiki Hut")) type = "house";
+    	else if (name.contains("Space Mountain")) type = "house";
+    	else if (name.contains("Pirate's Suite")) type = "house";
     	else if (name.contains("Main St Apartments")) type = "apt";
     	
     	if (name == "Haunted Mansion") panel.setBackground("res/hauntedmansion.png");
@@ -159,6 +164,10 @@ public class Housing implements Housing_Douglass {
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgDoneLeaving();
 		} 
+	}
+
+	public PersonAgent getOwner() {
+		return ownerPerson;
 	}
 	
 }
