@@ -27,7 +27,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private int loanTime;
 	
 	private SimCityGui simCityGui;
-	private BankCustomerGui personGui;
+	private BankCustomerGui customerGui;
 	
 	// agent correspondents
 	private Manager manager = null;
@@ -197,7 +197,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void goToTeller(){
 		animState = AnimState.walking;
-		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
+		customerGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
 		state = State.openingAccount;
 //	    simCityGui.updateInfoPanel(this);
 	}
@@ -229,17 +229,18 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void leaveBank(){
 		animState = AnimState.walking;
 		state = State.idle;
-		personGui.DoLeaveBank();
+		customerGui.DoLeaveBank();
 	}
 	private void failToLeaveBank(){
 		animState = AnimState.walking;
 		state = State.idle;
-		personGui.DoFailRobbery();
+		customerGui.DoFailRobbery();
 		AlertLog.getInstance().logMessage(AlertTag.BANK, "BC", "FAILED TO ROB BANK");
 	}
 	
 	private void leftBank(){
 		state = State.idle;
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "BC", "LEFT BANK");
 		teller.msgLeavingBank();
 		stateChanged();
 	}
@@ -296,11 +297,11 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	public void setGui(BankCustomerGui g) {
-		personGui = g;
+		customerGui = g;
 	}
 
 	public BankCustomerGui getGui() {
-		return personGui;
+		return customerGui;
 	}
 }
 

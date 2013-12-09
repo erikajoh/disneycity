@@ -107,7 +107,7 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	public void msgShiftDone() {
 		shiftDone = true;
-		if (!pickAndExecuteAnAction()) {person.msgStopWork(10);}
+		if (!pickAndExecuteAnAction()) {if (person!=null) person.msgStopWork(10); print("cashier going home");}
 	}
 
 	@Override

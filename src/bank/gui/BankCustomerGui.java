@@ -6,6 +6,8 @@ import bank.BankCustomerAgent;
 import java.awt.*;
 
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 
 public class BankCustomerGui implements Gui{
 
@@ -16,7 +18,7 @@ public class BankCustomerGui implements Gui{
 
 	private int windowX, windowY;
 	private int xPos, yPos;
-	private int fallCount = 0;
+	private int fallCount = 25;
 	private int xDestination, yDestination;
 	private enum Command {noCommand, GoToTeller, FailRobbery, LeaveBank}; //shortened to noCommand and walking?
 	private enum Direction{up, down, left, right, fall};
@@ -24,12 +26,14 @@ public class BankCustomerGui implements Gui{
 	private Command command=Command.noCommand;
 	private boolean isInBank = false;
 	private AnimationModule animModule;
+	private boolean isThief;
 
 
 	public BankCustomerGui(BankCustomerAgent c, SimCityGui gui, boolean present, boolean isThief, int wx, int wy){ //HostAgent m) {
 		agent = c;
 		windowX = wx;
 		windowY = wy;
+		this.isThief = isThief;
 		
 		if(isThief == false){
 			 animModule = new AnimationModule();
@@ -48,26 +52,36 @@ public class BankCustomerGui implements Gui{
 	}
 
 	public void updatePosition() {
-		if(command == Command.FailRobbery){
-			if(fallCount < 5){
-				fallCount++;
+		
+		if(command == Command.FailRobbery && xPos == xDestination && yPos == yDestination){
+			//AlertLog.getInstance().logMessage(AlertTag.BANK, "BANKGUI", "FALL");
+			direction = Direction.fall;
+			if(fallCount > 0){
+				AlertLog.getInstance().logMessage(AlertTag.BANK, "BANKGUI", "Fall Count: "+fallCount);
+				fallCount--;
 			}
-			else{
-				fallCount = 0;
-				command = command.noCommand;
-				xDestination = windowX/2-10;
-				yDestination = windowY+40;
+			else {
+				AlertLog.getInstance().logMessage(AlertTag.BANK, "BANKGUI", "DONE FALLING");
+				fallCount = 25;
+				yPos = windowY+500;
+				xDestination = (int)(windowX/2-10);
+				yDestination = windowY+500;
 				agent.msgAnimationFinishedLeavingBank();
+				command = command.noCommand;
 			}
 		}
 		else{
 			if (xPos < xDestination){
 				xPos++;
-				direction = Direction.right;
+				if(isThief == false){
+					direction = Direction.right;
+				}
 			}
 			else if (xPos > xDestination){
 				xPos--;
-				direction = Direction.left;
+				if(isThief == false){
+					direction = Direction.left;
+				}
 			}
 			if (yPos < yDestination){
 				yPos++;
@@ -84,9 +98,13 @@ public class BankCustomerGui implements Gui{
 				}
 				else if (command==Command.LeaveBank) {
 					agent.msgAnimationFinishedLeavingBank();
+					yPos = windowY+500;
+					yDestination = windowY+500;
 					isInBank = false;
 				}
-				command=Command.noCommand;
+				if(command != Command.FailRobbery){
+					command=Command.noCommand;
+				}
 			}
 		}
 		
@@ -133,13 +151,12 @@ public class BankCustomerGui implements Gui{
 	}
 	
 	public void DoLeaveBank() {
-		xDestination = windowX/2-10;
-		yDestination = windowY+40;
+		xDestination = (int)(windowX/2-10);
+		yDestination = windowY-24;
 		command = Command.LeaveBank;
 	}
 	
 	public void DoFailRobbery() {
-		xDestination = windowX/2-10;
 		yDestination = windowY/2;
 		command = Command.FailRobbery;
 	}

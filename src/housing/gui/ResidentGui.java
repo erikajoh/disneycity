@@ -144,7 +144,7 @@ public class ResidentGui implements Gui{
 			walls.add(new Wall(0.92,0.92,0.64,1));
 
 			if(roomNo == 0){
-				xTable = (int)(hWidth*0.63);
+				xTable = (int)(hWidth*0.62);
 				yTable = (int)(hHeight*0.59);
 				xBed = (int)(hWidth*0.16);
 				yBed = (int)(hHeight*0.15);

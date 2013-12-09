@@ -1,37 +1,18 @@
-2
+12
+Narwhal_Prime|Main St Apartments #1|OwnerResident
+CafeCashier1|Main St Apartments #1|Renter
+CafeCook1|Main St Apartments #1|Renter
+CafeHost1|Main St Apartments #1|Renter
 Narwhal_Secundus|Main St Apartments #2|OwnerResident
-PizzaHost1|Main St Apartments #2|Renter
-1
-Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus|PizzaHost1
-Friday
-
-1
-Narwhal_Secundus|Main St Apartments #2|OwnerResident
-1
-Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus
-Friday
-
-1
-NotEmployed|Haunted Mansion|OwnerResident
-1
-Haunted Mansion|NotEmployed|NotEmployed
-Thursday
-
-5
-Narwhal_Prime|Haunted Mansion|OwnerResident
-One|Main St Apartments #2|Renter
-Two|Main St Apartments #2|OwnerResident
-NotEmployed|Main St Apartments #3|OwnerResident
-StartWithCar|Main St Apartments #3|Renter
+BayouCashier1|Main St Apartments #2|Renter
+BayouCook1|Main St Apartments #2|Renter
+BayouHost1|Main St Apartments #2|Renter
+Edgar_Prime|Main St Apartments #3|OwnerResident
+HausCashier1|Main St Apartments #3|Renter
+HausCook1|Main St Apartments #3|Renter
+HausHost1|Main St Apartments #3|Renter
 3
-Haunted Mansion|Narwhal_Prime|Narwhal_Prime
-Main St Apartments #3|NotEmployed|NotEmployed|StartWithCar
-Main St Apartments #2|Two|One|Two
-Thursday
-
-2
-NotEmployed|Main St Apartments #3|OwnerResident
-Narwhal_Secundus|Main St Apartments #3|Renter
-1
-Main St Apartments #3|NotEmployed|NotEmployed|Narwhal_Secundus
+Main St Apartments #1|Narwhal_Prime|Narwhal_Prime|CafeCashier1|CafeCook1|CafeHost1
+Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus|BayouCashier1|BayouCook1|BayouHost1
+Main St Apartments #3|Edgar_Prime|Edgar_Prime|HausCashier1|HausCook1|HausHost1
 Friday

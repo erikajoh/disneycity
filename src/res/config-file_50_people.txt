@@ -1,6 +1,18 @@
-50
+12
+Narwhal_Prime|Main St Apartments #1|OwnerResident
+CafeCashier1|Main St Apartments #1|Renter
+CafeCook1|Main St Apartments #1|Renter
+CafeHost1|Main St Apartments #1|Renter
 Narwhal_Secundus|Main St Apartments #2|OwnerResident
-PizzaHost1|Main St Apartments #2|Renter
-17
-Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus|PizzaHost1
+BayouCashier1|Main St Apartments #2|Renter
+BayouCook1|Main St Apartments #2|Renter
+BayouHost1|Main St Apartments #2|Renter
+Edgar_Prime|Main St Apartments #3|OwnerResident
+HausCashier1|Main St Apartments #3|Renter
+HausCook1|Main St Apartments #3|Renter
+HausHost1|Main St Apartments #3|Renter
+3
+Main St Apartments #1|Narwhal_Prime|Narwhal_Prime|CafeCashier1|CafeCook1|CafeHost1
+Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus|BayouCashier1|BayouCook1|BayouHost1
+Main St Apartments #3|Edgar_Prime|Edgar_Prime|HausCashier1|HausCook1|HausHost1
 Friday
