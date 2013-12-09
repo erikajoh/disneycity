@@ -113,10 +113,8 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		buildings.add(new BuildingFinder(550,0,600,50,"Rancho Del Zocalo"));
 		buildings.add(new BuildingFinder(300,700,350,750,"Blue Bayou"));
 		buildings.add(new BuildingFinder(800,200,850,250,"Village Haus"));
-		//buildings.add(new BuildingFinder(200, 450, 250, 500,"Pizza Port"));
-		//buildings.add(new BuildingFinder(300,350,277,327,"Carnation Cafe"));
-		buildings.add(new BuildingFinder(300,350,277,327, "Pizza Port"));
-		buildings.add(new BuildingFinder(200, 450, 250, 500,"Carnation Cafe"));
+		buildings.add(new BuildingFinder(200, 450, 250, 500,"Pizza Port"));
+		buildings.add(new BuildingFinder(550,500,600,550,"Carnation Cafe"));
 		
 		buildings.add(new BuildingFinder(800,75, 850, 150,"Haunted Mansion"));
 		buildings.add(new BuildingFinder(150,0, 225, 50,"Tiki Hut"));
