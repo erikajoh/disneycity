@@ -122,7 +122,8 @@ public class TellerAgent extends Agent implements Teller {
 		synchronized(accounts){
 		   for(Account acc : accounts){
 			   if(acc.number == accountNum){
-				   customer.account = acc; 
+				   customer.account = acc;
+				   customer.state = State.depositingCash;
 					AlertLog.getInstance().logMessage(AlertTag.BANK, "Teller", "Found Account"); break;
 			   }
 		   }
@@ -137,6 +138,7 @@ public class TellerAgent extends Agent implements Teller {
 		synchronized(accounts){
 		   for(Account acc : accounts){
 			   if(acc.number == accountNum){
+				   customer.state = State.withdrawingCash;
 				   customer.account = acc; break;
 			   }
 		   }
