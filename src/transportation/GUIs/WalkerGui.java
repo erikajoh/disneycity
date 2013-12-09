@@ -74,13 +74,14 @@ public class WalkerGui implements Gui{
 		if(xPos - offset.getX() < -30 || xPos - offset.getX() > 500 || yPos - offset.getY() < -30 || yPos - offset.getY() > 500)
 			return;
 		g.drawImage(animModule.getImage(), (int)xPos - (int)offset.getX(), (int)yPos - (int)offset.getY(), null);
+		g.drawString(agent.getPerson().getName(), (int)xPos - (int)offset.getX(), (int)yPos - (int)offset.getY());
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
 		xLast = xPos;
 		yLast = yPos;
 		this.xDestination = xDestination * 25;
-		this.yDestination = yDestination * 25+2;
+		this.yDestination = yDestination * 25;
 		reachedHalfway = false;
 		reachedDestination = false;
 	}

@@ -3,6 +3,7 @@ package transportation.Agents;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import agent.Agent;
 import astar.astar.AStarNode;
 import astar.astar.Position;
 import simcity.interfaces.Person;
@@ -137,5 +138,8 @@ public class CarAgent extends MobileAgent{
 	public String getType() {
 		// TODO Auto-generated method stub
 		return "car";
+	}
+	public Person getPerson() {
+		return driver;
 	}
 }
