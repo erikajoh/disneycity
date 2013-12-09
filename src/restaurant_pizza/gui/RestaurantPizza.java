@@ -316,15 +316,25 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	public void msgEndOfShift() {
 		isOpen = false;
 		System.out.println("RESTAURANT GOT END OF SHIFT");
-		for (int i = 0; i < waiters.size(); i++) {
-			WaiterAgent w = waiters.get(i);
-			w.msgShiftDone();
+		if (host!=null) {
+			host.msgShiftDone();
 			if (cashier!=null) cashier.subtract(10);
+			for (int i = 0; i < waiters.size(); i++) {
+				if (cashier!=null) cashier.subtract(10);
+			}
 		}
-		if (cook!=null) cook.msgShiftDone();
-		if (host!=null) host.msgShiftDone();
-		if (cashier!=null) cashier.subtract(30);
-		if (cashier!=null) cashier.msgShiftDone();
+		else {
+			if (cashier!=null) { cashier.msgShiftDone(); cashier.subtract(10); }
+			for (int i = 0; i < waiters.size(); i++) {
+				WaiterAgent w = waiters.get(i);
+				w.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+			if (cook!=null) {
+				cook.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+		}
 		
 	}
 	
