@@ -4,6 +4,7 @@ package restaurant_cafe.gui;
 import restaurant_cafe.CustomerAgent;
 import restaurant_cafe.WaiterAgent;
 import simcity.gui.SimCityGui;
+import simcity.interfaces.Person;
 
 import java.awt.*;
 
@@ -19,6 +20,8 @@ public class WaiterGui implements Gui {
 	private enum Command {noCommand, walkToHost, walkToTable, walkToCook, walkToCashier};
 	private Command command = Command.noCommand;
 	SimCityGui gui;
+	Person person;
+	private boolean leaving = false;
 
     public WaiterGui(WaiterAgent agent, SimCityGui gui) {
         this.agent = agent;
@@ -41,6 +44,11 @@ public class WaiterGui implements Gui {
             yPos--;
         
         if (xPos == xDestination && yPos == yDestination){
+        	if(leaving) {
+        		if (person!=null) person.msgStopWork(10);
+            	System.out.println("waiter going home");
+            	leaving = false;
+        	}
         	if(command == Command.walkToTable) {
         		agent.msgAtTable(tableDestination);
         	}
@@ -77,6 +85,13 @@ public class WaiterGui implements Gui {
 
     public boolean isPresent() {
         return true;
+    }
+    
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
     }
     
     public void DoGoToTable(int tableNumber) {

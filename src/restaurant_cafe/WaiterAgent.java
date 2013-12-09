@@ -54,6 +54,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	boolean animating = false; 
 	enum BreakState{none, goOnBreak, goOffBreak};
 	BreakState breakState = BreakState.none;
+	boolean shiftDone = false;
 	
 	public Collection<Table> tables;
 	//note that tables is typed with Collection semantics.
@@ -111,6 +112,28 @@ public class WaiterAgent extends Agent implements Waiter {
 	public void msgEndBreak(){
 		breakState = BreakState.goOffBreak;
 		stateChanged();
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (customers.size() == 0) {
+			print ("going home!");
+			waiterGui.DoLeave(person);
+			if (cook!=null) { 
+				cook.msgShiftDone(); 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (host!=null) { 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(); 
+				cashier.subtract(20);
+			}
+		}
+		else {
+			print("my shift is done! but I still have customers");
+		}
 	}
 
 	public void msgPleaseSeatCustomer(Customer cust, int tableNum) {
@@ -400,6 +423,7 @@ public class WaiterAgent extends Agent implements Waiter {
 			//optional: e.printStackTrace();
 			return false;
 		}
+		if (shiftDone) {msgShiftDone();}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent

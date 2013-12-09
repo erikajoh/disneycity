@@ -23,6 +23,10 @@ public interface Cashier {
 	public void msgClearBill(Market market, boolean declined);
 	
 	public void msgNoMoney(Customer c);
+
+	public void subtract(double i);
+
+	public void msgShiftDone();
 	
 
 }

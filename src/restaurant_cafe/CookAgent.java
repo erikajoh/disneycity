@@ -36,6 +36,7 @@ public class CookAgent extends Agent implements Cook {
 	public Collection<Table> tables;
 	public Collection<Food> foods;
 	private CookGui cookGui;
+	boolean shiftDone = false;
 	
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
@@ -76,6 +77,13 @@ public class CookAgent extends Agent implements Cook {
 	}
 	
 	// Messages
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (orders.size() == 0) {
+			//person.msgStopWork(10);
+			cookGui.DoLeave(person);
+		}
+	}
 	public void msgHereIsOrder(Waiter w, String choice, Integer table){
 		print("table "+table+" ordered "+choice);
 		orders.add(new Order(w, choice, (int)table));

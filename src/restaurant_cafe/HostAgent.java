@@ -23,7 +23,7 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class HostAgent extends Agent implements Host {
 	static final int NTABLES = 3;
-	
+	boolean shiftDone = false;
 	class MyCustomer {
 		Customer customer;
 		CustomerState state;
@@ -84,6 +84,17 @@ public class HostAgent extends Agent implements Host {
 		return tables;
 	}
 	// Messages
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (customers.size() == 0) {
+			if (person!=null) person.msgStopWork(10);
+			print("host going home");
+			for (MyWaiter w : waiters) {
+				w.waiter.msgShiftDone();
+			}
+		}
+	}
 
 	public void msgIWantFood(Customer cust) {
 		customers.add(new MyCustomer(cust, CustomerState.waiting));
@@ -164,6 +175,8 @@ public class HostAgent extends Agent implements Host {
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
+		if (customers.size() == 0 && shiftDone == true) {if (person!=null) person.msgStopWork(10); print("host going home");} 
+
 		synchronized(customers){
 		for(MyCustomer customer : customers){
 			if(customer.state == CustomerState.waiting){
