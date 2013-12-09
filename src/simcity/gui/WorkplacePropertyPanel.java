@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,10 +19,14 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
+
 
 public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	SimCityGui gui;
 
+	String selectedWorkplace = "";
 	int selectedWorkplaceIndex = 0;
 	String[] workplaces;
 	
@@ -48,6 +54,21 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	int selectedPersonForRestIndex = 0;
 	String[] peopleForRest;
 	
+	public class ComboBox {
+		JComboBox comboBox;
+		String [] list;
+		String selectedItem = "";
+		int selectedIndex = 0;
+		public ComboBox(JComboBox cb, String[] l, String selItem, int selIndex){
+			comboBox = cb;
+			list = l;
+			selectedItem = selItem;
+			selectedIndex = selIndex;
+		}
+	};
+	
+	private List<ComboBox> comboBoxes = new ArrayList<ComboBox>();
+	
 	enum WorkplaceType{Market, Restaurant, Bank};
 	WorkplaceType type;
 	
@@ -69,11 +90,6 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JPanel inventory = new JPanel();
 	JPanel editInventory = new JPanel();
 	
-	/*JPanel setInventory;
-	JPanel setInventory1;
-	JPanel setInventory2;
-	JPanel setInventory3;
-	JPanel setInventory4;*/
 	JPanel swapMktWorkers = new JPanel();
 	JPanel swapRestWorkers = new JPanel();
 
@@ -82,8 +98,14 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JPanel editMenuItems = new JPanel();
 		
 public WorkplacePropertyPanel(SimCityGui gui) {
-		
 		this.gui = gui;
+		comboBoxes.add(new ComboBox(workplaceList, workplaces, selectedWorkplace, selectedWorkplaceIndex));
+		comboBoxes.add(new ComboBox(inventoryList, marketInventory, selectedMktItem, selectedMktItemIndex));
+		comboBoxes.add(new ComboBox(mktWorkersList, marketWorkers, selectedMktWorker, selectedMktWorkerIndex));
+		comboBoxes.add(new ComboBox(peopleForMktList, peopleForMkt, selectedPersonForMkt, selectedPersonForMktIndex));
+		comboBoxes.add(new ComboBox(menuItemsList, menu, selectedMenuItem, selectedMenuItemIndex));
+		comboBoxes.add(new ComboBox(restWorkersList, restWorkers, selectedRestWorker, selectedRestWorkerIndex));
+		comboBoxes.add(new ComboBox(peopleForRestList, peopleForRest, selectedPersonForRest, selectedPersonForRestIndex));
 		updateGui();
 	}
 
@@ -148,6 +170,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   spinner.setFont(spinner.getFont().deriveFont(12.0f));
 		   editInventory.add(spinner);
 		   setMktQuantity.setFont(setMktQuantity.getFont().deriveFont(12.0f));
+		   setMktQuantity.addActionListener(this);
 		   editInventory.add(setMktQuantity);
 		   properties.add(editInventory);
 		   
@@ -174,6 +197,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   peopleForMktList.addActionListener(this);
 		   swapMktWorkers.add(peopleForMktList);
 		   swapMktJobs.setFont(swapMktJobs.getFont().deriveFont(12.0f));
+		   swapMktJobs.addActionListener(this);
 		   swapMktWorkers.add(swapMktJobs);
 		   properties.add(swapMktWorkers);
 		}
@@ -188,6 +212,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			spinner.setFont(spinner.getFont().deriveFont(12.0f));
 			tellers.add(spinner);
 			setTellerAmt.setFont(setTellerAmt.getFont().deriveFont(12.0f));
+			setTellerAmt.addActionListener(this);
 			tellers.add(setTellerAmt);
 			properties.add(tellers);
 		}
@@ -259,6 +284,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		        editMenuItems.add(spinner2);
 				
 				setFoodQtyAndBalance.setFont(setFoodQtyAndBalance.getFont().deriveFont(12.0f));
+				setFoodQtyAndBalance.addActionListener(this);
 				editMenuItems.add(setFoodQtyAndBalance);
 				
 				   swapRestWorkers = new JPanel();
@@ -283,6 +309,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 				   peopleForRestList.addActionListener(this);
 				   swapRestWorkers.add(peopleForRestList);
 				   swapRestJobs.setFont(swapRestJobs.getFont().deriveFont(12.0f));
+				   swapRestJobs.addActionListener(this);
 				   swapRestWorkers.add(swapRestJobs);
 				   properties.add(swapRestWorkers);
 		
@@ -360,8 +387,38 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-	JComboBox cb = (JComboBox)e.getSource();
-    String name = (String)cb.getSelectedItem();
+	JComboBox cb = null;
+	JButton b = null;
+	String name = "";
+	if(e.getSource() instanceof JComboBox){
+		 cb = (JComboBox)e.getSource();
+		 name = (String)cb.getSelectedItem();
+	}
+	else if(e.getSource() instanceof JButton){
+		 b = (JButton)e.getSource();
+	}
+
+	
+	if(b!= null){
+	if(b == setMktQuantity){
+		AlertLog.getInstance().logInfo(AlertTag.CITY, "SET MKT QTY", "Changed to ");
+
+		
+	}
+	else if(b == swapMktJobs){
+		
+	}
+	else if(b == swapRestJobs){
+		
+	}
+	else if(b == setFoodQtyAndBalance){
+		
+	}
+	else if(b == setTellerAmt){
+		
+	}
+	}
+    if(cb != null){
     if(cb == workplaceList){
 	     for(int i = 0; i<workplaces.length; i++){
 		     if(workplaces[i].equals(name)){
@@ -432,7 +489,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     }
 	     }
     }
-    
+    }
 	}
 
 }
