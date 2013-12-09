@@ -6,6 +6,9 @@ import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.HostAgent;
 import restaurant_bayou.MarketAgent;
 import restaurant_bayou.WaiterAgent;
+import restaurant_bayou.ProducerConsumerMonitor;
+import restaurant_bayou.WaiterAgentNorm;
+import restaurant_bayou.WaiterAgentPC;
 import simcity.Restaurant;
 import simcity.PersonAgent;
 import simcity.RestMenu;
@@ -45,9 +48,9 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     private List<WaiterAgent> waiters = new ArrayList<WaiterAgent>();
     private JPanel restLabel = new JPanel();
-    private ListPanel customerPanel = new ListPanel(this, "customers");
-    private ListPanel waiterPanel = new ListPanel(this, "waiters");
-    private ListPanel marketPanel = new ListPanel(this, "markets");
+//    private ListPanel customerPanel = new ListPanel(this, "customers");
+//    private ListPanel waiterPanel = new ListPanel(this, "waiters");
+//    private ListPanel marketPanel = new ListPanel(this, "markets");
     private JPanel group = new JPanel();
     private JLabel restSubLabel = new JLabel();
     private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
@@ -55,6 +58,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     boolean isOpen;
     private Bank_Douglass bank;
     private Market_Douglass market2;
+    public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
 
     private SimCityGui gui; //reference to main gui
 
@@ -227,7 +231,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     	}
     	
     	else if (type.equals("Waiter")) {
-    		WaiterAgent w = new WaiterAgent(name);
+    		WaiterAgentNorm w = new WaiterAgentNorm(name, this);
         	WaiterGui waiterGui = new WaiterGui(w, gui, waiters.size());
         	if (p!=null) w.setPerson(p);
         	waiters.add(w);
@@ -237,8 +241,20 @@ public class RestaurantBayou extends JPanel implements Restaurant{
         	if (cook!=null) w.setCook(cook);
         	w.startThread();
     	}
+    	else if (type.equals("WaiterPC")) {
+    		WaiterAgentPC w = new WaiterAgentPC(name, this);
+        	WaiterGui waiterGui = new WaiterGui(w, gui, waiters.size());
+        	if (p!=null) w.setPerson(p);
+        	waiters.add(w);
+        	w.setGui(waiterGui);
+        	gui.bayouAniPanel.addGui(waiterGui);
+        	if (host!=null) w.setHost(host);
+        	if (cook!=null) w.setCook(cook);
+        	if (cashier!=null) w.setCashier(cashier);
+        	w.startThread();
+    	}
     	else if (type.equals("Host")) {
-    		host = new HostAgent(name);
+    		host = new HostAgent(name, this);
     		if (p!=null) host.setPerson(p);
     		if (cashierGui!=null) host.setGui(cashierGui);
     		if (cashier!=null) host.setCashier(cashier);
@@ -253,7 +269,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
             host.startThread();
     	}
     	else if (type.equals("Cook")) {
-    		cook = new CookAgent(name, menu);
+    		cook = new CookAgent(name, this, menu);
     		cookGui = new CookGui();
     		if (p!=null) cook.setPerson(p);
     		cook.setGui(cookGui);
@@ -295,10 +311,10 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 		restLabel.add(b, BorderLayout.SOUTH);
 	}
     
-    public void resetState(Object person){
-    	if (person instanceof CustomerAgent) customerPanel.resetCB(person);
-    	if (person instanceof WaiterAgent) waiterPanel.resetCB(person);
-    }
+//    public void resetState(Object person){
+//    	if (person instanceof CustomerAgent) customerPanel.resetCB(person);
+//    	if (person instanceof WaiterAgent) waiterPanel.resetCB(person);
+//    }
     
   /*  public void addTable(){
     	gui.animationPanel.addTable();
@@ -314,7 +330,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     }
     
     public String addWaiter(Boolean onBreak){
-    	WaiterAgent w = new WaiterAgent("w");
+    	WaiterAgentNorm w = new WaiterAgentNorm("w", this);
     	host.addWaiter(w);
     	WaiterGui waiterGui = new WaiterGui(w, gui, waiters.size());
     	w.setGui(waiterGui);
@@ -347,17 +363,28 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 	@Override
 	public void msgEndOfShift() {
 		isOpen = false;
-	/*	for (int i = 0; i < waiters.size(); i++) {
-			WaiterAgent w = waiters.get(i);
-			w.msgShiftDone();
-			cashier.subtract(10);
+		System.out.println("RESTAURANT BAYOU GOT END OF SHIFT");
+
+		if (host!=null) {
+			host.msgShiftDone();
+			for (int i = 0; i < waiters.size(); i++) {
+				if (cashier!=null) cashier.subtract(10);
+			}
 		}
-		if(cook == null)
-			cook.msgShiftDone();s
-		host.msgShiftDone();
-		cashier.subtract(30);
-		cashier.msgShiftDone();
-	*/}
+		else {
+			if (cashier!=null) { cashier.msgShiftDone(); cashier.subtract(10); }
+			for (int i = 0; i < waiters.size(); i++) {
+				WaiterAgent w = waiters.get(i);
+				w.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+			if (cook!=null) {
+				cook.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+		}
+		
+	}
 	
 	@Override
 	public void msgHereIsBill(Market_Douglass m, double amt) {

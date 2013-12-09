@@ -65,9 +65,10 @@ public class CookGui implements Gui{
 			yPos--;
 
 		if (xPos == xDestination && yPos == yDestination && leaving == true) {
-				System.out.println("cook going home ugh");
+				//System.out.println("cook going home ugh");
 	        	if (person!=null) person.msgStopWork(10);
 	        	leaving =false; 
+	        	actionInProgress = false;
 	    }
 		if (xPos == xDestination && yPos == yDestination) {
 			cook.msgAtLoc();
@@ -126,6 +127,7 @@ public class CookGui implements Gui{
 	}
 	
     public void DoLeave(Person p) {
+    	System.out.println("do leave getting called");
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;

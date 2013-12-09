@@ -216,7 +216,7 @@ public class SimCityGui extends JFrame  {
 		rabbitHole = new Housing(housAniPanel9, "Rabbit Hole");
 		pirateSuite = new Housing(housAniPanel10, "Pirate's Suite");
 		spaceMountain = new Housing(housAniPanel11, "Space Mountain");
-		spaceMountain = new Housing(housAniPanel12, "Tiki Hut");
+		tikiHut = new Housing(housAniPanel12, "Tiki Hut");
 		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");
 		mainStApts2 = new Housing(housAniPanel2, "Main St Apartments #2");
 		mainStApts3 = new Housing(housAniPanel3, "Main St Apartments #3");
@@ -372,18 +372,18 @@ public class SimCityGui extends JFrame  {
         //restRancho.addPerson(null, "Host", "Host", 50);
         //restRancho.addPerson(null, "Customer", "Sally", 50);
 		
-		//restPizza.addPerson(null, "Cook", "cook", 50);
-        //restPizza.addPerson(null, "Waiter", "w", 50);
-        //restPizza.addPerson(null, "Cashier", "cash", 50);
-        //restPizza.addPerson(null, "Host", "Host", 50);
-		//restPizza.addPerson(null, "Customer", "Sally", 50);
+		restPizza.addPerson(null, "Cook", "pcook", 50);
+        restPizza.addPerson(null, "Waiter", "pw", 50);
+        restPizza.addPerson(null, "Cashier", "pcash", 50);
+        restPizza.addPerson(null, "Host", "pHost", 50);
+		restPizza.addPerson(null, "Customer", "pSally", 50);
 		
-        //restBayou.addPerson(null, "Cook", "cook", 50);
-        //restBayou.addPerson(null, "Waiter", "w", 50);
-        //restBayou.addPerson(null, "Cashier", "cash", 50);
-        //restBayou.addPerson(null, "Market", "Trader Joes", 50);
-        //restBayou.addPerson(null, "Host", "Host", 50);
-        //restBayou.addPerson(null, "Customer", "Sally", 50);
+        restBayou.addPerson(null, "Cook", "cook", 50);
+        restBayou.addPerson(null, "WaiterPC", "w", 50);
+        restBayou.addPerson(null, "Cashier", "cash", 50);
+        restBayou.addPerson(null, "Market", "Trader Joes", 50);
+        restBayou.addPerson(null, "Host", "Host", 50);
+        restBayou.addPerson(null, "Customer", "Sally", 50);
         
 		restCafe.setMarket(mickeysMarket);
 		restCafe.setBank(pirateBank);

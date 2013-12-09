@@ -9,4 +9,5 @@ public interface Waiter {
 
 	public abstract void msgHereIsCheck(Check aCheck);
 	
+	public abstract void msgShiftDone(boolean d);
 }

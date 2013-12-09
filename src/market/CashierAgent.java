@@ -16,6 +16,7 @@ public class CashierAgent extends Agent {
 	private CashRegister r;
 	private double amt;
 	public List<Bill> marketBills = Collections.synchronizedList(new ArrayList<Bill>());
+	private boolean shiftDone = false;
 	
 	private PersonAgent person;
 	private Customer customer;
@@ -49,6 +50,10 @@ public class CashierAgent extends Agent {
 	public void setRestaurant(Restaurant rest) {
 		this.rest = rest;
 	}
+	
+	public void subtract(double amount) {
+		r.balance -= amount;
+	}
 
 	// Messages
 	
@@ -65,6 +70,14 @@ public class CashierAgent extends Agent {
 		amt = amount;
 		state = State.rcvdPayment;
 		stateChanged();
+	}
+	
+	public void msgShiftDone() {
+		print("got msg shift done");
+		shiftDone = true;
+		if (marketBills.size()==0) {
+			person.msgStopWork(10);
+		}
 	}
 
 	/**

@@ -95,10 +95,8 @@ public class CookAgent extends Agent implements Cook{
 	public void msgShiftDone() {
 		print("got msg shift done, have " + orders.size());
 		shiftDone = true;
-		if (orders.size()==0) {
-			gui.DoLeave(person);
+		gui.DoLeave(person);
 			//person.msgStopWork(10);
-		}
 	}
 	
 	public void msgAtLoc() {
@@ -164,7 +162,6 @@ public class CookAgent extends Agent implements Cook{
 				}
 				return true;
 			}
-			if (shiftDone) {gui.DoLeave(person);}
 			Order newO = restaurant.orderStand.remove();
 			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
 			else {waitTimer();}

@@ -3,6 +3,7 @@ package restaurant_bayou.test;
 import restaurant_bayou.CashierAgent;
 import restaurant_bayou.HostAgent;
 import restaurant_bayou.HostAgent.Menu;
+import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_bayou.test.mock.MockCustomer;
 import restaurant_bayou.test.mock.MockMarket;
 import restaurant_bayou.test.mock.MockWaiter;
@@ -20,11 +21,12 @@ import simcity.RestMenu;
 public class CashierTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
+	RestaurantBayou restaurant;
 	CashierAgent cashier;
 	MockWaiter waiter;
 	MockCustomer customer;
 	MockMarket market;
-	HostAgent host = new HostAgent("host");
+	HostAgent host = new HostAgent("host", restaurant);
 	RestMenu m = host.menu;
 	
 	/**

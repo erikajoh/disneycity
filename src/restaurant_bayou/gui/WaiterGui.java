@@ -4,6 +4,7 @@
 import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.WaiterAgent;
 import simcity.gui.SimCityGui;
+import simcity.interfaces.Person;
 
 import java.awt.*;
 
@@ -23,6 +24,9 @@ public class WaiterGui implements Gui {
     
     public boolean leaving = false;
     public boolean atTable = false;
+    
+    Person person;
+	private boolean leavingWork = false;
 
     public WaiterGui(WaiterAgent agent, SimCityGui gui, int numWaiters) {
         this.agent = agent;
@@ -48,6 +52,11 @@ public class WaiterGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination){
+        	if (leavingWork){
+        		if (person!=null) person.msgStopWork(10);
+            	System.out.println("waiter going home");
+            	leaving = false;
+        	}
         	if ((xDestination == xTable*table + xTable/10) && (yDestination == yTable - yTable/12)) {
         		agent.msgAtTable();
         		atTable = true;
@@ -75,6 +84,13 @@ public class WaiterGui implements Gui {
 
     public boolean isPresent() {
         return true;
+    }
+    
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
     }
 
     public void DoGoToTable(int seatnumber) {

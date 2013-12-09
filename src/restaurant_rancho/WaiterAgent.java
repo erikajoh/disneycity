@@ -26,6 +26,9 @@ import java.util.concurrent.Semaphore;
 		double cash;
 		boolean shiftDone = false;
 		RestaurantRancho restaurant;
+		boolean alertedShift = false;
+		boolean alert = false;
+		boolean hasntLeft = true;
 		
 		Person person;
 		
@@ -66,9 +69,11 @@ import java.util.concurrent.Semaphore;
 
 		// Messages
 		
-		public void msgShiftDone() {
+		public void msgShiftDone(boolean alertOthers) {
 			shiftDone = true;
-			if (customers.size() == 0) {
+			alert = alertOthers;
+			if (customers.size() == 0 && alertOthers) {
+				alertedShift = true;
 				print ("going home!");
 				waiterGui.DoLeave(person);
 				if (cook!=null) { 
@@ -82,6 +87,10 @@ import java.util.concurrent.Semaphore;
 					cashier.msgShiftDone(); 
 					cashier.subtract(20);
 				}
+			}
+			else if (customers.size()==0){
+				print ("going home!");
+				waiterGui.DoLeave(person);
 			}
 			else {
 				print("my shift is done! but I still have customers");
@@ -171,7 +180,6 @@ import java.util.concurrent.Semaphore;
 
 		// rules 
 			try{
-			if (customers.size() == 0 && shiftDone) {waiterGui.DoLeave(person); }
 			for (MyCustomer c : customers) {
 				if (c.cs == customerState.leaving) {
 					notifyHostFreeTable(c);
@@ -227,7 +235,7 @@ import java.util.concurrent.Semaphore;
 			catch(ConcurrentModificationException e) {
 				return false;
 			}
-			if (shiftDone) {msgShiftDone();}
+			if (shiftDone && !alertedShift) {msgShiftDone(alert); alertedShift = true;}
 			return false;
 
 		}

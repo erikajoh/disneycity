@@ -46,12 +46,22 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	RestaurantHaus restHaus;
 	
 	Housing hauntedMansion;
+	Housing cinderellaCastle;
+	Housing rabbitHole;
+	Housing pirateSuite;
+	Housing spaceMountain;
+	Housing tikiHut;
 	Housing mainStApts1;
 	Housing mainStApts2;
 	Housing mainStApts3;
 	Housing mainStApts4;
 	Housing mainStApts5;
 	Housing mainStApts6;
+	Housing mainStApts7;
+	Housing mainStApts8;
+	Housing mainStApts9;
+	Housing mainStApts10;
+	Housing mainStApts11;
 	
 	Bank pirateBank;
 	
@@ -109,19 +119,40 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		restaurants.add(restHaus);
 		
 		hauntedMansion = gui.hauntedMansion;
+		cinderellaCastle = gui.cinderellaCastle;
+		rabbitHole = gui.rabbitHole;
+		pirateSuite = gui.pirateSuite;
+		spaceMountain = gui.spaceMountain;
+		tikiHut = gui.tikiHut;
 		mainStApts1 = gui.mainStApts1;
 		mainStApts2 = gui.mainStApts2;
 		mainStApts3 = gui.mainStApts3;
 		mainStApts4 = gui.mainStApts4;
 		mainStApts5 = gui.mainStApts5;
 		mainStApts6 = gui.mainStApts6;
+		mainStApts7 = gui.mainStApts7;
+		mainStApts8 = gui.mainStApts8;
+		mainStApts9 = gui.mainStApts9;
+		mainStApts10 = gui.mainStApts10;
+		mainStApts11 = gui.mainStApts11;
+
 		housings.add(hauntedMansion);
+		housings.add(cinderellaCastle);
+		housings.add(rabbitHole);
+		housings.add(pirateSuite);
+		housings.add(spaceMountain);
+		housings.add(tikiHut);
 		housings.add(mainStApts1);
 		housings.add(mainStApts2);
 		housings.add(mainStApts3);
 		housings.add(mainStApts4);
 		housings.add(mainStApts5);
 		housings.add(mainStApts6);
+		housings.add(mainStApts7);
+		housings.add(mainStApts8);
+		housings.add(mainStApts9);
+		housings.add(mainStApts10);
+		housings.add(mainStApts11);
 		
 		pirateBank = gui.pirateBank;
 		
@@ -294,6 +325,21 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		if(houseName.equals("Haunted Mansion")){
 			return hauntedMansion;
 		}
+		else if(houseName.equals("Cinderella Castle")){
+			return cinderellaCastle;
+		}
+		else if(houseName.equals("Rabbit Hole")){
+			return rabbitHole;
+		}
+		else if(houseName.equals("Pirate's Suite")){
+			return pirateSuite;
+		}
+		else if(houseName.equals("Space Mountain")){
+			return spaceMountain;
+		}
+		else if(houseName.equals("Tiki Hut")){
+			return tikiHut;
+		}
 		else if(houseName.equals("Main St Apartments #1")){
 			return mainStApts1;
 		}
@@ -311,6 +357,21 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		}
 		else if(houseName.equals("Main St Apartments #6")){
 			return mainStApts6;
+		}
+		else if(houseName.equals("Main St Apartments #7")){
+			return mainStApts7;
+		}
+		else if(houseName.equals("Main St Apartments #8")){
+			return mainStApts8;
+		}
+		else if(houseName.equals("Main St Apartments #9")){
+			return mainStApts9;
+		}
+		else if(houseName.equals("Main St Apartments #10")){
+			return mainStApts10;
+		}
+		else if(houseName.equals("Main St Apartments #11")){
+			return mainStApts11;
 		}
 		return null;
 	}

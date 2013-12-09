@@ -75,7 +75,7 @@ public class HostAgent extends Agent {
 		shiftDone = true;
 		if (waitingCustomers.size() == 0) {if (person!=null) person.msgStopWork(10);
 			for (MyWaiter w : waiters) {
-				w.w.msgShiftDone();
+				w.w.msgShiftDone(true);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public class HostAgent extends Agent {
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
-		if (waitingCustomers.size() == 0 && shiftDone == true) {person.msgStopWork(10);} 
+		
 
 		if (tablesAllFull() && !waitingCustomers.isEmpty()) {
 			synchronized(waitingCustomers) {
@@ -156,6 +156,7 @@ public class HostAgent extends Agent {
 			//return true;
 			
 		}
+		if (shiftDone == true) {msgShiftDone();} 
 		return false;
 
 	}
