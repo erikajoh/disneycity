@@ -56,7 +56,7 @@ public class CrashGui implements Gui{
 	@Override
 	public boolean isPresent() {
 		// TODO Auto-generated method stub
-		return false;
+		return (state != CrashState.DONE);
 	}
 
 }
