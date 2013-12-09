@@ -184,14 +184,12 @@ public class WaiterAgent extends Agent implements Waiter {
 		shiftDone = true;
 		if (myCustomers.size() == 0) {
 			print ("going home!");
-			waiterGui.DoLeave();
-			person.msgStopWork(10);
+			waiterGui.DoLeave(person);
 			if (cook!=null) { 
 				cook.msgShiftDone(); 
 				if (cashier!=null) cashier.subtract(10); 
 			}
 			if (host!=null) { 
-				host.msgShiftDone(); 
 				if (cashier!=null) cashier.subtract(10); 
 			}
 			if (cashier!=null) { 

@@ -357,13 +357,6 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 
 		if (host!=null) {
 			host.msgShiftDone();
-
-	//for (int i = 0; i < waiters.size(); i++) {
-	//		WaiterAgent w = waiters.get(i);
-	//		w.msgShiftDone();
-	//		w.msgNeedBreak();
-//
-	//		if (cashier!=null) cashier.subtract(10);
 			for (int i = 0; i < waiters.size(); i++) {
 				if (cashier!=null) cashier.subtract(10);
 			}

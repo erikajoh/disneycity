@@ -4,6 +4,7 @@ package restaurant_haus.gui;
 import restaurant_haus.CustomerAgent;
 import restaurant_haus.WaiterAgent;
 import simcity.gui.SimCityGui;
+import simcity.interfaces.Person;
 
 import java.awt.*;
 
@@ -13,6 +14,7 @@ public class WaiterGui implements Gui {
     private SimCityGui gui;
     
     boolean atPosition = false;
+    private Person person;
 
     private int xPos = -20, yPos = -20;//default waiter position
     private int xHome = 0, yHome = 0;
@@ -26,6 +28,7 @@ public class WaiterGui implements Gui {
     String carrying = "";
     
     public final int waiterSize = 20;
+    private boolean leaving = false;
 
     public WaiterGui(WaiterAgent agent, SimCityGui g) {
     	super();
@@ -44,6 +47,10 @@ public class WaiterGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
 
+        if (xPos == xDestination && yPos == yDestination && leaving == true) {
+        	person.msgStopWork(10);
+        	leaving = false;
+        }
         if (xPos == xDestination && yPos == yDestination && !atPosition){
            agent.msgAtDestination();
            atPosition = true;
@@ -64,6 +71,13 @@ public class WaiterGui implements Gui {
 
     public boolean isPresent() {
         return true;
+    }
+    
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
     }
 
     /*
