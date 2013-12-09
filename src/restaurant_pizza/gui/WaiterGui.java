@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import simcity.interfaces.Person;
+import simcity.interfaces.Person;
+
 import javax.imageio.ImageIO;
 
 public class WaiterGui implements Gui {
@@ -34,7 +37,8 @@ public class WaiterGui implements Gui {
 	public static final int ytable2 = 230;
 	public static final int xtable3 = 275;
 	public static final int ytable3 = 230;
-	
+	Person person;
+	private boolean leaving = false;
 	public int xHomeDestination, yHomeDestination;
 	
     public WaiterGui(WaiterAgent agent, int aXStart, int aYStart) {
@@ -45,6 +49,7 @@ public class WaiterGui implements Gui {
         yDestination = aYStart;
         xHomeDestination = aXStart;
         yHomeDestination = aYStart;
+        
         bi = Toolkit.getDefaultToolkit().getImage("res/waiter.png");
 		
     }
@@ -60,6 +65,10 @@ public class WaiterGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
 
+        if (xPos == xDestination && yPos == yDestination && leaving == true) {
+        	person.msgStopWork(10);
+        	leaving = false;
+        }
         if (xPos == xDestination && yPos == yDestination && readyToMove) {
         	readyToMove = false;
         	command = Command.noCommand;
@@ -96,6 +105,13 @@ public class WaiterGui implements Gui {
     
     public boolean isOnBreak() {
     	return onBreak;
+    }
+    
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
     }
     
     public void DoGoToTable(int tableNumber) {

@@ -138,7 +138,10 @@ public class CookAgent extends Agent {
 	
 	public void msgShiftDone() {
 		shiftDone = true;
-		if (orders.size() == 0) {person.msgStopWork(10);}
+		if (orders.size() == 0) {
+			//person.msgStopWork(10);
+			cookGui.DoLeave(person);
+		}
 	}
 
 	public void msgOrderDone(Order o) {

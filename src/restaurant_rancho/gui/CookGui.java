@@ -1,5 +1,6 @@
 package restaurant_rancho.gui;
 import restaurant_rancho.CookAgent;
+import simcity.interfaces.Person;
 
 import java.util.List;
 import java.util.*;
@@ -22,6 +23,9 @@ public class CookGui implements Gui{
 	public static final int loc0Y = (RanchoAnimationPanel.WINDOWY*4)/20;
 	public static final int loc2X = (RanchoAnimationPanel.WINDOWX*15)/20;
 	public static final int loc2Y = (RanchoAnimationPanel.WINDOWY*8)/20;
+	
+	private Person person;
+	private boolean leaving;
 	
 	List<kitchenLoc> platingLocations;
 	List<kitchenLoc> cookingLocations;
@@ -60,6 +64,10 @@ public class CookGui implements Gui{
 		else if (yPos > yDestination)
 			yPos--;
 
+		if (xPos == xDestination && yPos == yDestination && leaving) {
+	        	person.msgStopWork(10);
+	        	leaving =false; 
+	    }
 		if (xPos == xDestination && yPos == yDestination) {
 			cook.msgAtLoc();
 			actionInProgress = false;
@@ -115,6 +123,13 @@ public class CookGui implements Gui{
 	public void setPresent(boolean p) {
 		isPresent = p;
 	}
+	
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
+    }
 	
 
 	public void DoWalkToHome() {//later you will map seatnumber to table coordinates.

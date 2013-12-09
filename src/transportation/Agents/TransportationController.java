@@ -407,6 +407,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Traffic light
 		trafficLight = new TrafficLight(new Position(16, 14), grid);
+		master.addGui(trafficLight);
 
 		//GoGo Pelipper trucks
 		grid[18][1].setMovement(false, true, false, false, MovementTile.MovementType.FLYING);

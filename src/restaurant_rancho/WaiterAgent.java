@@ -68,8 +68,23 @@ import java.util.concurrent.Semaphore;
 		
 		public void msgShiftDone() {
 			shiftDone = true;
-			if (customers.size()==0) {
-				if (person!=null) person.msgStopWork(10);
+			if (customers.size() == 0) {
+				print ("going home!");
+				waiterGui.DoLeave(person);
+				if (cook!=null) { 
+					cook.msgShiftDone(); 
+					if (cashier!=null) cashier.subtract(10.0); 
+				}
+				if (host!=null) { 
+					if (cashier!=null) cashier.subtract(10.0); 
+				}
+				if (cashier!=null) { 
+					cashier.msgShiftDone(); 
+					cashier.subtract(20);
+				}
+			}
+			else {
+				print("my shift is done! but I still have customers");
 			}
 		}
 		
@@ -156,7 +171,7 @@ import java.util.concurrent.Semaphore;
 
 		// rules 
 			try{
-			if (customers.size() == 0 && shiftDone) {person.msgStopWork(10);}
+			if (customers.size() == 0 && shiftDone) {waiterGui.DoLeave(person); }
 			for (MyCustomer c : customers) {
 				if (c.cs == customerState.leaving) {
 					notifyHostFreeTable(c);
@@ -212,6 +227,7 @@ import java.util.concurrent.Semaphore;
 			catch(ConcurrentModificationException e) {
 				return false;
 			}
+			if (shiftDone) {msgShiftDone();}
 			return false;
 
 		}

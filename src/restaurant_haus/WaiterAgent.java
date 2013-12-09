@@ -37,6 +37,7 @@ public class WaiterAgent extends Agent implements Waiter{
 	public HostAgent h = null;
 	public CashierAgent cashier;
 	public Person person;
+	boolean shiftDone = false;
 	
 
 	Timer breakTimer = new Timer();
@@ -85,6 +86,28 @@ public class WaiterAgent extends Agent implements Waiter{
 	}
 
 	// Messages
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (customers.size() == 0) {
+			print ("going home!");
+			waiterGui.DoLeave(person);
+			if (cook!=null) { 
+				cook.msgShiftDone(); 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			//if (host!=null) {  
+			//	if (cashier!=null) cashier.subtract(10); 
+			//}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(); 
+				cashier.subtract(20);
+			}
+		}
+		else {
+			print("my shift is done! but I still have customers");
+		}
+	}
 
 	public void msgPleaseSeatCustomer(CustomerAgent c, int table) {
 		customers.add(new MyCustomer(c, table));
@@ -369,6 +392,7 @@ public class WaiterAgent extends Agent implements Waiter{
 		}
 		
 		GoHome();
+		if (shiftDone) {msgShiftDone();}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent

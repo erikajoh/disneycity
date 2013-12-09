@@ -5,6 +5,7 @@ import restaurant_haus.CookAgent;
 import restaurant_haus.CustomerAgent;
 import restaurant_haus.WaiterAgent;
 import simcity.gui.SimCityGui;
+import simcity.interfaces.Person;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class CookGui implements Gui {
 
     public final int size = 20;
     
+    boolean leaving = false;
     boolean atDestination = false;
     private int xPos = 340, yPos = 125;//default cook position
     private int xDestination = 340, yDestination = 125;//default start position
@@ -25,6 +27,7 @@ public class CookGui implements Gui {
     private Point stove = new Point(325, 125);
     private Point plating = new Point(310, 115);
     private Point phone = new Point(405, 290);
+    private Person person;
     
     private enum STATE {CARRYING, STATIONARY};
     
@@ -106,6 +109,11 @@ public class CookGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
 
+        if (xPos == xDestination && yPos == yDestination && leaving == true) {
+        	person.msgStopWork(10);
+        	leaving = false;
+        }
+        
         if (xPos == xDestination && yPos == yDestination && !atDestination) {
            agent.msgAtDestination();
            atDestination = true;
@@ -151,6 +159,13 @@ public class CookGui implements Gui {
 
     public boolean isPresent() {
         return true;
+    }
+    
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
     }
 
     public void GoToRefrigerator() {

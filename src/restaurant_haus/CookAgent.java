@@ -25,6 +25,7 @@ public class CookAgent extends Agent {
 	
 	CookGui cookGui;
 	public Person person;
+	boolean shiftDone = false;
 
 	
 	Menu m;
@@ -139,6 +140,11 @@ public class CookAgent extends Agent {
 		orders.add(new Order(w, choice, table));
 		stateChanged();
 		//Add new order to list of orders
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (orders.size() == 0) {person.msgStopWork(10);}
 	}
 	
 	public void msgFoodDone (Order o) {

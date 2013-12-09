@@ -1,6 +1,7 @@
 package restaurant_pizza.gui;
 
 import restaurant_pizza.CookAgent;
+import simcity.interfaces.Person;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -30,6 +31,8 @@ public class CookGui implements Gui {
     // TODO: Show the plates as text with a new area
     private static final int xCookingAreaText = 300, yCookingAreaText = 100;
 	public static final int mySize = 20;
+	private boolean leaving = false;
+	Person person;
 	
     public CookGui(CookAgent agent) {
         this.agent = agent;
@@ -38,7 +41,6 @@ public class CookGui implements Gui {
         xDestination = xPlatingArea;
         yDestination = yPlatingArea;
         bi = Toolkit.getDefaultToolkit().getImage("res/cook.gif");
-
     }
 
     public void updatePosition() {
@@ -51,7 +53,10 @@ public class CookGui implements Gui {
             yPos++;
         else if (yPos > yDestination)
             yPos--;
-
+        if (xPos == xDestination && yPos == yDestination && leaving) {
+        	person.msgStopWork(10);
+        	leaving =false; 
+        }
         if (xPos == xDestination && yPos == yDestination && readyToMove) {
         	readyToMove = false;
         	command = Command.noCommand;
@@ -69,7 +74,6 @@ public class CookGui implements Gui {
         else {
         	g.drawString(orderStatus.substring(0,3), xPos-40, yPos);
         }
-
         g.setFont(new Font(null, Font.PLAIN, 12));
         if (cookingOrders.length() >4) g.drawString(cookingOrders.substring(1,4), xCookingAreaText + 50, yCookingAreaText);
         //TODO Draw the plates on cooking area here
@@ -102,6 +106,13 @@ public class CookGui implements Gui {
         yDestination = yCookingArea;
         command = Command.goToCookingArea;
         readyToMove = true;
+    }
+    
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
     }
     
     public void DoDisplayOrder(String aOrderStatus) {

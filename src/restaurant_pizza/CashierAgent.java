@@ -69,7 +69,7 @@ public class CashierAgent extends Agent implements Cashier {
 	}
 	
 	public void subtract(double amount) {
-		totalMoney -= 10;
+		totalMoney -= amount;
 	}
 	
 	public void initializeMenu() {

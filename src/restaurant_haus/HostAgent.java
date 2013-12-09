@@ -1,6 +1,7 @@
 package restaurant_haus;
 
 import agent_haus.Agent;
+//import restaurant_pizza.HostAgent.MyWaiter;
 import simcity.PersonAgent;
 import simcity.interfaces.Person;
 
@@ -27,6 +28,7 @@ public class HostAgent extends Agent {
 	//Later we will see how it is implemented
 	public Person person;
 	private String name;
+	boolean shiftDone = false;
 
 	private Menu m = new Menu();
 
@@ -66,6 +68,15 @@ public class HostAgent extends Agent {
 		return tables;
 	}
 	// Messages
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (waitingCustomers.size() == 0) {person.msgStopWork(10);
+			for (MyWaiter w : waiters) {
+				w.w.msgShiftDone();
+			}
+		}
+	}
 
 	public void msgGiveJob(WaiterAgent waiter) {
 		MyWaiter tempWaiter = new MyWaiter(waiter);
@@ -142,6 +153,7 @@ public class HostAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
+		if (waitingCustomers.size() == 0 && shiftDone == true) {person.msgStopWork(10);} 
 		if(isPaused) {
 			try {
 				pauseSem.acquire();
