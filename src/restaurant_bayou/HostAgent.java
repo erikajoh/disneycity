@@ -3,6 +3,7 @@ package restaurant_bayou;
 import agent_bayou.Agent;
 import restaurant_bayou.gui.CashierGui;
 import restaurant_bayou.gui.CookGui;
+import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_bayou.gui.WaiterGui;
 import simcity.PersonAgent;
 import simcity.RestMenu;
@@ -35,11 +36,13 @@ public class HostAgent extends Agent {
 	private String name;
 	private Person person;
 	boolean shiftDone = false;
+	RestaurantBayou restaurant;
 	
-	public HostAgent(String name) {
+	public HostAgent(String name, RestaurantBayou rest) {
 		super();
 
 		this.name = name;
+		this.restaurant = rest;
 
 		tables = new ArrayList<Table>(NTABLES);
 		for (int ix = 1; ix <= NTABLES; ix++) {
@@ -48,7 +51,7 @@ public class HostAgent extends Agent {
 
 		waiters = new ArrayList<WaiterAgent>(NWAITERS);
 		for (int ix = 1; ix <= NWAITERS; ix++) {
-			waiters.add(new WaiterAgent("le waiter "+ix));
+			waiters.add(new WaiterAgentNorm("le waiter "+ix, restaurant));
 		}
 
 		

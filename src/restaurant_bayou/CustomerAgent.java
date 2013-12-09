@@ -24,7 +24,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private CustomerGui customerGui;
 	private RestMenu menu;
 	private List<String> unavailableFood =  new ArrayList<String>();
-	private String choice;
+	String choice;
 	private Check myCheck;
 	private Wallet wallet;
 	private int dishDoingTime = 0;

@@ -1,13 +1,28 @@
 package restaurant_bayou;
+import java.util.TimerTask;
 import java.util.Vector;
-import restaurant_bayou.CookAgent.Order;
  
 public class ProducerConsumerMonitor extends Object {
     private final int N = 5;
     private int count = 0;
     private Vector theData;
     
-    synchronized public void insert(Order data) {
+	public enum OrderState {Waiting, Cooking, Done, Sent;}
+    public class Order {
+		WaiterAgent w;
+		String choice;
+		int table;
+		OrderState state;
+		public Order(WaiterAgent wa, String c, int tbl) {
+			w = wa;
+			choice = c;
+			table = tbl;
+			state = OrderState.Waiting;
+		}
+	}
+    
+    synchronized public void insert(WaiterAgent w, String ch, int tbl) {
+    	Order data = new Order(w, ch, tbl);
         while (count == N) {
             try{ 
                 System.out.println("\tFull, waiting");

@@ -11,12 +11,12 @@ import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.gui.CookGui;
 import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_bayou.interfaces.Market;
-import restaurant_bayou.CookAgent.Order;
+import restaurant_bayou.ProducerConsumerMonitor.Order;
 import simcity.interfaces.Person;
 
 public class CookAgent extends Agent {
 	private String name;
-	private List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
+	private List<myOrder> orders =  Collections.synchronizedList(new ArrayList<myOrder>());
 	private Inventory i = new Inventory();
 	private CashierAgent cashier;
 	private Semaphore busy = new Semaphore(1,true);
@@ -63,7 +63,7 @@ public class CookAgent extends Agent {
 		
 	}
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table){
-		orders.add(new Order(w, choice, table));
+		orders.add(new myOrder(w, choice, table));
 //		if (!waiters.contains(w)) waiters.add(w);
 		stateChanged();
 	}
@@ -137,7 +137,7 @@ public class CookAgent extends Agent {
 			}
 		}
 		synchronized(orders){
-			for (Order o: orders) {
+			for (myOrder o: orders) {
 				if (o.state == OrderState.Done) {
 					o.state = OrderState.Sent;
 					o.w.msgOrderIsDone(o.table);
@@ -147,7 +147,7 @@ public class CookAgent extends Agent {
 			}
 		}
 		synchronized(orders){
-			for (Order o: orders) {
+			for (myOrder o: orders) {
 				if (o.state == OrderState.Waiting) {
 					if (unavailableFood.contains(o.choice)){
 						o.w.msgOutOfFood(unavailableFood);
@@ -183,9 +183,14 @@ public class CookAgent extends Agent {
 				}
 			}
 		}
-//		Order newO = restaurant.orderStand.remove();
-//		if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
-//		else {waitTimer();}
+		Order newO = restaurant.orderStand.remove();
+		if (newO!=null) {
+			orders.add(new myOrder(newO.w, newO.choice, newO.table));
+			print("order stand not empty, got order for "+ newO.choice);
+			return true;
+		} else {
+			waitTimer();
+		}
 		return false;
 	}
 	
@@ -220,12 +225,12 @@ public class CookAgent extends Agent {
 	}
 	
 	public enum OrderState {Waiting, Cooking, Done, Sent;}
-	public class Order {
+	public class myOrder {
 		WaiterAgent w;
 		String choice;
 		int table;
 		OrderState state;
-		public Order(WaiterAgent wa, String c, int tbl) {
+		public myOrder(WaiterAgent wa, String c, int tbl) {
 			w = wa;
 			choice = c;
 			table = tbl;

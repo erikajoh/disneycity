@@ -379,7 +379,7 @@ public class SimCityGui extends JFrame  {
 		restPizza.addPerson(null, "Customer", "pSally", 50);
 		
         restBayou.addPerson(null, "Cook", "cook", 50);
-        restBayou.addPerson(null, "Waiter", "w", 50);
+        restBayou.addPerson(null, "WaiterPC", "w", 50);
         restBayou.addPerson(null, "Cashier", "cash", 50);
         restBayou.addPerson(null, "Market", "Trader Joes", 50);
         restBayou.addPerson(null, "Host", "Host", 50);
