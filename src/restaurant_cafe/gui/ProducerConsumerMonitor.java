@@ -30,8 +30,8 @@ class ProducerConsumerMonitor extends Object {
         }
     }
     
-    synchronized public Item remove() {
-        Item data;
+    synchronized public Order remove() {
+    	Order data;
         while(count == 0)
             try{ 
                 System.out.println("\tEmpty, waiting");
@@ -48,12 +48,12 @@ class ProducerConsumerMonitor extends Object {
         return data;
     }
     
-    private void insert_item(Item data){
+    private void insert_item(Order data){
         theData.addElement(data);
     }
     
-    private Item remove_item(){
-        Item data = (Item) theData.firstElement();
+    private Order remove_item(){
+    	Order data = (Order) theData.firstElement();
         theData.removeElementAt(0);
         return data;
     }
