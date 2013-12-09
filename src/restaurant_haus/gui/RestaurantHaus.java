@@ -300,6 +300,13 @@ public class RestaurantHaus extends JPanel implements Restaurant{
       
        	return workers;	
       }
+    
+    public int getQuantity(String name){
+    	if(cook != null){
+    		return cook.getQuantity(name);
+    	}
+    	return 0;
+    }
 
 	@Override
 	public String getRestaurantName() {

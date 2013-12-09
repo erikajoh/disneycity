@@ -313,6 +313,10 @@ public class CookAgent extends Agent {
 	
 	// utilities
 	
+	public int getQuantity(String name){
+	   return inventory.get(name);
+	} 
+	    
 
 	public void setGui(CookGui gui) {
 		cookGui = gui;

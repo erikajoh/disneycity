@@ -238,26 +238,31 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			properties.add(tellers);
 		}
 		else if(type == WorkplaceType.Restaurant){
-			
+			int foodQty = 0;
 			if (workplaceList.getSelectedItem().toString().contains("Bayou")){
 				menu = SimCityGui.restBayou.getFoodNames();
 				restWorkers = SimCityGui.restBayou.getWorkers();
+				foodQty = SimCityGui.restBayou.getQuantity(selectedMenuItem);
 			}
 			else if (workplaceList.getSelectedItem().toString().contains("Cafe")){
 				menu = SimCityGui.restCafe.getFoodNames();
 				restWorkers = SimCityGui.restCafe.getWorkers();
+				foodQty = SimCityGui.restCafe.getQuantity(selectedMenuItem);
 			}
 			else if (workplaceList.getSelectedItem().toString().contains("Haus")){
 				menu = SimCityGui.restHaus.getFoodNames();
 				restWorkers = SimCityGui.restHaus.getWorkers();
+				foodQty = SimCityGui.restHaus.getQuantity(selectedMenuItem);
 			}
 			else if (workplaceList.getSelectedItem().toString().contains("Pizza")){
 				menu = SimCityGui.restPizza.getFoodNames();
 				restWorkers = SimCityGui.restPizza.getWorkers();
+				foodQty = SimCityGui.restPizza.getQuantity(selectedMenuItem);
 			}
 			else if (workplaceList.getSelectedItem().toString().contains("Rancho")){
 				menu = SimCityGui.restRancho.getFoodNames();
 				restWorkers = SimCityGui.restRancho.getWorkers();
+				foodQty = SimCityGui.restRancho.getQuantity(selectedMenuItem);
 			}
 			
 			   menuItems = new JPanel();
@@ -283,7 +288,13 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			   label = new JLabel("Food Quantity:");
 			   label.setFont(label.getFont().deriveFont(12.0f));
 			   editMenuItems.add(label);
-			   SpinnerModel model = new SpinnerNumberModel(/*SimCityGui.mickeysMarket.getItemQty(selectedMktItem)*/10, 0, 50, 1);     
+			   SpinnerModel model;
+			   if(foodQty < 50){
+				   model  = new SpinnerNumberModel(foodQty, 0, 50, 1);     
+			   }
+			   else {
+				   model  = new SpinnerNumberModel(foodQty, 0, foodQty+10, 1);     
+			   }
 			   foodQtySpinner = new JSpinner(model);
 			   foodQtySpinner.setFont(foodQtySpinner.getFont().deriveFont(12.0f));
 			   editMenuItems.add(foodQtySpinner);
