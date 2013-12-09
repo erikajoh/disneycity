@@ -76,6 +76,7 @@ public class HostAgent extends Agent {
 	}
 		
 	public void msgIAmHere(CustomerAgent cust) {
+		print("bayou host got message i am here");
 		waitingCustomers.add(cust);
 		for (CustomerAgent c: customers) {
 			if (c == cust) {

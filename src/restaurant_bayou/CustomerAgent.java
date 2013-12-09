@@ -85,6 +85,7 @@ public class CustomerAgent extends Agent implements Customer {
 	
 	public void msgAnimationFinishedGoToSeat() {
 		//from animation
+		print("bayou customer seated");
 		event = AgentEvent.seated;
 		stateChanged();
 	}
@@ -164,6 +165,7 @@ public class CustomerAgent extends Agent implements Customer {
 			}
 			if (state == AgentState.BeingSeated && event == AgentEvent.seated){
 				state = AgentState.Seated;
+				
 				return true;
 			}
 			if (state == AgentState.Seated && event == AgentEvent.orderFood){

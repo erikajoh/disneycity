@@ -105,6 +105,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void msgImReadyToOrder(CustomerAgent cust) {
 		myCustomers.add(cust);
+		print("my customer " + myCustomers.get(0).getName() + " " + myCustomers.get(0).isSeated());
 		stateChanged();
 	}
 	
@@ -264,6 +265,7 @@ public class WaiterAgent extends Agent implements Waiter {
 							}
 					}
 				}
+				return true;
 			}
 			if (wantBreak) {
 				Do("I wanna go on break");
