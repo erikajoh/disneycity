@@ -76,6 +76,7 @@ public class CarTraversal extends GraphTraversal {
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSINTERSECTION ||
 					grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
 				continue;
 			}

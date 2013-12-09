@@ -191,6 +191,13 @@ public class RestaurantPizza extends JPanel implements Restaurant {
        	return workers;	
       }
     
+    public int getQuantity(String name){
+    	if(cook != null){
+    		return cook.getQuantity(name);
+    	}
+    	return 0;
+    } 
+    
     public boolean isOpen() {
     	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
     }

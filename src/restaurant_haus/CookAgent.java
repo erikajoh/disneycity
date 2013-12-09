@@ -419,6 +419,10 @@ public class CookAgent extends Agent {
 	
 	//utilities
 	
+    public int getQuantity(String name){
+   		return foodInventory.get(name).inventory;
+    }
+	
 	public void setMenu(Menu m) {
 		this.m = m;
 	}

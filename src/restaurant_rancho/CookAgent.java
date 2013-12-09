@@ -301,6 +301,15 @@ public class CookAgent extends Agent implements Cook{
 		
 	}
 	//utilities
+	 public int getQuantity(String name){
+		 for(Food food : foods){
+			 if(food.choice.equals(name)){
+				 return food.amount;
+			 } 
+		 }
+	   	return 0;
+	 } 
+	    
 	public Food findFood(String ch) {
 		synchronized(foods) {
 			for (Food f : foods) {

@@ -400,14 +400,14 @@ public class TransportationController extends Agent implements Transportation{
 		busStops.add(tempBusStop);
 		grid[11][4].setBusStop(busStops.get(0));
 		tempBusStop.addNearbyBuilding("Mickey's Market");
-		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("Tiki Hut");
 
 		tempBusStop = new BusStop("Bus Stop 1");//Left Center Bus Stop
 		tempBusStop.associateWalkTile(new Position(3, 11));
 		busStops.add(tempBusStop);
 		grid[4][11].setBusStop(busStops.get(1));
 		tempBusStop.addNearbyBuilding("Main St Apartments #2");
-		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("Rabbit Hole");
 		//		tempBusStop.addNearbyBuilding("Haunted Mansion");
 
 		tempBusStop = new BusStop("Bus Stop 2");//Left Bottom Bus
@@ -419,7 +419,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #5");
 		tempBusStop.addNearbyBuilding("Main St Apartments #8");
 		tempBusStop.addNearbyBuilding("Pizza Port");
-		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("Cinderella Castle");
 		//		tempBusStop.addNearbyBuilding("Mickey's Market");
 		
 		tempBusStop = new BusStop("Bus Stop 3");//Bottom Left Bus
@@ -428,7 +428,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[9][25].setBusStop(busStops.get(3));
 		tempBusStop.addNearbyBuilding("Main St Apartments #9");
 		tempBusStop.addNearbyBuilding("The Blue Bayou");
-		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("Space Mountain");
 		
 		tempBusStop = new BusStop("Bus Stop 4");//Bottom Right Bus
 		tempBusStop.associateWalkTile(new Position(24, 26));
@@ -437,6 +437,8 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #10");
 		tempBusStop.addNearbyBuilding("Main St Apartments #11");
 		tempBusStop.addNearbyBuilding("Carnation Cafe");
+		tempBusStop.addNearbyBuilding("Minnie's Market");
+		
 		
 		tempBusStop = new BusStop("Bus Stop 5");//Center Right Bus
 		tempBusStop.associateWalkTile(new Position(30, 18));
@@ -444,8 +446,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[29][18].setBusStop(busStops.get(5));
 		tempBusStop.addNearbyBuilding("Main St Apartments #6");
 		tempBusStop.addNearbyBuilding("Main St Apartments #7");
-		tempBusStop.addNearbyBuilding("");
-		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("Pirate's Suite");
 		
 		tempBusStop = new BusStop("Bus Stop 6");//Right Top Bus
 		tempBusStop.associateWalkTile(new Position(30, 8));
@@ -453,7 +454,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[29][8].setBusStop(busStops.get(6));
 		tempBusStop.addNearbyBuilding("Pirate Bank");
 		tempBusStop.addNearbyBuilding("Village Haus");
-		tempBusStop.addNearbyBuilding("");
+		tempBusStop.addNearbyBuilding("Haunted Mansion");
 		
 		tempBusStop = new BusStop("Bus Stop 7");//Top Right Bus
 		tempBusStop.associateWalkTile(new Position(23, 3));
@@ -490,7 +491,19 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Haunted Mansion", new Position(31, 4), new Position(32, 6), busStops.get(6));
 		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Tiki Hut", new Position(7, 2), new Position(9, 1), busStops.get(0));
+		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Rabbit Hole", new Position(2, 12), new Position(1, 10), busStops.get(1));
+		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Cinderella Castle", new Position(2, 26), new Position(1, 24), busStops.get(2));
+		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Space Mountain", new Position(9, 22), new Position(11, 21), busStops.get(3));
+		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Pirate's Suite", new Position(31, 17), new Position(32, 19), busStops.get(5));
+		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Mickey's Market", new Position(16, 2), new Position(14, 1), busStops.get(0));
+		directory.put(tempBuilding.name, tempBuilding);
+		tempBuilding = new Building("Minnie's Market", new Position(19, 19), new Position(21, 19), busStops.get(4));
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Pirate Bank", new Position(21, 12), new Position(24, 11), busStops.get(6));
 		directory.put(tempBuilding.name, tempBuilding);
