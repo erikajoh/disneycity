@@ -8,7 +8,7 @@ import java.util.Vector;
 import restaurant_cafe.gui.Order;
 
  
-class ProducerConsumerMonitor extends Object {
+public class ProducerConsumerMonitor extends Object {
     private final int N = 5;
     private int count = 0;
     private Vector theData;

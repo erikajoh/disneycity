@@ -59,6 +59,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 
 	Transportation transportation;
 	
+	TransportationPanel transPanel; 
+	
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
 	public final static int NUM_MARKETS = 1;
@@ -136,6 +138,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 		/* timing */
 	    newDay();
+	}
+	
+	public void setTransPanel(TransportationPanel tp) {
+		transPanel = tp;
 	}
 	
 	public void addPerson(String aName, String housingName, double startMoney, String foodPreference,
@@ -387,6 +393,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			if(currTicks == WORK_TWO_START) {
 				person.msgGoToWork(2);
 			}
+		}
+		if(currTicks == NIGHT) {
+			System.out.println("CHANGING PANEL IMAGE FOR NIGHT");
+			transPanel.changeDay();
+		}
+		if(currTicks == MORNING) {
+			System.out.println("CHANGING PANEL IMAGE FOR MORNING");
+			transPanel.changeDay();
 		}
 		
 		// handle ticks for housing
