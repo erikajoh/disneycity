@@ -111,7 +111,7 @@ public class ResidentGui implements Gui{
 			walls.add(new Wall(0.53,0.53,0,0.5));
 			walls.add(new Wall(0.66,1,0.46,0.46));
 			walls.add(new Wall(0.01,0.1,0.9,0.9));
-			walls.add(new Wall(0.2,0.98,0.9,0.9));
+			walls.add(new Wall(0.35,0.98,0.9,0.9));
 		} else if(type == "apt"){			
 			xPos = xEntrance = (int)(hWidth);
 			yPos = yEntrance = (int)(hHeight*0.56);
@@ -189,73 +189,73 @@ public class ResidentGui implements Gui{
 		for (Wall w : walls) {
 			
 			if (w.hitsHfromAbove(xPos,  yPos) && currDir == Direction.DOWN) {
-				System.out.println("hit a horizontal wall from above");
-				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
+//				System.out.println("hit a horizontal wall from above");
+//				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
 				xDestNext = xDestination;
 				if (xDestination < xPos || xDestination < w.xStart || w.xEnd == hWidth) {
-					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
+//					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
 					xDestination = w.xStart-16;
 				}
 				else if (xDestination > xPos || xDestination > w.xEnd) {
-					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
+//					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
 					xDestination = w.xEnd+1;
 				}
 				else {
-					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
+//					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
 					xDestination = w.xEnd+1;
 				}
 				dir = Dir.x;
 				break;
 			}else if(w.hitsHfromBelow(xPos, yPos) && currDir == Direction.UP){
-				System.out.println("hit a horizontal wall from below");
-				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
+//				System.out.println("hit a horizontal wall from below");
+//				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
 				xDestNext = xDestination;
 				if (xDestination < xPos || xDestination < w.xStart) {
-					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
+//					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
 					xDestination = w.xStart-16;
 				}
 				else if (xDestination > xPos || xDestination > w.xEnd || w.xStart == 0) {
-					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
+//					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
 					xDestination = w.xEnd+1;
 				}
 				else {
-					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
+//					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
 					xDestination = w.xStart-16;
 				}
 				dir = Dir.x;
 				break;
 			}else if(w.hitsVfromLeft(xPos, yPos) && currDir == Direction.RIGHT){
-				System.out.println("hit a vertical wall from the left");
-				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
+//				System.out.println("hit a vertical wall from the left");
+//				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
 				yDestNext = yDestination;
 				if (yDestination < yPos || yDestination < w.yStart || w.yEnd == hHeight) {
-					System.out.println("changing yDest to "+(w.yStart-24));
+//					System.out.println("changing yDest to "+(w.yStart-24));
 					yDestination = w.yStart-16;
 				}
 				else if (yDestination > yPos || yDestination > w.yEnd) {
-					System.out.println("changing yDest to "+(w.yEnd+1));
+//					System.out.println("changing yDest to "+(w.yEnd+1));
 					yDestination = w.yEnd+1;
 				}
 				else {
-					System.out.println("changing yDest to "+(w.yEnd+1));
+//					System.out.println("changing yDest to "+(w.yEnd+1));
 					yDestination = w.yEnd+1;
 				}
 				dir = Dir.y;
 				break;
 			}else if(w.hitsVfromRight(xPos, yPos) && currDir == Direction.LEFT){
-				System.out.println("hit a vertical wall from the right");
-				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
+//				System.out.println("hit a vertical wall from the right");
+//				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
 				yDestNext = yDestination;
 				if (yDestination < yPos || yDestination < w.yStart) {
-					System.out.println("changing yDest to "+(w.yStart-24));
+//					System.out.println("changing yDest to "+(w.yStart-24));
 					yDestination = w.yStart-16;
 				}
 				else if (yDestination > yPos || yDestination > w.yEnd || w.yStart == 0) {
-					System.out.println("changing yDest to "+(w.yEnd+1));
+//					System.out.println("changing yDest to "+(w.yEnd+1));
 					yDestination = w.yEnd+1;
 				}
 				else {
-					System.out.println("changing yDest to "+(w.yStart-24));
+//					System.out.println("changing yDest to "+(w.yStart-24));
 					yDestination = w.yStart-16;
 				}
 				dir = Dir.y;
@@ -350,13 +350,13 @@ public class ResidentGui implements Gui{
 		
 		if (xPos == xDestination && yPos == yDestination) {
 			if (xDestNext != -1) {
-				System.out.println("changing xDestination back to: "+xDestNext);
+//				System.out.println("changing xDestination back to: "+xDestNext);
 				xDestination = xDestNext;
 				xDestNext = -1;
 				dir = Dir.y;
 			}
 			if (yDestNext != -1) {
-				System.out.println("changing yDestination back to: "+yDestNext);
+//				System.out.println("changing yDestination back to: "+yDestNext);
 				yDestination = yDestNext;
 				yDestNext = -1;
 				dir = Dir.x;
