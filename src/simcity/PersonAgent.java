@@ -50,7 +50,7 @@ public class PersonAgent extends Agent implements Person {
 	private LocationState currentLocationState;
 	private String currentLocation;
 	
-	// Other constantly changing, state-based variables
+	// Other constantly changing, state-based variables related to person
 	private double moneyWanted = 0.0;
 	private double moneyToDeposit = 0.0;
 	private double rentToPay = 0.0;
@@ -65,6 +65,7 @@ public class PersonAgent extends Agent implements Person {
 	private MarketState marketState = MarketState.None;
 	private BankState bankState = BankState.None;
 	private TransportationState transportationState = TransportationState.None;
+	private boolean houseNeedsMaintenance = false;
 	private boolean isBankOpen = true;
 	
 	// Wrapper class lists
@@ -73,7 +74,7 @@ public class PersonAgent extends Agent implements Person {
 	private MyHousing myHome = null;
 	private MyBankAccount myPersonalBankAccount = null;
 	
-	// Food
+	// Food preferences
 	String foodPreference;
 	boolean preferEatAtHome;
 	
@@ -184,9 +185,9 @@ public class PersonAgent extends Agent implements Person {
 		return "Person " + getName();
 	}
 	
-	// ************************* MESSAGES ***********************************
+	// ************************* MESSAGES *********************************** 
 
-	// from main class: action queue messages
+	// from main class
 	public void msgWakeUp() {
 		log.add(new LoggedEvent("Must wake up"));
 		print("Must wake up");
@@ -250,6 +251,7 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	public void msgNeedMaintenance() {
+		System.out.println("msgNeedMaintenance() called");
 		log.add(new LoggedEvent("msgNeedMaintenance() called"));
 		actionQueue.add(new Action(ActionString.needMaintenance, 1, 0));
 		stateChanged();
@@ -258,6 +260,7 @@ public class PersonAgent extends Agent implements Person {
 	public void msgFinishedMaintenance() {
 		log.add(new LoggedEvent("msgFinishedMaintenance() called"));
 		event = PersonEvent.makingDecision;
+		houseNeedsMaintenance = false;
 		stateChanged();
 	}
 	
@@ -354,7 +357,6 @@ public class PersonAgent extends Agent implements Person {
 					+ "; event = " + event);
 		}
 		
-		// TODO Should this go somewhere else? Also not paying fare is non-normative
 		if(transportationState == TransportationState.NeedToPayFare) {
 			payFare();
 			transportationState = TransportationState.None;
@@ -375,9 +377,10 @@ public class PersonAgent extends Agent implements Person {
 				case payRent:
 					rentToPay += theAction.amount; break;
 				case receiveRent:
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Received rent: " + theAction.amount);
 					moneyOnHand += theAction.amount; break;
 				case needMaintenance: 
-					doMaintenance(); break;
+					houseNeedsMaintenance = true; break;
 				case goToWork:
 					checkGoingToWork((int)theAction.amount); break;
 			}
@@ -391,12 +394,14 @@ public class PersonAgent extends Agent implements Person {
 			
 			if(currentLocationState == LocationState.Home) { // at home
 				if(!insideHouse) { // if not inside house (i.e., at the doorstep), enter it
+					// I want to be home and I'm not working now
 					if(currentLocation.equals(targetLocation) && workplace == null) {
 						enterHouse();
 						insideHouse = true;
 						event = PersonEvent.onHold;
 					}
 					else {
+						// I have to leave
 						if(workplace != null)
 							targetLocation = workplace.name;
 						goToTransportation();
@@ -406,34 +411,51 @@ public class PersonAgent extends Agent implements Person {
 					print("Returning true because !insideHouse was true");
 					return true;
 				}
-				if(workplace != null) {
-					leaveHouse();
-					event = PersonEvent.onHold;
-				}
+				
+				// I have rent to pay
 				if(rentToPay > 0) {
+					// Ready to go to bank
 					if(bankState == BankState.NeedTransaction) {
 						leaveHouse();
 						event = PersonEvent.onHold;
 					}
 					else {
+						// Ready to pay rent
 						if(moneyOnHand >= rentToPay) {
 							payRent(rentToPay);
 						}
 						else {
+							// Have to go to bank
 							getRentMoneyFromBank();
 						}
 					}
 					print("returning true because rentToPay > 0");
 					return true;
 				}
-				if(!isNourished) { // if I'm hungry
-					if(currentLocation.equals(targetLocation)) { // decide to stay at home
+				
+				// I have to go to work
+				if(workplace != null) {
+					leaveHouse();
+					event = PersonEvent.onHold;
+				}
+				
+				// I need to do maintenance
+				if(houseNeedsMaintenance) {
+					doMaintenance();
+					event = PersonEvent.onHold;
+				}
+				
+				// I'm hungry
+				if(!isNourished) {
+					if(currentLocation.equals(targetLocation)) {
 						print("Deciding to eat");
+						// I want to eat at home
 						if(preferEatAtHome) {
-							if(marketState == MarketState.WantToBuy) { // not enough in fridge
+							if(marketState == MarketState.WantToBuy) {
 								hungryToMarket();
 							}
 							else {
+								// I have no food in the fridge
 								prepareToCookAtHome();
 								event = PersonEvent.onHold;
 							}
@@ -450,6 +472,8 @@ public class PersonAgent extends Agent implements Person {
 					print("returning true because !isNourished");
 					return true;
 				}
+				
+				// I am at home and I have surplus money
 				if(currentLocation.equals(targetLocation)) {
 					if(moneyOnHand > MONEY_ON_HAND_LIMIT) {
 						haveMoneyToDeposit();
@@ -460,18 +484,23 @@ public class PersonAgent extends Agent implements Person {
 						// TODO: Have enough money to pay off loans in personal bank account						
 					}
 				}
+				
 				else {
+					// I am leaving the house
 					leaveHouse();
 					event = PersonEvent.onHold;
 					print("returning true because isNourished");
 					return true;
 				}
+				
+				// I am tired
 				if(bodyState == BodyState.Tired) {
 					goToSleep();
 					bodyState = BodyState.Asleep;
 					event = PersonEvent.onHold;
 				}
 			}
+			
 			if(currentLocationState == LocationState.Bank) { // at bank
 				switch(bankState) {
 					case NeedTransaction: // Has business at the bank
@@ -506,6 +535,7 @@ public class PersonAgent extends Agent implements Person {
 				}
 				return true;
 			}
+			
 			if(currentLocationState == LocationState.Restaurant) { // at restaurant
 				if( (!isNourished && !preferEatAtHome && restState == RestaurantState.WantToEat)
 						|| ((restState == RestaurantState.WantToWork) && currentLocation.equals(workplace.name)) ) {
@@ -524,6 +554,7 @@ public class PersonAgent extends Agent implements Person {
 				print("Restaurant: setting on hold");
 				return true;
 			}
+			
 			if(currentLocationState == LocationState.Market) { // at market
 				
 				if(!isNourished && !preferEatAtHome) {
@@ -546,6 +577,7 @@ public class PersonAgent extends Agent implements Person {
 				return true;
 			}
 		}
+		
 		print("Nothing to do for now: isNourished = " + isNourished
 				+ "; currentLocationState = " + currentLocationState.toString()
 				+ "; bodyState = " + bodyState
@@ -631,7 +663,7 @@ public class PersonAgent extends Agent implements Person {
 	private void doMaintenance() {
 		print("Performing maintenance");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Performing maintenance");
-		myHome.housing.msgDoMaintenance();
+		myHome.housing.msgDoMaintenance(this);
 	}
 	
 	private void payRent(double amount) {
@@ -694,6 +726,7 @@ public class PersonAgent extends Agent implements Person {
 		log.add(new LoggedEvent("Going from " + currentLocation + " to " + targetLocation));
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Going from " + currentLocation + " to " + targetLocation);
 		transportation.msgWantToGo(currentLocation, targetLocation, this, preferredCommute.name(), "Edgar");
+		currentLocationState = LocationState.Transit;
 	}
 	
 	private void goHome() {

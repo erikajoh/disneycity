@@ -391,6 +391,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == START_OF_DAY && getCurrentDay().equals("Saturday")) {
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Today is " + getCurrentDay() + ", rent is due!");
 				theHousing.msgRentDue();
 			}
 		}
@@ -401,6 +402,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift End");
 				theRestaurant.msgEndOfShift();
 			}
 		}
@@ -417,7 +419,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	// these are start times for each of the day phases
 	private static final long START_OF_DAY		= 1;
-	private static final long MORNING			= START_OF_DAY		+ 40; //41
+	private static final long MORNING			= START_OF_DAY		+ 80; //41
 	private static final long WORK_ONE_START	= MORNING			+ 150;//191
 	private static final long NOON				= WORK_ONE_START	+ 150;//341
 	private static final long WORK_ONE_END		= NOON				+ 150;//491
