@@ -1,8 +1,12 @@
 package transportation.Agents;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
+
+import javax.swing.Timer;
 
 import market.Market;
 import transportation.Transportation;
@@ -29,14 +33,16 @@ public class TransportationController extends Agent implements Transportation{
 		REQUEST,
 		MOVING,
 		DESTINATION,
-		WAITINGTOSPAWN
+		WAITINGTOSPAWN,
+		TIMERIDLING
 	};
 
-	public class Mover {
+	public class Mover implements ActionListener{
 		public TransportationState transportationState;
 		public Person person;
 		MobileAgent mobile;
-
+		javax.swing.Timer timer;
+		
 		String startingLocation;
 		String endingLocation;
 		String method;
@@ -49,6 +55,20 @@ public class TransportationController extends Agent implements Transportation{
 			this.method = method;
 			this.character = character;
 			transportationState = TransportationState.REQUEST;
+			
+			timer = new Timer(500, this);
+		}
+		
+		public void waitingForSpawn() {
+			timer.start();
+			transportationState = TransportationState.TIMERIDLING;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			transportationState = TransportationState.REQUEST;
+			timer.stop();
+			stateChanged();
 		}
 	}
 
@@ -812,7 +832,7 @@ public class TransportationController extends Agent implements Transportation{
 
 	private void retrySpawn(Mover mover) {
 		log.add(new LoggedEvent("Resetting mover state"));
-		mover.transportationState = TransportationState.REQUEST;
+		mover.waitingForSpawn();
 	}
 
 	public MovementTile[][] getGrid() {
