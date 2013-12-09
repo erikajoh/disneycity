@@ -140,7 +140,7 @@ public class CustomerGui implements Gui{
 	}
 	
 	public void DoGoToCashier() {
-		xDestination = 200;
+		xDestination = 125;
 		yDestination = 30;
 		command = Command.GoToCashier;
 	}

@@ -12,7 +12,7 @@ public class CookGui implements Gui {
 
     private CookAgent agent = null;
     private int xPos, yPos;//default Cook position
-    private int xDestination = 530, yDestination = 430;//default start position
+    private int xDestination = 380, yDestination = 310;//default start position
 	private enum Command {cook, plate, noCommand};
 	private Command command = Command.noCommand;
 	private String grillName = "";
@@ -20,15 +20,15 @@ public class CookGui implements Gui {
 	boolean grillVisible = false, plateVisible = false;
 	SimCityGui gui;
 	int aniWindowX = 400;
-	int aniWindowY = 400; 
+	int aniWindowY = 330; 
 	private boolean leaving = false;
 	Person person;
 
     public CookGui(CookAgent agent, SimCityGui gui) {
         this.agent = agent;
     	this.gui = gui;
-		xPos = 530;
-    	yPos = 430;
+		xPos = 380;
+    	yPos = 310;
     }
 
     public void updatePosition() {
