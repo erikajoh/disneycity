@@ -1,7 +1,10 @@
 package transportation.Objects;
 
+import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import transportation.Agents.MobileAgent;
+import transportation.Agents.TransportationController;
 import transportation.Objects.MovementTile.MovementType;
 
 public class MovementTile extends Semaphore{
@@ -20,19 +23,24 @@ public class MovementTile extends Semaphore{
 	public boolean up, down, left, right;
 	BusStop busStop;
 	TrafficLight light;
-
-	public MovementTile() {
+	List<MobileAgent> occupants;
+	TransportationController controller;
+	
+	public MovementTile(TransportationController controller) {
 		super(1, true);
 
 		up = false;
 		down = false;
 		left = false;
 		right  = false;
-
+		
+		this.controller = controller;
 		type = MovementType.UNTYPED;
 
 		busStop = null;
 		light = null;
+		
+		occupants = Collections.synchronizedList(new ArrayList<MobileAgent>());
 	}
 
 	public void setMovement(boolean up, boolean down, boolean left, boolean right, MovementType type) {
@@ -41,6 +49,15 @@ public class MovementTile extends Semaphore{
 		this.left = left;
 		this.right = right;
 		this.type = type;
+	}
+	
+	public void addOccupant(MobileAgent occupant) {
+		synchronized(occupants) {
+			occupants.add(occupant);
+			if(occupants.size() == 2) {//Notify transportation controller of crash
+				
+			}
+		}
 	}
 	
 	public void setUp(boolean up) {

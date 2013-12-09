@@ -52,7 +52,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 	public TransportationPanel(SimCityGui gui) {
 		offset = new Point(0,0);
-		buffer = 30;
+		buffer = 50;
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 
@@ -98,36 +98,36 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		if(previousPosition != null) {
 			//Move Camera Up
 			if(previousPosition.getY() >= 0 && previousPosition.getY() <= buffer)
-				offset.y -= 1;
+				offset.y -= 2;
 
 			//Move Camera Down
-			if(previousPosition.getY() >= WINDOWX - buffer && previousPosition.getY() <= WINDOWX)
-				offset.y += 1;
+			if(previousPosition.getY() >= getSize().height - buffer && previousPosition.getY() <= getSize().height)
+				offset.y += 2;
 
 			//Move Camera Left
 			if(previousPosition.getX() >= 0 && previousPosition.getX() <= buffer)
-				offset.x -= 1;
+				offset.x -= 2;
 
 			//Move Camera Right
-			if(previousPosition.getX() >= WINDOWY - buffer && previousPosition.getY() <= WINDOWY)
-				offset.x += 1;
+			if(previousPosition.getX() >= getSize().height - buffer && previousPosition.getY() <= getSize().height)
+				offset.x += 2;
 		}
 
 		//offset clamping
 		//TODO: Set this to actual values once we know the size of the city
-		if(offset.x < -20) {
-			offset.x = -20;
+		if(offset.x < 0) {
+			offset.x = 0;
 		}
 		
-		if(offset.x > 20) {
-			offset.x = 20;
+		if(offset.x > 850 - getSize().width) {
+			offset.x = 850 - getSize().width;
 		}
 		
-		if(offset.y > 20) {
-			offset.y = 20;
+		if(offset.y > 750 - getSize().height) {
+			offset.y = 750 - getSize().height;
 		}
-		if(offset.y < -20) {
-			offset.y = -20;
+		if(offset.y < 0) {
+			offset.y = 0;
 		}
 		
 		g2.drawImage(img, (int)-offset.getX(), (int)-offset.getY(), null);

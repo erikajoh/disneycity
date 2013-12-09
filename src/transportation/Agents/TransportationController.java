@@ -104,7 +104,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		for(int i = 0; i < grid.length; i++) {
 			for(int j = 0; j< grid[0].length; j++) {
-				grid[i][j] = new MovementTile();
+				grid[i][j] = new MovementTile(this);
 			}
 		}
 		//Walkways
@@ -463,7 +463,6 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Rancho Del Zocalo");
 		//+++++++++++++++++++++++END CREATION OF BUS STOPS+++++++++++++++++++++++
 
-
 		//++++++++++++++++++++++BEGIN CREATION OF DIRECTORY++++++++++++++++++++++
 		directory = new HashMap<String, Building>();
 
@@ -523,14 +522,17 @@ public class TransportationController extends Agent implements Transportation{
 		tempBuilding = new Building("Bus Stop 7", new Position(23, 3), new Position(23, 4), busStops.get(1));
 		directory.put(tempBuilding.name, tempBuilding);
 		//+++++++++++++++++++++++END CREATION OF DIRECTORY+++++++++++++++++++++++
-
 		//Spawning Buses
+		buses = new ArrayList<BusAgent>();
+		
 		BusAgent tempBus = new BusAgent(this, new Position(4, 4));
 		BusGui busGui = new BusGui(4, 4, tempBus);
 		if(master != null)
 			master.addGui(busGui);
 		tempBus.setGui(busGui);
 		tempBus.startThread();
+		buses.add(tempBus);
+		
 		
 		tempBus = new BusAgent(this, new Position(29, 25));
 		busGui = new BusGui(29, 25, tempBus);
@@ -538,15 +540,18 @@ public class TransportationController extends Agent implements Transportation{
 			master.addGui(busGui);
 		tempBus.setGui(busGui);
 		tempBus.startThread();
+		buses.add(tempBus);
 
+		
 		//Spawning Delivery Truck
-		truck = new TruckAgent(new Position(10, 10), this, new FlyingTraversal(grid), 11, 11);
-		TruckGui truckGui = new TruckGui(11, 10, truck);
+		truck = new TruckAgent(new Position(17, 2), this, new FlyingTraversal(grid), 18, 1);
+		TruckGui truckGui = new TruckGui(18, 2, truck);
 		if(master != null)
 			master.addGui(truckGui);
 		truck.setGui(truckGui);
 		truck.startThread();
 
+		
 		if(master != null)
 			super.startThread();
 	}
@@ -743,16 +748,16 @@ public class TransportationController extends Agent implements Transportation{
 
 	public void createRoute(Queue<Position> route) {//Hack for one route
 		//SPAWN BUS AT {4, 4}
-		for(int i = 5; i <= 8; i++) {
+		for(int i = 5; i <= 25; i++) {
 			route.add(new Position(4, i));
 		}
-		for(int i = 5; i <= 11; i++) {
-			route.add(new Position(i, 8));
+		for(int i = 5; i <= 29; i++) {
+			route.add(new Position(i, 25));
 		}
-		for(int i = 7; i>=4; i--) {
-			route.add(new Position(11, i));
+		for(int i = 24; i>=4; i--) {
+			route.add(new Position(29, i));
 		}
-		for(int i = 10; i >= 4; i--) {
+		for(int i = 28; i >= 4; i--) {
 			route.add(new Position(i, 4));
 		}
 	}

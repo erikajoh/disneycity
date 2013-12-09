@@ -92,7 +92,7 @@ public class TrafficLight implements ActionListener{
 	private void changeCrossWalk(int x, int y, MovementTile.MovementType state) {
 		for(int i = 0; i < 2; i++) {
 			for(int j = 0; j < 2; j++) {
-				grid[i+x][j+y].setMovementType(state);
+				grid[i+x+location.getX()][j+y+location.getY()].setMovementType(state);
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public class TrafficLight implements ActionListener{
 	private boolean checkIntersectionClear() {
 		for(int i = -2; i < 4; i++) {
 			for(int j = -2; j < 4; j++) {
-				if(grid[i][j].availablePermits() != 1) {
+				if(grid[i+location.getX()][j+location.getY()].availablePermits() != 1) {
 					return false;
 				}
 			}
