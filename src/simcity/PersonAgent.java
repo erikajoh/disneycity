@@ -788,6 +788,8 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	private double getPersonalLoans() {
+		if(myPersonalBankAccount == null)
+			return 0;
 		return myPersonalBankAccount.loanNeeded;
 	}
 	
