@@ -23,6 +23,9 @@ import transportation.GUIs.Gui;
 public class TransportationPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener{
 	private final int WINDOWX = 400;
 	private final int WINDOWY = 330;
+	private final int scrollSpeed = 4;
+	private final int bufferZones = 4;
+	private final int buffer = 15;
 
 	private Image img;
 	SimCityGui gui;
@@ -31,7 +34,6 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	
 	MouseEvent previousPosition;
 	Point offset;
-	int buffer;
 
 	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	Timer timer;
@@ -40,7 +42,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		int xLeft, xRight, yTop, yBottom;
 		String name;
 
-		BuildingFinder(int xLeft, int xRight, int yTop, int yBottom, String name) {
+		BuildingFinder(int xLeft, int yTop, int xRight, int yBottom, String name) {
 			this.xLeft = xLeft;
 			this.xRight = xRight;
 			this.yTop = yTop;
@@ -65,7 +67,6 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	
 	public TransportationPanel(SimCityGui gui) {
 		offset = new Point(0,0);
-		buffer = 50;
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 
@@ -81,21 +82,36 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		addMouseMotionListener(this);
 
 		buildings = new ArrayList<BuildingFinder>();
-
-		buildings.add(new BuildingFinder(50,100,2,52,"Rancho Del Zocalo"));
-		buildings.add(new BuildingFinder(150,225,2,52,"Pirate Bank"));
-		buildings.add(new BuildingFinder(225,275,2,52,"Main St Apartments #1"));
-		buildings.add(new BuildingFinder(300,350,2,52,"Main St Apartments #2"));
-		buildings.add(new BuildingFinder(0,50,52,102,"Main St Apartments #3"));
-		buildings.add(new BuildingFinder(0,50,152,202,"Main St Apartments #4"));
-		buildings.add(new BuildingFinder(350,400,102,152,"Blue Bayou"));
-		buildings.add(new BuildingFinder(0,50,227,277,"Village Haus"));
-		buildings.add(new BuildingFinder(350,400,227,277,"Main St Apartments #6"));
-		buildings.add(new BuildingFinder(50,100,277,327,"Main St Apartments #5"));
-		buildings.add(new BuildingFinder(100,150,277,327,"Pizza Port"));
-		buildings.add(new BuildingFinder(175,275,277,327,"Mickey's Market"));
+		
+		buildings.add(new BuildingFinder(650,0,700,50,"Main St Apartments #1"));
+		buildings.add(new BuildingFinder(0,100,50,150,"Main St Apartments #2"));
+		buildings.add(new BuildingFinder(0,425,50,475,"Main St Apartments #3"));
+		buildings.add(new BuildingFinder(300,450,350,500,"Main St Apartments #4"));
+		buildings.add(new BuildingFinder(0,525,50,575,"Main St Apartments #5"));
+		buildings.add(new BuildingFinder(800,550,850,600,"Main St Apartments #6"));
+		buildings.add(new BuildingFinder(800,650,850,700,"Main St Apartments #7"));
+		buildings.add(new BuildingFinder(50,700,100,750,"Main St Apartments #8"));
+		buildings.add(new BuildingFinder(200,700,250,750,"Main St Apartments #9"));
+		buildings.add(new BuildingFinder(500,700,550,750,"Main St Apartments #10"));
+		buildings.add(new BuildingFinder(650,700,700,750,"Main St Apartments #11"));
+		
+		
+		buildings.add(new BuildingFinder(500,225,600,300,"Pirate Bank"));
+		buildings.add(new BuildingFinder(375,0,450,50,"Mickey's Market"));
+		buildings.add(new BuildingFinder(500,450,550,525,"Minnie's Market"));
+		
+		buildings.add(new BuildingFinder(550,0,600,50,"Rancho Del Zocalo"));
+		buildings.add(new BuildingFinder(300,700,350,750,"Blue Bayou"));
+		buildings.add(new BuildingFinder(800,200,850,250,"Village Haus"));
+		buildings.add(new BuildingFinder(550,500,600,550,"Pizza Port"));
 		buildings.add(new BuildingFinder(300,350,277,327,"Carnation Cafe"));
-		buildings.add(new BuildingFinder(305,400, 2, 102,"Haunted Mansion"));
+		
+		buildings.add(new BuildingFinder(800,75, 850, 150,"Haunted Mansion"));
+		buildings.add(new BuildingFinder(150,0, 225, 50,"Tiki Hut"));
+		buildings.add(new BuildingFinder(0,275, 50, 350,"Rabbit Hole"));
+		buildings.add(new BuildingFinder(0,625, 50, 700,"Cinderella Castle"));
+		buildings.add(new BuildingFinder(200,500, 275, 550,"Space Mountain"));
+		buildings.add(new BuildingFinder(800,425, 850, 500,"Pirate's Suite"));
 	}
 
 	@Override
@@ -110,20 +126,22 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		//offset changing
 		if(previousPosition != null) {
 			//Move Camera Up
-			if(previousPosition.getY() >= 0 && previousPosition.getY() <= buffer)
-				offset.y -= 2;
+			for(int i = 0; i < bufferZones; i++) {
+				if(previousPosition.getY() >= 0 && previousPosition.getY() <= buffer * (bufferZones-i))
+					offset.y -= scrollSpeed;
 
-			//Move Camera Down
-			if(previousPosition.getY() >= getSize().height - buffer && previousPosition.getY() <= getSize().height)
-				offset.y += 2;
+				//Move Camera Down
+				if(previousPosition.getY() >= getSize().height - buffer * (bufferZones-i) && previousPosition.getY() <= getSize().height)
+					offset.y += scrollSpeed;
 
-			//Move Camera Left
-			if(previousPosition.getX() >= 0 && previousPosition.getX() <= buffer)
-				offset.x -= 2;
+				//Move Camera Left
+				if(previousPosition.getX() >= 0 && previousPosition.getX() <= buffer * (bufferZones-i))
+					offset.x -= scrollSpeed;
 
-			//Move Camera Right
-			if(previousPosition.getX() >= getSize().height - buffer && previousPosition.getY() <= getSize().height)
-				offset.x += 2;
+				//Move Camera Right
+				if(previousPosition.getX() >= getSize().height - buffer * (bufferZones-i) && previousPosition.getY() <= getSize().height)
+					offset.x += scrollSpeed;
+			}
 		}
 
 		//offset clamping
@@ -175,7 +193,8 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
-		String name = findBuilding(me.getX(), me.getY());
+		String name = findBuilding((int)(me.getX() + offset.getX()), (int)(me.getY() + offset.getY()));
+		System.out.println(name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		if(name != null)
 			gui.showPanel(name);
 	}
@@ -184,7 +203,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		//for(BuildingFinder b : buildings) {
 		for(int i = 0; i < buildings.size(); i++) {
 			BuildingFinder b = buildings.get(i);
-			if(x >= b.xLeft - offset.getX() && x < b.xRight - offset.getX() && y >= b.yTop - offset.getY() && y < b.yBottom - offset.getY())
+			if(x >= b.xLeft && x < b.xRight && y >= b.yTop && y < b.yBottom)
 				return b.name;
 		}
 		return null;

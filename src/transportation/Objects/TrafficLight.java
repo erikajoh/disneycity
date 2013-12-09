@@ -40,10 +40,10 @@ public class TrafficLight implements ActionListener{
 		changeCrossWalk(-2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
 		changeCrossWalk(2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
 		
-		grid[location.getX()][location.getY()].setMovement(false, true, true, false, MovementTile.MovementType.TRAFFICCROSSROAD);
-		grid[location.getX()+1][location.getY()].setMovement(true, false, true, false, MovementTile.MovementType.TRAFFICCROSSROAD);
-		grid[location.getX()][location.getY()+1].setMovement(false, true, false, true, MovementTile.MovementType.TRAFFICCROSSROAD);
-		grid[location.getX()+1][location.getY()+1].setMovement(true, false, false, true, MovementTile.MovementType.TRAFFICCROSSROAD);
+		grid[location.getX()][location.getY()].setMovement(false, true, true, false, MovementTile.MovementType.TRAFFICCROSSINTERSECTION);
+		grid[location.getX()+1][location.getY()].setMovement(true, false, true, false, MovementTile.MovementType.TRAFFICCROSSINTERSECTION);
+		grid[location.getX()][location.getY()+1].setMovement(false, true, false, true, MovementTile.MovementType.TRAFFICCROSSINTERSECTION);
+		grid[location.getX()+1][location.getY()+1].setMovement(true, false, false, true, MovementTile.MovementType.TRAFFICCROSSINTERSECTION);
 	}
 
 	@Override
