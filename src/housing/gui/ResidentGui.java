@@ -153,8 +153,8 @@ public class ResidentGui implements Gui{
 				xMaintenance = (int)(hWidth*0.1);
 				yMaintenance = (int)(hHeight*0.3);
 			}else if(roomNo == 1){
-				xTable = (int)(hWidth*0.76);
-				yTable = (int)(hHeight*0.59);
+				xTable = (int)(hWidth*0.69);
+				yTable = (int)(hHeight*0.51);
 				xBed = (int)(hWidth*0.48);
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.65);
@@ -162,8 +162,8 @@ public class ResidentGui implements Gui{
 				xMaintenance = (int)(hWidth*0.42);
 				yMaintenance = (int)(hHeight*0.3);
 			}else if(roomNo == 2){
-				xTable = (int)(hWidth*0.69);
-				yTable = (int)(hHeight*0.51);
+				xTable = (int)(hWidth*0.76);
+				yTable = (int)(hHeight*0.59);
 				xBed = (int)(hWidth*0.79);
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.71);
@@ -345,6 +345,8 @@ public class ResidentGui implements Gui{
 			else if (command != Command.noCommand && command != Command.HelperMove) agent.msgAnimationFinished();
 			
 			command=Command.noCommand;
+			
+			return;
 			
 		}
 		
