@@ -7,6 +7,9 @@ import restaurant_cafe.HostAgent;
 import restaurant_cafe.MarketAgent;
 import restaurant_cafe.WaiterAgent;
 import restaurant_cafe.gui.Order;
+import restaurant_cafe.WaiterAgentNorm;
+import restaurant_cafe.WaiterAgentPC;
+import restaurant_cafe.gui.WaiterGui;
 import bank.gui.Bank;
 import simcity.RestMenu;
 import simcity.Restaurant;
@@ -62,6 +65,8 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     private JButton  pauseButton = new JButton("Pause Agents");
     private JPanel pauseGroup = new JPanel();
     private JPanel group = new JPanel();
+    
+    public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
 
     private SimCityGui gui; //reference to main gui
 
@@ -165,7 +170,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		//}
     	}
     	else if (type.equals("Waiter")) {
-    		WaiterAgent w = new WaiterAgent(name, menu, waiters.size()+1);	
+    		WaiterAgentNorm w = new WaiterAgentNorm(name, this, menu, waiters.size()+1);
     		if (p!=null) w.setPerson(p);
     		WaiterGui g = new WaiterGui(w, gui);
     		gui.cafeAniPanel.addGui(g);
@@ -176,6 +181,20 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		waiters.add(w);
     		w.setGui(g);
     		w.startThread();
+    	}
+    	else if (type.equals("WaiterPC")) {
+    		WaiterAgentPC w = new WaiterAgentPC(name, this, menu, waiters.size()+1);
+    		WaiterGui g = new WaiterGui(w, gui);
+    		if (p!=null) w.setPerson(p);
+    		gui.cafeAniPanel.addGui(g);
+    		if (host!=null) w.setHost(host);
+    		if (cook!= null) w.setCook(cook);
+    		if (cashier!=null)w.setCashier(cashier);
+    		if (host!=null) host.addWaiter(w);
+    		w.setGui(g);
+    		waiters.add(w);
+    		w.startThread();
+    		g.updatePosition();
     	}
     	else if (type.equals("Host")) {
     		if (p!=null) host.setPerson(p);
@@ -193,7 +212,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		host.startThread();
     	}
     	else if (type.equals("Cook")) {
-    		cook = new CookAgent(name, foods);
+    		cook = new CookAgent(name, this, foods);
     		if (p!=null) cook.setPerson(p);
     		CookGui cookGui = new CookGui(cook, gui);
     		cook.setGui(cookGui);

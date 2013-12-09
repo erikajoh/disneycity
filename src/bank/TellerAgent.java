@@ -116,15 +116,13 @@ public class TellerAgent extends Agent implements Teller {
 
 	public void	msgDepositCash(int accountNum, double cash){
 		print("DEPOSIT CASH ");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "Teller", "DepositMsg");
 		customer.requestAmt = cash;
 		List<Account> accounts = manager.getAccounts();
 		synchronized(accounts){
 		   for(Account acc : accounts){
 			   if(acc.number == accountNum){
 				   customer.account = acc;
-				   customer.state = State.depositingCash;
-					AlertLog.getInstance().logMessage(AlertTag.BANK, "Teller", "Found Account"); break;
+				   customer.state = State.depositingCash; break;
 			   }
 		   }
 		}
@@ -268,7 +266,6 @@ public class TellerAgent extends Agent implements Teller {
 	private void robBank(){
 		double cash = customer.requestAmt;
 		customer.success = robberySuccess.nextBoolean();
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "Teller", "ROBBED BANK "+ customer.success);
 		customer.bankCustomer.msgRobbedBank(cash, customer.success);
 		customer.state = State.deciding;
 	}

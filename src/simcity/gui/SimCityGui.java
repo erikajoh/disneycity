@@ -418,4 +418,8 @@ public class SimCityGui extends JFrame  {
 	public void updateGui(){
 		workplacePropertyPanel.updateGui();
 	}
+	
+	public void updateDayInfo(String day, String phase) {
+		zoomLabel.setText("It is currently " + phase + " on this " + day + ".");
+	}
 }

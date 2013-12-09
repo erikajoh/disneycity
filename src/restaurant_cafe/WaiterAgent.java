@@ -8,6 +8,7 @@ import restaurant_cafe.gui.CookGui;
 import restaurant_cafe.gui.Food;
 import restaurant_cafe.gui.Menu;
 import restaurant_cafe.gui.MenuItem;
+import restaurant_cafe.gui.RestaurantCafe;
 import restaurant_cafe.gui.WaiterGui;
 import restaurant_cafe.interfaces.Cashier;
 import restaurant_cafe.interfaces.Customer;
@@ -26,14 +27,14 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the WaiterAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class WaiterAgent extends Agent implements Waiter {
+public abstract class WaiterAgent extends Agent implements Waiter {
 	static final int NTABLES = 3;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
 	class MyCustomer {
 		Customer customer;
 		int number;
-		Table table;
+		protected Table table;
 		String choice;
 		Check check;
 		CustomerState state;
@@ -56,13 +57,15 @@ public class WaiterAgent extends Agent implements Waiter {
 	BreakState breakState = BreakState.none;
 	boolean shiftDone = false;
 	
+	RestaurantCafe restaurant;
+	
 	public Collection<Table> tables;
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
 	
 	Menu menu; //current menu. Out of stock foods taken off
 	private String name;
-	private Semaphore atTable = new Semaphore(0,true);
+	protected Semaphore atTable = new Semaphore(0,true);
 	
 	public HostAgent host;
 	public CookAgent cook;
@@ -72,9 +75,10 @@ public class WaiterAgent extends Agent implements Waiter {
 	public WaiterGui waiterGui;
 	public CookGui cookGui;
 
-	public WaiterAgent(String name, Menu m, int num) {
+	public WaiterAgent(String name, RestaurantCafe rest, Menu m, int num) {
 		super();
 		this.name = name;
+		restaurant = rest;
 		number = num;
 		tables = new ArrayList<Table>(NTABLES);
 		for (int ix = 1; ix <= NTABLES; ix++) {
@@ -465,6 +469,8 @@ public class WaiterAgent extends Agent implements Waiter {
 		}
 		customer.customer.msgAskOrder();
 	}
+	//protected abstract void bringOrderToCook(MyCustomer c); 
+
 	private void bringOrderToCook(MyCustomer customer){
 		print("Bring order to cook");
 		customer.state = CustomerState.foodCooking;
@@ -579,10 +585,13 @@ public class WaiterAgent extends Agent implements Waiter {
 		c.state = CustomerState.readyToSit;
 	}
 	
+	protected abstract void giveOrderToCook(MyCustomer customer);
+	/*
 	private void giveOrderToCook(MyCustomer customer){
 		cook.msgHereIsOrder(this, customer.choice, customer.table.tableNumber);
 		customer.state = CustomerState.idle;
 	}
+	*/
 	
 	private void DoGoToTable(int table){
 		//gui stuff
@@ -621,7 +630,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		return waiterGui;
 	}
 	
-	private static class Table {
+	static class Table {
 		Customer occupiedBy;
 		int tableNumber;
 		
