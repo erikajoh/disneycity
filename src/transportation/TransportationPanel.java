@@ -17,6 +17,8 @@ import java.util.List;
 import javax.swing.*;
 
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import transportation.Agents.TransportationController;
 import transportation.GUIs.Gui;
 
@@ -104,8 +106,10 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		buildings.add(new BuildingFinder(550,0,600,50,"Rancho Del Zocalo"));
 		buildings.add(new BuildingFinder(300,700,350,750,"Blue Bayou"));
 		buildings.add(new BuildingFinder(800,200,850,250,"Village Haus"));
-		buildings.add(new BuildingFinder(200, 450, 250, 500,"Pizza Port"));
-		buildings.add(new BuildingFinder(300,350,277,327,"Carnation Cafe"));
+		//buildings.add(new BuildingFinder(200, 450, 250, 500,"Pizza Port"));
+		//buildings.add(new BuildingFinder(300,350,277,327,"Carnation Cafe"));
+		buildings.add(new BuildingFinder(300,350,277,327, "Pizza Port"));
+		buildings.add(new BuildingFinder(200, 450, 250, 500,"Carnation Cafe"));
 		
 		buildings.add(new BuildingFinder(800,75, 850, 150,"Haunted Mansion"));
 		buildings.add(new BuildingFinder(150,0, 225, 50,"Tiki Hut"));
@@ -195,6 +199,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	@Override
 	public void mouseClicked(MouseEvent me) {
 		String name = findBuilding((int)(me.getX() + offset.getX()), (int)(me.getY() + offset.getY()));
+		AlertLog.getInstance().logInfo(AlertTag.TRANSPORTATION, "MOUSE CLICKED", name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		System.out.println(name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		if(name != null)
 			gui.showPanel(name);
