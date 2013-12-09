@@ -29,7 +29,6 @@ public class TellerGui implements Gui{
 	}
 
 	public void draw(Graphics2D g) {
-		
 		pirateTeller = Toolkit.getDefaultToolkit().getImage("res/pirateTeller.png");
 	    g.drawImage(pirateTeller, number*90+49, 33, 35, 35, null);
 	}

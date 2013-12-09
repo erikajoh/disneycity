@@ -86,6 +86,8 @@ public class SimCityGui extends JFrame  {
 	public static RestaurantHaus restHaus; 
 	public HausAnimationPanel hausAniPanel = new HausAnimationPanel();
 	
+	private final static int tellerAmt = 4;
+	
 	TransportationPanel cityAniPanel = new TransportationPanel(this);
 	private JPanel cityBanner = new JPanel();
 	private JPanel zoomBanner = new JPanel();
@@ -164,7 +166,7 @@ public class SimCityGui extends JFrame  {
 		mainStApts5 = new Housing(housAniPanel5, "Main St Apartments #5");
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
 		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
-		pirateBank = new Bank(this, "Pirate Bank");
+		pirateBank = new Bank(this, "Pirate Bank", tellerAmt);
 		
 		simCityPanel = new SimCityPanel(this);
 		workplacePropertyPanel = new WorkplacePropertyPanel(this);
