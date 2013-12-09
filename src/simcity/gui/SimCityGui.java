@@ -346,6 +346,6 @@ public class SimCityGui extends JFrame  {
 	}
 	
 	public void updateGui(){
-		//workplacePropertyPanel.updateGui();
+		workplacePropertyPanel.updateGui();
 	}
 }

@@ -19,6 +19,7 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
+import simcity.PersonAgent;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 
@@ -132,6 +133,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		    if(type == null){
 			    setType(workplaceList.getSelectedItem().toString());
 		    }
+		    if(selectedWorkplace.equals("")){
+				   selectedWorkplace = workplaceList.getSelectedItem().toString();
+			 }
 		    		
 		workplaceList.setSelectedIndex(selectedWorkplaceIndex);
 		workplaceList.addActionListener(this);
@@ -404,18 +408,50 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	if(b!= null){
 	  if(b == setMktQuantity){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set "+ selectedMktItem +" quantity to "+(Integer)mktSpinner.getValue());
+		SimCityGui.mickeysMarket.setInventory(selectedMktItem, (Integer)mktSpinner.getValue());
+		updateGui();
 	  }
 	  else if(b == swapMktJobs){
-		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Switching mkt workers "+ selectedMktWorker +" with "+selectedPersonForMkt);
+		ArrayList<PersonAgent> people = SimCityGui.simCityPanel.getPeople();
+		String[] parts = selectedMktWorker.split(": ");
+		String role = parts[0].toLowerCase();
+		String mktWorker = parts[1];
+		String workplace = selectedWorkplace.substring(selectedWorkplace.indexOf(' ')+1, selectedWorkplace.length());
+		for(PersonAgent person : people){
+			if(person.getName().equals(mktWorker)){
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", mktWorker + " should switch role to unemployed");
+				person.msgSwitchRole("unemployed", "");
+			}
+			else if(person.getName().equals(selectedPersonForMkt)){
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedPersonForMkt + " should switch role to "+role+ " at "+workplace);
+				person.msgSwitchRole(role, workplace);
+			}
+		}
 	  }
 	  else if(b == swapRestJobs){
-		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Switching rest workers "+ selectedRestWorker +" with "+selectedPersonForRest);
+		ArrayList<PersonAgent> people = SimCityGui.simCityPanel.getPeople();
+		String[] parts = selectedRestWorker.split(": ");
+		String role = parts[0].toLowerCase();
+		String restWorker = parts[1];
+		String workplace = selectedWorkplace.substring(selectedWorkplace.indexOf(' ')+1, selectedWorkplace.length());
+		for(PersonAgent person : people){
+			if(person.getName().equals(restWorker)){
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", restWorker + " should switch role to unemployed");
+				person.msgSwitchRole("unemployed", "");
+			}
+			else if(person.getName().equals(selectedPersonForRest)){
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedPersonForRest + " should switch role to "+role+ " at "+workplace);
+				person.msgSwitchRole(role, workplace);
+			}
+		}
 	  }
 	  else if(b == setFoodQtyAndBalance){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set "+ selectedMenuItem +" quantity to "+(Integer)foodQtySpinner.getValue()+ " and the balance to "+(Double)restBalSpinner.getValue());
 	  }
 	  else if(b == setTellerAmt){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set teller amt to "+(Integer)tellerSpinner.getValue());
+		SimCityGui.pirateBank.setTellerAmt((Integer)tellerSpinner.getValue());
+		updateGui();
 	  }
 	}
     if(cb != null){
@@ -423,6 +459,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	     for(int i = 0; i<workplaces.length; i++){
 		     if(workplaces[i].equals(name)){
 		    	 setType(name);
+			     selectedWorkplace = name;
 			     selectedWorkplaceIndex = i;
 			     updateGui();
 			     break;

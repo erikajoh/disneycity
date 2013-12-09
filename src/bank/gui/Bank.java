@@ -131,6 +131,10 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     	}
     }
     
+    public void setTellerAmt(int amount){
+    	
+    }
+    
     public void setManager(ManagerAgent m){
     	manager = m;
     }

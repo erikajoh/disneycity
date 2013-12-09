@@ -420,7 +420,10 @@ public class CookAgent extends Agent {
 	//utilities
 	
     public int getQuantity(String name){
-   		return foodInventory.get(name).inventory;
+    	if(foodInventory.get(name) != null){
+    		return foodInventory.get(name).inventory;
+    	}
+    	return 0;
     }
 	
 	public void setMenu(Menu m) {

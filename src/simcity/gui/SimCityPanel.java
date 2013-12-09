@@ -538,6 +538,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				return false;
 		return true;
 	}
+	
+	public 	ArrayList<PersonAgent> getPeople() {
+		return people;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
