@@ -77,9 +77,11 @@ public class HostAgent extends Agent {
 	
 	public void msgShiftDone() {
 		shiftDone = true;
-		if (waitingCustomers.size() == 0) {person.msgStopWork(10);
+		if (waitingCustomers.size() == 0) {
+			if (person!=null) person.msgStopWork(10);
+			print("host going home");
 			for (MyWaiter w : waiters) {
-				w.waiter.msgShiftDone();
+				w.waiter.msgShiftDone(true);
 			}
 		}
 	}
@@ -150,7 +152,7 @@ public class HostAgent extends Agent {
 	
 	// ***** SCHEDULER *****
 	protected boolean pickAndExecuteAnAction() {
-		if (waitingCustomers.size() == 0 && shiftDone == true) {person.msgStopWork(10);} 
+		if (waitingCustomers.size() == 0 && shiftDone == true) {if (person!=null) person.msgStopWork(10); print("host going home");} 
 		if(waiters.isEmpty())
 			return false;
 		

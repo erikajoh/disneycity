@@ -4,6 +4,7 @@ package restaurant_cafe.gui;
 import restaurant_cafe.CookAgent;
 import restaurant_cafe.CustomerAgent;
 import simcity.gui.SimCityGui; 
+import simcity.interfaces.Person;
 
 import java.awt.*;
 
@@ -20,6 +21,8 @@ public class CookGui implements Gui {
 	SimCityGui gui;
 	int aniWindowX = 400;
 	int aniWindowY = 400; 
+	private boolean leaving = false;
+	Person person;
 
     public CookGui(CookAgent agent, SimCityGui gui) {
         this.agent = agent;
@@ -43,6 +46,10 @@ public class CookGui implements Gui {
         if (xPos == xDestination && yPos == yDestination){   
         	if(command == Command.cook) {
         		grillVisible = true;
+        	}
+        	if (leaving == true) {
+        		leaving = false;
+        		if (person!=null) person.msgStopWork(10);
         	}
         	else if(command == Command.plate){
         		plateVisible = true;
@@ -77,6 +84,12 @@ public class CookGui implements Gui {
         return true;
     }
     
+    public void DoLeave(Person p) {
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
+    }
     public void DoGrilling(String name){
     	xDestination = aniWindowX-60;
     	yDestination = aniWindowY-20;

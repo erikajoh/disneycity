@@ -16,7 +16,7 @@ public class WorkerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, getItem, bringItem, deliverItem, goHome};
+	private enum Command {noCommand, getItem, bringItem, deliverItem, goHome, leave};
 	private Command command=Command.noCommand;
 	
 	public static final int mWidth = 400;
@@ -102,6 +102,11 @@ public class WorkerGui implements Gui{
     	xDestination = (int)(mWidth*0.57) - agent.getNum()*mWidth/15;
 		yDestination = (int)(mHeight*0.15);
     	command = Command.goHome;
+    }
+    
+    public void DoLeave() {
+		yDestination = 0;
+    	command = Command.leave;
     }
 
     public int getXPos() {

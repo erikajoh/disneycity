@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -22,8 +23,8 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
 	
     private Image bufferImage;
     private Dimension bufferSize;
-    
-    private List<Gui> guis = new ArrayList<Gui>();
+   
+    private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
     Timer timer = new Timer(5, this);
     Graphics2D g2;
     

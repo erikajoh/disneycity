@@ -66,7 +66,8 @@ public class WaiterGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination && leaving == true) {
-        	person.msgStopWork(10);
+        	if (person!=null) person.msgStopWork(10);
+        	System.out.println("waiter going home");
         	leaving = false;
         }
         if (xPos == xDestination && yPos == yDestination && readyToMove) {

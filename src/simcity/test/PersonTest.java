@@ -15,6 +15,7 @@ public class PersonTest extends TestCase
 	// instantiated in the setUp() method
 	PersonAgent person;
 	PersonAgent dummyHost, dummyWaiter, dummyCook, dummyCashier;
+	PersonAgent renter, owner;
 	MockHousing_Douglass mockHousing1, mockHousing2;
 	MockBank_Douglass mockBank;
 	MockRestaurant_Douglass mockRestaurant;
@@ -48,6 +49,9 @@ public class PersonTest extends TestCase
 		mockRestaurant.personAs(dummyCashier, "Cashier", "Dummy Cashier", 0);
 		
 		person = new PersonAgent("Narwhal Prime", mockHousing1, 0, "Chinese", false, "OwnerResident", mockTransportation, 'W');
+		
+		renter = new PersonAgent("Renter", mockHousing2, 50, "Chinese", false, "OwnerResident", mockTransportation, 'W');
+		owner = new PersonAgent("Owner", mockHousing2, 50, "Chinese", false, "Resident", mockTransportation, 'W');
 	}	
 	
 	// TEST #1
@@ -234,12 +238,21 @@ public class PersonTest extends TestCase
 	}
 	
 	// TEST #3
-	// Person: start with surplus money, go to market, deposit
+	// Person: start with surplus money, go to market, deposit, return home, done
 	public void testNormative_HomeBankMarketHome() {
 		
 	}
 	
+	// TEST #4
+	// Person: it's Friday morning, perform maintenance, return to original default position, done
 	public void testNormative_HomeMaintenance() {
+		
+	}
+	
+	// TEST #5
+	// Person: it's time to pay rent, renter and owner recieve appropriate messages
+	// Their money amounts are updated accordingly
+	public void testNormative_PayRent() {
 		
 	}
 }

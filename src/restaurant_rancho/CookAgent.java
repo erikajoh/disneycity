@@ -5,6 +5,7 @@ import agent_rancho.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import restaurant_cafe.gui.Food;
 import restaurant_rancho.Order;
 import restaurant_rancho.CustomerAgent.AgentEvent;
 import restaurant_rancho.CustomerAgent.AgentState;
@@ -92,10 +93,10 @@ public class CookAgent extends Agent implements Cook{
 	// Messages
 	
 	public void msgShiftDone() {
+		print("got msg shift done, have " + orders.size());
 		shiftDone = true;
-		if (orders.size()==0) {
-			person.msgStopWork(10);
-		}
+		gui.DoLeave(person);
+			//person.msgStopWork(10);
 	}
 	
 	public void msgAtLoc() {
@@ -161,7 +162,6 @@ public class CookAgent extends Agent implements Cook{
 				}
 				return true;
 			}
-			if (shiftDone) {person.msgStopWork(10);}
 			Order newO = restaurant.orderStand.remove();
 			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
 			else {waitTimer();}
@@ -309,6 +309,15 @@ public class CookAgent extends Agent implements Cook{
 		 }
 	   	return 0;
 	 } 
+	 
+	 public void setQuantity(String name, int num){
+		 for(Food food : foods){
+			 if(food.choice.equals(name)){
+				  food.amount = num;
+			 } 
+		 }
+	 }
+	
 	    
 	public Food findFood(String ch) {
 		synchronized(foods) {

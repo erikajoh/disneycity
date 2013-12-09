@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import restaurant_cafe.CookAgent.Order;
+import restaurant_cafe.gui.Order;
 import restaurant_cafe.gui.Food;
 import restaurant_cafe.gui.Menu;
 import restaurant_cafe.gui.MenuItem;
@@ -63,5 +63,12 @@ public class MockCook extends Mock implements Cook {
 	
 	public String getName(){
 		return name;
+	}
+
+
+	@Override
+	public Collection<Food> getFoods() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

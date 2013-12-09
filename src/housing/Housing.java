@@ -33,15 +33,30 @@ public class Housing implements Housing_Douglass {
 		panel = p;
 		name = n;
     	if (name.contains("Haunted Mansion")) type = "house";
+    	else if (name.contains("Cinderella Castle")) type = "house";
+    	else if (name.contains("Rabbit Hole")) type = "house";
+    	else if (name.contains("Tiki Hut")) type = "house";
+    	else if (name.contains("Space Mountain")) type = "house";
+    	else if (name.contains("Pirate's Suite")) type = "house";
     	else if (name.contains("Main St Apartments")) type = "apt";
     	
     	if (name == "Haunted Mansion") panel.setBackground("res/hauntedmansion.png");
+    	if (name == "Cinderella Castle") panel.setBackground("res/cinderellacastle.png");
+    	if (name == "Rabbit Hole") panel.setBackground("res/rabbithole.png");
+    	if (name == "Tiki Hut") panel.setBackground("res/tikihut.png");
+    	if (name == "Space Mountain") panel.setBackground("res/spacemountain.png");
+    	if (name == "Pirate's Suite") panel.setBackground("res/piratesuite.png");
     	if (name == "Main St Apartments #1") panel.setBackground("res/mainstapts1.png");
     	if (name == "Main St Apartments #2") panel.setBackground("res/mainstapts2.png");
     	if (name == "Main St Apartments #3") panel.setBackground("res/mainstapts3.png");
     	if (name == "Main St Apartments #4") panel.setBackground("res/mainstapts4.png");
     	if (name == "Main St Apartments #5") panel.setBackground("res/mainstapts5.png");
     	if (name == "Main St Apartments #6") panel.setBackground("res/mainstapts6.png");
+    	if (name == "Main St Apartments #7") panel.setBackground("res/mainstapts7.png");
+    	if (name == "Main St Apartments #8") panel.setBackground("res/mainstapts8.png");
+    	if (name == "Main St Apartments #9") panel.setBackground("res/mainstapts9.png");
+    	if (name == "Main St Apartments #10") panel.setBackground("res/mainstapts10.png");
+    	if (name == "Main St Apartments #11") panel.setBackground("res/mainstapts11.png");
     }
 	
 	public String getName() {
@@ -109,10 +124,10 @@ public class Housing implements Housing_Douglass {
 		}
 	}
 	
-	public void msgDoMaintenance() { // from timer
+	public void msgDoMaintenance(PersonAgent rp) { // from person
 		log.add(new LoggedEvent("Do maintenance"));
 		for (Renter r: renters) {
-			r.agent.msgDoMaintenance();
+			if (r.person == rp) r.agent.msgDoMaintenance();
 		}
 	}
 	
@@ -149,6 +164,10 @@ public class Housing implements Housing_Douglass {
 		for (Renter r: renters) {
 			if (r.agent == ra) r.person.msgDoneLeaving();
 		} 
+	}
+
+	public PersonAgent getOwner() {
+		return ownerPerson;
 	}
 	
 }

@@ -2,6 +2,8 @@ package bank;
 
 import bank.gui.BankCustomerGui;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import bank.gui.Account;
 import bank.interfaces.BankCustomer;
 import bank.interfaces.Person;
@@ -25,7 +27,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private int loanTime;
 	
 	private SimCityGui simCityGui;
-	private BankCustomerGui personGui;
+	private BankCustomerGui customerGui;
 	
 	// agent correspondents
 	private Manager manager = null;
@@ -125,6 +127,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		balance += cash;
 		print("GOT CASH "+ cash);
 		if(success == true){
+			change = cash;
 			state = State.leaving;
 		}
 		else {
@@ -179,7 +182,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			   return true;
 		   }
 		   else if(state == State.failedRobbery){
-			   tryToLeaveBank();
+			   failToLeaveBank();
 			   return true;
 		   }
 		  else if(state == State.left){
@@ -194,7 +197,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void goToTeller(){
 		animState = AnimState.walking;
-		personGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
+		customerGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
 		state = State.openingAccount;
 //	    simCityGui.updateInfoPanel(this);
 	}
@@ -226,12 +229,12 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void leaveBank(){
 		animState = AnimState.walking;
 		state = State.idle;
-		personGui.DoLeaveBank();
+		customerGui.DoLeaveBank();
 	}
-	private void tryToLeaveBank(){
+	private void failToLeaveBank(){
 		animState = AnimState.walking;
 		state = State.idle;
-		personGui.DoFailRobbery();
+		customerGui.DoFailRobbery();
 	}
 	
 	private void leftBank(){
@@ -292,11 +295,11 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	public void setGui(BankCustomerGui g) {
-		personGui = g;
+		customerGui = g;
 	}
 
 	public BankCustomerGui getGui() {
-		return personGui;
+		return customerGui;
 	}
 }
 

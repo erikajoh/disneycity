@@ -2,12 +2,11 @@ package restaurant_bayou;
 
 import agent_bayou.Agent;
 import restaurant_bayou.CashierAgent.Check;
-import restaurant_bayou.CookAgent.Order;
-import restaurant_bayou.CookAgent.OrderState;
 import restaurant_bayou.CustomerAgent.AgentEvent;
 import restaurant_bayou.CustomerAgent.AgentState;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.HostAgent.Table;
+import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_bayou.gui.WaiterGui;
 import restaurant_bayou.interfaces.Waiter;
 import simcity.PersonAgent;
@@ -21,16 +20,17 @@ import java.util.concurrent.Semaphore;
  * Restaurant Waiter Agent
  */
 
-public class WaiterAgent extends Agent implements Waiter {
+public abstract class WaiterAgent extends Agent implements Waiter {
 
 	private String name;
 	private HostAgent host;
-	private CookAgent cook;
-	private Semaphore atTable = new Semaphore(0, true);
+	private CashierAgent cashier;
+	protected CookAgent cook;
+	protected Semaphore atTable = new Semaphore(0, true);
 	private List<CustomerAgent> myCustomers = new ArrayList<CustomerAgent>();
-	private List<Integer> myTables = new ArrayList<Integer>();
+	public List<Integer> myTables = new ArrayList<Integer>();
 	private RestMenu myMenu = new RestMenu();
-	private Hashtable<CustomerAgent, String> myChoices = new Hashtable<CustomerAgent, String>();
+	public Hashtable<CustomerAgent, String> myChoices = new Hashtable<CustomerAgent, String>();
 	private List<String> unavailableFood = new ArrayList<String>();
 	private Hashtable<Integer, Check> checks = new Hashtable<Integer, Check>();
 	private List<Integer> checksReady = new ArrayList<Integer>();
@@ -47,11 +47,13 @@ public class WaiterAgent extends Agent implements Waiter {
 	public enum AgentEvent 
 	{none, seatCustomer, leaveCustomer, takeOrder, deliverOrder};
 	AgentEvent event = AgentEvent.none;
+	RestaurantBayou restaurant;
 
-	public WaiterAgent(String name) {
+	public WaiterAgent(String name, RestaurantBayou rest) {
 		super();
 
 		this.name = name;
+		this.restaurant = rest;
 		
 		myMenu.addItem("Filet Mignon", 42.99);
 		myMenu.addItem("Pan-Seared Salmon", 33.99);
@@ -65,6 +67,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	}
 		
 	public void msgOrderIsDone(int t) {
+		print("orderIsDone rcvd");
 		myTables.add(t);
 		stateChanged();
 	}
@@ -73,12 +76,38 @@ public class WaiterAgent extends Agent implements Waiter {
 		person = p;
 	}
 	
+	public void setCashier(CashierAgent cash) {
+		cashier = cash;
+	}
+	
 	public void setHost(HostAgent h) {
 		host = h;
 	}
 	
 	public void setCook(CookAgent c) {
 		cook = c;
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (myCustomers.size() == 0) {
+			print ("going home!");
+			waiterGui.DoLeave(person);
+			if (cook!=null) { 
+				cook.msgShiftDone(); 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (host!=null) { 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(); 
+				cashier.subtract(20);
+			}
+		}
+		else {
+			print("my shift is done! but I still have customers");
+		}
 	}
 
 	public void msgLeavingTable(CustomerAgent cust) {
@@ -105,6 +134,7 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void msgImReadyToOrder(CustomerAgent cust) {
 		myCustomers.add(cust);
+		print("my customer " + myCustomers.get(0).getName() + " " + myCustomers.get(0).isSeated());
 		stateChanged();
 	}
 	
@@ -212,7 +242,7 @@ public class WaiterAgent extends Agent implements Waiter {
 						for (Table t: host.tables) {
 							if (t.getOccupant() == c) {
 								c.msgOrderHasBeenReceived();
-								cook.msgHereIsOrder(this, myChoices.get(c), t.num);
+								dealWithOrder(c, t);
 								readyForNextTask = false;
 								return true;
 							}
@@ -264,12 +294,14 @@ public class WaiterAgent extends Agent implements Waiter {
 							}
 					}
 				}
+				return true;
 			}
 			if (wantBreak) {
 				Do("I wanna go on break");
 				host.msgWantToGoOnBreak(this);
 				return true;
 			}
+			if (shiftDone) {msgShiftDone();}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return false;
@@ -325,5 +357,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		onBreak = false;
 		stateChanged();
 	}
+	
+	protected abstract void dealWithOrder(CustomerAgent c, Table t); 
 }
 

@@ -1,35 +1,23 @@
-1
-Narwhal_Secundus|Main St Apartments #2|OwnerResident
-1
-Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus
-Friday
-
-5
+10
+Edgar_Prime|Main St Apartments #3|OwnerResident
+RanchoCashier1|Main St Apartments #3|Renter
+RanchoCook1|Main St Apartments #3|Renter
+RanchoHost1|Main St Apartments #3|Renter
+CafeCashier1|Main St Apartments #4|OwnerResident
+CafeCook1|Main St Apartments #4|Renter
+CafeHost1|Main St Apartments #4|Renter
+CafeWaiter1|Main St Apartments #4|Renter
 Narwhal_Prime|Haunted Mansion|OwnerResident
-One|Main St Apartments #2|Renter
-Two|Main St Apartments #2|OwnerResident
-NotEmployed|Main St Apartments #3|OwnerResident
-Narwhal_Secundus|Main St Apartments #3|Renter
-3
+Dylan|Main St Apartments #8|OwnerResident
+4
+Main St Apartments #3|Edgar_Prime|Edgar_Prime|RanchoCashier1|RanchoCook1|RanchoHost1
+Main St Apartments #4|CafeCashier1|CafeCashier1|CafeCook1|CafeHost1|CafeWaiter1
 Haunted Mansion|Narwhal_Prime|Narwhal_Prime
-Main St Apartments #3|NotEmployed|NotEmployed|Narwhal_Secundus
-Main St Apartments #2|Two|One|Two
+Main St Apartments #8|Dylan|Dylan
 Friday
 
 1
-One|Main St Apartments #2|OwnerResident
-2
-Main St Apartments #2|One|One
-Haunted Mansion|One
-
-2
-One|Main St Apartments #2|OwnerResident
-Two|Main St Apartments #2|Renter
+Narwhal_Prime|Haunted Mansion|OwnerResident
 1
-Main St Apartments #2|One|One|Two
-
-1
-One|Main St Apartments #2|OwnerResident
-1
-Main St Apartments #2|One|One
-
+Haunted Mansion|Narwhal_Prime|Narwhal_Prime
+Friday

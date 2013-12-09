@@ -6,7 +6,10 @@ import restaurant_cafe.CustomerAgent;
 import restaurant_cafe.HostAgent;
 import restaurant_cafe.MarketAgent;
 import restaurant_cafe.WaiterAgent;
-import restaurant_cafe.CookAgent.Order;
+import restaurant_cafe.gui.Order;
+import restaurant_cafe.WaiterAgentNorm;
+import restaurant_cafe.WaiterAgentPC;
+import restaurant_cafe.gui.WaiterGui;
 import bank.gui.Bank;
 import simcity.RestMenu;
 import simcity.Restaurant;
@@ -62,6 +65,8 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     private JButton  pauseButton = new JButton("Pause Agents");
     private JPanel pauseGroup = new JPanel();
     private JPanel group = new JPanel();
+    
+    public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
 
     private SimCityGui gui; //reference to main gui
 
@@ -69,16 +74,16 @@ public class RestaurantCafe extends JPanel implements Restaurant{
         this.gui = gui;
         this.name = name;
         type = "American";
-                
-        Food food = new Food("Apple-Granola Pancakes", 3000, 5, 4, 8, 10.49);
+               //initial food values are high so no mkt orders for now....
+        Food food = new Food("Apple-Granola Pancakes", 3000, 15, 4, 8, 10.49);
         foods.add(food);
-        food = new Food("Sirloin Steak and Eggs", 4000, 5, 4, 8, 11.99);
+        food = new Food("Sirloin Steak and Eggs", 4000, 15, 4, 8, 11.99);
         foods.add(food);
-        food = new Food("Ham and Cheese Omelet", 4000, 2, 4, 8, 9.99);
+        food = new Food("Ham and Cheese Omelet", 4000, 12, 4, 8, 9.99);
         foods.add(food);
-        food = new Food("Walt's Chili", 3500, 5, 4, 8, 6.99);
+        food = new Food("Walt's Chili", 3500, 5, 14, 8, 6.99);
         foods.add(food);
-        food = new Food("Main Street Cheeseburger", 4500, 5, 4, 8, 11.99);
+        food = new Food("Main Street Cheeseburger", 4500, 15, 4, 8, 11.99);
         foods.add(food);
         
         menu2.addItem("Apple-Granola Pancakes", 10.49);
@@ -165,7 +170,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		//}
     	}
     	else if (type.equals("Waiter")) {
-    		WaiterAgent w = new WaiterAgent(name, menu, waiters.size()+1);	
+    		WaiterAgentNorm w = new WaiterAgentNorm(name, this, menu, waiters.size()+1);
     		if (p!=null) w.setPerson(p);
     		WaiterGui g = new WaiterGui(w, gui);
     		gui.cafeAniPanel.addGui(g);
@@ -176,6 +181,20 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		waiters.add(w);
     		w.setGui(g);
     		w.startThread();
+    	}
+    	else if (type.equals("WaiterPC")) {
+    		WaiterAgentPC w = new WaiterAgentPC(name, this, menu, waiters.size()+1);
+    		WaiterGui g = new WaiterGui(w, gui);
+    		if (p!=null) w.setPerson(p);
+    		gui.cafeAniPanel.addGui(g);
+    		if (host!=null) w.setHost(host);
+    		if (cook!= null) w.setCook(cook);
+    		if (cashier!=null)w.setCashier(cashier);
+    		if (host!=null) host.addWaiter(w);
+    		w.setGui(g);
+    		waiters.add(w);
+    		w.startThread();
+    		g.updatePosition();
     	}
     	else if (type.equals("Host")) {
     		if (p!=null) host.setPerson(p);
@@ -193,7 +212,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		host.startThread();
     	}
     	else if (type.equals("Cook")) {
-    		cook = new CookAgent(name, foods);
+    		cook = new CookAgent(name, this, foods);
     		if (p!=null) cook.setPerson(p);
     		CookGui cookGui = new CookGui(cook, gui);
     		cook.setGui(cookGui);
@@ -278,6 +297,12 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		return cook.getQuantity(name);
     	}
     	return 0;
+    }
+    
+    public void setQuantityAndBalance(String name, int num, double balance){
+    	if(cook != null){
+    		 cook.setQuantity(name, num);
+    	}
     }
 
 	public String getRestaurantName() {

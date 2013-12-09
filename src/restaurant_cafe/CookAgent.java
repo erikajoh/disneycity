@@ -7,6 +7,8 @@ import restaurant_cafe.CustomerAgent.AgentEvent;
 import restaurant_cafe.gui.CookGui;
 import restaurant_cafe.gui.Food;
 import restaurant_cafe.gui.HostGui;
+import restaurant_cafe.gui.Order;
+import restaurant_cafe.gui.RestaurantCafe;
 import restaurant_cafe.interfaces.Cook;
 import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Market;
@@ -28,43 +30,27 @@ import java.util.concurrent.Semaphore;
 public class CookAgent extends Agent implements Cook {
 	static final int NTABLES = 3;//a global for the number of tables.
 	
-	public class Order {
-		Waiter waiter;
-		Food food;
-		int exclude = 0; //which markets already ordered from for order
-		int table;
-	    OrderState s;
-	    public Order(Waiter wp, String c, int t){
-	    	waiter = wp;
-			synchronized(foods){
-	    	  for(Food f : foods){
-	    		  if(f.getName().equals(c)){
-	    			  food = f;
-	    			  break;
-	    		  }
-	    	  }
-			}
-	    	table = t;
-	    	s = OrderState.pending;
-	    }
-	};
 	Person person;
-	enum OrderState{pending, cooking, reorder, done};
+	public enum OrderState{pending, cooking, reorder, done};
 	public Collection<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 	public Collection<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
 	public Collection<Table> tables;
 	public Collection<Food> foods;
 	private CookGui cookGui;
+	boolean shiftDone = false;
 	
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
 	private String name;
 	Timer timer = new Timer();
+	Timer standTimer = new Timer();
+	RestaurantCafe restaurant;
 	
-	public CookAgent(String name, Collection<Food> fds) {
+	public CookAgent(String name, RestaurantCafe rest, Collection<Food> fds) {
 		super();
 
 		this.name = name;
+		restaurant = rest;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));
 		synchronized(tables){
@@ -95,9 +81,20 @@ public class CookAgent extends Agent implements Cook {
 	}
 	
 	// Messages
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (orders.size() == 0) {
+			//person.msgStopWork(10);
+			cookGui.DoLeave(person);
+		}
+	}
 	public void msgHereIsOrder(Waiter w, String choice, Integer table){
 		print("table "+table+" ordered "+choice);
 		orders.add(new Order(w, choice, (int)table));
+		stateChanged();
+	}
+	public void msgAddOrder(Order o){
+		orders.add(o);
 		stateChanged();
 	}
 	public void msgFulfilledOrder(Food food, int amount){
@@ -157,7 +154,15 @@ public class CookAgent extends Agent implements Cook {
 			  }
 		  }
 		}
-		
+		Order newOrder = restaurant.orderStand.remove();
+		if (newOrder!=null) {
+			orders.add(newOrder);
+			print("order stand not empty, got order for "+ newOrder.food.getName()); 
+			return true;
+		}
+		else {
+			waitTimer();
+		}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -165,6 +170,16 @@ public class CookAgent extends Agent implements Cook {
 	}
 
 	// Actions
+	
+	private void waitTimer() {
+		standTimer.schedule(new TimerTask() {
+			public void run() {
+				stateChanged();
+			}
+		},
+		5000);
+	}
+	
 	private void cookIt(final Order o){
 		print("COOK " + o.food.getName() + " " + o.food.getAmount());
 		cookGui.DoGrilling(o.food.getName());
@@ -239,10 +254,21 @@ public class CookAgent extends Agent implements Cook {
     	}
     	return 0;
     }
-
+    
+	 public void setQuantity(String name, int num){
+		 for(Food food : foods){
+	    		if(food.getName().equals(name)){
+	    			 food.setAmount(num);
+	    		}
+	    	}
+	 }
 	
 	public Collection<Market> getMarkets(){
 		return markets;
+	}
+	
+	public Collection<Food> getFoods(){
+		return foods;
 	}
 	
 	public static class Table {

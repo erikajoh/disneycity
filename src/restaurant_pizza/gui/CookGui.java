@@ -54,8 +54,9 @@ public class CookGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
         if (xPos == xDestination && yPos == yDestination && leaving) {
-        	person.msgStopWork(10);
-        	leaving =false; 
+        	if (person!=null) person.msgStopWork(10);
+        	System.out.println("cook going home1");
+        	leaving = false; 
         }
         if (xPos == xDestination && yPos == yDestination && readyToMove) {
         	readyToMove = false;

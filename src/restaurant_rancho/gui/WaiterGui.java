@@ -3,6 +3,7 @@ package restaurant_rancho.gui;
 
 import restaurant_rancho.CustomerAgent;
 import restaurant_rancho.WaiterAgent;
+import simcity.interfaces.Person;
 
 import java.awt.*;
 
@@ -22,6 +23,8 @@ public class WaiterGui implements Gui {
 	public static final int yTable2 = yTable1;
 	public static final int xTable3 = xTable2+90;
 	public static final int yTable3 = yTable1;
+	private Person person;
+	private boolean leaving;
 	
 	String waiterText = "";
 
@@ -47,6 +50,11 @@ public class WaiterGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
 
+        if (xPos == xDestination && yPos == yDestination && leaving) {
+        	if (person!=null) person.msgStopWork(10);
+        	leaving =false; 
+        }
+        
         if (xPos == xDestination && yPos == yDestination) {
         	agent.msgAtTable();
         	actionInProgress = false;
@@ -71,6 +79,15 @@ public class WaiterGui implements Gui {
     
     public boolean isPresent() {
         return true;
+    }
+    
+    public void DoLeave(Person p) {
+    	System.out.println("should only print once, alas");
+    	xDestination = -50;
+    	yDestination = -50; 
+    	person = p;
+    	leaving = true;
+    	actionInProgress = true;
     }
     public void DoWalkToCust(int loc) {
     	xDestination = 50 + ((loc%15)%5)*40;

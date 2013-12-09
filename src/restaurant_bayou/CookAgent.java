@@ -9,12 +9,14 @@ import simcity.PersonAgent;
 import simcity.RestMenu;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.gui.CookGui;
+import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_bayou.interfaces.Market;
+import restaurant_bayou.ProducerConsumerMonitor.Order;
 import simcity.interfaces.Person;
 
 public class CookAgent extends Agent {
 	private String name;
-	private List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
+	private List<myOrder> orders =  Collections.synchronizedList(new ArrayList<myOrder>());
 	private Inventory i = new Inventory();
 	private CashierAgent cashier;
 	private Semaphore busy = new Semaphore(1,true);
@@ -23,19 +25,22 @@ public class CookAgent extends Agent {
 	private List<String> orderedFood =  Collections.synchronizedList(new ArrayList<String>());
 	private List<MyMarket> cutoffMarkets =  Collections.synchronizedList(new ArrayList<MyMarket>()); 
 	public List<MyMarket> markets =  Collections.synchronizedList(new ArrayList<MyMarket>());
+	public Timer t = new Timer();
 	private CookGui cookGui;
 	private Person person;
 	private RestMenu menu = new RestMenu();
 	boolean shiftDone = false;
+	RestaurantBayou restaurant;
 
 	/**
 	 * Constructor for CookAgent class
 	 *
 	 * @param name name of the cook
 	 */
-	public CookAgent(String name, RestMenu m){
+	public CookAgent(String name, RestaurantBayou r, RestMenu m){
 		super();
 		this.name = name;
+		this.restaurant = r;
 	    menu.addItem("Filet Mignon", 42.99);
 	    menu.addItem("Pan-Seared Salmon", 33.99);
 	    menu.addItem("Surf and Turf", 45.99);
@@ -58,9 +63,17 @@ public class CookAgent extends Agent {
 		
 	}
 	public void msgHereIsOrder(WaiterAgent w, String choice, int table){
-		orders.add(new Order(w, choice, table));
+		orders.add(new myOrder(w, choice, table));
 //		if (!waiters.contains(w)) waiters.add(w);
 		stateChanged();
+	}
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (orders.size() == 0) {
+			//person.msgStopWork(10);
+			cookGui.DoLeave(person);
+		}
 	}
 	
 	public void msgHereIsMoreFood(Market mkt, String f, int amt){
@@ -124,7 +137,7 @@ public class CookAgent extends Agent {
 			}
 		}
 		synchronized(orders){
-			for (Order o: orders) {
+			for (myOrder o: orders) {
 				if (o.state == OrderState.Done) {
 					o.state = OrderState.Sent;
 					o.w.msgOrderIsDone(o.table);
@@ -134,7 +147,7 @@ public class CookAgent extends Agent {
 			}
 		}
 		synchronized(orders){
-			for (Order o: orders) {
+			for (myOrder o: orders) {
 				if (o.state == OrderState.Waiting) {
 					if (unavailableFood.contains(o.choice)){
 						o.w.msgOutOfFood(unavailableFood);
@@ -170,6 +183,14 @@ public class CookAgent extends Agent {
 				}
 			}
 		}
+		Order newO = restaurant.orderStand.remove();
+		if (newO!=null) {
+			orders.add(new myOrder(newO.w, newO.choice, newO.table));
+			print("order stand not empty, got order for "+ newO.choice);
+			return true;
+		} else {
+			waitTimer();
+		}
 		return false;
 	}
 	
@@ -204,13 +225,12 @@ public class CookAgent extends Agent {
 	}
 	
 	public enum OrderState {Waiting, Cooking, Done, Sent;}
-	public class Order {
+	public class myOrder {
 		WaiterAgent w;
 		String choice;
 		int table;
 		OrderState state;
-		Timer t = new Timer();
-		public Order(WaiterAgent wa, String c, int tbl) {
+		public myOrder(WaiterAgent wa, String c, int tbl) {
 			w = wa;
 			choice = c;
 			table = tbl;
@@ -265,6 +285,12 @@ public class CookAgent extends Agent {
 		return i.food.get(name);
 	}
 	
+	
+	 public void setQuantity(String name, int num){
+		 i.food.put(name, num);
+	 }
+
+	
 	public void addMarket(Market m){
 		markets.add(new MyMarket(m));
 		stateChanged();
@@ -283,6 +309,15 @@ public class CookAgent extends Agent {
 	public void setGui(CookGui c){
 		cookGui = c;
 		c.setAgent(this);
+	}
+	
+	private void waitTimer() {
+		t.schedule(new TimerTask() {
+			public void run() {
+				stateChanged();
+			}
+		},
+		5000);
 	}
 
 }

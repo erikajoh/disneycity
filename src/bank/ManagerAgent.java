@@ -7,6 +7,8 @@ import bank.interfaces.BankCustomer;
 import bank.gui.Account;
 import bank.gui.Bank;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 
 import java.util.*;
 

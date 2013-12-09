@@ -33,7 +33,7 @@ public class HausAnimationPanel extends JPanel implements ActionListener {
         bufferSize = this.getSize();
         backgroundImage = Toolkit.getDefaultToolkit().getImage("res/hausRest.png");
  
-    	timer = new Timer(20, this );
+    	timer = new Timer(12, this );
     	timer.start();
     }
 

@@ -10,6 +10,9 @@ import bank.test.mock.MockTeller.State;
 
 import java.util.*;
 
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
+
 /**
  * bank Host Agent
  */
@@ -118,7 +121,8 @@ public class TellerAgent extends Agent implements Teller {
 		synchronized(accounts){
 		   for(Account acc : accounts){
 			   if(acc.number == accountNum){
-				   customer.account = acc; break;
+				   customer.account = acc;
+				   customer.state = State.depositingCash; break;
 			   }
 		   }
 		}
@@ -132,6 +136,7 @@ public class TellerAgent extends Agent implements Teller {
 		synchronized(accounts){
 		   for(Account acc : accounts){
 			   if(acc.number == accountNum){
+				   customer.state = State.withdrawingCash;
 				   customer.account = acc; break;
 			   }
 		   }
@@ -261,7 +266,6 @@ public class TellerAgent extends Agent implements Teller {
 	private void robBank(){
 		double cash = customer.requestAmt;
 		customer.success = robberySuccess.nextBoolean();
-		print("ROBBED BANK "+ customer.success);
 		customer.bankCustomer.msgRobbedBank(cash, customer.success);
 		customer.state = State.deciding;
 	}

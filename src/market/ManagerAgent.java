@@ -23,6 +23,7 @@ public class ManagerAgent extends Agent {
 	public CashierAgent cashier;
 	private List<WorkerAgent> myWorkers = new ArrayList<WorkerAgent>();
 	private List<Order> myOrders = new ArrayList<Order>();
+	private boolean shiftDone = false;
 	
 	class Order {
 		Customer c;
@@ -61,6 +62,17 @@ public class ManagerAgent extends Agent {
 		myOrders.add(new Order(c, choice, quantity, virtual));
     	stateChanged();
     }
+	
+	public void msgShiftDone() {
+		print("got msg shift done");
+		shiftDone = true;
+		if (market.getWorkers().length == 0) {
+			if (person!=null) person.msgStopWork(10);
+			for (WorkerAgent w : myWorkers) {
+				w.msgShiftDone(true);
+			}
+		}
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.

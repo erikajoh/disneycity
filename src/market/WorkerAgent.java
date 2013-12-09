@@ -22,6 +22,9 @@ public class WorkerAgent extends Agent {
 	private Semaphore moving = new Semaphore(0, true);
 	private Semaphore working = new Semaphore(0, true);
 	int num;
+	boolean shiftDone = false;
+	boolean alert = false;
+	boolean alertedShift = false;
 		
 	class MyOrder {
 		Customer c;
@@ -87,6 +90,30 @@ public class WorkerAgent extends Agent {
 		orders.add(new MyOrder(cust, c, quantity, virtual));
 		stateChanged();
 	}
+	
+	public void msgShiftDone(boolean alertOthers) {
+		shiftDone = true;
+		alert = alertOthers;
+		if (orders.size() == 0 && alertOthers) {
+			alertedShift = true;
+			print ("going home!");
+			workerGui.DoLeave(); //need to fix
+			if (manager!=null) { 
+				if (cashier!=null) cashier.subtract(10.0); 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(); 
+				cashier.subtract(20);
+			}
+		}
+		else if (orders.size() == 0){
+			print ("going home!");
+			workerGui.DoLeave();
+		}
+		else {
+			print("my shift is done! but I still have customers");
+		}
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -115,6 +142,7 @@ public class WorkerAgent extends Agent {
 			}
 			return true;
 		}
+		if (shiftDone && !alertedShift) {msgShiftDone(alert); alertedShift = true;}
 		return false;
 	}
 	

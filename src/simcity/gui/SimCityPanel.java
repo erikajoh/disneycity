@@ -38,6 +38,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 
 	// GUI and building variables
 	SimCityGui gui = null;
+	
+	JComboBox scenarioList;
 
 	RestaurantRancho restRancho;
 	RestaurantPizza restPizza;
@@ -46,18 +48,30 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	RestaurantHaus restHaus;
 	
 	Housing hauntedMansion;
+	Housing cinderellaCastle;
+	Housing rabbitHole;
+	Housing pirateSuite;
+	Housing spaceMountain;
+	Housing tikiHut;
 	Housing mainStApts1;
 	Housing mainStApts2;
 	Housing mainStApts3;
 	Housing mainStApts4;
 	Housing mainStApts5;
 	Housing mainStApts6;
+	Housing mainStApts7;
+	Housing mainStApts8;
+	Housing mainStApts9;
+	Housing mainStApts10;
+	Housing mainStApts11;
 	
 	Bank pirateBank;
 	
 	Market mickeysMarket;
 
 	Transportation transportation;
+	
+	TransportationPanel transPanel; 
 	
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
@@ -81,7 +95,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		JPanel selection = new JPanel();
 		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
 		// Create the combo box, select item at index 0.
-		JComboBox scenarioList = new JComboBox(scenarios);
+		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
 		scenarioList.addActionListener(this);
 		selection.setLayout(new FlowLayout());
@@ -107,19 +121,40 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		restaurants.add(restHaus);
 		
 		hauntedMansion = gui.hauntedMansion;
+		cinderellaCastle = gui.cinderellaCastle;
+		rabbitHole = gui.rabbitHole;
+		pirateSuite = gui.pirateSuite;
+		spaceMountain = gui.spaceMountain;
+		tikiHut = gui.tikiHut;
 		mainStApts1 = gui.mainStApts1;
 		mainStApts2 = gui.mainStApts2;
 		mainStApts3 = gui.mainStApts3;
 		mainStApts4 = gui.mainStApts4;
 		mainStApts5 = gui.mainStApts5;
 		mainStApts6 = gui.mainStApts6;
+		mainStApts7 = gui.mainStApts7;
+		mainStApts8 = gui.mainStApts8;
+		mainStApts9 = gui.mainStApts9;
+		mainStApts10 = gui.mainStApts10;
+		mainStApts11 = gui.mainStApts11;
+
 		housings.add(hauntedMansion);
+		housings.add(cinderellaCastle);
+		housings.add(rabbitHole);
+		housings.add(pirateSuite);
+		housings.add(spaceMountain);
+		housings.add(tikiHut);
 		housings.add(mainStApts1);
 		housings.add(mainStApts2);
 		housings.add(mainStApts3);
 		housings.add(mainStApts4);
 		housings.add(mainStApts5);
 		housings.add(mainStApts6);
+		housings.add(mainStApts7);
+		housings.add(mainStApts8);
+		housings.add(mainStApts9);
+		housings.add(mainStApts10);
+		housings.add(mainStApts11);
 		
 		pirateBank = gui.pirateBank;
 		
@@ -138,6 +173,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	    newDay();
 	}
 	
+	public void setTransPanel(TransportationPanel tp) {
+		transPanel = tp;
+	}
+	
 	public void addPerson(String aName, String housingName, double startMoney, String foodPreference,
 			boolean preferEatAtHome, char commute, String personality) {
 		
@@ -147,8 +186,18 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		else if(nameExists(aName))
 			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Failed to create person; person name already exists!");
 		else {
+			String type;
+			if (h.getOwner() == null) {
+				type = "OwnerResident";
+			} else {
+				type = "Renter";
+			}
 			PersonAgent personToAdd = new PersonAgent( aName, h, startMoney, foodPreference, preferEatAtHome,
-				"Renter", transportation, commute);
+				type, transportation, commute);
+			
+			if (type == "OwnerResident") {
+				h.setOwner(personToAdd); // key step
+			}
 			h.addRenter(personToAdd);
 			
 			for(int restInd = 0; restInd < NUM_RESTAURANTS; restInd++) {
@@ -163,9 +212,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			
 			personToAdd.setPersonality(personality);
 			people.add(personToAdd);
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Created person: " + aName);
 			personToAdd.startThread();
 			personToAdd.msgWakeUp();
-			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Created person: " + aName);
 		}
 	}
 	
@@ -267,9 +316,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			String theDay = br.readLine();
 			setDay(theDay);
 			
-			
-
-			// Only one bank so that's added in directly
+			// TODO: Need two banks
 			for(int personInd = 0; personInd < people.size(); personInd++) {
 				PersonAgent currPerson = people.get(personInd);
 				currPerson.addBank(pirateBank, "Customer");				
@@ -290,6 +337,21 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		if(houseName.equals("Haunted Mansion")){
 			return hauntedMansion;
 		}
+		else if(houseName.equals("Cinderella Castle")){
+			return cinderellaCastle;
+		}
+		else if(houseName.equals("Rabbit Hole")){
+			return rabbitHole;
+		}
+		else if(houseName.equals("Pirate's Suite")){
+			return pirateSuite;
+		}
+		else if(houseName.equals("Space Mountain")){
+			return spaceMountain;
+		}
+		else if(houseName.equals("Tiki Hut")){
+			return tikiHut;
+		}
 		else if(houseName.equals("Main St Apartments #1")){
 			return mainStApts1;
 		}
@@ -307,6 +369,21 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		}
 		else if(houseName.equals("Main St Apartments #6")){
 			return mainStApts6;
+		}
+		else if(houseName.equals("Main St Apartments #7")){
+			return mainStApts7;
+		}
+		else if(houseName.equals("Main St Apartments #8")){
+			return mainStApts8;
+		}
+		else if(houseName.equals("Main St Apartments #9")){
+			return mainStApts9;
+		}
+		else if(houseName.equals("Main St Apartments #10")){
+			return mainStApts10;
+		}
+		else if(houseName.equals("Main St Apartments #11")){
+			return mainStApts11;
 		}
 		return null;
 	}
@@ -344,12 +421,33 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	public void handleTick() {
 		long currTicks = getNumTicks();
-		if(currTicks % 20 == 0)
+
+		if(currTicks % 20 == 0) {
 			System.out.println("Timer has ticked: # ticks = " + currTicks);
+		}
+		
+		if(currTicks % 10 == 0) {
+			gui.updateDayInfo(currentDay.toString(), getDayPhase());
+		}
+		
+		if(currTicks == START_OF_DAY) {
+			if(currentDay == DayOfTheWeek.Sunday)
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "It's " + currentDay.name() + "; banks are closed today.");
+		}
 		
 		// handle ticks for people
 		for(int i = 0; i < people.size(); i++) {
 			final PersonAgent person = people.get(i);
+			
+			// closing times
+			// people, not the banks themselves, know about whether banks are open at the start of the day
+			// restaurants themselves will know whether they are open or not
+			if(currTicks == START_OF_DAY) {
+				if(currentDay == DayOfTheWeek.Sunday)
+					person.msgSetBanksOpen(false);
+				else
+					person.msgSetBanksOpen(true);
+			}
 			
 			// hunger signals
 			// there are three day phases: morning, noon, and evening.
@@ -384,6 +482,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				person.msgGoToWork(2);
 			}
 		}
+		if(currTicks == NIGHT) {
+			System.out.println("CHANGING PANEL IMAGE FOR NIGHT");
+			transPanel.changeDay();
+		}
+		if(currTicks == MORNING) {
+			System.out.println("CHANGING PANEL IMAGE FOR MORNING");
+			transPanel.changeDay();
+		}
 		
 		// handle ticks for housing
 		for(int i = 0; i < housings.size(); i++) {
@@ -391,6 +497,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == START_OF_DAY && getCurrentDay().equals("Saturday")) {
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Today is " + getCurrentDay() + ", rent is due!");
 				theHousing.msgRentDue();
 			}
 		}
@@ -401,9 +508,12 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift End");
 				theRestaurant.msgEndOfShift();
 			}
 		}
+		
+		//handle ticks for banks
 	}
 	
 	/* all time-related variables and methods */
@@ -501,6 +611,44 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		return false;
 	}
 	
+	public String getDayPhase() {
+		if(numTicks >= END_OF_DAY)
+			return "End of day";
+		if(numTicks >= NIGHT)
+			return "Night";
+		if(numTicks >= WORK_TWO_END)
+			return "End of Work Phase 2";
+		if(numTicks >= EVENING)
+			return "evening";
+		if(numTicks >= WORK_TWO_START)
+			return "Work Phase 2";
+		if(numTicks >= WORK_ONE_END)
+			return "End of Work Phase 1";
+		if(numTicks >= NOON)
+			return "noon";
+		if(numTicks >= WORK_ONE_START)
+			return "Work Phase 1";
+		if(numTicks >= MORNING)
+			return "morning";
+		if(numTicks >= START_OF_DAY)
+			return "a new day";
+		return "ERROR";
+	}
+	
+	/*
+	 * 
+	 * private static final long START_OF_DAY		= 1;
+	private static final long MORNING			= START_OF_DAY		+ 40; //41
+	private static final long WORK_ONE_START	= MORNING			+ 150;//191
+	private static final long NOON				= WORK_ONE_START	+ 150;//341
+	private static final long WORK_ONE_END		= NOON				+ 150;//491
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 160;//651
+	private static final long EVENING			= WORK_TWO_START	+ 150;//801
+	private static final long WORK_TWO_END		= EVENING			+ 150;//951
+	private static final long NIGHT				= WORK_TWO_END		+ 160;//1111
+	private static final long END_OF_DAY		= NIGHT				+ 800;//1911
+	 */
+
 	public String[] getAllPeople() {
 		ArrayList<String> names = new ArrayList<String>();
 		for(int i = 0; i < people.size(); i++) {
@@ -538,11 +686,17 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				return false;
 		return true;
 	}
+	
+	public 	ArrayList<PersonAgent> getPeople() {
+		return people;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JComboBox cb = (JComboBox)e.getSource();
-        String scenarioName = (String)cb.getSelectedItem();
-		AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Changed to "+scenarioName);
+		if (e.getSource() instanceof JComboBox) {
+			JComboBox cb = (JComboBox)e.getSource();
+	        String scenarioName = (String)cb.getSelectedItem();
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Changed to "+scenarioName);
+		}
 	}
 }

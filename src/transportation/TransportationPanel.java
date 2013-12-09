@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.List;
 import javax.swing.*;
 
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import transportation.Agents.TransportationController;
 import transportation.GUIs.Gui;
 
@@ -30,7 +33,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	private Image img;
 	SimCityGui gui;
 	private Transportation controller;
-	boolean day = true;
+	boolean day = false;
 	
 	MouseEvent previousPosition;
 	Point offset;
@@ -54,13 +57,18 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	List<BuildingFinder> buildings;
 	
 	public void changeDay() {
+		System.out.println("yay changeDay is called");
 		if(day) {
 			img = Toolkit.getDefaultToolkit().getImage("res/simcitynight.jpg");
+//			if (!gui.poppedOut) img = img.getScaledInstance(400, 330, Image.SCALE_DEFAULT);
 			day = false;
+			updateUI();
 		}
 		else {
 			img = Toolkit.getDefaultToolkit().getImage("res/simcityLarge.jpg");
+//			if (!gui.poppedOut) img = img.getScaledInstance(400, 330, Image.SCALE_DEFAULT);
 			day = true;
+			updateUI();
 		}
 			
 	}
@@ -72,7 +80,9 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 		this.gui = gui;
 
-		img = Toolkit.getDefaultToolkit().getImage("res/simcityLarge.jpg");	
+		img = Toolkit.getDefaultToolkit().getImage("res/simcitynight.jpg");	
+//		if (!gui.poppedOut) img = img.getScaledInstance(400, 330, Image.SCALE_DEFAULT);
+		
 		timer = new Timer(20, this );
 		timer.start();
 
@@ -104,7 +114,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		buildings.add(new BuildingFinder(300,700,350,750,"Blue Bayou"));
 		buildings.add(new BuildingFinder(800,200,850,250,"Village Haus"));
 		buildings.add(new BuildingFinder(200, 450, 250, 500,"Pizza Port"));
-		buildings.add(new BuildingFinder(300,350,277,327,"Carnation Cafe"));
+		buildings.add(new BuildingFinder(550,500,600,550,"Carnation Cafe"));
 		
 		buildings.add(new BuildingFinder(800,75, 850, 150,"Haunted Mansion"));
 		buildings.add(new BuildingFinder(150,0, 225, 50,"Tiki Hut"));
@@ -194,6 +204,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	@Override
 	public void mouseClicked(MouseEvent me) {
 		String name = findBuilding((int)(me.getX() + offset.getX()), (int)(me.getY() + offset.getY()));
+		AlertLog.getInstance().logInfo(AlertTag.TRANSPORTATION, "MOUSE CLICKED", name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		System.out.println(name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		if(name != null)
 			gui.showPanel(name);

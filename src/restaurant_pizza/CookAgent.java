@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import restaurant_pizza.gui.CookGui;
-import simcity.PersonAgent;
+import restaurant_pizza.gui.RestaurantPizza;
 import simcity.interfaces.Person;
 import simcity.RestMenu;
 
@@ -43,6 +43,8 @@ public class CookAgent extends Agent {
 	Semaphore atDestination = new Semaphore(0, true);
 	Semaphore pauseAction = new Semaphore(0, true);
 	
+	RestaurantPizza restaurant;
+	
 	private CookGui cookGui = null;
 
 	public CookAgent(String name) {
@@ -63,6 +65,10 @@ public class CookAgent extends Agent {
     	recipeTimes.put("Bread Sticks",  20);
 	}
 	
+	public void setRestaurant(RestaurantPizza rest) {
+		restaurant = rest;
+	}
+	
 	public void setMarkets(List<MarketAgent> marketAgents) {
 		for(MarketAgent ma : marketAgents)
 			myMarkets.add(new MyMarket(ma));
@@ -77,7 +83,7 @@ public class CookAgent extends Agent {
 	}
 	
 	 public void setAmount(String choice, int amount) {
-	    	
+	    // TODO This is empty, needed for WorkplacePropertiesPanel
 	 }
 	
 	public void initializeMaps() throws Exception {
@@ -116,12 +122,12 @@ public class CookAgent extends Agent {
 	// ***** MESSAGES *****
 
 	public void msgNewOrder(WaiterAgent w, int tableNum, String order) {
-		print("msgNewOrder() called by Waiter " + w.getName());
+		print("msgNewOrder() from Waiter " + w.getName());
 		long timeFinish = -1;
 		if(menu.menuItems.containsKey(order) && inventory.get(order) > 0) {
 			timeFinish = (System.currentTimeMillis() + (long)((menu.menuItems.get(order))*Constants.SECOND));
-			int previousInventoryAmont = inventory.get(order);
-			inventory.put(order, previousInventoryAmont - 1);
+			int previousInventoryAmount = inventory.get(order);
+			inventory.put(order, previousInventoryAmount - 1);
 			print("Number of items of type " + order + " left: " + inventory.get(order));
 
 			Order incomingOrder = new Order(w, tableNum, order, timeFinish);
@@ -138,7 +144,10 @@ public class CookAgent extends Agent {
 	
 	public void msgShiftDone() {
 		shiftDone = true;
-		if (orders.size() == 0) {person.msgStopWork(10);}
+		if (orders.size() == 0) {
+			//person.msgStopWork(10);
+			cookGui.DoLeave(person);
+		}
 	}
 
 	public void msgOrderDone(Order o) {
@@ -207,10 +216,34 @@ public class CookAgent extends Agent {
 				}
 			}
 		}
+		// TODO Check if this leaving shift action works
+		if(shiftDone)
+			cookGui.DoLeave(person);
+		
+		// Producer-consumer handling
+		StandOrder orderFromStand = restaurant.revolvingStand.remove();
+		if(orderFromStand != null) {
+			
+			WaiterAgent standWaiter = orderFromStand.waiter;
+			int standTableNum = orderFromStand.tableNum;
+			String standOrderType = orderFromStand.order;
+			
+			if(menu.menuItems.containsKey(orderFromStand.order) && inventory.get(orderFromStand.order) > 0) {
+				long timeFinish = (System.currentTimeMillis() + (long)((menu.menuItems.get(standOrderType))*Constants.SECOND));
+				Order newStandOrder = new Order(standWaiter, standTableNum, standOrderType, timeFinish);
+				AddNewOrderFromStand(newStandOrder);
+			}
+			return true;
+		}
 		return false;
 	}
 
 	// ***** ACTIONS *****
+	
+	private void AddNewOrderFromStand(Order newStandOrder) {
+		print("Retrieving order from stand");
+		msgNewOrder(newStandOrder.waiter, newStandOrder.tableNum, newStandOrder.order);
+	}
 	
 	private void TellWaiterWeAreOut(Order o) {
 		print("TellWaiterWeAreOut() called");
@@ -316,7 +349,10 @@ public class CookAgent extends Agent {
 	public int getQuantity(String name){
 	   return inventory.get(name);
 	} 
-	    
+	
+	 public void setQuantity(String name, int num){
+		inventory.put(name, num);
+	 }
 
 	public void setGui(CookGui gui) {
 		cookGui = gui;
