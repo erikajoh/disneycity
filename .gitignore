@@ -22,3 +22,7 @@ Desktop.ini
 .classpath
 /bin/.classpath
 /bin/restaurants
+
+#Daron's netbeans stuff
+/build
+/nbproject
