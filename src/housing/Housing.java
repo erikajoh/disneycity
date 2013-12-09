@@ -10,7 +10,6 @@ import java.util.Map;
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
 import simcity.interfaces.Housing_Douglass;
-import transportation.TransportationPanel.BuildingFinder;
 
 public class Housing implements Housing_Douglass {
 	
