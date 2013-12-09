@@ -29,8 +29,10 @@ import java.io.FileReader;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -159,6 +161,35 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     public RestMenu getMenu() {
     	return menu;
     }
+    
+    public String[] getFoodNames(){
+    	return menu.menuList.toArray(new String[0]);
+    }
+    
+    public String[] getWorkers(){
+      	 List<String> restWorkers = new ArrayList<String>();
+           
+       	if(cashier != null){
+       		String cashierName = "Cashier: "+cashier.getName();
+       		restWorkers.add(cashierName);
+       	}
+       	if(cook != null){
+       		String cookName = "Cook: "+cook.getName();
+       		restWorkers.add(cookName);
+       	}
+       	if(host != null){
+       		String hostName = "Host: "+host.getName();
+       		restWorkers.add(hostName);
+       	}
+       	for(WaiterAgent waiter : waiters){
+       		String waiterName = "Waiter: "+waiter.getName();
+       		restWorkers.add(waiterName);
+       	}
+       	String[] workers = new String[restWorkers.size()];
+       	workers = restWorkers.toArray(workers);
+      
+       	return workers;	
+      }
     
     public boolean isOpen() {
     	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
@@ -316,15 +347,32 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	public void msgEndOfShift() {
 		isOpen = false;
 		System.out.println("RESTAURANT GOT END OF SHIFT");
-		for (int i = 0; i < waiters.size(); i++) {
-			WaiterAgent w = waiters.get(i);
-			w.msgShiftDone();
-			if (cashier!=null) cashier.subtract(10);
+
+		if (host!=null) {
+			host.msgShiftDone();
+
+	//for (int i = 0; i < waiters.size(); i++) {
+	//		WaiterAgent w = waiters.get(i);
+	//		w.msgShiftDone();
+	//		w.msgNeedBreak();
+//
+	//		if (cashier!=null) cashier.subtract(10);
+			for (int i = 0; i < waiters.size(); i++) {
+				if (cashier!=null) cashier.subtract(10);
+			}
 		}
-		if (cook!=null) cook.msgShiftDone();
-		if (host!=null) host.msgShiftDone();
-		if (cashier!=null) cashier.subtract(30);
-		if (cashier!=null) cashier.msgShiftDone();
+		else {
+			if (cashier!=null) { cashier.msgShiftDone(); cashier.subtract(10); }
+			for (int i = 0; i < waiters.size(); i++) {
+				WaiterAgent w = waiters.get(i);
+				w.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+			if (cook!=null) {
+				cook.msgShiftDone();
+				if (cashier!=null) cashier.subtract(10);
+			}
+		}
 		
 	}
 	

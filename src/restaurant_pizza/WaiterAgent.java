@@ -182,9 +182,25 @@ public class WaiterAgent extends Agent implements Waiter {
 	
 	public void msgShiftDone() {
 		shiftDone = true;
-		print("telling waiter to go home");
-		if (myCustomers.size() == 0) {person.msgStopWork(10);}
-		msgNeedBreak();
+		if (myCustomers.size() == 0) {
+			print ("going home!");
+			person.msgStopWork(10);
+			if (cook!=null) { 
+				cook.msgShiftDone(); 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (host!=null) { 
+				host.msgShiftDone(); 
+				if (cashier!=null) cashier.subtract(10); 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(); 
+				cashier.subtract(20);
+			}
+		}
+		else {
+			print("my shift is done! but I still have customers");
+		}
 	}
 	
 	public void msgAtDestination() {
@@ -296,7 +312,7 @@ public class WaiterAgent extends Agent implements Waiter {
 					}
 				}
 			}
-			if (shiftDone) {person.msgStopWork(10);}
+			if (shiftDone) {msgShiftDone();}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return true;
