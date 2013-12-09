@@ -93,6 +93,7 @@ public class CookAgent extends Agent implements Cook{
 	// Messages
 	
 	public void msgShiftDone() {
+		print("got msg shift done, have " + orders.size());
 		shiftDone = true;
 		if (orders.size()==0) {
 			gui.DoLeave(person);

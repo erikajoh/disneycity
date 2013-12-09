@@ -51,7 +51,7 @@ public class WaiterGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination && leaving) {
-        	person.msgStopWork(10);
+        	if (person!=null) person.msgStopWork(10);
         	leaving =false; 
         }
         
@@ -86,6 +86,7 @@ public class WaiterGui implements Gui {
     	yDestination = -50; 
     	person = p;
     	leaving = true;
+    	actionInProgress = true;
     }
     public void DoWalkToCust(int loc) {
     	xDestination = 50 + ((loc%15)%5)*40;

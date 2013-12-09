@@ -71,8 +71,9 @@ public class HostAgent extends Agent {
 
 	// Messages
 	public void msgShiftDone() {
+		print("got msg shift done");
 		shiftDone = true;
-		if (waitingCustomers.size() == 0) {person.msgStopWork(10);
+		if (waitingCustomers.size() == 0) {if (person!=null) person.msgStopWork(10);
 			for (MyWaiter w : waiters) {
 				w.w.msgShiftDone();
 			}

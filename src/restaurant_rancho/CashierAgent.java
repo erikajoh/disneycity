@@ -83,6 +83,7 @@ public class CashierAgent extends Agent implements Cashier{
 	// Messages
 
 	public void msgShiftDone() {
+		print("got msg shift done");
 		shiftDone = true;
 		if (checks.size()==0) {
 			person.msgStopWork(10);

@@ -25,7 +25,7 @@ public class CookGui implements Gui{
 	public static final int loc2Y = (RanchoAnimationPanel.WINDOWY*8)/20;
 	
 	private Person person;
-	private boolean leaving;
+	private boolean leaving = false;
 	
 	List<kitchenLoc> platingLocations;
 	List<kitchenLoc> cookingLocations;
@@ -64,8 +64,9 @@ public class CookGui implements Gui{
 		else if (yPos > yDestination)
 			yPos--;
 
-		if (xPos == xDestination && yPos == yDestination && leaving) {
-	        	person.msgStopWork(10);
+		if (xPos == xDestination && yPos == yDestination && leaving == true) {
+				System.out.println("cook going home ugh");
+	        	if (person!=null) person.msgStopWork(10);
 	        	leaving =false; 
 	    }
 		if (xPos == xDestination && yPos == yDestination) {
@@ -129,6 +130,7 @@ public class CookGui implements Gui{
     	yDestination = -50; 
     	person = p;
     	leaving = true;
+    	actionInProgress = true;
     }
 	
 
