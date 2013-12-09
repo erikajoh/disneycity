@@ -93,6 +93,35 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	return menu;
     }
     
+    public String[] getFoodNames(){
+    	return menu.menuList.toArray(new String[0]);
+    }
+    
+    public String[] getWorkers(){
+      	 List<String> restWorkers = new ArrayList<String>();
+           
+       	if(cashier != null){
+       		String cashierName = "Cashier: "+cashier.getName();
+       		restWorkers.add(cashierName);
+       	}
+       	if(cook != null){
+       		String cookName = "Cook: "+cook.getName();
+       		restWorkers.add(cookName);
+       	}
+       	if(host != null){
+       		String hostName = "Host: "+host.getName();
+       		restWorkers.add(hostName);
+       	}
+       	for(WaiterAgent waiter : waiters){
+       		String waiterName = "Waiter: "+waiter.getName();
+       		restWorkers.add(waiterName);
+       	}
+       	String[] workers = new String[restWorkers.size()];
+       	workers = restWorkers.toArray(workers);
+      
+       	return workers;	
+      }
+    
     public String getRestaurantName() { return name; }
     public String getType() { return type; }
     

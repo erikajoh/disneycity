@@ -19,7 +19,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import simcity.interfaces.Market_Douglass;
@@ -269,6 +271,35 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	public RestMenu getMenu() {
 		return menu;
 	}
+	
+    public String[] getFoodNames(){
+    	return menu.menuList.toArray(new String[0]);
+    }
+    
+    public String[] getWorkers(){
+      	 List<String> restWorkers = new ArrayList<String>();
+           
+       	if(cashier != null){
+       		String cashierName = "Cashier: "+cashier.getName();
+       		restWorkers.add(cashierName);
+       	}
+       	if(cook != null){
+       		String cookName = "Cook: "+cook.getName();
+       		restWorkers.add(cookName);
+       	}
+       	if(host != null){
+       		String hostName = "Host: "+host.getName();
+       		restWorkers.add(hostName);
+       	}
+       	for(WaiterAgent waiter : waiters){
+       		String waiterName = "Waiter: "+waiter.getName();
+       		restWorkers.add(waiterName);
+       	}
+       	String[] workers = new String[restWorkers.size()];
+       	workers = restWorkers.toArray(workers);
+      
+       	return workers;	
+      }
 
 	@Override
 	public String getRestaurantName() {
