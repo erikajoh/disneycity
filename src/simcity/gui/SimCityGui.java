@@ -92,6 +92,9 @@ public class SimCityGui extends JFrame  {
 	public static Housing spaceMountain;
 	public HousingAnimationPanel housAniPanel11 = new HousingAnimationPanel();	
 	
+	public static Housing tikiHut;
+	public HousingAnimationPanel housAniPanel12 = new HousingAnimationPanel();	
+	
 	public static Market mickeysMarket;
 	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
 	
@@ -142,6 +145,7 @@ public class SimCityGui extends JFrame  {
 		cards.add(housAniPanel9, "Rabbit Hole");
 		cards.add(housAniPanel10, "Pirate's Suite");
 		cards.add(housAniPanel11, "Space Mountain");
+		cards.add(housAniPanel12, "Tiki Hut");
 		cards.add(housAniPanel1, "Main St Apartments #1");
 		cards.add(housAniPanel2, "Main St Apartments #2");
 		cards.add(housAniPanel3, "Main St Apartments #3");
@@ -181,6 +185,7 @@ public class SimCityGui extends JFrame  {
 		rabbitHole = new Housing(housAniPanel9, "Rabbit Hole");
 		pirateSuite = new Housing(housAniPanel10, "Pirate's Suite");
 		spaceMountain = new Housing(housAniPanel11, "Space Mountain");
+		spaceMountain = new Housing(housAniPanel12, "Tiki Hut");
 		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");
 		mainStApts2 = new Housing(housAniPanel2, "Main St Apartments #2");
 		mainStApts3 = new Housing(housAniPanel3, "Main St Apartments #3");
