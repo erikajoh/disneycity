@@ -78,7 +78,7 @@ public class TruckGui implements Gui{
 	
 	public void draw(Graphics2D g, Point offset) {
 		animModule.updateAnimation();
-		if(xPos - offset.getX() < -30 || xPos - offset.getX() > 410 || yPos - offset.getY() < -30 || yPos - offset.getY() > 340)
+		if(xPos - offset.getX() < -30 || xPos - offset.getX() > 500 || yPos - offset.getY() < -30 || yPos - offset.getY() > 500)
 			return;
 		g.drawImage(animModule.getImage(), (int)xPos - (int)offset.getX(), (int)yPos - (int)offset.getY(), null);
 	}

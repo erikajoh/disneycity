@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,6 +35,8 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 	JSpinner moneySpinner;
 	JComboBox foodPreferenceList;
 	JComboBox personalityList;
+	JCheckBox preferAtHomeCheckBox;
+	JComboBox transportationList;
 	
 	JButton addPersonButton = new JButton("Create person");
 	
@@ -42,27 +45,62 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 		updateGui();
 	}
 
+	// TODO: notes with creating person:
+	// They will always be renters since owners are set in stone
+	// 
 	public void updateGui(){
 	    clear();
 		settings.removeAll();
-		settings.setLayout(new GridLayout(4, 1));
-		
+		settings.setLayout(new GridLayout(10, 2));
         Dimension panelDim = new Dimension(354,50);  
         
+		JLabel label = new JLabel("Name");
+		settings.add(label);
+		
         nameField = new JTextField();
+        settings.add(nameField);
+        
+        label = new JLabel("Housing");
+		settings.add(label);
+        
         housingList = new JComboBox(SimCityGui.simCityPanel.getAllHousing());
+        settings.add(housingList);
+        
+        label = new JLabel("Staring money");
+		settings.add(label);
         
         SpinnerModel startMoneySpinner = new SpinnerNumberModel(START_MONEY, 0, 100, 1);
         moneySpinner = new JSpinner(startMoneySpinner);
-        
-        
-        
-        // display the GUI elements in the panel
-        
-        settings.add(nameField);
-        settings.add(housingList);
         settings.add(moneySpinner);
-        settings.add(nameField);
+        
+        label = new JLabel("Food preference");
+		settings.add(label);
+        
+        String[] foodPreferenceArray = {"Italian", "Mexican", "Southern", "American", "German"};
+        foodPreferenceList = new JComboBox(foodPreferenceArray);
+        settings.add(foodPreferenceList);
+        
+        label = new JLabel("Personality type");
+		settings.add(label);
+        
+        String[] personalityArray = {"Normal", "Deadbeat", "Crook"};
+        personalityList = new JComboBox(personalityArray);
+        settings.add(personalityList);
+        
+        label = new JLabel("Start eating at home?");
+		settings.add(label);
+		
+		preferAtHomeCheckBox = new JCheckBox();
+		settings.add(preferAtHomeCheckBox);
+        
+		label = new JLabel("Transportation type");
+		settings.add(label);
+        
+        String[] transportationArray = {"Walk", "Bus", "Car"};
+        transportationList = new JComboBox(transportationArray);
+        settings.add(transportationList);
+		
+        addPersonButton.addActionListener(this);
         settings.add(addPersonButton);
 		add(settings);
 	    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -70,18 +108,17 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 	
 	public void clear(){
 		
-		settings.revalidate();
-		settings.repaint();
+		//settings.revalidate();
+		//settings.repaint();
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		JComboBox cb = (JComboBox)e.getSource();
-		String name = (String)cb.getSelectedItem();
-		if(cb == housingList) {
-		     
-		}
-		if(cb == personalityList) {
-			
+		if(e.getSource() == addPersonButton) {
+			String personName = nameField.getText();
+			/*gui.simCityPanel.addPerson(personName, (String)housingList.getSelectedItem(), 
+					(double)moneySpinner.getValue(), (String)foodPreferenceList.getSelectedItem(),
+					preferAtHomeCheckBox.isSelected(), ((String)transportationList.getSelectedItem()).charAt(0),
+					(String)personalityList.getSelectedItem());*/
 		}
 	}
 }

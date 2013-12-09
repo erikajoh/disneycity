@@ -11,7 +11,7 @@ import java.util.TimerTask;
 
 public class Building {
 
-	private final static int START_INVENTORY = 0;
+	private final static int START_INVENTORY = 1;
 	String type;
 	Timer timer = new Timer();
 	ResidentAgent resident;

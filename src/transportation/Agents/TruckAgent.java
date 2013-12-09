@@ -19,6 +19,7 @@ public class TruckAgent extends MobileAgent{
 	Position currentPosition;
 	Position marketPosition;
 	Position deliveryPosition;
+	Position homePosition;
 	TransportationController master;
 	TruckGui gui = null;
 	FlyingTraversal aStar;
@@ -74,10 +75,11 @@ public class TruckAgent extends MobileAgent{
 	
 	List<deliveryOrder> orders;
 	
-	public TruckAgent(Position marketPosition, TransportationController master, FlyingTraversal aStar) {
+	public TruckAgent(Position marketPosition, TransportationController master, FlyingTraversal aStar, int homeX, int homeY) {
 		this.currentPosition = marketPosition;
 		this.marketPosition = marketPosition;
 		this.master = master;
+		homePosition = new Position(homeX, homeY);
 		
 		animSem = new Semaphore(0, true);
 		this.aStar = aStar;
@@ -131,7 +133,7 @@ public class TruckAgent extends MobileAgent{
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERED) {
-					goToPosition(marketPosition, false);
+					goToPosition(marketPosition, null);
 					deleteOrder(order);
 					return true;
 				}
@@ -142,8 +144,8 @@ public class TruckAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToPosition(Position goal, boolean recalculate) {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, recalculate);
+	public void goToPosition(Position goal, Position ignore) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, ignore);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -174,7 +176,10 @@ public class TruckAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToPosition(goal, true);
+				if(tmpPath == goal)
+					goToPosition(goal, null);
+				else
+					goToPosition(goal, tmpPath);
 				break;
 			}
 
@@ -194,10 +199,10 @@ public class TruckAgent extends MobileAgent{
 
 	private void deliverOrder(deliveryOrder order) {
 		if(order.person != null) {//person order
-			goToPosition(master.directory.get(order.location).vehicleTile, false);
+			goToPosition(master.directory.get(order.location).vehicleTile, null);
 		}
 		else if(order.restaurant != null) {//Restaurant order
-			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile, false);
+			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile, null);
 		}
 		if (order.person != null) order.person.msgHereIsOrder(order.food, order.quantity);
 		else if (order.restaurant != null) order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
@@ -212,7 +217,7 @@ public class TruckAgent extends MobileAgent{
 	}
 	
 	private void pickUpOrders() {
-		goToPosition(marketPosition, false);
+		goToPosition(marketPosition, null);
 		for(deliveryOrder order : orders) {
 			order.status = Status.DELIVERING;
 			stateChanged();
@@ -224,7 +229,7 @@ public class TruckAgent extends MobileAgent{
 	}
 	
 	private void idle() {
-		goToPosition(new Position (11, 11), false);
+		goToPosition(new Position (homePosition.getX(), homePosition.getY()), null);
 		gui.doIdle();
 	}
 	

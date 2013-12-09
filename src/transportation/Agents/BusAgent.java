@@ -28,13 +28,13 @@ public class BusAgent extends MobileAgent{
 
 	TransportationController master;
 
-	public BusAgent(TransportationController master) {
+	public BusAgent(TransportationController master, Position position) {
 		collectedFare = 0;
 		currentBusStop = null;
 		busRiders = Collections.synchronizedList(new ArrayList<BusRider>());
 		route = new LinkedList<Position>();
 		this.master = master;
-		currentPosition = new Position(4, 4);
+		currentPosition = position;
 		try {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].acquire();
 		} catch (InterruptedException e) {
@@ -161,19 +161,30 @@ public class BusAgent extends MobileAgent{
 
 	public void createRoute() {//Hack for one route
 		//SPAWN BUS AT {4, 4}
-		for(int i = 5; i <= 8; i++) {
+		for(int i = 5; i <= 25; i++) {
 			route.add(new Position(4, i));
 		}
-		for(int i = 5; i <= 11; i++) {
-			route.add(new Position(i, 8));
+		for(int i = 5; i <= 29; i++) {
+			route.add(new Position(i, 25));
 		}
-		for(int i = 7; i>=4; i--) {
-			route.add(new Position(11, i));
+		for(int i = 24; i>=4; i--) {
+			route.add(new Position(29, i));
 		}
-		for(int i = 10; i >= 4; i--) {
+		for(int i = 28; i >= 4; i--) {
 			route.add(new Position(i, 4));
 		}
+		
+		//Iterate through bus route until you find the position you're currently at
+//		System.out.println("Starting position is: " + currentPosition.toString());
+		while(route.peek().getX() != currentPosition.getX() || route.peek().getY() != currentPosition.getY()) {
+//			System.out.println("Tested for current position and rejected: " + route.peek().toString());
+			route.add(route.poll());
+		}
+		route.add(route.poll());
+//		System.out.println("Starting destination is: " + route.peek().toString());
 	}
+	
+	
 
 	public void createRoute(Queue<Position> route) {
 		this.route = route;
@@ -186,5 +197,9 @@ public class BusAgent extends MobileAgent{
 	@Override
 	public String getType() {
 		return "bus";
+	}
+
+	public Queue<Position> getRoute() {
+		return route;
 	}
 }

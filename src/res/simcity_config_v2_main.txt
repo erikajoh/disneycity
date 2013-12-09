@@ -1,13 +1,7 @@
-2
-One|Main St Apartments #2|OwnerResident
-Two|Main St Apartments #2|Renter
 1
-Main St Apartments #2|One|One|Two
-
+Narwhal_Prime|Main St Apartments #2|OwnerResident
 1
-One|Main St Apartments #2|OwnerResident
-1
-Main St Apartments #2|One|One
+Main St Apartments #2|Narwhal_Prime|Narwhal_Prime
 
 5
 Narwhal_Prime|Haunted Mansion|OwnerResident
@@ -19,3 +13,22 @@ Narwhal_Secundus|Main St Apartments #3|Renter
 Haunted Mansion|Narwhal_Prime|Narwhal_Prime
 Main St Apartments #3|NotEmployed|NotEmployed|Narwhal_Secundus
 Main St Apartments #2|Two|One|Two
+Friday
+
+1
+One|Main St Apartments #2|OwnerResident
+2
+Main St Apartments #2|One|One
+Haunted Mansion|One
+
+2
+One|Main St Apartments #2|OwnerResident
+Two|Main St Apartments #2|Renter
+1
+Main St Apartments #2|One|One|Two
+
+1
+One|Main St Apartments #2|OwnerResident
+1
+Main St Apartments #2|One|One
+

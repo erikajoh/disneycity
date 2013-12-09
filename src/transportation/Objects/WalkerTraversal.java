@@ -13,10 +13,10 @@ import astar.astar.GraphTraversal;
 import astar.astar.Node;
 import astar.astar.Position;
 
-public class FlyingTraversal extends GraphTraversal {
+public class WalkerTraversal extends GraphTraversal {
 	private MovementTile[][] grid;
 
-	public FlyingTraversal(MovementTile[][] grid){
+	public WalkerTraversal(MovementTile[][] grid){
 		super();
 		this.grid = grid; 
 		//grid = new Object[1000][2000];
@@ -65,19 +65,26 @@ public class FlyingTraversal extends GraphTraversal {
 			if ((nextX+1>grid.length || nextY+1>grid[0].length) ||
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
-			//System.out.println("considering"+next);
-			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type == MovementTile.MovementType.UNTYPED || grid[nextX][nextY].type == MovementTile.MovementType.ROAD) {
-				continue;
-			}
+
 			if(ignore != null) {
 				if(nextX == ignore.getX() && nextY == ignore.getY())
 					continue;
 			}
+
+			//System.out.println("considering"+next);
+			if (inPath(next,path) ||
+					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
+					grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
+				continue;
+			}
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
-			
-			
+
+
 			//update distance travelled
 			nodeTemp.setDistTravelled(node.getDistTravelled()+pos.distance(next));
 			//update approximate total distance to destination
@@ -98,7 +105,18 @@ public class FlyingTraversal extends GraphTraversal {
 					(nextX<0 || nextY<0)) continue;
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
-			if (inPath(next,path) || !next.open(grid) || grid[nextX][nextY].type == MovementTile.MovementType.UNTYPED) continue;
+			if (inPath(next,path) ||
+					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
+					grid[nextX][nextY].type == MovementTile.MovementType.WALKWAY)) {
+				continue;
+			}
+			if(ignore != null) {
+				if(nextX == ignore.getX() && nextY == ignore.getY())
+					continue;
+			}
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);
@@ -116,7 +134,7 @@ public class FlyingTraversal extends GraphTraversal {
 			expandedNodes.add(nodeTemp);//could have just added
 			//them directly to nodelist 
 		}
-		
+
 		return expandedNodes;
 	}//end expandFunc
 	private boolean inPath (Position pos, List<Position> path){

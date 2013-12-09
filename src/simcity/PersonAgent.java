@@ -31,7 +31,7 @@ public class PersonAgent extends Agent implements Person {
 	private boolean isNourished;
 	private double moneyOnHand;
 	private Map<String, Integer> itemsOnHand;
-	private enum PersonType {Normal, Wealthy, Deadbeat, Crook};
+	private enum PersonType {Normal, Deadbeat, Crook};
 	private PersonType myPersonality;
 	private enum PreferredCommute {Walk, Bus, Car};
 	private PreferredCommute preferredCommute;
@@ -65,6 +65,7 @@ public class PersonAgent extends Agent implements Person {
 	private MarketState marketState = MarketState.None;
 	private BankState bankState = BankState.None;
 	private TransportationState transportationState = TransportationState.None;
+	private boolean isBankOpen = true;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -145,8 +146,6 @@ public class PersonAgent extends Agent implements Person {
 	public void	setPersonality(String type) {
 		if(type.equals("Normal"))
 			myPersonality = PersonType.Normal;
-		else if(type.equals("Wealthy"))
-			myPersonality = PersonType.Wealthy;
 		else if(type.equals("Deadbeat"))
 			myPersonality = PersonType.Deadbeat;
 		else if(type.equals("Crook"))
@@ -650,6 +649,7 @@ public class PersonAgent extends Agent implements Person {
 		print("I'm hungry and I want to eat at restaurant");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
+		
 		// TODO: Added this in case no restaurants available; need to test this works
 		if(targetRestaurant == null)
 			preferEatAtHome = !preferEatAtHome;
@@ -778,15 +778,39 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	private MyRestaurant chooseRestaurant() {
-		// TODO: refine criteria for choosing restaurant
+		// TODO: refine criteria for choosing restaurant:
+		/*
+		 	Follow these rules in order below:
+		 	
+		 	Are you a deadbeat? Ignore "affordability" conditions below
+		 	
+		 	Is that restaurant closed? Choose next restaurant
+		 	Is this preferred restaurant and is affordable? Overrides any other restaurant, return immediately
+		 	Cannot afford to buy cheapest item? If banks are open plan to go to bank, if banks not open choose next restaurant 
+			All other criteria are satisfied? Choose the restaurant for now, look at other restaurants, return if no more
+			
+		*/
 		MyObject[] myObjectsArray = getObjects();
-		for(int i = 0; i < myObjectsArray.length; i++)
+		MyRestaurant chosenRestaurant = null;
+		for(int i = 0; i < myObjectsArray.length; i++) {
 			if(myObjectsArray[i] instanceof MyRestaurant) {
 				MyRestaurant tempRest = (MyRestaurant)myObjectsArray[i];
-				if(tempRest.restaurantType.equals(foodPreference))
-					return tempRest;
+				
+				boolean isOpen = tempRest.restaurant.isOpen();
+				boolean isPreferred = tempRest.restaurantType.equals(foodPreference);
+				boolean isAffordable = (myPersonality == PersonType.Deadbeat)
+						|| (getLowestPrice(tempRest.restaurant.getMenu().menuItems) <= moneyOnHand);
+
+				if(isOpen) {
+					if(isPreferred && isAffordable)
+						return tempRest;
+					if(!isAffordable && isBankOpen) {
+						chosenRestaurant = tempRest;
+					}
+				}
 			}
-		return null;
+		}
+		return chosenRestaurant;
 	}
 	
 	private MyMarket chooseMarket() {

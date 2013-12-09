@@ -18,44 +18,44 @@ public class WalkerAgent extends MobileAgent{
 	TransportationController master;
 	WalkerGui gui;
 	boolean arrived;
-	TransportationTraversal aStar;
-	
+	WalkerTraversal aStar;
+
 	Semaphore animSem;
 	BusStop beginBusStop, endBusStop;
 	String building;
 
-	public WalkerAgent(Person walker, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar) {
+	public WalkerAgent(Person walker, Position currentPosition, Position endPosition, TransportationController master, WalkerTraversal aStar) {
 		this.walker = walker;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
 		this.master = master;
 		arrived = false;
 		this.aStar = aStar;
-		
+
 		animSem = new Semaphore(0, true);
 		beginBusStop = null;
 		endBusStop = null;
 		building = null;
 	}
-	
-	public WalkerAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, TransportationTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
+
+	public WalkerAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, WalkerTraversal aStar, BusStop beginBusStop, BusStop endBusStop, String building) {
 		this.walker = person;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
 		this.master = master;
 		arrived = false;
 		this.aStar = aStar;
-		
+
 		animSem = new Semaphore(0, true);
 		this.beginBusStop = beginBusStop;
 		this.endBusStop= endBusStop;
 		this.building = building;
 	}
-	
+
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-			
+
 		}
 		//System.out.println("Releasing " + currentPosition.toString());
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
@@ -69,10 +69,10 @@ public class WalkerAgent extends MobileAgent{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		if(beginBusStop != null) {
-			goToPosition(beginBusStop.getAssociatedTile(), false);
+			goToPosition(beginBusStop.getAssociatedTile(), null);
 		}
 		if(!arrived) {
-			goToPosition(endPosition, false);
+			goToPosition(endPosition, null);
 		}
 		if(arrived) {
 			tauntAndLeave();
@@ -80,8 +80,8 @@ public class WalkerAgent extends MobileAgent{
 		return false;
 	}
 
-	public void goToPosition(Position goal, boolean recalculate) {
-		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, recalculate);
+	public void goToPosition(Position goal, Position ignore) {
+		AStarNode aStarNode = (AStarNode)aStar.generalSearch(currentPosition, goal, ignore);
 		List<Position> path = aStarNode.getPath();
 		Boolean firstStep   = true;
 		Boolean gotPermit   = true;
@@ -95,8 +95,16 @@ public class WalkerAgent extends MobileAgent{
 
 			//Try and get lock for the next step.
 			int attempts    = 1;
+
+			MovementTile.MovementType temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
+			while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
+				if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+					break;
+				try { Thread.sleep(1000); }
+				catch (Exception e){}
+			}
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-			
+
 			Random random = new Random();
 			int attemptsToMake = random.nextInt(3) + 3;
 			//Did not get lock. Lets make n attempts.
@@ -107,6 +115,12 @@ public class WalkerAgent extends MobileAgent{
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
 
+				while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
+					if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+						break;
+					try { Thread.sleep(1000); }
+					catch (Exception e){}
+				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 				attempts ++;
 			}
@@ -114,7 +128,10 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				goToPosition(goal, true);
+				if(tmpPath == goal)
+					goToPosition(goal, null);
+				else
+					goToPosition(goal, tmpPath);
 				break;
 			}
 
@@ -132,7 +149,7 @@ public class WalkerAgent extends MobileAgent{
 			}
 			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
 		}
-		
+
 		arrived = true;
 	}
 

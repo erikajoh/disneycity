@@ -47,7 +47,7 @@ public class TransportationTraversal extends GraphTraversal {
 		//System.out.print("createStartNode"); n.printNode();
 		return n;
 	}
-	public List<Node> expandFunc(Node n, boolean recalculate) {
+	public List<Node> expandFunc(Node n, Position ignore) {
 		AStarNode node = (AStarNode) n;
 		//loop computes the positions you can get to from node
 		List<Node> expandedNodes = new ArrayList<Node>();
@@ -77,8 +77,6 @@ public class TransportationTraversal extends GraphTraversal {
 				continue;
 			}
 			
-			if (recalculate && !next.open(grid))
-				continue;
 			//printCurrentList();
 			//System.out.println("available"+next);
 			AStarNode nodeTemp = new AStarNode(next);

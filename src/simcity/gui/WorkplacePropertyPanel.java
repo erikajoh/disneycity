@@ -17,10 +17,6 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
-import simcity.gui.trace.AlertLog;
-import simcity.gui.trace.AlertTag;
-import simcity.RestMenu;
-
 
 public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	SimCityGui gui;
@@ -40,6 +36,18 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	int selectedPersonForMktIndex = 0;
 	String[] peopleForMkt;
 	
+	String selectedMenuItem = "";
+	int selectedMenuItemIndex = 0;
+	String[] menu;
+	
+	String selectedRestWorker = "";
+	int selectedRestWorkerIndex = 0;
+	String[] restWorkers;
+	
+	String selectedPersonForRest = "";
+	int selectedPersonForRestIndex = 0;
+	String[] peopleForRest;
+	
 	enum WorkplaceType{Market, Restaurant, Bank};
 	WorkplaceType type;
 	
@@ -47,23 +55,32 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JComboBox inventoryList;
 	JComboBox mktWorkersList;
 	JComboBox peopleForMktList;
+	JComboBox restWorkersList;
+	JComboBox peopleForRestList;
+	JComboBox menuItemsList;
+
+	JButton setMktQuantity = new JButton("Set");
 	JButton swapMktJobs = new JButton("Swap");
+	JButton swapRestJobs = new JButton("Swap");
+	JButton setFoodQtyAndBalance = new JButton("Set");
+	JButton setTellerAmt = new JButton("Set");
 	
 	JPanel properties = new JPanel();
 	JPanel inventory = new JPanel();
 	JPanel editInventory = new JPanel();
-	JPanel setInventory;
+	
+	/*JPanel setInventory;
 	JPanel setInventory1;
 	JPanel setInventory2;
 	JPanel setInventory3;
-	JPanel setInventory4;
+	JPanel setInventory4;*/
 	JPanel swapMktWorkers = new JPanel();
+	JPanel swapRestWorkers = new JPanel();
 
 	JPanel tellers = new JPanel();
-	JPanel restaurants = new JPanel();
-	
-	RestMenu menu;
-	
+	JPanel menuItems = new JPanel();
+	JPanel editMenuItems = new JPanel();
+		
 public WorkplacePropertyPanel(SimCityGui gui) {
 		
 		this.gui = gui;
@@ -71,8 +88,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	}
 
 	public void updateGui(){
-	    //clear();
-		//properties.removeAll();
+	    clear();
+		properties.removeAll();
+		
 		properties.setLayout(new GridLayout(4, 1));
 		JLabel label;
 		
@@ -116,6 +134,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			   selectedMktItem = inventoryList.getSelectedItem().toString();
 		   }
 		
+		   editInventory = new JPanel();
 		   editInventory.setMaximumSize(panelDim);
 		   editInventory.setLayout(new FlowLayout());
 		   label = new JLabel("Current Quantity: "+SimCityGui.mickeysMarket.getItemQty(selectedMktItem)+"   ");
@@ -128,6 +147,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   JSpinner spinner = new JSpinner(model);
 		   spinner.setFont(spinner.getFont().deriveFont(12.0f));
 		   editInventory.add(spinner);
+		   setMktQuantity.setFont(setMktQuantity.getFont().deriveFont(12.0f));
+		   editInventory.add(setMktQuantity);
 		   properties.add(editInventory);
 		   
 		   swapMktWorkers = new JPanel();
@@ -155,7 +176,6 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   swapMktJobs.setFont(swapMktJobs.getFont().deriveFont(12.0f));
 		   swapMktWorkers.add(swapMktJobs);
 		   properties.add(swapMktWorkers);
-		   
 		}
 		else if(type == WorkplaceType.Bank){
 			tellers = new JPanel();
@@ -167,37 +187,106 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			JSpinner spinner = new JSpinner(model);
 			spinner.setFont(spinner.getFont().deriveFont(12.0f));
 			tellers.add(spinner);
+			setTellerAmt.setFont(setTellerAmt.getFont().deriveFont(12.0f));
+			tellers.add(setTellerAmt);
 			properties.add(tellers);
 		}
 		else if(type == WorkplaceType.Restaurant){
-			restaurants = new JPanel();
-			restaurants.setLayout(new FlowLayout());
-			label = new JLabel("Set Balance:");
-			label.setFont(label.getFont().deriveFont(12.0f));
-			restaurants.add(label);
-			SpinnerModel model = new SpinnerNumberModel(100.00, 0.00, 999.99, 5);     
-			JSpinner spinner = new JSpinner(model);
-			spinner.setFont(spinner.getFont().deriveFont(12.0f));
-			JSpinner.NumberEditor editor = (JSpinner.NumberEditor)spinner.getEditor();  
-		    DecimalFormat format = editor.getFormat();  
-		    format.setMinimumFractionDigits(2);  
-		    editor.getTextField().setHorizontalAlignment(SwingConstants.CENTER);  
-	        Dimension d = spinner.getPreferredSize();  
-	        d.width = 80;  
-	        spinner.setPreferredSize(d);
-			restaurants.add(spinner);
 			
-		/*	if (workplaceList.getSelectedItem().toString().contains("Bayou"))
-				menu = SimCityGui.restBayou.getMenu();
-			else if (workplaceList.getSelectedItem().toString().contains("Cafe"))
-				menu = SimCityGui.restCafe.getMenu();
-			else if (workplaceList.getSelectedItem().toString().contains("Haus"))
-				menu = SimCityGui.restHaus.getMenu();
-			else if (workplaceList.getSelectedItem().toString().contains("Pizza"))
-				menu = SimCityGui.restPizza.getMenu();
-			else if (workplaceList.getSelectedItem().toString().contains("Rancho"))
-				menu = SimCityGui.restRancho.getMenu();
+			if (workplaceList.getSelectedItem().toString().contains("Bayou")){
+				menu = SimCityGui.restBayou.getFoodNames();
+				restWorkers = SimCityGui.restBayou.getWorkers();
+			}
+			else if (workplaceList.getSelectedItem().toString().contains("Cafe")){
+				menu = SimCityGui.restCafe.getFoodNames();
+				restWorkers = SimCityGui.restCafe.getWorkers();
+			}
+			else if (workplaceList.getSelectedItem().toString().contains("Haus")){
+				menu = SimCityGui.restHaus.getFoodNames();
+				restWorkers = SimCityGui.restHaus.getWorkers();
+			}
+			else if (workplaceList.getSelectedItem().toString().contains("Pizza")){
+				menu = SimCityGui.restPizza.getFoodNames();
+				restWorkers = SimCityGui.restPizza.getWorkers();
+			}
+			else if (workplaceList.getSelectedItem().toString().contains("Rancho")){
+				menu = SimCityGui.restRancho.getFoodNames();
+				restWorkers = SimCityGui.restRancho.getWorkers();
+			}
 			
+			   menuItems = new JPanel();
+		       menuItems.setMaximumSize(panelDim);
+			   menuItemsList = new JComboBox(menu);
+			   menuItemsList.setFont(menuItemsList.getFont().deriveFont(12.0f));
+			   menuItemsList.setSelectedIndex(selectedMenuItemIndex);
+			   menuItemsList.addActionListener(this);
+			
+			   label = new JLabel("Choose an food:");
+			   label.setFont(label.getFont().deriveFont(12.0f));
+			   menuItems.add(label);
+			   menuItems.add(menuItemsList);
+			   properties.add(menuItems);
+			
+			   if(selectedMenuItem.equals("")){
+				   selectedMenuItem = menuItemsList.getSelectedItem().toString();
+			   }
+			
+			   editMenuItems = new JPanel();
+			   editMenuItems.setMaximumSize(panelDim);
+			   editMenuItems.setLayout(new FlowLayout());
+			   label = new JLabel("Food Quantity:");
+			   label.setFont(label.getFont().deriveFont(12.0f));
+			   editMenuItems.add(label);
+			   SpinnerModel model = new SpinnerNumberModel(/*SimCityGui.mickeysMarket.getItemQty(selectedMktItem)*/50, 0, 100, 1);     
+			   JSpinner spinner = new JSpinner(model);
+			   spinner.setFont(spinner.getFont().deriveFont(12.0f));
+			   editMenuItems.add(spinner);
+			   properties.add(editMenuItems);
+			   
+				label = new JLabel("Balance:");
+				label.setFont(label.getFont().deriveFont(12.0f));
+				editMenuItems.add(label);
+			    model = new SpinnerNumberModel(100.00, 0.00, 999.99, 5);     
+				JSpinner spinner2 = new JSpinner(model);
+				spinner2.setFont(spinner2.getFont().deriveFont(12.0f));
+				JSpinner.NumberEditor editor = (JSpinner.NumberEditor)spinner2.getEditor();  
+			    DecimalFormat format = editor.getFormat();  
+			    format.setMinimumFractionDigits(2);  
+			    editor.getTextField().setHorizontalAlignment(SwingConstants.CENTER);  
+		        Dimension d = spinner.getPreferredSize();  
+		        d.width = 80;  
+		        spinner.setPreferredSize(d);
+		        editMenuItems.add(spinner2);
+				
+				setFoodQtyAndBalance.setFont(setFoodQtyAndBalance.getFont().deriveFont(12.0f));
+				editMenuItems.add(setFoodQtyAndBalance);
+				
+				   swapRestWorkers = new JPanel();
+				   swapRestWorkers.setLayout(new FlowLayout());
+				   restWorkersList = new JComboBox(restWorkers);
+				   restWorkersList.setFont(restWorkersList.getFont().deriveFont(12.0f));
+				   if(restWorkersList.getItemCount() != 0){
+				       restWorkersList.setSelectedIndex(selectedRestWorkerIndex);
+				   }
+				   restWorkersList.addActionListener(this);
+				   swapRestWorkers.add(restWorkersList);
+				   label = new JLabel("and");
+				   label.setFont(label.getFont().deriveFont(12.0f));
+				   swapRestWorkers.add(label);
+				   
+				   peopleForRest = SimCityGui.simCityPanel.getAllUnemployedPeople();
+				   peopleForRestList = new JComboBox(peopleForRest);
+				   peopleForRestList.setFont(peopleForRestList.getFont().deriveFont(12.0f));
+				   if(peopleForRestList.getItemCount() != 0){
+				       peopleForRestList.setSelectedIndex(selectedPersonForRestIndex);
+				   }
+				   peopleForRestList.addActionListener(this);
+				   swapRestWorkers.add(peopleForRestList);
+				   swapRestJobs.setFont(swapRestJobs.getFont().deriveFont(12.0f));
+				   swapRestWorkers.add(swapRestJobs);
+				   properties.add(swapRestWorkers);
+		
+			/*
 			setInventory = new JPanel();
 			setInventory1 = new JPanel();
 			setInventory2 = new JPanel();
@@ -238,17 +327,13 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	        Dimension d1 = spinner.getPreferredSize();  
 	        d.width = 80;  
 	        spinner.setPreferredSize(d);
-	      
-			*/
-				
+	      */
 			
-			properties.add(restaurants);
 		}
 		
 		add(properties);
 		
 	    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-		
 	}
 
 	public void clear(){
@@ -256,7 +341,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		properties.remove(editInventory);
 		properties.remove(swapMktWorkers);
 		properties.remove(tellers);
-		properties.remove(restaurants);
+		properties.remove(menuItems);
+		properties.remove(editMenuItems);
 		properties.revalidate();
 		properties.repaint();
 	}
@@ -311,6 +397,36 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     if(peopleForMkt[i].equals(name)){
 			     selectedPersonForMkt = name;
 			     selectedPersonForMktIndex = i;
+			     updateGui();
+			     break;
+		     }
+	     }
+    }
+    else if(cb == restWorkersList){
+	     for(int i = 0; i<restWorkers.length; i++){
+		     if(restWorkers[i].equals(name)){
+			     selectedRestWorker = name;
+			     selectedRestWorkerIndex = i;
+			     updateGui();
+			     break;
+		     }
+	     }
+    }
+   else if(cb == peopleForRestList){
+	     for(int i = 0; i<peopleForRest.length; i++){
+		     if(peopleForRest[i].equals(name)){
+			     selectedPersonForRest = name;
+			     selectedPersonForRestIndex = i;
+			     updateGui();
+			     break;
+		     }
+	     }
+   }
+    else if(cb == menuItemsList){
+	     for(int i = 0; i<menu.length; i++){
+		     if(menu[i].equals(name)){
+		    	 setType(name);
+			     selectedMenuItemIndex = i;
 			     updateGui();
 			     break;
 		     }
