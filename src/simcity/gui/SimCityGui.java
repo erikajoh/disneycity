@@ -216,7 +216,7 @@ public class SimCityGui extends JFrame  {
 		rabbitHole = new Housing(housAniPanel9, "Rabbit Hole");
 		pirateSuite = new Housing(housAniPanel10, "Pirate's Suite");
 		spaceMountain = new Housing(housAniPanel11, "Space Mountain");
-		spaceMountain = new Housing(housAniPanel12, "Tiki Hut");
+		tikiHut = new Housing(housAniPanel12, "Tiki Hut");
 		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");
 		mainStApts2 = new Housing(housAniPanel2, "Main St Apartments #2");
 		mainStApts3 = new Housing(housAniPanel3, "Main St Apartments #3");
