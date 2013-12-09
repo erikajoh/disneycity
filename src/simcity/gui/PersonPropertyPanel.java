@@ -45,9 +45,6 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 		updateGui();
 	}
 
-	// TODO: notes with creating person:
-	// They will always be renters since owners are set in stone
-	// 
 	public void updateGui(){
 	    clear();
 		settings.removeAll();

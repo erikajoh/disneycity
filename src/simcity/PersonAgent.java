@@ -21,7 +21,7 @@ public class PersonAgent extends Agent implements Person {
 	// ************************* DATA ***********************************
 	
 	// Console message handling
-	int printCount = 100;
+	int printCount = 1000;
 	
 	// Unit testing
 	public EventLog log = new EventLog();
@@ -804,7 +804,6 @@ public class PersonAgent extends Agent implements Person {
 		 	Is this preferred restaurant and is affordable? Overrides any other restaurant, return immediately
 		 	Cannot afford to buy cheapest item? If banks are open plan to go to bank, if banks not open choose next restaurant 
 			All other criteria are satisfied? Choose the restaurant for now, look at other restaurants, return if no more
-			
 		*/
 		MyObject[] myObjectsArray = getObjects();
 		MyRestaurant chosenRestaurant = null;
@@ -820,9 +819,8 @@ public class PersonAgent extends Agent implements Person {
 				if(isOpen) {
 					if(isPreferred && isAffordable)
 						return tempRest;
-					if(isAffordable || (!isAffordable && isBankOpen)) {
+					if(isAffordable || (!isAffordable && isBankOpen))
 						chosenRestaurant = tempRest;
-					}
 				}
 			}
 		}
