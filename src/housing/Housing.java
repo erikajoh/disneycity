@@ -47,6 +47,11 @@ public class Housing implements Housing_Douglass {
     	if (name == "Main St Apartments #4") panel.setBackground("res/mainstapts4.png");
     	if (name == "Main St Apartments #5") panel.setBackground("res/mainstapts5.png");
     	if (name == "Main St Apartments #6") panel.setBackground("res/mainstapts6.png");
+    	if (name == "Main St Apartments #7") panel.setBackground("res/mainstapts7.png");
+    	if (name == "Main St Apartments #8") panel.setBackground("res/mainstapts8.png");
+    	if (name == "Main St Apartments #9") panel.setBackground("res/mainstapts9.png");
+    	if (name == "Main St Apartments #10") panel.setBackground("res/mainstapts10.png");
+    	if (name == "Main St Apartments #11") panel.setBackground("res/mainstapts11.png");
     }
 	
 	public String getName() {

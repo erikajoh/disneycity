@@ -93,7 +93,22 @@ public class SimCityGui extends JFrame  {
 	public HousingAnimationPanel housAniPanel11 = new HousingAnimationPanel();	
 	
 	public static Housing tikiHut;
-	public HousingAnimationPanel housAniPanel12 = new HousingAnimationPanel();	
+	public HousingAnimationPanel housAniPanel12 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts7;
+	public HousingAnimationPanel housAniPanel13 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts8;
+	public HousingAnimationPanel housAniPanel14 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts9;
+	public HousingAnimationPanel housAniPanel15 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts10;
+	public HousingAnimationPanel housAniPanel16 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts11;
+	public HousingAnimationPanel housAniPanel17 = new HousingAnimationPanel();
 	
 	public static Market mickeysMarket;
 	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
@@ -152,6 +167,11 @@ public class SimCityGui extends JFrame  {
 		cards.add(housAniPanel4, "Main St Apartments #4");
 		cards.add(housAniPanel5, "Main St Apartments #5");
 		cards.add(housAniPanel6, "Main St Apartments #6");
+		cards.add(housAniPanel13, "Main St Apartments #7");
+		cards.add(housAniPanel14, "Main St Apartments #8");
+		cards.add(housAniPanel15, "Main St Apartments #9");
+		cards.add(housAniPanel16, "Main St Apartments #10");
+		cards.add(housAniPanel17, "Main St Apartments #11");
 		cards.add(markAniPanel, "Mickey's Market");
 		cards.add(bankAniPanel, "Pirate Bank");
 		cards.add(ranchoAniPanel, "Rancho Del Zocalo");
@@ -166,6 +186,17 @@ public class SimCityGui extends JFrame  {
 		animationPanelsList.add(housAniPanel4);
 		animationPanelsList.add(housAniPanel5);
 		animationPanelsList.add(housAniPanel6);
+		animationPanelsList.add(housAniPanel7);
+		animationPanelsList.add(housAniPanel8);
+		animationPanelsList.add(housAniPanel9);
+		animationPanelsList.add(housAniPanel10);
+		animationPanelsList.add(housAniPanel11);
+		animationPanelsList.add(housAniPanel12);
+		animationPanelsList.add(housAniPanel13);
+		animationPanelsList.add(housAniPanel14);
+		animationPanelsList.add(housAniPanel15);
+		animationPanelsList.add(housAniPanel16);
+		animationPanelsList.add(housAniPanel17);
 		animationPanelsList.add(markAniPanel);
 		animationPanelsList.add(bankAniPanel);
 		animationPanelsList.add(ranchoAniPanel);
@@ -192,6 +223,11 @@ public class SimCityGui extends JFrame  {
 		mainStApts4 = new Housing(housAniPanel4, "Main St Apartments #4");
 		mainStApts5 = new Housing(housAniPanel5, "Main St Apartments #5");
 		mainStApts6 = new Housing(housAniPanel6, "Main St Apartments #6");
+		mainStApts7 = new Housing(housAniPanel13, "Main St Apartments #7");
+		mainStApts8 = new Housing(housAniPanel14, "Main St Apartments #8");
+		mainStApts9 = new Housing(housAniPanel15, "Main St Apartments #9");
+		mainStApts10 = new Housing(housAniPanel16, "Main St Apartments #10");
+		mainStApts11 = new Housing(housAniPanel17, "Main St Apartments #11");
 		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
 		pirateBank = new Bank(this, "Pirate Bank", tellerAmt);
 		
