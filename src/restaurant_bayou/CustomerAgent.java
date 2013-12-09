@@ -24,7 +24,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private CustomerGui customerGui;
 	private RestMenu menu;
 	private List<String> unavailableFood =  new ArrayList<String>();
-	private String choice;
+	String choice;
 	private Check myCheck;
 	private Wallet wallet;
 	private int dishDoingTime = 0;
@@ -85,6 +85,7 @@ public class CustomerAgent extends Agent implements Customer {
 	
 	public void msgAnimationFinishedGoToSeat() {
 		//from animation
+		print("bayou customer seated");
 		event = AgentEvent.seated;
 		stateChanged();
 	}
@@ -164,6 +165,7 @@ public class CustomerAgent extends Agent implements Customer {
 			}
 			if (state == AgentState.BeingSeated && event == AgentEvent.seated){
 				state = AgentState.Seated;
+				
 				return true;
 			}
 			if (state == AgentState.Seated && event == AgentEvent.orderFood){
@@ -208,7 +210,7 @@ public class CustomerAgent extends Agent implements Customer {
 			}
 			if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 				state = AgentState.DoingNothing;
-				person.msgDoneEating(eatingSuccess, wallet.getAmt()); 
+//				person.msgDoneEating(eatingSuccess, wallet.getAmt()); // COMMENT THIS OUT IF THERE AREN'T REAL PEOPLE IN THE RESTAURANT 
 				waiter.msgDoneLeaving(this);
 				return true;
 			}

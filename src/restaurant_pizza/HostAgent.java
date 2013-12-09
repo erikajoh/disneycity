@@ -81,7 +81,7 @@ public class HostAgent extends Agent {
 			if (person!=null) person.msgStopWork(10);
 			print("host going home");
 			for (MyWaiter w : waiters) {
-				w.waiter.msgShiftDone();
+				w.waiter.msgShiftDone(true);
 			}
 		}
 	}

@@ -13,7 +13,6 @@ import AnimationTools.AnimationModule;
 
 public class ResidentGui implements Gui{
 
-	/* animation from Doug */
 	AnimationModule animModule;
 	private enum Direction { UP, DOWN, LEFT, RIGHT};
 	boolean standing = false;
@@ -123,7 +122,7 @@ public class ResidentGui implements Gui{
 				walls.add(new Wall(0.6,1,0.5,0.5));
 			}
 			if (roomNo == 2) {
-				walls.add(new Wall(0,0.84,0.5,0.5));
+				walls.add(new Wall(0,0.82,0.5,0.5));
 				walls.add(new Wall(0.93,1,0.5,0.5));
 			}
 			if (roomNo == 3) {
@@ -142,7 +141,6 @@ public class ResidentGui implements Gui{
 			walls.add(new Wall(0.75,0.75,0.56,0.69));
 			//entrance/exit wall
 			walls.add(new Wall(0.92,0.92,0.64,1));
-
 			if(roomNo == 0){
 				xTable = (int)(hWidth*0.62);
 				yTable = (int)(hHeight*0.59);
@@ -151,7 +149,7 @@ public class ResidentGui implements Gui{
 				xKitchen = (int)(hWidth*0.59);
 				yKitchen = (int)(hHeight*0.7);
 				xMaintenance = (int)(hWidth*0.1);
-				yMaintenance = (int)(hHeight*0.3);
+				yMaintenance = (int)(hHeight*0.37);
 			}else if(roomNo == 1){
 				xTable = (int)(hWidth*0.69);
 				yTable = (int)(hHeight*0.51);
@@ -160,7 +158,7 @@ public class ResidentGui implements Gui{
 				xKitchen = (int)(hWidth*0.65);
 				yKitchen = (int)(hHeight*0.7);
 				xMaintenance = (int)(hWidth*0.42);
-				yMaintenance = (int)(hHeight*0.3);
+				yMaintenance = (int)(hHeight*0.37);
 			}else if(roomNo == 2){
 				xTable = (int)(hWidth*0.76);
 				yTable = (int)(hHeight*0.59);
@@ -168,8 +166,8 @@ public class ResidentGui implements Gui{
 				yBed = (int)(hHeight*0.15);
 				xKitchen = (int)(hWidth*0.71);
 				yKitchen = (int)(hHeight*0.7);
-				xMaintenance = (int)(hWidth*0.84);
-				yMaintenance = (int)(hHeight*0.3);
+				xMaintenance = (int)(hWidth*0.73);
+				yMaintenance = (int)(hHeight*0.37);
 			}else if(roomNo == 3){
 				xTable = (int)(hWidth*0.69);
 				yTable = (int)(hHeight*0.67);
@@ -177,85 +175,56 @@ public class ResidentGui implements Gui{
 				yBed = (int)(hHeight*0.71);
 				xKitchen = (int)(hWidth*0.77);
 				yKitchen = (int)(hHeight*0.7);
-				xMaintenance = (int)(hWidth*0.35);
-				yMaintenance = (int)(hHeight*0.74);
+				xMaintenance = (int)(hWidth*0.41);
+				yMaintenance = (int)(hHeight*0.75);
 			}
 		}
 	}
 
 	public void updatePosition() {
 				
-		// general animation states
 		for (Wall w : walls) {
 			
 			if (w.hitsHfromAbove(xPos,  yPos) && currDir == Direction.DOWN) {
-//				System.out.println("hit a horizontal wall from above");
-//				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
 				xDestNext = xDestination;
 				if (xDestination < xPos || xDestination < w.xStart || w.xEnd == hWidth) {
-//					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
 					xDestination = w.xStart-16;
-				}
-				else if (xDestination > xPos || xDestination > w.xEnd) {
-//					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
+				} else if (xDestination > xPos || xDestination > w.xEnd) {
 					xDestination = w.xEnd+1;
-				}
-				else {
-//					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
+				} else {
 					xDestination = w.xEnd+1;
 				}
 				dir = Dir.x;
 				break;
 			}else if(w.hitsHfromBelow(xPos, yPos) && currDir == Direction.UP){
-//				System.out.println("hit a horizontal wall from below");
-//				System.out.println("xPos: "+xPos+" xDest: "+xDestination);
 				xDestNext = xDestination;
-				if (xDestination < xPos || xDestination < w.xStart) {
-//					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
-					xDestination = w.xStart-16;
-				}
-				else if (xDestination > xPos || xDestination > w.xEnd || w.xStart == 0) {
-//					System.out.println("changing xDest from " + xDestination + " to "+(w.xEnd+1));
+				if (xDestination > xPos || xDestination > w.xEnd || w.xStart == 0) {
 					xDestination = w.xEnd+1;
-				}
-				else {
-//					System.out.println("changing xDest from " + xDestination + " to "+(w.xStart-24));
+				} else if (xDestination < xPos || xDestination < w.xStart) {
+					xDestination = w.xStart-16;
+				} else {
 					xDestination = w.xStart-16;
 				}
 				dir = Dir.x;
 				break;
 			}else if(w.hitsVfromLeft(xPos, yPos) && currDir == Direction.RIGHT){
-//				System.out.println("hit a vertical wall from the left");
-//				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
 				yDestNext = yDestination;
 				if (yDestination < yPos || yDestination < w.yStart || w.yEnd == hHeight) {
-//					System.out.println("changing yDest to "+(w.yStart-24));
 					yDestination = w.yStart-16;
-				}
-				else if (yDestination > yPos || yDestination > w.yEnd) {
-//					System.out.println("changing yDest to "+(w.yEnd+1));
+				} else if (yDestination > yPos || yDestination > w.yEnd) {
 					yDestination = w.yEnd+1;
-				}
-				else {
-//					System.out.println("changing yDest to "+(w.yEnd+1));
+				} else {
 					yDestination = w.yEnd+1;
 				}
 				dir = Dir.y;
 				break;
 			}else if(w.hitsVfromRight(xPos, yPos) && currDir == Direction.LEFT){
-//				System.out.println("hit a vertical wall from the right");
-//				System.out.println("yPos: "+yPos+" yDest: "+yDestination);
 				yDestNext = yDestination;
-				if (yDestination < yPos || yDestination < w.yStart) {
-//					System.out.println("changing yDest to "+(w.yStart-24));
-					yDestination = w.yStart-16;
-				}
-				else if (yDestination > yPos || yDestination > w.yEnd || w.yStart == 0) {
-//					System.out.println("changing yDest to "+(w.yEnd+1));
+				if (yDestination > yPos || yDestination > w.yEnd || w.yStart == 0) {
 					yDestination = w.yEnd+1;
-				}
-				else {
-//					System.out.println("changing yDest to "+(w.yStart-24));
+				} else if (yDestination < yPos || yDestination < w.yStart) {
+					yDestination = w.yStart-16;
+				} else {
 					yDestination = w.yStart-16;
 				}
 				dir = Dir.y;
@@ -268,8 +237,7 @@ public class ResidentGui implements Gui{
 			if (xPos < xDestination) {
 				xPos++;
 				currDir = Direction.RIGHT;
-			}
-			else if (xPos > xDestination) {
+			} else if (xPos > xDestination) {
 				xPos--;
 				currDir = Direction.LEFT;
 			}
@@ -277,8 +245,7 @@ public class ResidentGui implements Gui{
 			if (yPos < yDestination) {
 				yPos++;
 				currDir = Direction.DOWN;
-			}
-			else if (yPos > yDestination) {
+			} else if (yPos > yDestination) {
 				yPos--;
 				currDir = Direction.UP;
 			}
@@ -286,15 +253,13 @@ public class ResidentGui implements Gui{
 			if (xPos < xDestination) {
 				xPos++;
 				currDir = Direction.RIGHT;
-			}
-			else if (xPos > xDestination) {
+			} else if (xPos > xDestination) {
 				xPos--;
 				currDir = Direction.LEFT;
 			} else if (yPos < yDestination) {
 				yPos++;
 				currDir = Direction.DOWN;
-			}
-			else if (yPos > yDestination) {
+			} else if (yPos > yDestination) {
 				yPos--;
 				currDir = Direction.UP;
 			}
@@ -314,11 +279,9 @@ public class ResidentGui implements Gui{
 		// animation rules
 		if(sleeping) {
 			animModule.changeAnimation("Sleep");
-		}
-		else if(standing) {
+		} else if(standing) {
 			animModule.changeAnimation("Stand");
-		}
-		else {
+		} else {
 			switch(currDir) {
 				case UP:
 					animModule.changeAnimation("WalkUp"); break;			
@@ -340,9 +303,9 @@ public class ResidentGui implements Gui{
 			
 			if (command == Command.LeaveHouse) {
 				agent.msgAnimationLeavingFinished();
-			}
-			else if (command == Command.DoneMaintenance) agent.msgMaintenanceAnimationFinished();
-			else if (command != Command.noCommand && command != Command.HelperMove) agent.msgAnimationFinished();
+			} else if (command == Command.DoneMaintenance) {
+				agent.msgMaintenanceAnimationFinished();
+			} else if (command != Command.noCommand && command != Command.HelperMove) agent.msgAnimationFinished();
 			
 			command=Command.noCommand;
 			
@@ -352,13 +315,11 @@ public class ResidentGui implements Gui{
 		
 		if (xPos == xDestination && yPos == yDestination) {
 			if (xDestNext != -1) {
-//				System.out.println("changing xDestination back to: "+xDestNext);
 				xDestination = xDestNext;
 				xDestNext = -1;
 				dir = Dir.y;
 			}
 			if (yDestNext != -1) {
-//				System.out.println("changing yDestination back to: "+yDestNext);
 				yDestination = yDestNext;
 				yDestNext = -1;
 				dir = Dir.x;
@@ -443,18 +404,8 @@ public class ResidentGui implements Gui{
 	public void DoMaintenance() {
 		xDestNext = -1;
 		yDestNext = -1;
-		DoGoToTable();
 		xDestFinal = xDestination = xMaintenance;
 		yDestFinal = yDestination = yMaintenance;
-		command = Command.HelperMove;
-		try {
-			moving.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		xDestFinal = xDestination = xTable;
-		yDestFinal = yDestination = yTable;
 		command = Command.DoneMaintenance;
 		try {
 			moving.acquire();
@@ -483,7 +434,6 @@ public class ResidentGui implements Gui{
 		yDestNext = -1;
 		xDestFinal = xDestination = xEntrance;
 		yDestFinal = yDestination = yEntrance;
-		System.out.println("leaving house to dest: "+xDestFinal+ " "+ yDestFinal);
 		command = Command.LeaveHouse;
 		try {
 			moving.acquire();

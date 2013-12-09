@@ -26,7 +26,7 @@ public class MockWaiter extends Mock implements Waiter {
 	}
 
 	@Override
-	public void msgShiftDone() {
+	public void msgShiftDone(boolean b) {
 		
 	}
 }

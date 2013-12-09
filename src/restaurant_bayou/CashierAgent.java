@@ -26,7 +26,6 @@ public class CashierAgent extends Agent {
 	private CookAgent cook;
 	private Person person;
 	boolean shiftDone = false;
-	
 	public EventLog log = new EventLog();
 
 	/**
@@ -41,12 +40,17 @@ public class CashierAgent extends Agent {
 		myMenu = m;
 	}
 	
-	public void msgShiftDone() { 
+	public void msgShiftDone() {
 		shiftDone = true;
-		if (!pickAndExecuteAnAction()) { person.msgStopWork(10); }
+		if (!pickAndExecuteAnAction()) {if (person!=null) person.msgStopWork(10); print("cashier going home");}
 	}
+	
 	public void setPerson(Person p) {
 		person = p;
+	}
+	
+	public void subtract(double amount) {
+		r.balance -= amount;
 	}
 
 	public void msgGiveMeCheck(Waiter w, Customer c, String choice, int table){
