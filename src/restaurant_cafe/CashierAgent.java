@@ -48,6 +48,7 @@ public class CashierAgent extends Agent implements Cashier {
 	Person person;
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	public Collection<Food> foods;
+	boolean shiftDone = false;
 	
 	private double balance = 100.00;
 	
@@ -92,9 +93,16 @@ public class CashierAgent extends Agent implements Cashier {
 	public String getName() {
 		return name;
 	}
-
+	
+	
 	
 	// Messages
+	
+	public void msgShiftDone() {
+		shiftDone = true;
+		if (!pickAndExecuteAnAction()) {if (person!=null) person.msgStopWork(10); print("cashier going home");}
+	}
+	
 	public void msgBillFromMarket(Market market, double total){
 		bills.add(new Bill(market, total));
 		print("BILL $"+total+" FROM "+market.getName());
@@ -319,6 +327,10 @@ public class CashierAgent extends Agent implements Cashier {
 
 		public CashierGui getGui() {
 			return cashierGui;
+		}
+
+		public void subtract(double amount) {
+			balance -= amount;
 		}
 }
 

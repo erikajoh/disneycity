@@ -24,4 +24,9 @@ public class MockWaiter extends Mock implements Waiter {
 		check = aCheck;
 		log.add(new LoggedEvent("Received msgHereIsCheck from cashier. Delivering to customer."));
 	}
+
+	@Override
+	public void msgShiftDone() {
+		
+	}
 }
