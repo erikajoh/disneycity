@@ -1,0 +1,6 @@
+50
+Narwhal_Secundus|Main St Apartments #2|OwnerResident
+PizzaHost1|Main St Apartments #2|Renter
+17
+Main St Apartments #2|Narwhal_Secundus|Narwhal_Secundus|PizzaHost1
+Friday

@@ -52,6 +52,12 @@ public class SimCityGui extends JFrame  {
 	
 	public static RestaurantPizza restPizza;
 	public PizzaAnimationPanel pizzaAniPanel = new PizzaAnimationPanel();
+
+	public static RestaurantCafe restCafe;
+	public CafeAnimationPanel cafeAniPanel = new CafeAnimationPanel();
+	
+	public static RestaurantHaus restHaus; 
+	public HausAnimationPanel hausAniPanel = new HausAnimationPanel();
 	
 	public static Housing mainStApts1;
 	public HousingAnimationPanel housAniPanel1 = new HousingAnimationPanel();
@@ -71,20 +77,34 @@ public class SimCityGui extends JFrame  {
 	public static Housing mainStApts6;
 	public HousingAnimationPanel housAniPanel6 = new HousingAnimationPanel();
 	
+	public static Housing mainStApts7; // new
+	public HousingAnimationPanel housAniPanel7 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts8; // new
+	public HousingAnimationPanel housAniPanel8 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts9; // new
+	public HousingAnimationPanel housAniPanel9 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts10; // new
+	public HousingAnimationPanel housAniPanel10 = new HousingAnimationPanel();
+	
+	public static Housing mainStApts11; // new
+	public HousingAnimationPanel housAniPanel11 = new HousingAnimationPanel();
+	
 	public static Housing hauntedMansion;
-	public HousingAnimationPanel housAniPanel7 = new HousingAnimationPanel();	
+	public HousingAnimationPanel housAniPanel12 = new HousingAnimationPanel();	
+	
+	// TODO add Housing class and animation panels for the five other houses
 	
 	public static Market mickeysMarket;
 	public MarketAnimationPanel markAniPanel = new MarketAnimationPanel();
+	
+	public static Market minniesMarket; // new
+	public MarketAnimationPanel markAniPanel2 = new MarketAnimationPanel();
 		
 	public static Bank pirateBank;
 	public BankAnimationPanel bankAniPanel = new BankAnimationPanel();
-	
-	public static RestaurantCafe restCafe;
-	public CafeAnimationPanel cafeAniPanel = new CafeAnimationPanel();
-	
-	public static RestaurantHaus restHaus; 
-	public HausAnimationPanel hausAniPanel = new HausAnimationPanel();
 	
 	private final static int tellerAmt = 4;
 	
@@ -122,7 +142,7 @@ public class SimCityGui extends JFrame  {
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "SimCity Disneyland created");
 						
 		cards = new JPanel(new CardLayout());
-		cards.add(housAniPanel7, "Haunted Mansion");
+		cards.add(housAniPanel12, "Haunted Mansion");
 		cards.add(housAniPanel1, "Main St Apartments #1");
 		cards.add(housAniPanel2, "Main St Apartments #2");
 		cards.add(housAniPanel3, "Main St Apartments #3");
@@ -137,7 +157,7 @@ public class SimCityGui extends JFrame  {
 		cards.add(pizzaAniPanel, "Pizza Port");
 		cards.add(hausAniPanel, "Village Haus");
 				
-		animationPanelsList.add(housAniPanel7);
+		animationPanelsList.add(housAniPanel12);
 		animationPanelsList.add(housAniPanel1);
 		animationPanelsList.add(housAniPanel2);
 		animationPanelsList.add(housAniPanel3);
@@ -158,7 +178,7 @@ public class SimCityGui extends JFrame  {
 		restPizza = new RestaurantPizza(this, "Pizza Port");
 		restHaus = new RestaurantHaus(this, "Village Haus");
 		restCafe = new RestaurantCafe(this, "Carnation Cafe");
-		hauntedMansion = new Housing(housAniPanel7, "Haunted Mansion");
+		hauntedMansion = new Housing(housAniPanel12, "Haunted Mansion");
 		mainStApts1 = new Housing(housAniPanel1, "Main St Apartments #1");
 		mainStApts2 = new Housing(housAniPanel2, "Main St Apartments #2");
 		mainStApts3 = new Housing(housAniPanel3, "Main St Apartments #3");

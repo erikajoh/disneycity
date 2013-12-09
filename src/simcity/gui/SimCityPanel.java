@@ -419,7 +419,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	// these are start times for each of the day phases
 	private static final long START_OF_DAY		= 1;
-	private static final long MORNING			= START_OF_DAY		+ 80; //41
+	private static final long MORNING			= START_OF_DAY		+ 40; //41
 	private static final long WORK_ONE_START	= MORNING			+ 150;//191
 	private static final long NOON				= WORK_ONE_START	+ 150;//341
 	private static final long WORK_ONE_END		= NOON				+ 150;//491
