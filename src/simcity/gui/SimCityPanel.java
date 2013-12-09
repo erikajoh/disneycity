@@ -375,13 +375,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				person.msgWakeUp();
 			}
 			if(currTicks == NIGHT) {
-				System.out.println("CHANGING PANEL IMAGE");
-				transPanel.changeDay();
 				person.msgGoToSleep();
-			}
-			if(currTicks == MORNING) {
-				System.out.println("CHANGING PANEL IMAGE");
-				transPanel.changeDay();
 			}
 			// person maintenance signal: maintain house if it's Friday morning
 			if(currTicks == MORNING && getCurrentDay().equals("Friday")) {
@@ -395,6 +389,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			if(currTicks == WORK_TWO_START) {
 				person.msgGoToWork(2);
 			}
+		}
+		if(currTicks == NIGHT) {
+			System.out.println("CHANGING PANEL IMAGE FOR NIGHT");
+			transPanel.changeDay();
+		}
+		if(currTicks == MORNING) {
+			System.out.println("CHANGING PANEL IMAGE FOR MORNING");
+			transPanel.changeDay();
 		}
 		
 		// handle ticks for housing

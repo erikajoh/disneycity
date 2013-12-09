@@ -30,7 +30,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	private Image img;
 	SimCityGui gui;
 	private Transportation controller;
-	boolean day = true;
+	boolean day = false;
 	
 	MouseEvent previousPosition;
 	Point offset;
@@ -54,6 +54,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	List<BuildingFinder> buildings;
 	
 	public void changeDay() {
+		System.out.println("yay changeDay is called");
 		if(day) {
 			img = Toolkit.getDefaultToolkit().getImage("res/simcitynight.jpg");
 			day = false;
@@ -72,7 +73,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 		this.gui = gui;
 
-		img = Toolkit.getDefaultToolkit().getImage("res/simcityLarge.jpg");	
+		img = Toolkit.getDefaultToolkit().getImage("res/simcitynight.jpg");	
 		timer = new Timer(20, this );
 		timer.start();
 
