@@ -32,5 +32,7 @@ public interface Waiter {
 	public void msgHereIsCheck(Customer cust, Check check);
 	
 	public void msgCustomerLeaving(Customer cust);
+	
+	public Cook getCook();
 
 }
