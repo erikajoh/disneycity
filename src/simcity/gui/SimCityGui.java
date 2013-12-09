@@ -307,6 +307,8 @@ public class SimCityGui extends JFrame  {
 		logPanel.setLayout(new BoxLayout(logPanel, BoxLayout.Y_AXIS));
 		logPanel.add(tracePanel);
 		add(logPanel, c9);
+		
+		simCityPanel.setTransPanel(cityAniPanel);
 
 	}
 	
@@ -320,12 +322,13 @@ public class SimCityGui extends JFrame  {
 		PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", null, 'c');
 		restRancho.setMarket(mickeysMarket);
 		restRancho.setBank(pirateBank);
-		restRancho.addPerson(null, "Cook", "cook", 50);
-        restRancho.addPerson(null, "WaiterPC", "w", 50);
-        restRancho.addPerson(p, "Cashier", "cash", 50);
-        restRancho.addPerson(null, "Market", "Trader Joes", 50);
-        restRancho.addPerson(null, "Host", "Host", 50);
+		//restRancho.addPerson(null, "Cook", "cook", 50);
+        //restRancho.addPerson(null, "WaiterPC", "w", 50);
+        //restRancho.addPerson(p, "Cashier", "cash", 50);
+        //restRancho.addPerson(null, "Market", "Trader Joes", 50);
+        //restRancho.addPerson(null, "Host", "Host", 50);
         //restRancho.addPerson(null, "Customer", "Sally", 50);
+		
 		//restPizza.addPerson(null, "Cook", "cook", 50);
         //restPizza.addPerson(null, "Waiter", "w", 50);
         //restPizza.addPerson(null, "Cashier", "cash", 50);
@@ -359,6 +362,8 @@ public class SimCityGui extends JFrame  {
 		mickeysMarket.addPerson(null, "Cashier", "Kapow");
 		mickeysMarket.addPerson(null, "Worker", "Bleep");
 		mickeysMarket.addPerson(null, "Worker", "Meep");
+		
+		
 		
 	}
 	
