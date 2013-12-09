@@ -1,7 +1,6 @@
 package simcity;
 
 import agent.Agent;
-import bank.gui.Bank;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Bank_Douglass;
@@ -11,7 +10,6 @@ import simcity.interfaces.Person;
 import java.util.*;
 
 import market.Market;
-import housing.Housing;
 import simcity.test.mock.EventLog;
 import simcity.test.mock.LoggedEvent;
 import transportation.Transportation;
@@ -490,9 +488,6 @@ public class PersonAgent extends Agent implements Person {
 						print("returning true because haveMoneyToDeposit()");
 						return true;
 					}
-					if(moneyOnHand > getPersonalLoans()) {
-						// TODO: Have enough money to pay off loans in personal bank account						
-					}
 				}
 				
 				else {
@@ -637,37 +632,45 @@ public class PersonAgent extends Agent implements Person {
 		print("I need rent money");
 		log.add(new LoggedEvent("Need to pay rent; not enough money"));
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I need rent money");
-		moneyWanted += rentToPay;
-		bankState = BankState.NeedTransaction;
 		MyBank targetBank = chooseBank();
-		targetLocation = targetBank.name;
+		if(targetBank != null) {
+			moneyWanted += rentToPay;
+			bankState = BankState.NeedTransaction;
+			targetLocation = targetBank.name;
+		}
 	}
 	
 	private void hungryToMarket() {
 		print("I'm hungry and I want to buy food at market and cook at home");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm hungry and I want to buy food at market and cook at home");
 		MyMarket targetMarket = chooseMarket();
-		double price = targetMarket.theMarket.getPrice(foodPreference);
-		if(moneyOnHand < price) {
-			log.add(new LoggedEvent("Want to buy food at market; not enough money"));
-			moneyWanted = price - moneyOnHand;
-			bankState = BankState.NeedTransaction;
-			MyBank targetBank = chooseBank();
-			targetLocation = targetBank.name;
-			return;
+		if(targetMarket != null) {
+			double price = targetMarket.theMarket.getPrice(foodPreference);
+			if(moneyOnHand < price) {
+				log.add(new LoggedEvent("Want to buy food at market; not enough money"));
+				MyBank targetBank = chooseBank();
+				if(targetBank != null)
+					targetLocation = targetBank.name;
+					moneyWanted = price - moneyOnHand;
+					bankState = BankState.NeedTransaction;
+			}
+			else {
+				print("I have enough money to buy food from market");
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have enough money to buy food from market");
+				targetLocation = targetMarket.name;
+			}
 		}
-		print("I have enough money to buy food from market");
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have enough money to buy food from market");
-		targetLocation = targetMarket.name;
 	}
 	
 	private void haveMoneyToDeposit() {
 		print("I have excess money to deposit");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have excess money to deposit");
-		moneyToDeposit = moneyOnHand - MONEY_ON_HAND_LIMIT;
-		bankState = BankState.NeedTransaction;
 		MyBank targetBank = chooseBank();
-		targetLocation = targetBank.name;
+		if(targetBank != null) {
+			moneyToDeposit = moneyOnHand - MONEY_ON_HAND_LIMIT;
+			bankState = BankState.NeedTransaction;
+			targetLocation = targetBank.name;
+		}
 	}
 
 	private void doMaintenance() {
@@ -710,15 +713,18 @@ public class PersonAgent extends Agent implements Person {
 			double lowestPrice = getLowestPrice(theMenu);
 			if(moneyOnHand < lowestPrice) {
 				log.add(new LoggedEvent("Want to eat at restaurant; not enough money"));
-				moneyWanted = lowestPrice - moneyOnHand;
-				bankState = BankState.NeedTransaction;
 				MyBank targetBank = chooseBank();
-				targetLocation = targetBank.name;
-				return;
+				if(targetBank != null) {
+					moneyWanted = lowestPrice - moneyOnHand;
+					bankState = BankState.NeedTransaction;
+					targetLocation = targetBank.name;
+				}
 			}
-			print("I have enough money to buy from restaurant");
-			restState = RestaurantState.WantToEat;
-			targetLocation = targetRestaurant.name;
+			else {
+				print("I have enough money to buy from restaurant");
+				restState = RestaurantState.WantToEat;
+				targetLocation = targetRestaurant.name;
+			}
 		}
 	}
 	
@@ -879,11 +885,17 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	private MyBank chooseBank() {
+		ArrayList<MyBank> bankList = new ArrayList<MyBank>();
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)
-			if(myObjectsArray[i] instanceof MyBank)
-				return (MyBank)myObjectsArray[i];
-		return null;
+			if(myObjectsArray[i] instanceof MyBank) {
+				MyBank tempMyBank = (MyBank)myObjectsArray[i];
+				if(myPersonalBankAccount != null && myPersonalBankAccount.bank.equals(tempMyBank.bank))
+					return tempMyBank;
+				bankList.add((MyBank)myObjectsArray[i]);
+			}
+		int randomInd = getRandomInt(0, bankList.size());
+		return bankList.get(randomInd);
 	}
 	
 	private MyRestaurant findWorkplace(int session) {
@@ -900,6 +912,10 @@ public class PersonAgent extends Agent implements Person {
 	
 	private MyObject[] getObjects() {
 		return (MyObject[])myObjects.toArray(new MyObject[myObjects.size()]);
+	}
+	
+	private int getRandomInt(int min, int max) {
+		return (int)((Math.random() * (double)max)+ (double)min);
 	}
 	
 	// ************************* WRAPPER CLASSES ***********************************
