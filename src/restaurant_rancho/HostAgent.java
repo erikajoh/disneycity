@@ -1,6 +1,7 @@
 package restaurant_rancho;
 
 import agent_rancho.Agent;
+//import restaurant_pizza.HostAgent.MyWaiter;
 import restaurant_rancho.Table;
 import restaurant_rancho.gui.RestaurantRanchoGui;
 import restaurant_rancho.gui.WaiterGui;
@@ -71,8 +72,10 @@ public class HostAgent extends Agent {
 	// Messages
 	public void msgShiftDone() {
 		shiftDone = true;
-		if (waitingCustomers.size()==0) {
-			person.msgStopWork(10);
+		if (waitingCustomers.size() == 0) {person.msgStopWork(10);
+			for (MyWaiter w : waiters) {
+				w.w.msgShiftDone();
+			}
 		}
 	}
 	public void msgIWantFood(CustomerAgent cust, int num) {
@@ -122,6 +125,8 @@ public class HostAgent extends Agent {
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
+		if (waitingCustomers.size() == 0 && shiftDone == true) {person.msgStopWork(10);} 
+
 		if (tablesAllFull() && !waitingCustomers.isEmpty()) {
 			synchronized(waitingCustomers) {
 				for (MyCustomer mc : waitingCustomers) {	
@@ -143,9 +148,6 @@ public class HostAgent extends Agent {
 							Do("Gave " + waitingCustomers.get(0).cust + " to waiter " + waiter.w.getName());
 							waitingCustomers.remove(0);
 							return true;
-						}
-						if (waitingCustomers.isEmpty() && shiftDone) {
-							person.msgStopWork(10);
 						}
 					}
 				}
