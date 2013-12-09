@@ -1,6 +1,7 @@
 package restaurant_haus;
 
 import agent_haus.Agent;
+import restaurant_cafe.gui.Food;
 import restaurant_haus.gui.CookGui;
 import restaurant_haus.gui.WaiterGui;
 import simcity.PersonAgent;
@@ -426,8 +427,17 @@ public class CookAgent extends Agent {
 	//utilities
 	
     public int getQuantity(String name){
-   		return foodInventory.get(name).inventory;
+    	if(foodInventory.get(name) != null){
+    		return foodInventory.get(name).inventory;
+    	}
+    	return 0;
     }
+    
+	 public void setQuantity(String name, int num){
+			if(foodInventory.get(name) != null){
+	    		 foodInventory.get(name).inventory = num;
+	    	}
+	 }
 	
 	public void setMenu(Menu m) {
 		this.m = m;

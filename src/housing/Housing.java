@@ -114,10 +114,10 @@ public class Housing implements Housing_Douglass {
 		}
 	}
 	
-	public void msgDoMaintenance() { // from timer
+	public void msgDoMaintenance(PersonAgent rp) { // from person
 		log.add(new LoggedEvent("Do maintenance"));
 		for (Renter r: renters) {
-			r.agent.msgDoMaintenance();
+			if (r.person == rp) r.agent.msgDoMaintenance();
 		}
 	}
 	

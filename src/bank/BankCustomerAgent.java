@@ -2,6 +2,8 @@ package bank;
 
 import bank.gui.BankCustomerGui;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import bank.gui.Account;
 import bank.interfaces.BankCustomer;
 import bank.interfaces.Person;
@@ -125,6 +127,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		balance += cash;
 		print("GOT CASH "+ cash);
 		if(success == true){
+			change = cash;
 			state = State.leaving;
 		}
 		else {
@@ -179,7 +182,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			   return true;
 		   }
 		   else if(state == State.failedRobbery){
-			   tryToLeaveBank();
+			   failToLeaveBank();
 			   return true;
 		   }
 		  else if(state == State.left){
@@ -228,10 +231,11 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		state = State.idle;
 		personGui.DoLeaveBank();
 	}
-	private void tryToLeaveBank(){
+	private void failToLeaveBank(){
 		animState = AnimState.walking;
 		state = State.idle;
 		personGui.DoFailRobbery();
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "BC", "FAILED TO ROB BANK");
 	}
 	
 	private void leftBank(){

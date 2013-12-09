@@ -348,6 +348,11 @@ public class PersonAgent extends Agent implements Person {
 		stateChanged();
 	}
 	
+	//from gui
+	public void msgSwitchRole(String role, String location){
+		
+	}
+	
 	// ************************* SCHEDULER ***********************************
 	
 	public boolean pickAndExecuteAnAction() {

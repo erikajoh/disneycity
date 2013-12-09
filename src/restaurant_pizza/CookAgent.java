@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import restaurant_cafe.gui.Food;
 import restaurant_pizza.gui.CookGui;
 import simcity.PersonAgent;
 import simcity.interfaces.Person;
@@ -138,7 +139,10 @@ public class CookAgent extends Agent {
 	
 	public void msgShiftDone() {
 		shiftDone = true;
-		if (orders.size() == 0) {person.msgStopWork(10);}
+		if (orders.size() == 0) {
+			//person.msgStopWork(10);
+			cookGui.DoLeave(person);
+		}
 	}
 
 	public void msgOrderDone(Order o) {
@@ -316,7 +320,10 @@ public class CookAgent extends Agent {
 	public int getQuantity(String name){
 	   return inventory.get(name);
 	} 
-	    
+	
+	 public void setQuantity(String name, int num){
+		inventory.put(name, num);
+	 }
 
 	public void setGui(CookGui gui) {
 		cookGui = gui;
