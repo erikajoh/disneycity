@@ -116,6 +116,7 @@ public class TellerAgent extends Agent implements Teller {
 
 	public void	msgDepositCash(int accountNum, double cash){
 		print("DEPOSIT CASH ");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Teller", "DepositMsg");
 		customer.requestAmt = cash;
 		List<Account> accounts = manager.getAccounts();
 		synchronized(accounts){
