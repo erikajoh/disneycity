@@ -98,6 +98,13 @@ public class WaiterGui implements Gui {
     	return onBreak;
     }
     
+    public void DoLeave() {
+    	xPos = -50;
+    	yPos = -50;
+    	xDestination = -50;
+    	yDestination = -50; 
+    }
+    
     public void DoGoToTable(int tableNumber) {
     	
         xDestination = xTable + mySize + (tableSpacing*(tableNumber));

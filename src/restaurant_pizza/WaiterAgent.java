@@ -184,6 +184,7 @@ public class WaiterAgent extends Agent implements Waiter {
 		shiftDone = true;
 		if (myCustomers.size() == 0) {
 			print ("going home!");
+			waiterGui.DoLeave();
 			person.msgStopWork(10);
 			if (cook!=null) { 
 				cook.msgShiftDone(); 

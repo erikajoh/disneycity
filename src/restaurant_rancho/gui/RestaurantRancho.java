@@ -305,6 +305,13 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		
     		
     }
+    
+    public void removeMe(WaiterAgent wa, String type) {
+    	if (type == "Waiter") {
+    		waiters.remove(wa);
+    		System.out.println("removing waiter " + wa.getName());
+    	}
+    }
 	@Override
 	public void setMarket(Market_Douglass m) {
 		market = m;
@@ -317,6 +324,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 		}
 		
 	}
+
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
 		cook.msgHereIsOrder(food, quantity, ID);
