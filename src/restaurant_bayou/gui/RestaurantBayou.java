@@ -6,6 +6,7 @@ import restaurant_bayou.CustomerAgent;
 import restaurant_bayou.HostAgent;
 import restaurant_bayou.MarketAgent;
 import restaurant_bayou.WaiterAgent;
+import restaurant_bayou.ProducerConsumerMonitor;
 import simcity.Restaurant;
 import simcity.PersonAgent;
 import simcity.RestMenu;
@@ -55,6 +56,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     boolean isOpen;
     private Bank_Douglass bank;
     private Market_Douglass market2;
+//    public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
 
     private SimCityGui gui; //reference to main gui
 
@@ -253,7 +255,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
             host.startThread();
     	}
     	else if (type.equals("Cook")) {
-    		cook = new CookAgent(name, menu);
+    		cook = new CookAgent(name, this, menu);
     		cookGui = new CookGui();
     		if (p!=null) cook.setPerson(p);
     		cook.setGui(cookGui);

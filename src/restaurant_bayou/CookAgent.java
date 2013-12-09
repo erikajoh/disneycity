@@ -9,7 +9,9 @@ import simcity.PersonAgent;
 import simcity.RestMenu;
 import restaurant_bayou.HostAgent.Menu;
 import restaurant_bayou.gui.CookGui;
+import restaurant_bayou.gui.RestaurantBayou;
 import restaurant_bayou.interfaces.Market;
+import restaurant_bayou.CookAgent.Order;
 import simcity.interfaces.Person;
 
 public class CookAgent extends Agent {
@@ -23,19 +25,22 @@ public class CookAgent extends Agent {
 	private List<String> orderedFood =  Collections.synchronizedList(new ArrayList<String>());
 	private List<MyMarket> cutoffMarkets =  Collections.synchronizedList(new ArrayList<MyMarket>()); 
 	public List<MyMarket> markets =  Collections.synchronizedList(new ArrayList<MyMarket>());
+	public Timer t = new Timer();
 	private CookGui cookGui;
 	private Person person;
 	private RestMenu menu = new RestMenu();
 	boolean shiftDone = false;
+	RestaurantBayou restaurant;
 
 	/**
 	 * Constructor for CookAgent class
 	 *
 	 * @param name name of the cook
 	 */
-	public CookAgent(String name, RestMenu m){
+	public CookAgent(String name, RestaurantBayou r, RestMenu m){
 		super();
 		this.name = name;
+		this.restaurant = r;
 	    menu.addItem("Filet Mignon", 42.99);
 	    menu.addItem("Pan-Seared Salmon", 33.99);
 	    menu.addItem("Surf and Turf", 45.99);
@@ -170,6 +175,9 @@ public class CookAgent extends Agent {
 				}
 			}
 		}
+//		Order newO = restaurant.orderStand.remove();
+//		if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
+//		else {waitTimer();}
 		return false;
 	}
 	
@@ -209,7 +217,6 @@ public class CookAgent extends Agent {
 		String choice;
 		int table;
 		OrderState state;
-		Timer t = new Timer();
 		public Order(WaiterAgent wa, String c, int tbl) {
 			w = wa;
 			choice = c;
@@ -289,6 +296,15 @@ public class CookAgent extends Agent {
 	public void setGui(CookGui c){
 		cookGui = c;
 		c.setAgent(this);
+	}
+	
+	private void waitTimer() {
+		t.schedule(new TimerTask() {
+			public void run() {
+				stateChanged();
+			}
+		},
+		5000);
 	}
 
 }
