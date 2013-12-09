@@ -24,6 +24,8 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	private final int WINDOWX = 400;
 	private final int WINDOWY = 330;
 	private final int scrollSpeed = 4;
+	private final int bufferZones = 4;
+	private final int buffer = 15;
 
 	private Image img;
 	SimCityGui gui;
@@ -32,7 +34,6 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	
 	MouseEvent previousPosition;
 	Point offset;
-	int buffer;
 
 	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	Timer timer;
@@ -66,7 +67,6 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 	
 	public TransportationPanel(SimCityGui gui) {
 		offset = new Point(0,0);
-		buffer = 10;
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 
@@ -126,7 +126,6 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		//offset changing
 		if(previousPosition != null) {
 			//Move Camera Up
-			int bufferZones = 6;
 			for(int i = 0; i < bufferZones; i++) {
 				if(previousPosition.getY() >= 0 && previousPosition.getY() <= buffer * (bufferZones-i))
 					offset.y -= scrollSpeed;

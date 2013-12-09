@@ -118,6 +118,13 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     
      	return workers;	
     }
+    
+    public int getQuantity(String name){
+    	if(cook != null){
+    		return cook.getQuantity(name);
+    	}
+    	return 0;
+    }
 
     /**
      * Sets up the restaurant label that includes the menu,

@@ -14,9 +14,10 @@ public class MovementTile extends Semaphore{
 		ROAD,
 		CROSSWALK,
 		TRAFFICCROSSWALK,
-		TRAFFICCROSSROAD,
+		TRAFFICCROSSINTERSECTION,
 		TRAFFICCROSSNONE,
-		FLYING
+		FLYING,
+		TRAFFICCROSSROAD
 	};
 
 	MovementType type;
@@ -68,7 +69,7 @@ public class MovementTile extends Semaphore{
 		this.down = down;
 	}
 	
-	public void setRight(boolean Right) {
+	public void setRight(boolean right) {
 		this.right = right;
 	}
 	

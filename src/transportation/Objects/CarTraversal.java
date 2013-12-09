@@ -72,11 +72,15 @@ public class CarTraversal extends GraphTraversal {
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
 			if (inPath(next,path) ||
-					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					!(grid[nextX][nextY].type == MovementTile.MovementType.CROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSINTERSECTION ||
 					grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
+				if(nextX == 30 && nextY == 1) {
+					System.out.println("Refusing Tile because wrong type" + next);
+				}
 				continue;
 			}
 
@@ -114,10 +118,11 @@ public class CarTraversal extends GraphTraversal {
 			Position next = new Position(nextX,nextY);
 			//System.out.println("considering"+next);
 			if (inPath(next,path) ||
-					!(grid[nextX][nextY].type ==MovementTile.MovementType.CROSSWALK ||
+					!(grid[nextX][nextY].type == MovementTile.MovementType.CROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSWALK ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSROAD ||
 					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSNONE ||
+					grid[nextX][nextY].type == MovementTile.MovementType.TRAFFICCROSSINTERSECTION ||
 					grid[nextX][nextY].type == MovementTile.MovementType.ROAD)) {
 				continue;
 			}

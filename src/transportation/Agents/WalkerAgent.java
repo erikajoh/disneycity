@@ -184,4 +184,8 @@ public class WalkerAgent extends MobileAgent{
 		return "walker";
 	}
 
+	public Person getPerson() {
+		return walker;
+	}
+
 }
