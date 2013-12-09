@@ -40,6 +40,7 @@ public class AnimationModule {
 	public String filePathway;//Stores the file pathway to the image
 	public BufferedImage img = null;//This is the image that gets drawn
 	public boolean moving = true;
+	private boolean looping = true;
 
 	public AnimationModule(String character, String firstAnimation, int frameDelay) {//Give it all the information you can
 		this.character = character;
@@ -74,7 +75,7 @@ public class AnimationModule {
 			//Frame updates
 			if(frameDelayCounter >= frameDelay && moving) {//UpdateFrame
 				currentFrame ++;
-				if(currentFrame > totalFrames)
+				if(currentFrame > totalFrames && looping)
 					currentFrame = 1;
 				frameDelayCounter = 0;
 			}
@@ -117,6 +118,7 @@ public class AnimationModule {
 	}
 
 	public void changeAnimation(String animation) {
+		looping = true;
 		this.animation = animation;
 		setMoving();
 	}
@@ -164,5 +166,9 @@ public class AnimationModule {
 
 	public boolean getLastFrame() {
 		return (currentFrame == totalFrames);
+	}
+	
+	public void setNoLoop() {
+		looping = false;
 	}
 }
