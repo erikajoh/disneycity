@@ -24,6 +24,8 @@ public interface Teller {
 		
 	public void msgLeavingBank();
 	
+	public void msgClose();
+	
 	public TellerGui getGui();
 
 }

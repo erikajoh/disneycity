@@ -91,7 +91,9 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	}
 	
 	public void msgClose(){
-		
+		for(TellerAgent teller : tellers){
+			teller.msgClose();
+		}
 	}
     
     public BankCustomer createBankCustomer(Person person, boolean present, boolean isThief){
