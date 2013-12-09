@@ -51,7 +51,7 @@ public class MockHousing_Douglass extends Mock_Douglass implements Housing_Dougl
 	}
 
 	@Override
-	public void msgDoMaintenance() {
+	public void msgDoMaintenance(PersonAgent rp) {
 		// TODO Auto-generated method stub
 		
 	}
