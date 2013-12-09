@@ -38,6 +38,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 
 	// GUI and building variables
 	SimCityGui gui = null;
+	
+	JComboBox scenarioList;
 
 	RestaurantRancho restRancho;
 	RestaurantPizza restPizza;
@@ -93,7 +95,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		JPanel selection = new JPanel();
 		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
 		// Create the combo box, select item at index 0.
-		JComboBox scenarioList = new JComboBox(scenarios);
+		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
 		scenarioList.addActionListener(this);
 		selection.setLayout(new FlowLayout());
@@ -184,8 +186,18 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		else if(nameExists(aName))
 			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Failed to create person; person name already exists!");
 		else {
+			String type;
+			if (h.getOwner() == null) {
+				type = "OwnerResident";
+			} else {
+				type = "Renter";
+			}
 			PersonAgent personToAdd = new PersonAgent( aName, h, startMoney, foodPreference, preferEatAtHome,
-				"Renter", transportation, commute);
+				type, transportation, commute);
+			
+			if (type == "OwnerResident") {
+				h.setOwner(personToAdd); // key step
+			}
 			h.addRenter(personToAdd);
 			
 			for(int restInd = 0; restInd < NUM_RESTAURANTS; restInd++) {
@@ -200,9 +212,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			
 			personToAdd.setPersonality(personality);
 			people.add(personToAdd);
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Created person: " + aName);
 			personToAdd.startThread();
 			personToAdd.msgWakeUp();
-			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Created person: " + aName);
 		}
 	}
 	
@@ -666,8 +678,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JComboBox cb = (JComboBox)e.getSource();
-        String scenarioName = (String)cb.getSelectedItem();
-		AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Changed to "+scenarioName);
+		if (e.getSource() instanceof JComboBox) {
+			JComboBox cb = (JComboBox)e.getSource();
+	        String scenarioName = (String)cb.getSelectedItem();
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Changed to "+scenarioName);
+		}
 	}
 }
