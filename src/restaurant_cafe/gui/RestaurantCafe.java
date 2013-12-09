@@ -6,7 +6,7 @@ import restaurant_cafe.CustomerAgent;
 import restaurant_cafe.HostAgent;
 import restaurant_cafe.MarketAgent;
 import restaurant_cafe.WaiterAgent;
-import restaurant_cafe.CookAgent.Order;
+import restaurant_cafe.gui.Order;
 import bank.gui.Bank;
 import simcity.RestMenu;
 import simcity.Restaurant;

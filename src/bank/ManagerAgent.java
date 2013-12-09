@@ -7,6 +7,8 @@ import bank.interfaces.BankCustomer;
 import bank.gui.Account;
 import bank.gui.Bank;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 
 import java.util.*;
 
@@ -152,6 +154,7 @@ public class ManagerAgent extends Agent implements Manager {
 	}
 	
 	public void msgRequestDeposit(BankCustomer bc, int accountNumber, double amount){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Manager", "DepositMsg");
 		WaitingCustomer waitingCustomer = null;
 		synchronized(waitingCustomers){
 		   for(WaitingCustomer wc : waitingCustomers){

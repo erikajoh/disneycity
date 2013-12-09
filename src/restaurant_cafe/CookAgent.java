@@ -7,6 +7,7 @@ import restaurant_cafe.CustomerAgent.AgentEvent;
 import restaurant_cafe.gui.CookGui;
 import restaurant_cafe.gui.Food;
 import restaurant_cafe.gui.HostGui;
+import restaurant_cafe.gui.Order;
 import restaurant_cafe.interfaces.Cook;
 import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Market;
@@ -28,28 +29,8 @@ import java.util.concurrent.Semaphore;
 public class CookAgent extends Agent implements Cook {
 	static final int NTABLES = 3;//a global for the number of tables.
 	
-	public class Order {
-		Waiter waiter;
-		Food food;
-		int exclude = 0; //which markets already ordered from for order
-		int table;
-	    OrderState s;
-	    public Order(Waiter wp, String c, int t){
-	    	waiter = wp;
-			synchronized(foods){
-	    	  for(Food f : foods){
-	    		  if(f.getName().equals(c)){
-	    			  food = f;
-	    			  break;
-	    		  }
-	    	  }
-			}
-	    	table = t;
-	    	s = OrderState.pending;
-	    }
-	};
 	Person person;
-	enum OrderState{pending, cooking, reorder, done};
+	public enum OrderState{pending, cooking, reorder, done};
 	public Collection<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 	public Collection<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
 	public Collection<Table> tables;
@@ -250,6 +231,10 @@ public class CookAgent extends Agent implements Cook {
 	
 	public Collection<Market> getMarkets(){
 		return markets;
+	}
+	
+	public Collection<Food> getFoods(){
+		return foods;
 	}
 	
 	public static class Table {

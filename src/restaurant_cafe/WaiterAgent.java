@@ -585,6 +585,10 @@ public class WaiterAgent extends Agent implements Waiter {
 		cashier = c;
 	}
 	
+	public CookAgent getCook(){
+		return cook;
+	}
+	
 	public void setGui(WaiterGui gui) {
 		waiterGui = gui;
 	}

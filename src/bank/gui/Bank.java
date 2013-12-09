@@ -70,6 +70,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void msgRequestDeposit(Person person, int accountNum, double reqAmt, boolean present){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "DepositMsg");
     	BankCustomer bca = createBankCustomer(person, present, false);
     	manager.msgRequestDeposit(bca, accountNum, reqAmt);
     }
