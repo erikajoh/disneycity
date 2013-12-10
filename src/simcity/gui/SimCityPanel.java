@@ -77,6 +77,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
 	public final static int NUM_MARKETS = 1;
+	public final static int NUM_BANKS = 2;
 	
 	public final static String MAIN_CONFIG_FILE = "simcity_config_v2_main.txt";
 
@@ -85,6 +86,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	ArrayList<Restaurant> restaurants = new ArrayList<Restaurant>();
 	ArrayList<Housing> housings = new ArrayList<Housing>();
 	ArrayList<Market> markets = new ArrayList<Market>();
+	ArrayList<Bank> banks = new ArrayList<Bank>();
 	
 	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	 
@@ -170,6 +172,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		mickeysMarket = gui.mickeysMarket;
 		markets.add(mickeysMarket);
 		
+		banks.add(pirateBank);
+		
 		transportation = gui.cityAniPanel.getTransportation();
 		
 		animationPanelsList = gui.animationPanelsList;
@@ -180,28 +184,28 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	}
 	
 	public void beginSimulation() {
-		String scenario = (String)scenarioList.getSelectedItem();
+		int scenarioInd = scenarioList.getSelectedIndex();
 		String fileName = MAIN_CONFIG_FILE;
 		
-		if(scenario.equals("Scenario 1 - Fully employed, 1 person")) {
+		if(scenarioInd == 0) {
 			
 		}
-		if(scenario.equals("Scenario 2 - Fully employed, 3 people")) {
+		if(scenarioInd == 1) {
 			fileName = "config-file_scenario-2.txt";
 		}
-		if(scenario.equals("Scenario 3 - Cook Cashier Market")) {
+		if(scenarioInd == 2) {
 			
 		}
-		if(scenario.equals("Scenario 5 - Bus stops")) {
+		if(scenarioInd == 3) {
 			
 		}
-		if(scenario.equals("Scenario 6 - Avoid closed places")) {
+		if(scenarioInd == 4) {
 			
 		}
-		if(scenario.equals("Scenario 7 - Market delivery fails")) {
+		if(scenarioInd == 5) {
 			
 		}
-		if(scenario.equals("Scenario 10 - 50 people")) {
+		if(scenarioInd == 6) {
 			fileName = "config-file_50_people.txt";
 		}
 		
@@ -264,7 +268,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// Step 1: get all the names of the people so that:
 				// a) the person knows which housing he lives
 				// b) we know which properties files to use
-			URL mainFileURL = getClass().getResource("/res/" + MAIN_CONFIG_FILE);
+			URL mainFileURL = getClass().getResource("/res/" + fileName);
 			URI mainFileURI = mainFileURL.toURI(); 
 			BufferedReader br = new BufferedReader(new FileReader(new File(mainFileURI)));
 			int numPeople = Integer.parseInt(br.readLine());
@@ -328,6 +332,23 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				}
 				
 				// parsing banks
+				for(int bankInd = 1; bankInd <= NUM_BANKS; bankInd++) {
+					String bankName = props.getProperty("bank" + bankInd + "_name");
+					
+					String bankRole = props.getProperty("bank" + bankInd + "_role");
+					if(bankRole == null) bankRole = "Customer";
+					
+					String bankShiftString = props.getProperty("bank" + bankInd + "_shift");
+					int bankShift = 0;
+					if(bankShiftString != null)
+						bankShift = Integer.parseInt(bankShiftString);
+					
+					if(bankName != null) {
+						Bank b = mapStringToBank(bankName);
+						if(b != null)
+							personToAdd.addBank(b, bankRole, bankShift); // key step
+					}
+				}
 				
 				people.add(personToAdd);
 			}
@@ -353,10 +374,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			String theDay = br.readLine();
 			setDay(theDay);
 			
-			// TODO: Need two banks
 			for(int personInd = 0; personInd < people.size(); personInd++) {
 				PersonAgent currPerson = people.get(personInd);
-				currPerson.addBank(pirateBank, "Customer");				
+				
+				currPerson.addBank(pirateBank, "Customer", 0);				
 				currPerson.startThread();
 			}
 			// end new parser
@@ -439,6 +460,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		for(int i = 0; i < markets.size(); i++)
 			if(marketName.equals(markets.get(i).getName()))
 				return markets.get(i);
+		return null;
+	}
+	
+	public Bank mapStringToBank(String bankName) {
+		for(int i = 0; i < banks.size(); i++)
+			if(bankName.equals(banks.get(i).getName()))
+				return banks.get(i);
 		return null;
 	}
 	

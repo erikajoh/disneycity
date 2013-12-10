@@ -164,8 +164,8 @@ public class PersonAgent extends Agent implements Person {
 		return tempMyHousing;
 	}
 	
-	public void	addBank(Bank_Douglass b, String personType) {
-		MyBank tempMyBank = new MyBank(b, b.getBankName(), personType);
+	public void	addBank(Bank_Douglass b, String personType, int workSession) {
+		MyBank tempMyBank = new MyBank(b, b.getBankName(), personType, workSession);
 		myObjects.add(tempMyBank);
 	}
 	
@@ -981,10 +981,12 @@ public class PersonAgent extends Agent implements Person {
 		
 		Bank_Douglass bank;
 		String personType;
-		public MyBank(Bank_Douglass b, String name, String type) {
+		int workSession;
+		public MyBank(Bank_Douglass b, String name, String type, int workSession) {
 			bank = b;
 			this.name = name;
 			personType = type;
+			this.workSession = workSession;
 		}
 	}
 	
