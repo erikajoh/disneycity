@@ -533,7 +533,7 @@ public class PersonAgent extends Agent implements Person {
 			}
 			
 			if(currentLocationState == LocationState.Bank) { // at bank
-				if(isBankOpen)
+				if(bankState != BankState.WantToWork && isBankOpen)
 					bankState = BankState.None;
 				switch(bankState) {
 					case NeedTransaction: // Has business at the bank
