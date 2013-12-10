@@ -29,7 +29,7 @@ public class MockBankCustomer extends Mock {
 	public enum AnimState{go, walking, idle};
 	AnimState animState = AnimState.idle;
 	
-	int accountNum;
+	int accountNum = -1;
 	double requestAmt;	
 
 	/**
@@ -72,6 +72,7 @@ public class MockBankCustomer extends Mock {
 	}
 	
 	public void	msgThief(double ra){
+		log.add(new LoggedEvent("Gonna rob this bank"));
 		requestAmt = ra;
 		state = State.robbing;
 	}
@@ -109,6 +110,7 @@ public class MockBankCustomer extends Mock {
 	}
 	
 	public void msgRobbedBank(double cash, boolean success){
+		log.add(new LoggedEvent("ROBBED BANK? "+success));
 		balance += cash;
 		if(success == true){
 			change = cash;
@@ -140,7 +142,6 @@ public class MockBankCustomer extends Mock {
 			return true;
 		}
 	    else if(animState == AnimState.idle){
-		
 		   if(state == State.openingAccount){
 			   openAccount();
 			   return true;
@@ -200,8 +201,9 @@ public class MockBankCustomer extends Mock {
 		state = State.idle;
 	}
 	private void failToLeaveBank(){
+		log.add(new LoggedEvent("Tripped and fell on the floor"));
 		animState = AnimState.walking;
-		state = State.idle;
+		state = State.left;
 	}
 	private void leaveBank(){
 		animState = AnimState.walking;
@@ -262,6 +264,10 @@ public class MockBankCustomer extends Mock {
 	
 	public void setTeller(MockTeller t) {
 		teller = t;
+	}
+	
+	public MockTeller getTeller() {
+		return teller;
 	}
 	
 	public void setGui(BankCustomerGui g) {

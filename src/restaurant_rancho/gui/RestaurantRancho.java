@@ -22,6 +22,7 @@ import restaurant_rancho.WaiterAgentNorm;
 import market.Market;
 
 import java.awt.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -46,8 +47,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private HostAgent host;
     private CookAgent cook;
     private CashierAgent cashier;    
-    private List<WaiterAgent> waiters = new ArrayList<WaiterAgent>();
-    private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
+    private List<WaiterAgent> waiters = Collections.synchronizedList( new ArrayList<WaiterAgent>());
+    private List<CustomerAgent> customers = Collections.synchronizedList(new ArrayList<CustomerAgent>());
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private ListPanel waiterPanel = new ListPanel (this, "Waiters");
@@ -159,18 +160,22 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	if (cashier!=null && cashier.isWorking==false) {
     		removeCashier();
     	}
+    	synchronized(waiters) {
     	for (WaiterAgent w : waiters ) {
     		if (w.isWorking==false) {
     			removeWaiter(w);
     		}
     	}
+    	}
     	if (shiftsSwitching) {
     		if (host!=null && host.isWorking == true) 
     			return true;
     		else if (waiters.size()!=0) {
+    			synchronized (waiters) {
     			for (WaiterAgent w : waiters) {
     				if (w.isWorking == true)
     					return true;
+    			}
     			}
     		}
     		else if (cook!=null && cook.isWorking == true) {
@@ -278,6 +283,10 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public void addPerson(Person p, String type, String name, double money) {
+    	if (host==null && type.equals("Customer")) {
+    		p.msgDoneEating(false, money);
+    	}
+    	
     	if (!isChangingShifts()) {
 
     		if (type.equals("Customer")) {
@@ -408,10 +417,12 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public void removeCook() {
+    	System.out.println("removing cook " + cook.getName());
     	cook = null;
     }
     
     public void removeWaiter(WaiterAgent w) {
+    	System.out.println("removing waiter " + w.getName());
     	waiters.remove(w);
     }
     
@@ -452,6 +463,16 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 			host.msgShiftDone();
 			for (int i = 0; i < waiters.size(); i++) {
 				if (cashier!=null) cashier.subtract(10);
+			}
+			if (waiters.size() == 0) {
+				if (cook!=null) {
+					cook.msgShiftDone();
+					if (cashier!=null) cashier.subtract(10);
+				}
+				if (cashier!=null) {
+					cashier.subtract(10);
+					cashier.msgShiftDone();
+				}
 			}
 		}
 		else {

@@ -215,7 +215,7 @@ import java.util.concurrent.Semaphore;
 			catch(ConcurrentModificationException e) {
 				return false;
 			}
-			if (shiftDone && !alertedShift) {leaveWork(); alertedShift = true;}
+			if (shiftDone && !alertedShift && customers.size() == 0) {leaveWork(); alertedShift = true;}
 			return false;
 
 		}

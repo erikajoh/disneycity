@@ -40,7 +40,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public enum AnimState{go, walking, idle};
 	AnimState animState = AnimState.idle;
 	
-	int accountNum;
+	int accountNum = -1;
 	double requestAmt;	
 
 	/**
@@ -129,13 +129,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		balance += cash;
 		print("GOT CASH "+ cash);
 		if(success == true){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "The crook got away with the robbery!");
 			change = cash;
 			state = State.leaving;
 		}
 		else {
 			state = State.failedRobbery;
 		}
-		
 		stateChanged();
 	}
 	
@@ -161,8 +161,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			goToTeller();
 			return true;
 		}
-	    else if(animState == AnimState.idle){
-		
+	    else if(animState == AnimState.idle){	
 		   if(state == State.openingAccount){
 			   openAccount();
 			   return true;
@@ -231,8 +230,9 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	private void failToLeaveBank(){
 		animState = AnimState.walking;
-		state = State.idle;
+		state = State.left;
 		customerGui.DoFailRobbery();
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "The crook wasn't able to get away with the robbery. He got nervous and dropped the bag of money. Luckily he made his escape without revealing the true identity of the villian behind the Wario suit.");
 	}
 	
 	private void leftBank(){
