@@ -226,22 +226,21 @@ public class Market implements Market_Douglass {
     public void EndOfShift() {
 		isOpen = false;
 		System.out.println("MARKET GOT END OF SHIFT");
-
 		if (manager!=null) {
 			manager.msgShiftDone();
 			for (int i = 0; i < workers.size(); i++) {
-				if (cashier!=null) cashier.subtract(10);
+//				if (cashier!=null) cashier.subtract(10);
 			}
 		}
 		else {
 			if (cashier!=null) {
 				cashier.msgShiftDone();
-				cashier.subtract(10);
+//				cashier.subtract(10);
 			}
 			for (int i = 0; i < workers.size(); i++) {
 				WorkerAgent w = workers.get(i);
 				w.msgShiftDone(false);
-				if (cashier!=null) cashier.subtract(10);
+//				if (cashier!=null) cashier.subtract(10);
 			}
 		}
 		

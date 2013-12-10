@@ -64,14 +64,8 @@ public class ManagerAgent extends Agent {
     }
 	
 	public void msgShiftDone() {
-//		print("got msg shift done");
-//		shiftDone = true;
-//		if (market.getWorkers().length == 0) {
-//			if (person!=null) person.msgStopWork(10);
-//			for (WorkerAgent w : myWorkers) {
-//				w.msgShiftDone(true);
-//			}
-//		}
+		shiftDone = true;
+		stateChanged();
 	}
 
 	/**
@@ -84,12 +78,10 @@ public class ManagerAgent extends Agent {
             If so, tell waiter to seat customer at table.
 		 */
 		for (Order o: myOrders) {
-	    	myWorkers.get(0).msgGoGetItem(o.c, o.choice, o.quantity, o.virtual);
-	    	myWorkers.add(myWorkers.get(0));
-	    	myWorkers.remove(0);
-	    	myOrders.remove(o);
+	    	AssignWorkerToOrder(o);
 	    	return true;
 		}
+		if (shiftDone) ShiftDone();
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -97,6 +89,17 @@ public class ManagerAgent extends Agent {
 	}
 
 	// Actions
+	
+	public void ShiftDone() {
+		
+	}
+	
+	public void AssignWorkerToOrder(Order o) {
+		myWorkers.get(0).msgGoGetItem(o.c, o.choice, o.quantity, o.virtual);
+    	myWorkers.add(myWorkers.get(0));
+    	myWorkers.remove(0);
+    	myOrders.remove(o);
+	}
 	
 }
 

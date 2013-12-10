@@ -76,11 +76,8 @@ public class CashierAgent extends Agent {
 	}
 	
 	public void msgShiftDone() {
-//		print("got msg shift done");
-//		shiftDone = true;
-//		if (marketBills.size()==0) {
-//			person.msgStopWork(10);
-//		}
+		shiftDone = true;
+		stateChanged();
 	}
 
 	/**
@@ -96,7 +93,12 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
+		if (shiftDone) ShiftDone();
 		return false;
+	}
+	
+	public void ShiftDone() {
+		
 	}
 	
 	public void UpdateInventory(Bill b) {

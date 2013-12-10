@@ -94,27 +94,8 @@ public class WorkerAgent extends Agent {
 	}
 	
 	public void msgShiftDone(boolean alertOthers) {
-//		shiftDone = true;
-//		alert = alertOthers;
-//		if (orders.size() == 0 && alertOthers) {
-//			alertedShift = true;
-//			print ("going home!");
-//			workerGui.DoLeave(); //need to fix
-//			if (manager!=null) { 
-//				if (cashier!=null) cashier.subtract(10.0); 
-//			}
-//			if (cashier!=null) { 
-////				cashier.msgShiftDone(); 
-//				cashier.subtract(20);
-//			}
-//		}
-//		else if (orders.size() == 0){
-//			print ("going home!");
-//			workerGui.DoLeave();
-//		}
-//		else {
-//			print("my shift is done! but I still have customers");
-//		}
+		shiftDone = true;
+		stateChanged();
 	}
 
 	/**
@@ -126,11 +107,14 @@ public class WorkerAgent extends Agent {
 			GetItemAndReturn(o);
 			return true;
 		}
-//		if (shiftDone && !alertedShift) {
-//			msgShiftDone(alert);
-//			alertedShift = true;
-//		}
+		if (shiftDone) {
+			ShiftDone();
+		}
 		return false;
+	}
+	
+	public void ShiftDone() {
+		// TODO
 	}
 	
 	public void GetItemAndReturn(MyOrder o) {
