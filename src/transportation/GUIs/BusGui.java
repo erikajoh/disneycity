@@ -3,6 +3,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import AnimationTools.AnimationModule;
+import transportation.TransportationPanel;
 import transportation.Agents.BusAgent;
 
 public class BusGui implements Gui{
@@ -11,7 +12,7 @@ public class BusGui implements Gui{
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	
-	
+	TransportationPanel panel;
 	BusAgent agent;
 	boolean isPresent = true;
 	
@@ -68,8 +69,7 @@ public class BusGui implements Gui{
 
 	public void draw(Graphics2D g, Point offset) {
 		animModule.updateAnimation();
-		if(xPos - offset.getX() < -30 || xPos - offset.getX() > 500 || yPos - offset.getY() < -30 || yPos - offset.getY() > 500)
-			return;
+		if(xPos - offset.getX() < -30 || xPos - offset.getX() > panel.getWidth()+50 || yPos - offset.getY() < -30 || yPos - offset.getY() > panel.getHeight()+50) return;
 		g.drawImage(animModule.getImage(), (int)xPos - (int)offset.getX(), (int)yPos - (int)offset.getY(), null);
 	}
 
@@ -93,5 +93,9 @@ public class BusGui implements Gui{
 	
 	public boolean isPresent() {
 		return isPresent;
+	}
+	
+	public void setPanel(TransportationPanel p) {
+		panel = p;
 	}
 }

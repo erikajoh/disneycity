@@ -3,6 +3,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import AnimationTools.AnimationModule;
+import transportation.TransportationPanel;
 import transportation.Agents.TruckAgent;
 
 public class TruckGui implements Gui{
@@ -11,7 +12,7 @@ public class TruckGui implements Gui{
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	
-	
+	TransportationPanel panel;
 	TruckAgent agent;
 	boolean isPresent = true;
 	
@@ -99,5 +100,10 @@ public class TruckGui implements Gui{
 	
 	public boolean isPresent() {
 		return isPresent;
+	}
+
+	@Override
+	public void setPanel(TransportationPanel p) {
+		panel = p;
 	}
 }

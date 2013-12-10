@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import transportation.TransportationPanel;
 import transportation.GUIs.Gui;
 import astar.astar.Position;
 
@@ -16,7 +17,8 @@ public class TrafficLight implements ActionListener, Gui{
 	Position location;
 	MovementTile[][] grid;
 	Timer timer;
-
+	TransportationPanel panel;
+	
 	private enum LightState {
 		UPDOWN,
 		UPDOWNCAUTION,
@@ -162,5 +164,10 @@ public class TrafficLight implements ActionListener, Gui{
 	@Override
 	public boolean isPresent() {
 		return true;
+	}
+
+	@Override
+	public void setPanel(TransportationPanel p) {
+		panel = p;
 	}
 }
