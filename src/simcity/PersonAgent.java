@@ -792,6 +792,7 @@ public class PersonAgent extends Agent implements Person {
 			}
 			else {
 				print("I have enough money to buy from restaurant");
+				log.add(new LoggedEvent("I have enough money to buy from restaurant"));
 				restState = RestaurantState.WantToEat;
 				targetLocation = targetRestaurant.name;
 			}

@@ -79,7 +79,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public final static int NUM_MARKETS = 1;
 	public final static int NUM_BANKS = 1;
 	
-	public final static String MAIN_CONFIG_FILE = "config-file-rancho-two-shifts.txt";
+	public final static String MAIN_CONFIG_FILE = "simcity_config_v2_main.txt";
 
 	// lists to hold all the different buildings
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();
@@ -104,7 +104,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 								"5-Bus stops",
 								"6-Closed places",
 								"7-Market deliver fail",
-								"10-50 people" };
+								"10-50 people",
+								"DEBUG"};
 		// Create the combo box, select item at index 0.
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);

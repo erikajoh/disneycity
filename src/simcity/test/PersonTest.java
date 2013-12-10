@@ -426,7 +426,23 @@ public class PersonTest extends TestCase
 		// step 2: transportation
 
 		person.msgDoneEntering();
-
+		assertEquals("Person: 3 event logs",
+				3, person.log.size());
+		assertTrue("Contains log: Returning true because !insideHouse",
+				person.log.containsString("Returning true because !insideHouse"));
+		assertTrue("Contains log: msgDoneEntering() called",
+				person.log.containsString("msgDoneEntering() called"));
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
+		
+		person.msgSetBanksOpen(true);
+		assertTrue("Call scheduler, deciding hunger, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		assertTrue("Contains log: want to go to restaurant but not enough money",
+				person.log.containsString("!isNourished"));
+		
 		person.msgDoneLeaving();
 	}
 	
