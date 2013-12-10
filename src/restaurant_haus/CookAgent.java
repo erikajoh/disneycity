@@ -52,7 +52,7 @@ public class CookAgent extends Agent {
 			this.time = time;
 			this.inventory = 7;//hack to test inventory
 			if(this.choice.equals("Pastrami Cheeseburger")) {
-				this.inventory = 1;
+				this.inventory = 6;
 			}
 			if(this.choice.equals("Chicken Sausage Pretzel Roll")) {
 				this.inventory = 6;

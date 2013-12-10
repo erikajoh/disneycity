@@ -612,14 +612,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	//timing
 	private static final long START_OF_DAY		= 1;
 	private static final long MORNING			= START_OF_DAY		+ 40; //41
-	private static final long WORK_ONE_START	= MORNING			+ 180;//221
-	private static final long NOON				= WORK_ONE_START	+ 180;//401
-	private static final long WORK_ONE_END		= NOON				+ 180;//581
-	private static final long WORK_TWO_START	= WORK_ONE_END		+ 190;//771
-	private static final long EVENING			= WORK_TWO_START	+ 180;//951
-	private static final long WORK_TWO_END		= EVENING			+ 180;//1131
-	private static final long NIGHT				= WORK_TWO_END		+ 190;//1321
-	private static final long END_OF_DAY		= NIGHT				+ 800;//2121
+	private static final long WORK_ONE_START	= MORNING			+ 90;//131
+	private static final long NOON				= WORK_ONE_START	+ 180;//311
+	private static final long WORK_ONE_END		= NOON				+ 180;//491
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 190;//681
+	private static final long EVENING			= WORK_TWO_START	+ 180;//861
+	private static final long WORK_TWO_END		= EVENING			+ 180;//1041
+	private static final long NIGHT				= WORK_TWO_END		+ 190;//1231
+	private static final long END_OF_DAY		= NIGHT				+ 800;//2031
 	// length of day 1911 = appx. 4 minutes
 	
 	// for setting random delay for eating

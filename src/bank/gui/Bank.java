@@ -103,6 +103,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	
 	public void msgTellerLeftBank(TellerAgent teller){
 		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Teller left bank");
+		teller.getPerson().msgStopWork(25);
 		tellers.remove(teller);
 		if(tellers.size() == 0){
 			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Tellers should be clear");

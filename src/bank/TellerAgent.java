@@ -10,6 +10,7 @@ import bank.interfaces.BankCustomer;
 
 import java.util.*;
 
+import simcity.PersonAgent;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
@@ -312,6 +313,10 @@ public class TellerAgent extends Agent implements Teller {
 	
 	public void setPerson(Person p) {
 		person = p;
+	}
+	
+	public Person getPerson() {
+		return person;
 	}
 	
 	public void setBank(Bank b){
