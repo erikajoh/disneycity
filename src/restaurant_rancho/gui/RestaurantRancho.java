@@ -284,12 +284,14 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public void addPerson(Person p, String type, String name, double money) {
-    	if (host==null && type.equals("Customer")) {
+    	System.out.println("COWABUNGA PERSON " + name + " ADDED TO RESTAURANT WHICH IS OPEN? : " + isOpen);
+    	if (!isOpen && type.equals("Customer")) {
+    		System.out.println("COWABUNGA THIS IS GOOD YAY");
     		p.msgDoneEating(false, money);
     	}
     	
     	// if changing shifts, don't want to add new workers with pointers to old workers as workers from shift get ready to leave work
-    	if (!isChangingShifts()) {
+    	if (isOpen) {
 
     		if (type.equals("Customer")) {
     			
@@ -466,6 +468,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	
 	@Override
 	public void EndOfShift() {
+		isOpen = false;
 		System.out.println("RESTAURANT RANCHO GOT END OF SHIFT");
 		double wage;
 		if (cashier!=null) {wage = cashier.money - 500;}
