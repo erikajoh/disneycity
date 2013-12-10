@@ -39,6 +39,8 @@ public class CookAgent extends Agent implements Cook{
 	int curID;
 	boolean shiftDone = false;
 	
+	public boolean isWorking = true;
+	
 
 	public CookAgent(String name, RestaurantRancho rest, Market_Douglass m) {
 		super();
@@ -95,6 +97,7 @@ public class CookAgent extends Agent implements Cook{
 	public void msgShiftDone() {
 		print("got msg shift done, have " + orders.size());
 		shiftDone = true;
+		isWorking = false;
 		gui.DoLeave(person);
 			//person.msgStopWork(10);
 	}
