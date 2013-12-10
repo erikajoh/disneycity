@@ -207,9 +207,10 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		String name = findBuilding((int)(me.getX() + offset.getX()), (int)(me.getY() + offset.getY()));
 		AlertLog.getInstance().logInfo(AlertTag.TRANSPORTATION, "MOUSE CLICKED", name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		System.out.println(name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
-		if(name != null)
+		if(name != null) {
 			gui.showPanel(name);
-		gui.closePopOut();
+			gui.closePopOut();
+		}
 	}
 
 	private String findBuilding(int x, int y) {
