@@ -7,6 +7,6 @@ import agent.*;
 public abstract class MobileAgent extends Agent {
 	protected abstract boolean pickAndExecuteAnAction();
 	public abstract String getType();
-	public void msgCrash() {}
+	public void crash() {}
 	public Person getPerson(){return null;}
 }

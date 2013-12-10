@@ -99,7 +99,7 @@ public class CarGui implements Gui{
 		//Change animation
 		//Change boolean to prevent position updating
 		if(!reachedHalfway) {
-			agent.msgHalfway();
+//			agent.msgHalfway();
 			reachedHalfway = true;
 		}
 		animModule.changeAnimation("Crash", 40);

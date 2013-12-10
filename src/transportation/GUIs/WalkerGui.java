@@ -114,13 +114,15 @@ public class WalkerGui implements Gui{
 		//Change animation
 		//Change boolean to prevent position updating
 		if(!reachedHalfway) {
+			System.out.println("BLAH");
 			agent.msgHalfway();
 			reachedHalfway = true;
 		}
 		animModule.changeAnimation("Crash", 10);
 		animModule.setNoLoop();
 		crashed = true;
-		agent.stopThread();
+//		agent.animSem.release();
+//		agent.stopThread();
 	}
 	@Override
 	public void setPanel(TransportationPanel p) {
