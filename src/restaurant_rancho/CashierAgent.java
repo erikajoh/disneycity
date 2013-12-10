@@ -36,6 +36,7 @@ public class CashierAgent extends Agent implements Cashier{
 	public enum bankState {nothing, waitingForBank};
 	bankState bs;
 	boolean shiftDone = false;
+	double wage;
 	Restaurant restaurant;
 	//public RestMenu menu= new RestMenu();
 	public enum checkState {nothing, pending, readyForCust, waitingForCust, paid, complete, notComplete, completing};
@@ -45,7 +46,7 @@ public class CashierAgent extends Agent implements Cashier{
 		this.restaurant = restaurant;
 		checks = Collections.synchronizedList(new ArrayList<Check>());
 		bills = Collections.synchronizedList(new ArrayList<MarketBill>());
-		money = 100;
+		money = 500;
 		accountNum = -1;
 		endOfDay = false;
 		bs = bankState.nothing;
@@ -84,9 +85,10 @@ public class CashierAgent extends Agent implements Cashier{
 
 	// Messages
 
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
 		print("got msg shift done");
 		shiftDone = true;
+		wage = w;
 		stateChanged();
 	
 	}
@@ -221,7 +223,7 @@ public class CashierAgent extends Agent implements Cashier{
 
 	// Actions
 	private void leaveWork() {
-		person.msgStopWork(10);
+		person.msgStopWork(wage);
 		isWorking = false; 
 	}
 	private void makeCheck(final Check check) {
@@ -305,6 +307,7 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 		return null;
 	}
+
 
 
 

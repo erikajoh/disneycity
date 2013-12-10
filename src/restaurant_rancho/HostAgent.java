@@ -29,6 +29,8 @@ public class HostAgent extends Agent {
 	boolean shiftDone = false;
 	
 	public boolean isWorking = true;
+	
+	double wage;
  
 	public HostAgent(String name) {
 		super();
@@ -72,10 +74,11 @@ public class HostAgent extends Agent {
 	}
 
 	// Messages
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
 		print("got msg shift done");
 		shiftDone = true;
 		isWorking = false;
+		wage = w;
 		stateChanged();
 	}
 	
@@ -163,9 +166,9 @@ public class HostAgent extends Agent {
 
 	// Actions
 	private void leaveWork() {
-		if (person!=null) person.msgStopWork(10);
+		if (person!=null) person.msgStopWork(wage);
 		for (MyWaiter w : waiters) {
-			w.w.msgShiftDone(true);
+			w.w.msgShiftDone(true, wage);
 		}	
 	}
 	private void askToWait(MyCustomer c) {

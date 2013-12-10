@@ -25,6 +25,7 @@ public class WaiterGui implements Gui {
 	public static final int yTable3 = yTable1;
 	private Person person;
 	private boolean leaving;
+	double wage;
 	
 	String waiterText = "";
 
@@ -51,7 +52,7 @@ public class WaiterGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination && leaving) {
-        	if (person!=null) person.msgStopWork(10);
+        	if (person!=null) person.msgStopWork(wage);
         	leaving =false; 
         }
         
@@ -81,11 +82,12 @@ public class WaiterGui implements Gui {
         return true;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	System.out.println("should only print once, alas");
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
+    	wage = w;
     	leaving = true;
     	actionInProgress = true;
     }

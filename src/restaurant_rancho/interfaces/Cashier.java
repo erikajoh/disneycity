@@ -5,7 +5,7 @@ public interface Cashier {
 	
 	public void subtract(double amount);
 	
-	public void msgShiftDone();
+	public void msgShiftDone(double wage);
 	
 	public abstract void msgComputeCheck(Waiter w, Customer c, String choice, RestMenu menu);
 	

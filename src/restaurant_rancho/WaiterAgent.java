@@ -30,6 +30,8 @@ import java.util.concurrent.Semaphore;
 		boolean alert = false;
 		boolean hasntLeft = true;
 		
+		double wage;
+		
 		public boolean isWorking = true;
 		
 		Person person;
@@ -71,9 +73,10 @@ import java.util.concurrent.Semaphore;
 
 		// Messages
 		
-		public void msgShiftDone(boolean alertOthers) {
+		public void msgShiftDone(boolean alertOthers, double w) {
 			shiftDone = true;
 			alert = alertOthers;
+			wage = w;
 			stateChanged();
 		}
 		
@@ -227,23 +230,23 @@ import java.util.concurrent.Semaphore;
 				alertedShift = true;
 				print ("going home!");
 				isWorking = false;
-				waiterGui.DoLeave(person);
+				waiterGui.DoLeave(person, wage);
 				if (cook!=null) { 
-					cook.msgShiftDone(); 
-					if (cashier!=null) cashier.subtract(10.0); 
+					cook.msgShiftDone(wage); 
+					if (cashier!=null) cashier.subtract(wage); 
 				}
 				if (host!=null) { 
-					if (cashier!=null) cashier.subtract(10.0); 
+					if (cashier!=null) cashier.subtract(wage); 
 				}
 				if (cashier!=null) { 
-					cashier.msgShiftDone(); 
-					cashier.subtract(20);
+					cashier.msgShiftDone(wage); 
+					cashier.subtract(wage*2);
 				}
 			}
 			else {
 				print ("going home!");
 				isWorking = false;
-				waiterGui.DoLeave(person);
+				waiterGui.DoLeave(person, wage);
 			}
 		}
 		protected void seatCustomer(Customer c, int table, int loc) {
