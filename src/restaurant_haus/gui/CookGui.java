@@ -21,7 +21,7 @@ public class CookGui implements Gui {
     
     boolean leaving = false;
     boolean atDestination = false;
-    private int xPos = 340, yPos = 125;//default cook position
+    private int xPos = 320, yPos = 125;//default cook position
     private int xDestination = 340, yDestination = 125;//default start position
     private Point refrigerator = new Point(320, 50);
     private Point stove = new Point(325, 125);
