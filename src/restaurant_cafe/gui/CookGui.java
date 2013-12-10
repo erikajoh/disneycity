@@ -12,7 +12,8 @@ public class CookGui implements Gui {
 
     private CookAgent agent = null;
     private int xPos, yPos;//default Cook position
-    private int xDestination = 380, yDestination = 310;//default start position
+    private int xStart = 370, yStart = 310;
+    private int xDestination = 370, yDestination = 310;//default start position
 	private enum Command {cook, plate, noCommand};
 	private Command command = Command.noCommand;
 	private String grillName = "";
@@ -27,7 +28,7 @@ public class CookGui implements Gui {
     public CookGui(CookAgent agent, SimCityGui gui) {
         this.agent = agent;
     	this.gui = gui;
-		xPos = 380;
+		xPos = 370;
     	yPos = 310;
     }
 
@@ -61,10 +62,10 @@ public class CookGui implements Gui {
 
     public void draw(Graphics2D g) {
     	//System.out.println(xPos + " " + yPos);
-        g.setColor(Color.WHITE);
-        g.fillRect(xPos, yPos, 20, 20);
-		g.setColor(Color.BLACK);
-		g.drawString("C", xPos+5, yPos+15);
+    		g.setColor(Color.WHITE);
+    		g.fillRect(xPos, yPos, 20, 20);
+    		g.setColor(Color.BLACK);
+    		g.drawString("C", xPos+5, yPos+15);
 		
 		if(grillVisible == true){
 			g.setColor(Color.WHITE);
@@ -113,17 +114,20 @@ public class CookGui implements Gui {
     
 	public String getOrderString(String choice){
 		String orderString = "";
-		if(choice.equals("Steak")){
-			orderString = "St";
+		if(choice.contains("Apple")){
+			orderString = "A";
 		}
-		else if(choice.equals("Chicken")){
+		else if(choice.contains("Steak")){
+			orderString = "S";
+		}
+		else if(choice.contains("Omelet")){
+			orderString = "O";
+		}
+		else if(choice.equals("Chili")){
 			orderString = "C";
 		}
-		else if(choice.equals("Salad")){
-			orderString = "Sa";
-		}
-		else if(choice.equals("Pizza")){
-			orderString = "P";
+		else if(choice.contains("Cheeseburger")){
+			orderString = "B";
 		}
 		else{
 			orderString = "";

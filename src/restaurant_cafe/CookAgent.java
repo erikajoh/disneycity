@@ -98,9 +98,9 @@ public class CookAgent extends Agent implements Cook {
 	    for(Order o : orders){
 		    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "order state: "+o.s);
 	    }
-	    if(pickAndExecuteAnAction()==true){
+	   // if(pickAndExecuteAnAction()==true){
 	    	stateChanged();
-	    }
+	    //}
 	}
 	public void msgAddOrder(Order o){
 		orders.add(o);
@@ -127,10 +127,9 @@ public class CookAgent extends Agent implements Cook {
 	public void msgFoodDone(Order o){
 		AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "Food is done");
 		o.s = OrderState.done;
-		print("FOOD IS DONE");
-		 if(pickAndExecuteAnAction()==true){
-		    	stateChanged();
-		    }
+		 //if(pickAndExecuteAnAction()==true){
+		stateChanged();
+		   // }
 	}
 	
 	/**
@@ -173,6 +172,7 @@ public class CookAgent extends Agent implements Cook {
 		}
 		Order newOrder = restaurant.orderStand.remove();
 		if (newOrder!=null) {
+			AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "New stand order");
 			orders.add(newOrder);
 			print("order stand not empty, got order for "+ newOrder.food.getName()); 
 			return true;
@@ -217,6 +217,7 @@ public class CookAgent extends Agent implements Cook {
 			public void run() {
 				msgFoodDone(o);
 				cookGui.DoneGrilling();
+				stateChanged();
 			}
 		}, o.food.getCookingTime());
 	}
