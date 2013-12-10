@@ -22,6 +22,7 @@ import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 import transportation.Agents.TransportationController;
 import transportation.GUIs.Gui;
+import transportation.GUIs.WalkerGui;
 
 public class TransportationPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener{
 	private final int WINDOWX = 400;
@@ -175,6 +176,19 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 		synchronized (guis) {
 			for(Gui gui : guis) {
+				/*
+				if(gui instanceof WalkerGui) {
+					WalkerGui temp = (WalkerGui)gui;
+					//System.out.println(temp.agent.getPerson().getName());
+					if(temp.agent.getPerson().getName().equals("CafeCashier1")) {
+						System.out.println("CAFECASHIER IS HERE: " + String.valueOf(guis.indexOf(gui)));
+					}
+				}
+				System.out.println("ERROR IS HERE: " + String.valueOf(guis.indexOf(gui)));
+				if(guis.indexOf(gui) == 46)
+					System.exit(0);
+				System.out.println(gui.returnType());
+				*/
 				if (gui.isPresent()) {
 					gui.updatePosition();
 				}
@@ -207,8 +221,10 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		String name = findBuilding((int)(me.getX() + offset.getX()), (int)(me.getY() + offset.getY()));
 		AlertLog.getInstance().logInfo(AlertTag.TRANSPORTATION, "MOUSE CLICKED", name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		System.out.println(name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
-		if(name != null)
+		if(name != null) {
 			gui.showPanel(name);
+			gui.closePopOut();
+		}
 	}
 
 	private String findBuilding(int x, int y) {

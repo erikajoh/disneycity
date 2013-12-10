@@ -3,6 +3,7 @@ package transportation.Objects;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import astar.astar.Position;
 import transportation.Agents.MobileAgent;
 import transportation.Agents.TransportationController;
 import transportation.Objects.MovementTile.MovementType;
@@ -26,8 +27,9 @@ public class MovementTile extends Semaphore{
 	TrafficLight light;
 	List<MobileAgent> occupants;
 	TransportationController controller;
+	Position position;
 	
-	public MovementTile(TransportationController controller) {
+	public MovementTile(TransportationController controller, int x, int y) {
 		super(1, true);
 
 		up = false;
@@ -35,6 +37,7 @@ public class MovementTile extends Semaphore{
 		left = false;
 		right  = false;
 		
+		position = new Position(x, y);
 		this.controller = controller;
 		type = MovementType.UNTYPED;
 
@@ -56,9 +59,15 @@ public class MovementTile extends Semaphore{
 		synchronized(occupants) {
 			occupants.add(occupant);
 			if(occupants.size() == 2) {//Notify transportation controller of crash
-				
+				controller.msgCrash(occupants.get(0), occupants.get(1), position);
+				occupants.remove(1);
+				occupants.remove(0);
 			}
 		}
+	}
+	
+	public void removeOccupant(MobileAgent occupant) {
+		occupants.remove(occupant);
 	}
 	
 	public void setUp(boolean up) {

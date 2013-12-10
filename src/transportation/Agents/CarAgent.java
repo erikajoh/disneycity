@@ -1,6 +1,7 @@
 package transportation.Agents;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 import agent.Agent;
@@ -34,8 +35,10 @@ public class CarAgent extends MobileAgent{
 		this.aStar = aStar;
 	}
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
-		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
 
@@ -43,6 +46,11 @@ public class CarAgent extends MobileAgent{
 		animSem.release();
 	}
 
+	@Override
+	public void msgCrash() {
+		gui.crash();
+	}
+	
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {
@@ -95,20 +103,26 @@ public class CarAgent extends MobileAgent{
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 					attempts ++;
 			}
-
+			
+			Random random = new Random();
+			int randomInt = random.nextInt(100);
 			//Did not get lock after trying n attempts. So recalculating path.            
-			if (!gotPermit) {
+			if (!gotPermit && randomInt != 0) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				if(tmpPath == endPosition)
+				if(tmpPath.getX() == endPosition.getX() && tmpPath.getY() == endPosition.getY())
 					goToEndPosition(null);
 				else
 					goToEndPosition(tmpPath);
 				break;
 			}
-
+			
+			if(!gotPermit && randomInt == 0) {//it goes anyway and causes a crash
+				aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].release();
+			}
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
 			//currentPosition.release(aStar.getGrid());
+			master.getGrid()[tmpPath.getX()][tmpPath.getY()].addOccupant(this);
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			try {
 				animSem.acquire();
@@ -123,8 +137,10 @@ public class CarAgent extends MobileAgent{
 	}
 
 	public void tauntAndLeave() {
-		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+		}
 		master.msgArrivedAtDestination(driver);
 		gui.setIgnore();
 		stopThread();
@@ -139,6 +155,8 @@ public class CarAgent extends MobileAgent{
 		// TODO Auto-generated method stub
 		return "car";
 	}
+	
+	@Override
 	public Person getPerson() {
 		return driver;
 	}

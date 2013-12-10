@@ -13,6 +13,7 @@ import transportation.Transportation;
 import transportation.TransportationPanel;
 import transportation.GUIs.BusGui;
 import transportation.GUIs.CarGui;
+import transportation.GUIs.CrashGui;
 import transportation.GUIs.TruckGui;
 import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
@@ -42,7 +43,7 @@ public class TransportationController extends Agent implements Transportation{
 		public Person person;
 		MobileAgent mobile;
 		javax.swing.Timer timer;
-		
+
 		String startingLocation;
 		String endingLocation;
 		String method;
@@ -55,15 +56,15 @@ public class TransportationController extends Agent implements Transportation{
 			this.method = method;
 			this.character = character;
 			transportationState = TransportationState.REQUEST;
-			
+
 			timer = new Timer(500, this);
 		}
-		
+
 		public void waitingForSpawn() {
 			timer.start();
 			transportationState = TransportationState.TIMERIDLING;
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			transportationState = TransportationState.REQUEST;
@@ -112,11 +113,71 @@ public class TransportationController extends Agent implements Transportation{
 	MovementTile[][] grid;
 	public List<BusStop> busStops;
 	public List<BusAgent> buses;
-	public TruckAgent truck;
+	public TruckAgent truckMickey;
+	public TruckAgent truckMinnie;
 	private TrafficLight trafficLight;
+
+	private class Crash {
+		public MobileAgent agent1;
+		public MobileAgent agent2;
+		public WalkerAgent agentW;
+		public CarAgent agentC;
+		public CarAgent agentCC;
+		public Position position;
+		CrashState state;
+		CrashGui gui;
+		TransportationController controller;
+
+		public Crash(MobileAgent agent1, MobileAgent agent2, Position position, TransportationController controller) {
+			this.agent1 = agent1;
+			this.agent2 = agent2;
+			agentW = null;
+			agentC = null;
+			agentCC = null;
+			this.position = position;
+			this.controller = controller;
+			state = CrashState.ONGOING;
+
+			if(agent1 instanceof CarAgent && agent2 instanceof CarAgent) {
+				agentC = (CarAgent)agent1;
+				agentCC = (CarAgent)agent2;
+				gui = new CrashGui(position, false, controller);
+				agent1.msgCrash();
+				agent2.msgCrash();
+				controller.master.addGui(gui);
+			}
+			else if(agent1 instanceof CarAgent && agent2 instanceof WalkerAgent) {
+				agentW = (WalkerAgent)agent2;
+				agentC = (CarAgent)agent1;
+				gui = new CrashGui(position, true, controller);
+				controller.master.addGui(gui);
+				agent2.msgCrash();
+			}
+			else if(agent2 instanceof CarAgent && agent1 instanceof WalkerAgent) {
+				agentW = (WalkerAgent)agent1;
+				agentC = (CarAgent)agent2;
+				gui = new CrashGui(position, true, controller);
+				controller.master.addGui(gui);
+				agent1.msgCrash();
+			}
+			else {
+				state = CrashState.DONE;
+			}
+			
+		}
+	}
+
+	enum CrashState {
+		ONGOING,
+		DONE,
+		REMOVE
+	}
+
+	List<Crash> crashes;
 
 	public TransportationController(TransportationPanel panel) {
 		master = panel;
+		crashes = Collections.synchronizedList(new ArrayList<Crash>());
 		movingObjects = Collections.synchronizedList(new ArrayList<Mover>());
 
 		//++++++++++++++++++++++BEGIN CREATION OF GRID++++++++++++++++++++++
@@ -124,7 +185,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		for(int i = 0; i < grid.length; i++) {
 			for(int j = 0; j< grid[0].length; j++) {
-				grid[i][j] = new MovementTile(this);
+				grid[i][j] = new MovementTile(this, i, j);
 			}
 		}
 		//Walkways
@@ -231,19 +292,19 @@ public class TransportationController extends Agent implements Transportation{
 		//Houses first which are single tiles
 		grid[9][1].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);//Tiki Hut
 		grid[9][4].setUp(true);
-		
+
 		grid[32][6].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);//Haunted Mansion
 		grid[29][6].setRight(true);
-		
+
 		grid[1][10].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);//Rabbit Hole
 		grid[4][10].setLeft(true);
-		
+
 		grid[32][19].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);//Pirate's Suite
 		grid[29][19].setRight(true);
-		
+
 		grid[11][21].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);//Space Mountain
 		grid[11][24].setUp(true);
-		
+
 		grid[1][24].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);//Cinderella Castle
 		grid[4][24].setLeft(true);
 
@@ -296,8 +357,8 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Pizza and Apt #4
 		grid[10][18].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[11][18].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
-		grid[10][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[11][18].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[10][19].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[11][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[10][15].setDown(true);
 
@@ -316,8 +377,8 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Cafe
 		grid[24][20].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[25][21].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
-		grid[24][20].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
+		grid[25][20].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
+		grid[24][21].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[25][21].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[25][24].setUp(true);
 
@@ -411,7 +472,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		setCrossWalk(24, 12, false);//Bank
 
-		setCrossWalk(10, 18, false);//Pizza and Apt #4
+		setCrossWalk(10, 16, false);//Pizza and Apt #4
 		setCrossWalk(22, 18, false);//Southern Market
 
 		setCrossWalk(19, 2, true);//Apt #3 and Apt #5
@@ -420,7 +481,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		setCrossWalk(30, 24, true);//Apt #6 and Apt #7
 
-		setCrossWalk(4, 28, false);//Apt #8
+		setCrossWalk(4, 26, false);//Apt #8
 		setCrossWalk(10, 28, false);//Apt #9 and Bayou
 		setCrossWalk(22, 28, false);//Apt #10
 		setCrossWalk(28, 28, false);//Apt #11
@@ -467,7 +528,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Pizza Port");
 		tempBusStop.addNearbyBuilding("Cinderella Castle");
 		//		tempBusStop.addNearbyBuilding("Mickey's Market");
-		
+
 		tempBusStop = new BusStop("Bus Stop 3");//Bottom Left Bus
 		tempBusStop.associateWalkTile(new Position(9, 26));
 		busStops.add(tempBusStop);
@@ -475,7 +536,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #9");
 		tempBusStop.addNearbyBuilding("The Blue Bayou");
 		tempBusStop.addNearbyBuilding("Space Mountain");
-		
+
 		tempBusStop = new BusStop("Bus Stop 4");//Bottom Right Bus
 		tempBusStop.associateWalkTile(new Position(24, 26));
 		busStops.add(tempBusStop);
@@ -484,8 +545,8 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #11");
 		tempBusStop.addNearbyBuilding("Carnation Cafe");
 		tempBusStop.addNearbyBuilding("Minnie's Market");
-		
-		
+
+
 		tempBusStop = new BusStop("Bus Stop 5");//Center Right Bus
 		tempBusStop.associateWalkTile(new Position(30, 18));
 		busStops.add(tempBusStop);
@@ -493,7 +554,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #6");
 		tempBusStop.addNearbyBuilding("Main St Apartments #7");
 		tempBusStop.addNearbyBuilding("Pirate's Suite");
-		
+
 		tempBusStop = new BusStop("Bus Stop 6");//Right Top Bus
 		tempBusStop.associateWalkTile(new Position(30, 8));
 		busStops.add(tempBusStop);
@@ -501,7 +562,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Pirate Bank");
 		tempBusStop.addNearbyBuilding("Village Haus");
 		tempBusStop.addNearbyBuilding("Haunted Mansion");
-		
+
 		tempBusStop = new BusStop("Bus Stop 7");//Top Right Bus
 		tempBusStop.associateWalkTile(new Position(23, 3));
 		busStops.add(tempBusStop);
@@ -583,7 +644,7 @@ public class TransportationController extends Agent implements Transportation{
 		//+++++++++++++++++++++++END CREATION OF DIRECTORY+++++++++++++++++++++++
 		//Spawning Buses
 		buses = new ArrayList<BusAgent>();
-		
+
 		BusAgent tempBus = new BusAgent(this, new Position(4, 4));
 		BusGui busGui = new BusGui(4, 4, tempBus);
 		if(master != null)
@@ -591,8 +652,8 @@ public class TransportationController extends Agent implements Transportation{
 		tempBus.setGui(busGui);
 		tempBus.startThread();
 		buses.add(tempBus);
-		
-		
+
+
 		tempBus = new BusAgent(this, new Position(29, 25));
 		busGui = new BusGui(29, 25, tempBus);
 		if(master != null)
@@ -601,16 +662,22 @@ public class TransportationController extends Agent implements Transportation{
 		tempBus.startThread();
 		buses.add(tempBus);
 
-		
+
 		//Spawning Delivery Truck
-		truck = new TruckAgent(new Position(17, 2), this, new FlyingTraversal(grid), 18, 1);
-		TruckGui truckGui = new TruckGui(18, 2, truck);
+		truckMickey = new TruckAgent(new Position(17, 2), this, new FlyingTraversal(grid), 18, 1);
+		TruckGui truckGui = new TruckGui(17, 2, truckMickey);
 		if(master != null)
 			master.addGui(truckGui);
-		truck.setGui(truckGui);
-		truck.startThread();
+		truckMickey.setGui(truckGui);
+		truckMickey.startThread();
 
-		
+		truckMinnie = new TruckAgent(new Position(19, 20), this, new FlyingTraversal(grid), 20, 21);
+		truckGui = new TruckGui(19, 20, truckMinnie);
+		if(master != null)
+			master.addGui(truckGui);
+		truckMinnie.setGui(truckGui);
+		truckMinnie.startThread();
+
 		if(master != null)
 			super.startThread();
 	}
@@ -630,6 +697,9 @@ public class TransportationController extends Agent implements Transportation{
 			grid[x+1][y+1].setMovement(true, true, false, false, MovementType.CROSSWALK);
 		}
 
+
+		CrashGui CG = new CrashGui(new Position(4,10), false, this);
+		master.addGui(CG);
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
@@ -657,16 +727,43 @@ public class TransportationController extends Agent implements Transportation{
 	}
 
 	public void msgSendDelivery(Restaurant restaurant, Market market, String food, int quantity, int id) {
-		truck.msgDeliverOrder(restaurant, market, food, quantity, id);
+		if(market.getName().equals("Mickey's Market"))
+			truckMickey.msgDeliverOrder(restaurant, market, food, quantity, id);
+		else
+			truckMinnie.msgDeliverOrder(restaurant, market, food, quantity, id);
 	}
 
 	public void msgSendDelivery(Person person, Market market, String food, int quantity, String location) {
-		truck.msgDeliverOrder(person, market, food, quantity, location);
+		if(market.getName().equals("Mickey's Market"))
+			truckMickey.msgDeliverOrder(person, market, food, quantity, location);
+		else
+			truckMinnie.msgDeliverOrder(person, market, food, quantity, location);
+	}
+
+	public void msgCrash(MobileAgent agent1, MobileAgent agent2, Position position) {
+		crashes.add(new Crash(agent1, agent2, position, this));
+	}
+
+	public void msgCrashCompleted(CrashGui crash) {
+		for(Crash c : crashes) {
+			if(c.gui == crash) {
+				c.state = CrashState.REMOVE;
+			}
+		}
 	}
 
 	//+++++++++++++++++SCHEDULER+++++++++++++++++
 	@Override
 	public boolean pickAndExecuteAnAction() {
+		synchronized(crashes) {
+			for(Crash crash : crashes) {
+				if(crash.state == CrashState.REMOVE) {
+					removeCrash(crash);
+					return true;
+				}
+			}
+		}
+
 		synchronized(movingObjects) {
 			for(Mover mover : movingObjects) {
 				if(mover.transportationState == TransportationState.REQUEST) {
@@ -697,6 +794,35 @@ public class TransportationController extends Agent implements Transportation{
 				return true;
 		}
 		return false;
+	}
+
+	private void removeCrash(Crash crash) {
+		//Remove crash from the map
+		//Open up semaphore of the crash
+		//message people about their crash
+		if(crash.agentCC == null) {//One person crash
+			if(crash.agentW != null) {
+				crash.agentW.msgCrash();
+				crash.agentW.getPerson().msgCrash(true);
+			}
+			if(crash.agentC != null) {
+				crash.agentW.msgCrash();
+				crash.agentC.getPerson().msgCrash(false);
+			}
+		}
+		if(crash.agentW == null) {//Two car crash
+			if(crash.agentCC != null) {
+				crash.agentW.msgCrash();
+				crash.agentW.getPerson().msgCrash(true);
+			}
+			if(crash.agentC != null) {
+				crash.agentW.msgCrash();
+				crash.agentC.getPerson().msgCrash(true);
+			}
+		}
+		if(grid[crash.position.getX()][crash.position.getY()].availablePermits() == 0)
+		grid[crash.position.getX()][crash.position.getY()].release();
+		crash.state = CrashState.DONE;
 	}
 
 	private void spawnMover(Mover mover) {

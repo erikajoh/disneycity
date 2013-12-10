@@ -6,12 +6,12 @@ import bank.gui.Account;
 import bank.interfaces.Teller;
 import bank.interfaces.Manager;
 import bank.interfaces.BankCustomer;
-import bank.test.mock.MockTeller.State;
 
 import java.util.*;
 
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
+import simcity.interfaces.Person;
 
 /**
  * bank Host Agent
@@ -19,10 +19,13 @@ import simcity.gui.trace.AlertTag;
 
 public class TellerAgent extends Agent implements Teller {
 	Manager manager;
+	Person person;
+	
 	final static double amountPerDay = 25.00;
 	private Random robberySuccess = new Random();
 	
-	enum State{ shouldEnter, shouldLeave, stay};
+	enum State{shouldEnter, shouldLeave, working};
+	State state = State.working;
 	
 	enum CustomerState {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
 
@@ -160,9 +163,13 @@ public class TellerAgent extends Agent implements Teller {
 		stateChanged();
 	}
 	
+	public void	msgOpen(){
+		state = State.shouldEnter;
+		stateChanged();
+	}
+	
 	public void	msgClose(){
-		print("CLOSE BANK");
-		customer.state = CustomerState.leaving;
+		state = State.shouldLeave;
 		stateChanged();
 	}
 	
@@ -196,6 +203,12 @@ public class TellerAgent extends Agent implements Teller {
 			   customerLeaving();
 			   return true;
 		  }
+		}
+		if(state == State.shouldEnter){
+			enterBank();
+		}
+		if(state == State.shouldLeave){
+			leaveBank();
 		}
 		
 		return false;
@@ -284,8 +297,21 @@ public class TellerAgent extends Agent implements Teller {
 		customer = null;
 	}
 	
+	private void enterBank(){
+		tellerGui.DoEnterBank();
+	}
+	private void leaveBank(){
+		tellerGui.DoLeaveBank();
+		//person.msgLeftBankAsTeller();
+	}
+	
 	
 	//utilities
+	
+	public void setPerson(Person p) {
+		person = p;
+	}
+	
 	public void setGui(TellerGui gui) {
 		tellerGui = gui;	
 	}

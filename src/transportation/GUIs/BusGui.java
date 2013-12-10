@@ -98,4 +98,9 @@ public class BusGui implements Gui{
 	public void setPanel(TransportationPanel p) {
 		panel = p;
 	}
+	
+	@Override
+	public String returnType() {
+		return "Bus";
+	}
 }

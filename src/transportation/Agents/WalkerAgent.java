@@ -55,7 +55,7 @@ public class WalkerAgent extends MobileAgent{
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		//System.out.println("Releasing " + currentPosition.toString());
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
@@ -65,6 +65,11 @@ public class WalkerAgent extends MobileAgent{
 		animSem.release();
 	}
 
+	@Override
+	public void msgCrash() {
+		gui.crash();
+	}
+	
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {
@@ -128,7 +133,7 @@ public class WalkerAgent extends MobileAgent{
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
-				if(tmpPath == goal)
+				if(tmpPath.getX() == goal.getX() && tmpPath.getY() == goal.getY())
 					goToPosition(goal, null);
 				else
 					goToPosition(goal, tmpPath);
@@ -138,6 +143,7 @@ public class WalkerAgent extends MobileAgent{
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
 			//currentPosition.release(aStar.getGrid());
+			master.getGrid()[tmpPath.getX()][tmpPath.getY()].addOccupant(this);
 			gui.setMoving();
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			//System.out.println("DESTINATION: " + tmpPath.toString());
@@ -168,6 +174,7 @@ public class WalkerAgent extends MobileAgent{
 			beginBusStop.addRider(walker, endBusStop, building);
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 			//System.out.println("Releasing " + currentPosition.toString());
 		}
 		gui.setIgnore();
@@ -184,6 +191,7 @@ public class WalkerAgent extends MobileAgent{
 		return "walker";
 	}
 
+	@Override
 	public Person getPerson() {
 		return walker;
 	}
