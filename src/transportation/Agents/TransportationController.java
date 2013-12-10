@@ -698,7 +698,7 @@ public class TransportationController extends Agent implements Transportation{
 		}
 
 
-		CrashGui CG = new CrashGui(new Position(4,10), false, this);
+		CrashGui CG = new CrashGui(new Position(0,0), false, this);
 		master.addGui(CG);
 	}
 
@@ -742,6 +742,7 @@ public class TransportationController extends Agent implements Transportation{
 
 	public void msgCrash(MobileAgent agent1, MobileAgent agent2, Position position) {
 		crashes.add(new Crash(agent1, agent2, position, this));
+		stateChanged();
 	}
 
 	public void msgCrashCompleted(CrashGui crash) {
@@ -750,6 +751,7 @@ public class TransportationController extends Agent implements Transportation{
 				c.state = CrashState.REMOVE;
 			}
 		}
+		stateChanged();
 	}
 
 	//+++++++++++++++++SCHEDULER+++++++++++++++++
@@ -802,21 +804,21 @@ public class TransportationController extends Agent implements Transportation{
 		//message people about their crash
 		if(crash.agentCC == null) {//One person crash
 			if(crash.agentW != null) {
-				crash.agentW.msgCrash();
+				crash.agentW.crashDone();
 				crash.agentW.getPerson().msgCrash(true);
 			}
 			if(crash.agentC != null) {
-				crash.agentW.msgCrash();
+				crash.agentC.crashDone();
 				crash.agentC.getPerson().msgCrash(false);
 			}
 		}
 		if(crash.agentW == null) {//Two car crash
 			if(crash.agentCC != null) {
-				crash.agentW.msgCrash();
-				crash.agentW.getPerson().msgCrash(true);
+				crash.agentCC.crashDone();
+				crash.agentCC.getPerson().msgCrash(true);
 			}
 			if(crash.agentC != null) {
-				crash.agentW.msgCrash();
+				crash.agentC.crashDone();
 				crash.agentC.getPerson().msgCrash(true);
 			}
 		}

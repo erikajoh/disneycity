@@ -35,9 +35,10 @@ public class CarAgent extends MobileAgent{
 		this.aStar = aStar;
 	}
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
@@ -137,9 +138,10 @@ public class CarAgent extends MobileAgent{
 	}
 
 	public void tauntAndLeave() {
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
+//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		master.msgArrivedAtDestination(driver);
 		gui.setIgnore();
@@ -159,5 +161,9 @@ public class CarAgent extends MobileAgent{
 	@Override
 	public Person getPerson() {
 		return driver;
+	}
+	public void crashDone() {
+		gui.crashDone();
+		
 	}
 }

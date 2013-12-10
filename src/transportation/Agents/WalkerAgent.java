@@ -53,8 +53,8 @@ public class WalkerAgent extends MobileAgent{
 	}
 
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
 		}
 		//System.out.println("Releasing " + currentPosition.toString());
@@ -172,8 +172,8 @@ public class WalkerAgent extends MobileAgent{
 		}
 		else
 			beginBusStop.addRider(walker, endBusStop, building);
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
 			//System.out.println("Releasing " + currentPosition.toString());
 		}
@@ -194,6 +194,10 @@ public class WalkerAgent extends MobileAgent{
 	@Override
 	public Person getPerson() {
 		return walker;
+	}
+
+	public void crashDone() {
+		gui.crashDone();
 	}
 
 }
