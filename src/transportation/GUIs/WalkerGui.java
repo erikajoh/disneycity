@@ -75,10 +75,8 @@ public class WalkerGui implements Gui{
 
 	public void draw(Graphics2D g, Point offset) {
 		animModule.updateAnimation();
-		if(xPos - offset.getX() < -30 || xPos - offset.getX() > 500 || yPos - offset.getY() < -30 || yPos - offset.getY() > 500)
-			return;
+		if(xPos - offset.getX() < -30 || xPos - offset.getX() > panel.getWidth()+50 || yPos - offset.getY() < -30 || yPos - offset.getY() > panel.getHeight()+50) return;
 		g.drawImage(animModule.getImage(), (int)xPos - (int)offset.getX(), (int)yPos - (int)offset.getY(), null);
-		g.drawString(agent.getPerson().getName(), (int)xPos - (int)offset.getX(), (int)yPos - (int)offset.getY());
 	}
 
 	public void setDestination (float xDestination, float yDestination) {
