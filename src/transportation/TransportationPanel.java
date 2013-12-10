@@ -176,6 +176,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 		synchronized (guis) {
 			for(Gui gui : guis) {
+				/*
 				if(gui instanceof WalkerGui) {
 					WalkerGui temp = (WalkerGui)gui;
 					//System.out.println(temp.agent.getPerson().getName());
@@ -187,6 +188,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 				if(guis.indexOf(gui) == 46)
 					System.exit(0);
 				System.out.println(gui.returnType());
+				*/
 				if (gui.isPresent()) {
 					gui.updatePosition();
 				}
