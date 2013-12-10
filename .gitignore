@@ -27,3 +27,5 @@ Desktop.ini
 /build
 /nbproject
 /nbbuild/
+manifest.mf
+nb-build.xml
