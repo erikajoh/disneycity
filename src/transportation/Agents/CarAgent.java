@@ -24,6 +24,8 @@ public class CarAgent extends MobileAgent{
 	CarTraversal aStar;
 	Semaphore animSem;
 	
+	final int crashChance = 100;
+	
 	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, CarTraversal aStar) {
 		this.driver = person;
 		this.currentPosition = currentPosition;
@@ -120,7 +122,7 @@ public class CarAgent extends MobileAgent{
 				break;
 			}
 			
-			if(!gotPermit && randomInt == 0) {//it goes anyway and causes a crash
+			if(!gotPermit && randomInt <= crashChance) {//it goes anyway and causes a crash
 				aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].release();
 			}
 			//Got the required lock. Lets move.
