@@ -4,15 +4,10 @@ import bank.gui.BankCustomerGui;
 import simcity.gui.SimCityGui;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
-import bank.gui.Account;
 import bank.interfaces.BankCustomer;
-import bank.interfaces.Person;
 import bank.interfaces.Teller;
 import bank.interfaces.Manager;
 import agent.Agent;
-
-import java.util.*;
-
 
 
 /**

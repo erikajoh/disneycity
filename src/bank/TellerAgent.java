@@ -24,8 +24,7 @@ public class TellerAgent extends Agent implements Teller {
 	final static double amountPerDay = 25.00;
 	private Random robberySuccess = new Random();
 	
-	enum State{shouldEnter, shouldLeave, working};
-	State state = State.working;
+	boolean shouldLeave = false;
 	
 	enum CustomerState {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
 
@@ -169,7 +168,7 @@ public class TellerAgent extends Agent implements Teller {
 	}
 	
 	public void	msgClose(){
-		state = State.shouldLeave;
+		shouldLeave = true;
 		stateChanged();
 	}
 	
@@ -204,11 +203,8 @@ public class TellerAgent extends Agent implements Teller {
 			   return true;
 		  }
 		}
-		if(state == State.shouldEnter){
-			enterBank();
-			return true;
-		}
-		if(state == State.shouldLeave){
+		
+		if(shouldLeave == true){
 			leaveBank();
 			return true;
 		}
@@ -299,11 +295,10 @@ public class TellerAgent extends Agent implements Teller {
 		customer = null;
 	}
 	
-	private void enterBank(){
-		tellerGui.DoEnterBank();
-	}
+	
 	private void leaveBank(){
 		tellerGui.DoLeaveBank();
+		shouldLeave = false;
 		//person.msgLeftBankAsTeller(double moneyMade);
 	}
 	

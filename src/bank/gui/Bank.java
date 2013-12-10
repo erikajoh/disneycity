@@ -148,6 +148,9 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		t.setGui(g);
     		manager.addTeller(t);
     		t.startThread();
+    		if(tellers.size()==1){
+    			//msgBankOpen();
+    		}
     }
     
     public void setTellerAmt(int amount){
