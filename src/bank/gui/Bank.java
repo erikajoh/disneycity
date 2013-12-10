@@ -151,6 +151,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void addPerson(Person person){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "ADD TELLER");
     		TellerAgent t = new TellerAgent(person, person.getName());	
     		TellerGui g = new TellerGui(t, gui, tellers.size());
     		gui.bankAniPanel.addGui(g);
