@@ -378,6 +378,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", null, 'c');
 		restRancho.setMarket(mickeysMarket);
 		restRancho.setBank(pirateBank);
+		restCafe.setMarket(mickeysMarket);
 		//restRancho.addPerson(null, "Cook", "cook", 50);
         //restRancho.addPerson(null, "WaiterPC", "w", 50);
         //restRancho.addPerson(p, "Cashier", "cash", 50);
