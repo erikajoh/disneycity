@@ -40,6 +40,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	SimCityGui gui = null;
 	
 	JComboBox scenarioList;
+	JButton startButton = new JButton("Start");
 
 	RestaurantRancho restRancho;
 	RestaurantPizza restPizza;
@@ -76,6 +77,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
 	public final static int NUM_MARKETS = 1;
+	public final static int NUM_BANKS = 1;
 	
 	public final static String MAIN_CONFIG_FILE = "config-file-rancho-two-shifts.txt";
 
@@ -84,6 +86,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	ArrayList<Restaurant> restaurants = new ArrayList<Restaurant>();
 	ArrayList<Housing> housings = new ArrayList<Housing>();
 	ArrayList<Market> markets = new ArrayList<Market>();
+	ArrayList<Bank> banks = new ArrayList<Bank>();
 	
 	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
 	 
@@ -93,14 +96,22 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		
 		/* Scenario panel */
 		JPanel selection = new JPanel();
-		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
+		String[] scenarios = {	"1-One person go",
+								"2-Three people go",
+								"3-CookCashierMarket",
+								"5-Bus stops",
+								"6-Closed places",
+								"7-Market deliver fail",
+								"10-50 people" };
 		// Create the combo box, select item at index 0.
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
 		scenarioList.addActionListener(this);
 		selection.setLayout(new FlowLayout());
-		selection.add(new JLabel("Choose a scenario:"));
+		selection.add(new JLabel(""));
 		selection.add(scenarioList);
+		startButton.addActionListener(this);
+	    selection.add(startButton);
 		add(selection);
 		
 		String foodPrefMexican = "Mexican";
@@ -161,16 +172,46 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		mickeysMarket = gui.mickeysMarket;
 		markets.add(mickeysMarket);
 		
+		banks.add(pirateBank);
+		
 		transportation = gui.cityAniPanel.getTransportation();
 		
 		animationPanelsList = gui.animationPanelsList;
 		
-		initializeFromConfigFile("simcity_config_v2_main.txt");
-		
 	    setLayout(new GridLayout());
+	    
+	    //beginSimulation();
+	}
 	
-		/* timing */
-	    newDay();
+	public void beginSimulation() {
+		int scenarioInd = scenarioList.getSelectedIndex();
+		String fileName = MAIN_CONFIG_FILE;
+		
+		if(scenarioInd == 0) {
+			fileName = "config-file_scenario-1.txt"; // TODO
+		}
+		if(scenarioInd == 1) {
+			fileName = "config-file_scenario-2.txt";
+		}
+		if(scenarioInd == 2) {
+			fileName = "config-file_scenario-3.txt"; // TODO
+		}
+		if(scenarioInd == 3) {
+			fileName = "config-file_scenario-5.txt"; // TODO
+		}
+		if(scenarioInd == 4) {
+			fileName = "config-file_scenario-6.txt"; // TODO
+		}
+		if(scenarioInd == 5) {
+			fileName = "config-file_scenario-7.txt"; // TODO
+		}
+		if(scenarioInd == 6) {
+			fileName = "config-file_scenario-10.txt";
+		}
+		
+		startButton.setEnabled(false);
+		initializeFromConfigFile(fileName);
+		newDay();
 	}
 	
 	public void setTransPanel(TransportationPanel tp) {
@@ -221,15 +262,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	// Configuration file parsing
 	// Upon instantiation, pass all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 	public void initializeFromConfigFile(String fileName) {
-		resetAllElements(); // TODO: are we using this?
-		
 		try {			
 			// begin new parser
 			// from CSCI 201 website
 			// Step 1: get all the names of the people so that:
 				// a) the person knows which housing he lives
 				// b) we know which properties files to use
-			URL mainFileURL = getClass().getResource("/res/" + MAIN_CONFIG_FILE);
+			URL mainFileURL = getClass().getResource("/res/" + fileName);
 			URI mainFileURI = mainFileURL.toURI(); 
 			BufferedReader br = new BufferedReader(new FileReader(new File(mainFileURI)));
 			int numPeople = Integer.parseInt(br.readLine());
@@ -292,6 +331,26 @@ public class SimCityPanel extends JPanel implements ActionListener {
 						personToAdd.addMarket(m, marketRole, marketShift); // key step
 				}
 				
+				// parsing banks
+				for(int bankInd = 1; bankInd <= NUM_BANKS; bankInd++) {
+					String bankName = props.getProperty("bank" + bankInd + "_name");
+					if(bankName == null) bankName = "Pirate Bank";
+					
+					String bankRole = props.getProperty("bank" + bankInd + "_role");
+					if(bankRole == null) bankRole = "Customer";
+					
+					String bankShiftString = props.getProperty("bank" + bankInd + "_shift");
+					int bankShift = 0;
+					if(bankShiftString != null)
+						bankShift = Integer.parseInt(bankShiftString);
+					
+					if(bankName != null) {
+						Bank b = mapStringToBank(bankName);
+						if(b != null)
+							personToAdd.addBank(b, bankRole, bankShift); // key step
+					}
+				}
+				
 				people.add(personToAdd);
 			}
 				
@@ -316,10 +375,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			String theDay = br.readLine();
 			setDay(theDay);
 			
-			// TODO: Need two banks
 			for(int personInd = 0; personInd < people.size(); personInd++) {
 				PersonAgent currPerson = people.get(personInd);
-				currPerson.addBank(pirateBank, "Customer");				
+				
+				//currPerson.addBank(pirateBank, "Customer", 0);				
 				currPerson.startThread();
 			}
 			// end new parser
@@ -328,10 +387,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		}
 	}
 
-	// TODO reset all elements
-	public void resetAllElements() {
-		
-	}
 	
 	public Housing mapStringToHousing(String houseName) {
 		if(houseName.equals("Haunted Mansion")){
@@ -409,6 +464,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		return null;
 	}
 	
+	public Bank mapStringToBank(String bankName) {
+		for(int i = 0; i < banks.size(); i++)
+			if(bankName.equals(banks.get(i).getBankName()))
+				return banks.get(i);
+		return null;
+	}
+	
 	public void newDay() {
 		timer = new Timer();
 	    timer.scheduleAtFixedRate(new TimerTask() {
@@ -417,6 +479,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				handleTick();
 			}
 		}, 0, TICK_DELAY);
+	}
+	
+	public void banksAreOpen(boolean open) {
+		for(int i = 0; i < people.size(); i++) {
+			PersonAgent person = people.get(i);
+			person.msgSetBanksOpen(open);
+		}
 	}
 	
 	public void handleTick() {
@@ -509,11 +578,11 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift Start");
-				theRestaurant.StartOfShift();
+				theRestaurant.startOfShift();
 			}
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift End");
-				theRestaurant.EndOfShift();
+				theRestaurant.endOfShift();
 			}
 		}
 		
@@ -639,20 +708,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		return "ERROR";
 	}
 	
-	/*
-	 * 
-	 * private static final long START_OF_DAY		= 1;
-	private static final long MORNING			= START_OF_DAY		+ 40; //41
-	private static final long WORK_ONE_START	= MORNING			+ 150;//191
-	private static final long NOON				= WORK_ONE_START	+ 150;//341
-	private static final long WORK_ONE_END		= NOON				+ 150;//491
-	private static final long WORK_TWO_START	= WORK_ONE_END		+ 160;//651
-	private static final long EVENING			= WORK_TWO_START	+ 150;//801
-	private static final long WORK_TWO_END		= EVENING			+ 150;//951
-	private static final long NIGHT				= WORK_TWO_END		+ 160;//1111
-	private static final long END_OF_DAY		= NIGHT				+ 800;//1911
-	 */
-
 	public String[] getAllPeople() {
 		ArrayList<String> names = new ArrayList<String>();
 		for(int i = 0; i < people.size(); i++) {
@@ -691,7 +746,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		return true;
 	}
 	
-	public 	ArrayList<PersonAgent> getPeople() {
+	public ArrayList<PersonAgent> getPeople() {
 		return people;
 	}
 
@@ -701,6 +756,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			JComboBox cb = (JComboBox)e.getSource();
 	        String scenarioName = (String)cb.getSelectedItem();
 			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Changed to "+scenarioName);
+		}
+		if (e.getSource() instanceof JButton) {
+			beginSimulation();
 		}
 	}
 }

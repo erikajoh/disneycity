@@ -56,6 +56,8 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     Market_Douglass market;
     boolean isOpen = false;
     
+    private int numWorkers;
+    
     private static final int GAP_SIZE = 10;
     private static int WAITER_X_START = 140;
     private static int WAITER_Y_START = 110;
@@ -349,14 +351,14 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	}
 
 	@Override
-	public void StartOfShift() {
+	public void startOfShift() {
 		isOpen = true;
 	}
 
 	@Override
-	public void EndOfShift() {
+	public void endOfShift() {
 		isOpen = false;
-		System.out.println("RESTAURANT GOT END OF SHIFT");
+		System.out.println("RESTAURANT PIZZA GOT END OF SHIFT");
 
 		if (host!=null) {
 			host.msgShiftDone();

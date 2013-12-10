@@ -7,6 +7,10 @@ import simcity.interfaces.Person;
 public interface Bank_Douglass {
 	public String getBankName();
 	
+	public boolean isOpen();
+	
+	public void addPerson(Person person);
+	
 	public void msgRequestAccount(Person person, double reqAmt, boolean present);
 	public void msgRequestDeposit(Person person, int accountNum, double reqAmt, boolean present);
 	public void msgRequestWithdrawal(Person person, int accountNum, double reqAmt, boolean present);

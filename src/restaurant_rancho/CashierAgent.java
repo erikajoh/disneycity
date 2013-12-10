@@ -100,9 +100,6 @@ public class CashierAgent extends Agent implements Cashier{
 		stateChanged();
 	}
 	
-	public void subtract(double amount) {
-		money-=amount;
-	}
 	
 	public void msgHereIsMarketBill(Market_Douglass m, double amount){
 		log.add(new LoggedEvent("Received Market Bill."));
@@ -306,6 +303,10 @@ public class CashierAgent extends Agent implements Cashier{
 			}
 		}
 		return null;
+	}
+	
+	public void subtract(double amount) {
+		money-=amount;
 	}
 
 
