@@ -1,5 +1,6 @@
 package bank.test;
 
+import bank.test.mock.LoggedEvent;
 import bank.test.mock.MockBank;
 import bank.test.mock.MockBankCustomer;
 import bank.test.mock.MockManager;
@@ -71,7 +72,6 @@ public class BankCustomerTest extends TestCase
         teller3 = new MockTeller("Teller3");	
         teller3.setManager(manager);
     	manager.addTeller(teller3);
-    	
 	}	
 	/**
 	 * This tests the customer under very simple terms: opening an account and having the correct amount of cash at the end
@@ -79,7 +79,7 @@ public class BankCustomerTest extends TestCase
 	public void testBankOpenAccountScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(50.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -115,7 +115,7 @@ public class BankCustomerTest extends TestCase
 	public void testBankOpenAndDepositScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(50.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -172,7 +172,7 @@ public class BankCustomerTest extends TestCase
 public void testBankOpenAndWithdrawScenario(){
 	customer0 = new MockPerson("Person");
 	customer0.setBalance(50.00);
-	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 	customer0.setBank(bank);
 	assertEquals(customer0.accounts.size(), 0);
 	assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -229,7 +229,7 @@ public void testBankOpenAndWithdrawScenario(){
  public void testBankOpenAndWithdrawUntilLoanScenario(){
 	customer0 = new MockPerson("Person");
 	customer0.setBalance(50.00);
-	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 	customer0.setBank(bank);
 	assertEquals(customer0.accounts.size(), 0);
 	assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -306,7 +306,7 @@ public void testBankOpenAndWithdrawScenario(){
   public void testBankPayBackLoanScenario(){
  	customer0 = new MockPerson("Person");
  	customer0.setBalance(50.00);
- 	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+ 	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
  	customer0.setBank(bank);
  	assertEquals(customer0.accounts.size(), 0);
  	assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -450,7 +450,7 @@ public void testBankOpenAndWithdrawScenario(){
    public void testBankMultipleLoansScenario(){
   	customer0 = new MockPerson("Person");
   	customer0.setBalance(50.00);
-  	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+  	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
   	customer0.setBank(bank);
   	assertEquals(customer0.accounts.size(), 0);
   	assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -551,7 +551,7 @@ public void testBankOpenAndWithdrawScenario(){
    public void testBankFailPayBackLoanScenario(){
   	customer0 = new MockPerson("Person");
   	customer0.setBalance(50.00);
-  	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+  	customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
   	customer0.setBank(bank);
   	assertEquals(customer0.accounts.size(), 0);
   	assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -772,7 +772,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankOpenTwoAccountsScenario(){
 		customer0 = new MockPerson("Person");
 	  	customer0.setBalance(50.00);
-	  	customer0.msgArrive(-1, 10.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+	  	customer0.msgArrive(-1, 10.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 	  	customer0.setBank(bank);
 	  	assertEquals(customer0.accounts.size(), 0);
 	  	assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -801,7 +801,7 @@ public void testBankOpenAndWithdrawScenario(){
 	  	assertEquals(customer0.balance, 40.00);
 	  	assertEquals(customer0.accounts.size(), 1);
 		
-		customer0.msgArrive(-1, 40.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 40.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 1);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -839,7 +839,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankOpenTwoAccountsAndDepositScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(100.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -868,7 +868,7 @@ public void testBankOpenAndWithdrawScenario(){
 		assertEquals(customer0.balance, 75.0);
 		assertEquals(customer0.accounts.size(), 1);
 		
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 1);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -979,7 +979,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankOpenTwoAccountsAndLoanScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(100.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1008,7 +1008,7 @@ public void testBankOpenAndWithdrawScenario(){
 		assertEquals(customer0.balance, 75.0);
 		assertEquals(customer0.accounts.size(), 1);
 		
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 1);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1120,7 +1120,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankPayLoanFromOtherAccountScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(100.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1149,7 +1149,7 @@ public void testBankOpenAndWithdrawScenario(){
 		assertEquals(customer0.balance, 75.0);
 		assertEquals(customer0.accounts.size(), 1);
 		
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 1);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1318,7 +1318,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankTwoAccountsTwoLoans(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(100.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1347,7 +1347,7 @@ public void testBankOpenAndWithdrawScenario(){
 		assertEquals(customer0.balance, 75.0);
 		assertEquals(customer0.accounts.size(), 1);
 		
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 1);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1600,7 +1600,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankTwoCustomersSameTellerScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(50.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1631,7 +1631,7 @@ public void testBankOpenAndWithdrawScenario(){
 		
 		customer1 = new MockPerson("Person1");
 		customer1.setBalance(50.00);
-		customer1.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer1.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer1.setBank(bank);
 		assertEquals(customer1.accounts.size(), 0);
 		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
@@ -1709,7 +1709,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankTwoCustomersWithLoansSameTellerScenario(){
 		customer0 = new MockPerson("Person"); //initializing customer0 with an account with 100.00 cash, 0 on hand
 		customer0.setBalance(100.00);
-		customer0.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -1741,7 +1741,7 @@ public void testBankOpenAndWithdrawScenario(){
 		
 		customer1 = new MockPerson("Person1"); //initializing customer1 with an account with 100.00 cash, 0 on hand
 		customer1.setBalance(100.00);
-		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer1.setBank(bank);
 		assertEquals(customer1.accounts.size(), 0);
 		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
@@ -1980,7 +1980,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankTwoCustomersTwoAccountsDiffTellerScenario(){
 		customer0 = new MockPerson("Person"); //initializing customer0 with an account with 100.00 cash, 0 on hand
 		customer0.setBalance(200.00);
-		customer0.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -2013,7 +2013,7 @@ public void testBankOpenAndWithdrawScenario(){
 		
 		customer1 = new MockPerson("Person1"); //initializing customer1 with an account with 100.00 cash, 0 on hand
 		customer1.setBalance(200.00);
-		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer1.setBank(bank);
 		assertEquals(customer1.accounts.size(), 0);
 		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
@@ -2043,7 +2043,7 @@ public void testBankOpenAndWithdrawScenario(){
 		assertEquals(customer1.getBalance(1), 100.00);
 		assertEquals(customer1.accounts.size(), 1);
 		
-		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer1.msgArrive(-1, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer1.setBank(bank);
 		assertEquals(customer1.accounts.size(), 1);
 		assertTrue("customer1 has arrived", customer1.pickAndExecuteAnAction());
@@ -2149,7 +2149,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankTwoCustomersDiffTellerScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(50.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -2261,7 +2261,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankTwoCustomersWithLoansDiffTellerScenario(){
 		customer0 = new MockPerson("Person");
 		customer0.setBalance(50.00);
-		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+		customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 		customer0.setBank(bank);
 		assertEquals(customer0.accounts.size(), 0);
 		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -2450,7 +2450,7 @@ public void testBankOpenAndWithdrawScenario(){
 	public void testBankTwoCustomersMultAccountsWithLoansDiffTellerScenario(){
 			customer0 = new MockPerson("Person");
 			customer0.setBalance(50.00);
-			customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, any other num for new acc or no num
+			customer0.msgArrive(-1, 25.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
 			customer0.setBank(bank);
 			assertEquals(customer0.accounts.size(), 0);
 			assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
@@ -2687,4 +2687,159 @@ public void testBankOpenAndWithdrawScenario(){
 			assertEquals(customer1.getLoanTime(2), 0); //reset
 			assertEquals(customer1.accounts.size(), 2); //account # is 2
 	    }
+	/**
+	 * This tests the non-normative scenario of a person successfully robbing the bank
+	 */
+	public void testBankSuccessfulThiefScenario(){
+		customer0 = new MockPerson("Person");
+		customer0.setBalance(0.00);
+		customer0.msgArrive(2, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
+		customer0.setBank(bank);
+		assertEquals(customer0.accounts.size(), 0);
+		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("Thief"));
+		MockBankCustomer mbc = bank.getMBC(customer0);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("robbery"));
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("Gonna rob this bank"));
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+		mbc.msgAnimationFinishedGoToTeller();
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should rob bank", mbc.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("robbing"));
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("Teller being robbed"));
+		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ROBBED BANK? true"));
+	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+	  	mbc.msgAnimationFinishedLeavingBank();
+	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
+		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue(customer0.log.getLastLoggedEvent().toString(), customer0.log.containsString("TRANSACTION COMPLETE"));
+		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+		assertEquals(customer0.balance, 100.0);
+		assertEquals(customer0.accounts.size(), 0);
+	}
+	
+	/**
+	 * This tests the non-normative scenario of a person failing to rob the bank
+	 */
+	public void testBankFailureThiefScenario(){
+		customer0 = new MockPerson("Person");
+		customer0.setBalance(0.00);
+		customer0.msgArrive(2, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
+		customer0.setBank(bank);
+		teller0.setSuccess(false);
+		assertEquals(customer0.accounts.size(), 0);
+		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("Thief"));
+		MockBankCustomer mbc = bank.getMBC(customer0);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("robbery"));
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("Gonna rob this bank"));
+		assertTrue("MockBankCustomer will go to teller", mbc.pickAndExecuteAnAction());
+		mbc.msgAnimationFinishedGoToTeller();
+		assertNotSame(mbc.teller, null);
+		assertTrue("Finished simulation to teller so bank customer should open account", mbc.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("robbing"));
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("Teller being robbed"));
+		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ROBBED BANK? false"));
+	  	assertTrue("Spawned bank customer will try to leave the bank", mbc.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("Tripped and fell on the floor"));
+	  	mbc.msgAnimationFinishedLeavingBank();
+	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
+		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue(customer0.log.getLastLoggedEvent().toString(), customer0.log.containsString("TRANSACTION COMPLETE"));
+		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+		assertEquals(customer0.balance, 0.00);
+		assertEquals(customer0.accounts.size(), 0);
+	}
+	
+	/**
+	 * This tests the non-normative scenario of two robberies happening concurrently (with different tellers)
+	 */
+	public void testBankMultipleThievesScenario(){
+		customer0 = new MockPerson("Person");
+		customer0.setBalance(0.00);
+		customer0.msgArrive(2, 100.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
+		customer0.setBank(bank);
+		customer1 = new MockPerson("Person");
+		customer1.setBalance(0.00);
+		customer1.msgArrive(2, 1000.00); //hack for mock, 0 for deposit, 1 for withdraw, 2 for deposit, any other num for new acc or no num
+		customer1.setBank(bank);
+		teller0.setSuccess(true);
+		teller1.setSuccess(false);
+		
+		//customer0 goes to teller0
+		assertEquals(customer0.accounts.size(), 0);
+		assertTrue("Customer0 has arrived", customer0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("Thief"));
+		MockBankCustomer mbc = bank.getMBC(customer0);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("robbery"));
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("Gonna rob this bank"));
+		assertEquals(mbc.getTeller(), teller0);
+		assertTrue("MockBankCustomer0 will go to teller", mbc.pickAndExecuteAnAction());
+		mbc.msgAnimationFinishedGoToTeller();
+		
+		//customer1 goes to teller1
+		assertEquals(customer1.accounts.size(), 0);
+		assertTrue("Customer1 has arrived", customer1.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("Thief"));
+		MockBankCustomer mbc1 = bank.getMBC(customer1);
+		assertTrue("Manager can assign customer to teller", manager.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("robbery"));
+		assertTrue(mbc1.log.getLastLoggedEvent().toString(), mbc1.log.containsString("Gonna rob this bank"));
+		assertEquals(mbc1.getTeller(), teller1);
+		assertTrue("MockBankCustomer1 will go to teller", mbc1.pickAndExecuteAnAction());
+		mbc1.msgAnimationFinishedGoToTeller();
+
+		
+		//customer 0 tries to rob the bank successfully
+		assertTrue("Finished simulation to teller so bank customer should rob bank", mbc.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("robbing"));
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("Teller being robbed"));
+		assertTrue("Teller0 will finally open the account", teller0.pickAndExecuteAnAction());
+		assertTrue(mbc.log.getLastLoggedEvent().toString(), mbc.log.containsString("ROBBED BANK? true"));
+
+		
+		//customer 1 tries to rob the bank unsuccessfully, trips and falls first
+		assertTrue("Finished simulation to teller so bank customer should open account", mbc1.pickAndExecuteAnAction());
+		assertTrue(mbc1.log.getLastLoggedEvent().toString(), mbc1.log.containsString("robbing"));
+		assertTrue(teller1.log.getLastLoggedEvent().toString(), teller1.log.containsString("Teller being robbed"));
+		assertTrue("teller1 will finally open the account", teller1.pickAndExecuteAnAction());
+		assertTrue(mbc1.log.getLastLoggedEvent().toString(), mbc1.log.containsString("ROBBED BANK? false"));
+	  	assertTrue("Spawned bank customer will try to leave the bank", mbc1.pickAndExecuteAnAction());
+		assertTrue(mbc1.log.getLastLoggedEvent().toString(), mbc1.log.containsString("Tripped and fell on the floor"));
+	  	mbc1.msgAnimationFinishedLeavingBank();
+	  	assertTrue("Spawned bank customer has left bank", mbc1.pickAndExecuteAnAction());
+		assertTrue(teller1.log.getLastLoggedEvent().toString(), teller1.log.containsString("LEAVING"));
+		assertTrue("Teller will tell manager that he is free", teller1.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue(customer1.log.getLastLoggedEvent().toString(), customer1.log.containsString("TRANSACTION COMPLETE"));
+		assertTrue("Person will generate new balance", customer1.pickAndExecuteAnAction());
+		assertEquals(customer1.balance, 0.00);
+		assertEquals(customer1.accounts.size(), 0);
+		
+		//customer0 is able to leave the bank
+	  	assertTrue("Spawned bank customer will leave bank", mbc.pickAndExecuteAnAction());
+	  	mbc.msgAnimationFinishedLeavingBank();
+	  	assertTrue("Spawned bank customer has left bank", mbc.pickAndExecuteAnAction());
+		assertTrue(teller0.log.getLastLoggedEvent().toString(), teller0.log.containsString("LEAVING"));
+		assertTrue("Teller will tell manager that he is free", teller0.pickAndExecuteAnAction());
+		assertTrue(manager.log.getLastLoggedEvent().toString(), manager.log.containsString("TELLER FREE"));
+		assertTrue("Manager will pass this info to the bank", manager.pickAndExecuteAnAction());
+		assertTrue(customer0.log.getLastLoggedEvent().toString(), customer0.log.containsString("TRANSACTION COMPLETE"));
+		assertTrue("Person will generate new balance", customer0.pickAndExecuteAnAction());
+		assertEquals(customer0.balance, 100.0);
+		assertEquals(customer0.accounts.size(), 0);
+	}
+	
 }

@@ -304,9 +304,8 @@ public class TellerAgent extends Agent implements Teller {
 	}
 	private void leaveBank(){
 		tellerGui.DoLeaveBank();
-		//person.msgLeftBankAsTeller();
+		//person.msgLeftBankAsTeller(double moneyMade);
 	}
-	
 	
 	//utilities
 	

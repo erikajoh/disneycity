@@ -34,6 +34,7 @@ public class MockBank {
     }
     
     public void msgThief(MockPerson person, double reqAmt, boolean present){
+    	log.add(new LoggedEvent("bank is being robbed"));
     	MockBankCustomer bca = createBankCustomer(person, present, true);
     	manager.msgThief(bca, reqAmt);
     }
