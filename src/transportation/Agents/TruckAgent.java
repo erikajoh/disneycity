@@ -220,12 +220,12 @@ public class TruckAgent extends MobileAgent{
 
 	private void deliverOrder(deliveryOrder order) {
 		if(order.person != null) {//person order
-			goToPosition(master.directory.get(order.location).vehicleTile, null);
+			goToPosition(master.directory.get(order.location).walkingTile, null);
 			order.person.msgHereIsOrder(order.food, order.quantity);
 			order.status = Status.DELIVERED;
 		}
 		else if(order.restaurant != null) {//Restaurant order
-			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile, null);
+			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).walkingTile, null);
 			if(order.restaurant.isOpen()) {
 				order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
 				order.status = Status.DELIVERED;
