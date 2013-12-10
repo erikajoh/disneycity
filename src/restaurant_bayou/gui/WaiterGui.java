@@ -14,6 +14,7 @@ public class WaiterGui implements Gui {
     private String text = "";
     
     private SimCityGui gui;
+    double wage;
 
     public static final int xTable = 100;
     public static final int yTable = 250;
@@ -53,7 +54,7 @@ public class WaiterGui implements Gui {
 
         if (xPos == xDestination && yPos == yDestination){
         	if (leavingWork){
-        		if (person!=null) person.msgStopWork(10);
+        		if (person!=null) person.msgStopWork(wage);
             	System.out.println("waiter going home");
             	leaving = false;
         	}
@@ -86,10 +87,11 @@ public class WaiterGui implements Gui {
         return true;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
+    	wage = w;
     	leaving = true;
     }
 

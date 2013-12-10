@@ -26,6 +26,7 @@ public class CookGui implements Gui {
     
     private boolean leavingWork = false;
     private Person person;
+    double wage;
 
     public CookGui() {
         xHome = 320;
@@ -45,7 +46,6 @@ public class CookGui implements Gui {
             xPos++;
         else if (xPos > xDestination)
             xPos--;
-
         if (yPos < yDestination)
             yPos++;
         else if (yPos > yDestination)
@@ -53,10 +53,9 @@ public class CookGui implements Gui {
 
         if (xPos == xDestination && yPos == yDestination){
         	 if (leavingWork) {
-             	if (person!=null) person.msgStopWork(10);
-             	System.out.println("cook going home");
-             	leaving = false; 
-             }
+        		 if (person!=null) person.msgStopWork(wage);
+        		 leaving =false; 
+        	}
         	if (getting && xDestination == xHome && yDestination == yHome-40){
         		getting = false;
         		agent.msgCookReady();
@@ -70,8 +69,7 @@ public class CookGui implements Gui {
         		goingHome = false;
         		agent.msgCookReady();
         	}
-    	}
-             
+    	}   
     }
 
     public void draw(Graphics2D g) {
@@ -88,10 +86,11 @@ public class CookGui implements Gui {
         return true;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
+    	wage = w;
     	leavingWork = true;
     }
 

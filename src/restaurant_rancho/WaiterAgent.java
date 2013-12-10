@@ -79,7 +79,7 @@ import java.util.concurrent.Semaphore;
 			wage = w;
 			stateChanged();
 		}
-		
+	
 		public void msgCreateCustomer(Customer c, int t, int l) {
 			MyCustomer mc = new MyCustomer(c);
 			mc.table = t;

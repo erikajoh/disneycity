@@ -13,6 +13,8 @@ import simcity.Restaurant;
 import simcity.PersonAgent;
 import simcity.RestMenu;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import bank.gui.Bank;
 import market.Market;
 import market.WorkerAgent;
@@ -59,6 +61,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     private Bank_Douglass bank;
     private Market_Douglass market2;
     public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
+    int numWorkers = 0;
 
     private SimCityGui gui; //reference to main gui
 
@@ -100,6 +103,30 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     
     public String[] getFoodNames(){
     	return menu.menuList.toArray(new String[0]);
+    }
+    
+    public void removeWaiters() {
+    	if (host!=null && host.isWorking==false) {
+    		host = null;
+    		numWorkers--;
+    	}
+    	if (cook!=null && cook.isWorking==false) {
+    		cook = null;
+    		numWorkers--;
+    	}
+    	if (cashier!=null && cashier.isWorking==false) {
+    		cashier = null;
+    		numWorkers--;
+    	}
+    	synchronized(waiters) {
+    	for (WaiterAgent w : waiters ) {
+    		if (w.isWorking==false) {
+    			waiters.remove(w);
+    			numWorkers--;
+    		}
+    	}
+    	}
+
     }
     
     public String[] getWorkers(){
@@ -214,7 +241,12 @@ public class RestaurantBayou extends JPanel implements Restaurant{
      * @param name name of person
      */
     public void addPerson(Person p, String type, String name, double money) {
-
+    	if (!isOpen && type.equals("Customer")) {
+    		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
+    		p.msgDoneEating(false, money);
+    		return;
+    	}
+    	
     	if (type.equals("Customer")) {
     		//if (returningCusts.contains(p)) {
     		//	returningCusts.get(p).getGui().setHungry();
@@ -366,25 +398,35 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 
 	@Override
 	public void endOfShift() {
-		isOpen = false;
 		System.out.println("RESTAURANT BAYOU GOT END OF SHIFT");
-
+		double wage;
+		if (cashier!=null) {
+			wage = cashier.balance - 500;
+			cashier.subtract(wage);
+		}
+		else wage = 0;
+		wage = wage/numWorkers;
+		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
+		isOpen = false;
 		if (host!=null) {
-			host.msgShiftDone();
-			for (int i = 0; i < waiters.size(); i++) {
-				if (cashier!=null) cashier.subtract(10);
+			host.msgShiftDone(wage);
+			if (waiters.size() == 0) {
+				if (cook!=null) {
+					cook.msgShiftDone(wage);
+				}
+				if (cashier!=null) {
+					cashier.msgShiftDone(wage);
+				}
 			}
 		}
 		else {
-			if (cashier!=null) { cashier.msgShiftDone(); cashier.subtract(10); }
+			if (cashier!=null) { cashier.msgShiftDone(wage);  }
 			for (int i = 0; i < waiters.size(); i++) {
 				WaiterAgent w = waiters.get(i);
-				w.msgShiftDone();
-				if (cashier!=null) cashier.subtract(10);
+				w.msgShiftDone(false, wage);
 			}
 			if (cook!=null) {
-				cook.msgShiftDone();
-				if (cashier!=null) cashier.subtract(10);
+				cook.msgShiftDone(wage);
 			}
 		}
 		
