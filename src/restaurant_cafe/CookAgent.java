@@ -98,9 +98,9 @@ public class CookAgent extends Agent implements Cook {
 	    for(Order o : orders){
 		    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "order state: "+o.s);
 	    }
-	   // if(pickAndExecuteAnAction()==true){
+	   if(pickAndExecuteAnAction()==true){
 	    	stateChanged();
-	    //}
+	    }
 	}
 	public void msgAddOrder(Order o){
 		orders.add(o);

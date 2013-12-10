@@ -67,7 +67,12 @@ public class TellerAgent extends Agent implements Teller {
 	
 	public TellerAgent(String name) {
 		super();
-
+		this.name = name;
+	}
+	
+	public TellerAgent(Person p, String name) {
+		super();
+		person = p;
 		this.name = name;
 	}
 
@@ -163,11 +168,6 @@ public class TellerAgent extends Agent implements Teller {
 		stateChanged();
 	}
 	
-	public void	msgOpen(){
-		state = State.shouldEnter;
-		stateChanged();
-	}
-	
 	public void	msgClose(){
 		state = State.shouldLeave;
 		stateChanged();
@@ -206,9 +206,11 @@ public class TellerAgent extends Agent implements Teller {
 		}
 		if(state == State.shouldEnter){
 			enterBank();
+			return true;
 		}
 		if(state == State.shouldLeave){
 			leaveBank();
+			return true;
 		}
 		
 		return false;

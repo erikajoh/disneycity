@@ -23,9 +23,7 @@ public interface Teller {
 	public void msgRobBank(double cash);
 		
 	public void msgLeavingBank();
-	
-	public void msgOpen();
-	
+		
 	public void msgClose();
 	
 	public TellerGui getGui();
