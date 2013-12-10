@@ -504,6 +504,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "It's " + currentDay.name() + "; banks are closed today.");
 		}
 		
+		if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift Start");
+		}
+		
 		// handle ticks for people
 		for(int i = 0; i < people.size(); i++) {
 			final PersonAgent person = people.get(i);
@@ -577,16 +581,22 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
-				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift Start");
 				theRestaurant.startOfShift();
 			}
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
-				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift End");
 				theRestaurant.endOfShift();
 			}
 		}
 		
 		//handle ticks for banks
+		for(int i = 0; i < banks.size(); i++) {
+			Bank theBank = banks.get(i);
+			// rent is due signal: at the start of every Saturday
+			// TODO whole rent system needs to be tested with actual PersonAgents
+			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
+				theBank.msgClose();
+			}
+		}
 	}
 	
 	/* all time-related variables and methods */
