@@ -326,9 +326,9 @@ public class CashierAgent extends Agent implements Cashier {
 	  bill.paid = true;
 }*/
 	private void payBill(Bill bill) {
-		bill.market.msgHereIsPayment(restaurant, bill.amount);
-		balance -= bill.amount;
-		print ("Paid market, I have " + money + " dollars now");
+		bill.market.msgHereIsPayment(restaurant, bill.total);
+		balance -= bill.total;
+		print ("Paid market, I have " + balance + " dollars now");
 		bills.remove(bill);
 		stateChanged();
 	}

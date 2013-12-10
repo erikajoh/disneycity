@@ -11,10 +11,10 @@ import restaurant_cafe.interfaces.Waiter;
  *
  */
 public interface Cashier {
-	
-	public void msgBillFromMarket(Market_Douglass market, double total);
-	
+		
 	public void msgProduceCheck(Customer c, Waiter w, String choice);
+	
+	public void msgHereIsMarketBill(Market_Douglass m, double amount);
 	
 	public void msgWaiterHere(Customer customer);
 	
