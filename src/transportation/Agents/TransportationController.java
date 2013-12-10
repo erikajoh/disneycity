@@ -123,17 +123,21 @@ public class TransportationController extends Agent implements Transportation{
 		Position position;
 		CrashState state;
 		CrashGui gui;
+		TransportationController controller;
 		
-		public Crash(MobileAgent agent1, MobileAgent agent2, Position position) {
+		public Crash(MobileAgent agent1, MobileAgent agent2, Position position, TransportationController controller) {
 			this.agent1 = agent1;
 			this.agent2 = agent2;
 			this.position = position;
+			this.controller = controller;
 			
 			if(agent1 instanceof CarAgent && agent2 instanceof CarAgent) {
-				gui = new CrashGui(position, false);
+				gui = new CrashGui(position, false, controller);
+				controller.master.addGui(gui);
 			}
 			else {
-				gui = new CrashGui(position, true);
+				gui = new CrashGui(position, true, controller);
+				controller.master.addGui(gui);
 			}
 			state = CrashState.ONGOING;
 			master.addGui(gui);
@@ -142,7 +146,8 @@ public class TransportationController extends Agent implements Transportation{
 	
 	enum CrashState {
 		ONGOING,
-		DONE
+		DONE,
+		REMOVE
 	}
 	
 	List<Crash> crashes;
@@ -668,6 +673,9 @@ public class TransportationController extends Agent implements Transportation{
 			grid[x+1][y+1].setMovement(true, true, false, false, MovementType.CROSSWALK);
 		}
 
+		
+		CrashGui CG = new CrashGui(new Position(4,10), true, this);
+		master.addGui(CG);
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
@@ -709,7 +717,15 @@ public class TransportationController extends Agent implements Transportation{
 	}
 
 	public void msgCrash(MobileAgent agent1, MobileAgent agent2, Position position) {
-		
+		crashes.add(new Crash(agent1, agent2, position, this));
+	}
+	
+	public void msgCrashCompleted(CrashGui crash) {
+		for(Crash c : crashes) {
+			if(c.gui == crash) {
+				c.state = CrashState.REMOVE;
+			}
+		}
 	}
 
 	//+++++++++++++++++SCHEDULER+++++++++++++++++
