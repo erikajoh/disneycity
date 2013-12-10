@@ -77,7 +77,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
 	public final static int NUM_MARKETS = 1;
-	public final static int NUM_BANKS = 2;
+	public final static int NUM_BANKS = 1;
 	
 	public final static String MAIN_CONFIG_FILE = "config-file-rancho-two-shifts.txt";
 
@@ -188,25 +188,25 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		String fileName = MAIN_CONFIG_FILE;
 		
 		if(scenarioInd == 0) {
-			
+			fileName = "config-file_scenario-1.txt"; // TODO
 		}
 		if(scenarioInd == 1) {
 			fileName = "config-file_scenario-2.txt";
 		}
 		if(scenarioInd == 2) {
-			
+			fileName = "config-file_scenario-3.txt"; // TODO
 		}
 		if(scenarioInd == 3) {
-			
+			fileName = "config-file_scenario-5.txt"; // TODO
 		}
 		if(scenarioInd == 4) {
-			
+			fileName = "config-file_scenario-6.txt"; // TODO
 		}
 		if(scenarioInd == 5) {
-			
+			fileName = "config-file_scenario-7.txt"; // TODO
 		}
 		if(scenarioInd == 6) {
-			fileName = "config-file_50_people.txt";
+			fileName = "config-file_scenario-10.txt";
 		}
 		
 		startButton.setEnabled(false);
@@ -334,6 +334,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				// parsing banks
 				for(int bankInd = 1; bankInd <= NUM_BANKS; bankInd++) {
 					String bankName = props.getProperty("bank" + bankInd + "_name");
+					if(bankName == null) bankName = "Pirate Bank";
 					
 					String bankRole = props.getProperty("bank" + bankInd + "_role");
 					if(bankRole == null) bankRole = "Customer";
@@ -377,7 +378,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			for(int personInd = 0; personInd < people.size(); personInd++) {
 				PersonAgent currPerson = people.get(personInd);
 				
-				currPerson.addBank(pirateBank, "Customer", 0);				
+				//currPerson.addBank(pirateBank, "Customer", 0);				
 				currPerson.startThread();
 			}
 			// end new parser
@@ -465,7 +466,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	public Bank mapStringToBank(String bankName) {
 		for(int i = 0; i < banks.size(); i++)
-			if(bankName.equals(banks.get(i).getName()))
+			if(bankName.equals(banks.get(i).getBankName()))
 				return banks.get(i);
 		return null;
 	}

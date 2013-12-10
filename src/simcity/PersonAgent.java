@@ -64,7 +64,7 @@ public class PersonAgent extends Agent implements Person {
 	private BankState bankState = BankState.None;
 	private TransportationState transportationState = TransportationState.None;
 	private boolean houseNeedsMaintenance = false;
-	private boolean isBankOpen = true;
+	private boolean isBankOpen = false;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -441,24 +441,27 @@ public class PersonAgent extends Agent implements Person {
 				}
 				
 				// I have rent to pay
+				print("checking rentToPay > 0");
 				if(rentToPay > 0) {
 					// Ready to go to bank
 					if(bankState == BankState.NeedTransaction) {
 						leaveHouse();
 						event = PersonEvent.onHold;
+						return true;
 					}
 					else {
 						// Ready to pay rent
 						if(moneyOnHand >= rentToPay) {
 							payRent(rentToPay);
+							return true;
 						}
 						else {
 							// Have to go to bank
 							getRentMoneyFromBank();
+							if(isBankOpen)
+								return true;
 						}
 					}
-					print("returning true because rentToPay > 0");
-					return true;
 				}
 				
 				// I have to go to work
@@ -481,35 +484,38 @@ public class PersonAgent extends Agent implements Person {
 						if(preferEatAtHome) {
 							if(marketState == MarketState.WantToBuy) {
 								hungryToMarket();
+								if(isBankOpen)
+									return true;
 							}
 							else {
 								// I have no food in the fridge
 								prepareToCookAtHome();
 								event = PersonEvent.onHold;
+								return true;
 							}
 						}
 						else {
 							hungryToRestaurant();
+							if(isBankOpen)
+								return true;
 						}
 					}
 					else {
 						leaveHouse();
 						event = PersonEvent.onHold;
+						return true;
 					}
 					log.add(new LoggedEvent("returning true because !isNourished"));
-					print("returning true because !isNourished");
-					return true;
 				}
 				
 				// I am at home and I have surplus money
 				if(currentLocation.equals(targetLocation)) {
-					if(moneyOnHand > MONEY_ON_HAND_LIMIT) {
+					if(isBankOpen && moneyOnHand > MONEY_ON_HAND_LIMIT) {
 						haveMoneyToDeposit();
 						print("returning true because haveMoneyToDeposit()");
 						return true;
 					}
 				}
-				
 				else {
 					// I am leaving the house
 					leaveHouse();
@@ -527,6 +533,8 @@ public class PersonAgent extends Agent implements Person {
 			}
 			
 			if(currentLocationState == LocationState.Bank) { // at bank
+				if(isBankOpen)
+					bankState = BankState.None;
 				switch(bankState) {
 					case NeedTransaction: // Has business at the bank
 						if(myPersonalBankAccount == null) {
@@ -556,6 +564,10 @@ public class PersonAgent extends Agent implements Person {
 								event = PersonEvent.onHoldInTransportation;
 							}
 						}
+						break;
+					case WantToWork:
+						goToWorkAtBank();
+						event = PersonEvent.onHoldInBank;
 						break;
 				}
 				return true;
@@ -835,6 +847,13 @@ public class PersonAgent extends Agent implements Person {
 		myBank.bank.msgRequestDeposit(this, myPersonalBankAccount.accountNumber, moneyToDeposit, true);
 	}
 	
+	private void goToWorkAtBank() {
+		print("Working at bank");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Working at bank");
+		MyBank myBank = (MyBank)currentMyObject;
+		myBank.bank.addPerson(this);
+	}
+	
 	//Market actions
 	private void enterMarket() {
 		print("Entering market");
@@ -932,7 +951,9 @@ public class PersonAgent extends Agent implements Person {
 		if(bankList.size() == 0)
 			return null;
 		int randomInd = getRandomInt(0, bankList.size());
-		return bankList.get(randomInd);
+		// TODO Change this once both banks are working
+		return bankList.get(0);
+		//return bankList.get(randomInd);
 	}
 
 	// TODO what if market is closed?

@@ -45,4 +45,11 @@ public class MockBank extends Mock implements Bank_Douglass {
 			// TODO Auto-generated method stub
 			return false;
 		}
+
+
+		@Override
+		public void addPerson(Person person) {
+			// TODO Auto-generated method stub
+			
+		}
 }

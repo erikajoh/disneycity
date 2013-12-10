@@ -70,4 +70,10 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 	public boolean isOpen() {
 		return true;
 	}
+
+	@Override
+	public void addPerson(Person person) {
+		// TODO Auto-generated method stub
+		
+	}
 }
