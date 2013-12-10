@@ -105,8 +105,15 @@ public class TrafficLight implements ActionListener, Gui{
 	}
 	
 	private boolean checkIntersectionClear() {
-		for(int i = -2; i < 4; i++) {
+		for(int i = 0; i < 2; i++) {
 			for(int j = -2; j < 4; j++) {
+				if(grid[i+location.getX()][j+location.getY()].availablePermits() != 1) {
+					return false;
+				}
+			}
+		}
+		for(int i = -2; i < 4; i++) {
+			for(int j = 0; j < 2; j++) {
 				if(grid[i+location.getX()][j+location.getY()].availablePermits() != 1) {
 					return false;
 				}
