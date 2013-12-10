@@ -1,7 +1,7 @@
 package restaurant_cafe.interfaces;
 
 import restaurant_cafe.interfaces.Customer;
-import restaurant_cafe.interfaces.Market;
+import simcity.interfaces.Market_Douglass;
 import restaurant_cafe.interfaces.Waiter;
 
 /**
@@ -12,7 +12,7 @@ import restaurant_cafe.interfaces.Waiter;
  */
 public interface Cashier {
 	
-	public void msgBillFromMarket(Market market, double total);
+	public void msgBillFromMarket(Market_Douglass market, double total);
 	
 	public void msgProduceCheck(Customer c, Waiter w, String choice);
 	
@@ -20,7 +20,7 @@ public interface Cashier {
 	
 	public void msgHereIsPayment(Customer cust, double cash);
 	
-	public void msgClearBill(Market market, boolean declined);
+	public void msgClearBill(Market_Douglass market, boolean declined);
 	
 	public void msgNoMoney(Customer c);
 
