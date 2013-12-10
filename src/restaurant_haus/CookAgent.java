@@ -25,6 +25,8 @@ public class CookAgent extends Agent {
 	CashierAgent cashier;
 	RestaurantHaus rest;
 	private Semaphore atDestination = new Semaphore(0, true);
+	boolean needToCheckStand = false;
+	private OrderStand orderStand;
 	
 	int nextID = 0;
 	
@@ -34,28 +36,9 @@ public class CookAgent extends Agent {
 
 
 	Menu m;
-	private class Order {
-		WaiterAgent w;
-		String choice;
-		int table;
-		State s;
-
-		Order(WaiterAgent w, String choice, int table) {
-			this.w = w;
-			this.choice = choice;
-			this.table = table;
-			s = State.Pending;
-		}
-	}
 
 	List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
-	enum State {
-		Pending,
-		Cooking,
-		Done,
-		Plated,
-		PickedUp
-	};
+	
 	Timer timer = new Timer();
 
 	private class Food {
@@ -131,8 +114,9 @@ public class CookAgent extends Agent {
 
 	List<Market_Douglass> markets = Collections.synchronizedList(new ArrayList<Market_Douglass>());
 
-	public CookAgent(String name, RestaurantHaus rest) {
+	public CookAgent(String name, RestaurantHaus rest, OrderStand orderStand) {
 		super();
+		this.orderStand = orderStand;
 		this.name = name;
 		this.rest = rest;
 		foodInventory.put("Pastrami Cheeseburger", new Food("Pastrami Cheeseburger", 5000));
@@ -170,7 +154,7 @@ public class CookAgent extends Agent {
 	}
 
 	public void msgFoodDone (Order o) {
-		o.s = State.Done;
+		o.s = Order.State.Done;
 		print("I finished cooking " + o.choice + " for table " + String.valueOf(o.table) + ".");
 		stateChanged();
 		//Set state of order to Done
@@ -180,7 +164,7 @@ public class CookAgent extends Agent {
 		synchronized(orders) {
 			for(Order order : orders) {
 				if(order.w == w) {
-					order.s = State.PickedUp;
+					order.s = Order.State.PickedUp;
 					stateChanged();
 					return;
 				}
@@ -196,7 +180,12 @@ public class CookAgent extends Agent {
 		}
 		stateChanged();
 	}
-
+	
+	public void msgCheckStand() {
+		needToCheckStand = true;
+		stateChanged();
+	}
+	
 	public void msgAtDestination() {
 		atDestination.release();
 		stateChanged();
@@ -230,10 +219,15 @@ public class CookAgent extends Agent {
 				return true;
 			}
 		}
-
+		
+		if(needToCheckStand) {
+			checkStand();
+			return true;
+		}
+		
 		synchronized(orders) {
 			for(Order o : orders) {
-				if(o.s == State.Done) {
+				if(o.s == Order.State.Done) {
 					plateIt(o);
 					return true;
 				}
@@ -242,7 +236,7 @@ public class CookAgent extends Agent {
 
 		synchronized(orders) {
 			for(Order o : orders) {
-				if(o.s == State.Pending) {
+				if(o.s == Order.State.Pending) {
 					cookIt(o);
 					return true;
 				}
@@ -251,7 +245,7 @@ public class CookAgent extends Agent {
 
 		synchronized(orders) {
 			for(Order o : orders) {
-				if(o.s == State.PickedUp) {
+				if(o.s == Order.State.PickedUp) {
 					removeIt(o);
 					return true;
 				}
@@ -312,7 +306,7 @@ public class CookAgent extends Agent {
 		timer.schedule(new CookingTask(o, this), (long)currentOrder.time);
 
 		print("I started cooking " + o.choice + " for table " + String.valueOf(o.table) + ".");
-		o.s = State.Cooking;
+		o.s = Order.State.Cooking;
 
 		if(inventoryLow(currentOrder.inventory) && currentOrder.s == InventoryState.Steady) {
 			currentOrder.s = InventoryState.Low;
@@ -342,7 +336,7 @@ public class CookAgent extends Agent {
 		cookGui.LeaveFood(o.table, true);
 
 		o.w.msgFoodReady(o.table);
-		o.s = State.Plated;
+		o.s = Order.State.Plated;
 		/*o.w.msgFoodReady(o.choice,o.table)
 		 * Orders.remove(o);
 		 */
@@ -367,13 +361,6 @@ public class CookAgent extends Agent {
 	}
 
 	private void orderFood(Food food) {
-		cookGui.GoToPhone();
-		try {
-			atDestination.acquire();
-		}
-		catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		print("I'd like to place an order for " + String.valueOf(SAFEFOODQUANTITY - food.inventory) + " " + food.choice + ", please.");
 		Random random = new Random();
 		
@@ -382,7 +369,20 @@ public class CookAgent extends Agent {
 		nextID++;
 		food.s = InventoryState.Ordered;
 	}
-
+	
+	public void checkStand() {
+		cookGui.goToStand();
+		try {
+			atDestination.acquire();
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		List<Order> tempOrders = orderStand.getOrders();
+		for(Order order : tempOrders)
+			orders.add(order);
+	}
+	
 	//utilities
 
 	public int getQuantity(String name){
