@@ -508,6 +508,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[11][4].setBusStop(busStops.get(0));
 		tempBusStop.addNearbyBuilding("Mickey's Market");
 		tempBusStop.addNearbyBuilding("Tiki Hut");
+		master.addGui(tempBusStop);
 
 		tempBusStop = new BusStop("Bus Stop 1");//Left Center Bus Stop
 		tempBusStop.associateWalkTile(new Position(3, 11));
@@ -515,6 +516,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[4][11].setBusStop(busStops.get(1));
 		tempBusStop.addNearbyBuilding("Main St Apartments #2");
 		tempBusStop.addNearbyBuilding("Rabbit Hole");
+		master.addGui(tempBusStop);
 		//		tempBusStop.addNearbyBuilding("Haunted Mansion");
 
 		tempBusStop = new BusStop("Bus Stop 2");//Left Bottom Bus
@@ -527,6 +529,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #8");
 		tempBusStop.addNearbyBuilding("Pizza Port");
 		tempBusStop.addNearbyBuilding("Cinderella Castle");
+		master.addGui(tempBusStop);
 		//		tempBusStop.addNearbyBuilding("Mickey's Market");
 
 		tempBusStop = new BusStop("Bus Stop 3");//Bottom Left Bus
@@ -536,6 +539,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #9");
 		tempBusStop.addNearbyBuilding("Blue Bayou");
 		tempBusStop.addNearbyBuilding("Space Mountain");
+		master.addGui(tempBusStop);
 
 		tempBusStop = new BusStop("Bus Stop 4");//Bottom Right Bus
 		tempBusStop.associateWalkTile(new Position(24, 26));
@@ -545,6 +549,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #11");
 		tempBusStop.addNearbyBuilding("Carnation Cafe");
 		tempBusStop.addNearbyBuilding("Minnie's Market");
+		master.addGui(tempBusStop);
 
 
 		tempBusStop = new BusStop("Bus Stop 5");//Center Right Bus
@@ -554,6 +559,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Main St Apartments #6");
 		tempBusStop.addNearbyBuilding("Main St Apartments #7");
 		tempBusStop.addNearbyBuilding("Pirate's Suite");
+		master.addGui(tempBusStop);
 
 		tempBusStop = new BusStop("Bus Stop 6");//Right Top Bus
 		tempBusStop.associateWalkTile(new Position(30, 8));
@@ -562,6 +568,7 @@ public class TransportationController extends Agent implements Transportation{
 		tempBusStop.addNearbyBuilding("Pirate Bank");
 		tempBusStop.addNearbyBuilding("Village Haus");
 		tempBusStop.addNearbyBuilding("Haunted Mansion");
+		master.addGui(tempBusStop);
 
 		tempBusStop = new BusStop("Bus Stop 7");//Top Right Bus
 		tempBusStop.associateWalkTile(new Position(23, 3));
@@ -569,6 +576,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[23][4].setBusStop(busStops.get(7));
 		tempBusStop.addNearbyBuilding("Main St Apartments #1");
 		tempBusStop.addNearbyBuilding("Rancho Del Zocalo");
+		master.addGui(tempBusStop);
 		//+++++++++++++++++++++++END CREATION OF BUS STOPS+++++++++++++++++++++++
 
 		//++++++++++++++++++++++BEGIN CREATION OF DIRECTORY++++++++++++++++++++++
