@@ -9,6 +9,8 @@ import restaurant_rancho.WaiterAgent;
 import bank.gui.Bank;
 import simcity.PersonAgent;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.RestMenu;
 import simcity.Restaurant;
 import restaurant_rancho.ProducerConsumerMonitor;
@@ -284,12 +286,13 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public void addPerson(Person p, String type, String name, double money) {
-    	if (host==null && type.equals("Customer")) {
+    	if (!isOpen && type.equals("Customer")) {
+    		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
     		p.msgDoneEating(false, money);
     	}
     	
     	// if changing shifts, don't want to add new workers with pointers to old workers as workers from shift get ready to leave work
-    	if (!isChangingShifts()) {
+    	if (isOpen) {
 
     		if (type.equals("Customer")) {
     			
@@ -465,41 +468,36 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	}
 	
 	@Override
-
 	public void endOfShift() {
 		System.out.println("RESTAURANT RANCHO GOT END OF SHIFT");
 		double wage;
-		if (cashier!=null) {wage = cashier.money - 500;}
+		if (cashier!=null) {
+			wage = cashier.money - 500;
+			cashier.subtract(wage);
+		}
 		else wage = 0;
 		wage = wage/numWorkers;
 		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
 		isOpen = false;
 		if (host!=null) {
 			host.msgShiftDone(wage);
-			for (int i = 0; i < waiters.size(); i++) {
-				if (cashier!=null) cashier.subtract(wage);
-			}
 			if (waiters.size() == 0) {
 				if (cook!=null) {
 					cook.msgShiftDone(wage);
-					if (cashier!=null) cashier.subtract(wage);
 				}
 				if (cashier!=null) {
-					cashier.subtract(wage);
 					cashier.msgShiftDone(wage);
 				}
 			}
 		}
 		else {
-			if (cashier!=null) { cashier.msgShiftDone(wage); cashier.subtract(wage); }
+			if (cashier!=null) { cashier.msgShiftDone(wage);  }
 			for (int i = 0; i < waiters.size(); i++) {
 				WaiterAgent w = waiters.get(i);
 				w.msgShiftDone(false, wage);
-				if (cashier!=null) cashier.subtract(wage);
 			}
 			if (cook!=null) {
 				cook.msgShiftDone(wage);
-				if (cashier!=null) cashier.subtract(wage);
 			}
 		}
 		

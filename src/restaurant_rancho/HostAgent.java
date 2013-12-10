@@ -159,7 +159,7 @@ public class HostAgent extends Agent {
 			//return true;
 			
 		}
-		if (shiftDone == true) {leaveWork();} 
+		if (shiftDone == true && waitingCustomers.size()==0) {leaveWork();} 
 		return false;
 
 	}

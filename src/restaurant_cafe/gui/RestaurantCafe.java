@@ -77,15 +77,15 @@ public class RestaurantCafe extends JPanel implements Restaurant{
         this.name = name;
         type = "American";
                //initial food values are high so no mkt orders for now....
-        Food food = new Food("Apple-Granola Pancakes", 3000, 15, 4, 8, 10.49);
+        Food food = new Food("Apple-Granola Pancakes", 1500, 15, 4, 8, 10.49);
         foods.add(food);
-        food = new Food("Sirloin Steak and Eggs", 4000, 15, 4, 8, 11.99);
+        food = new Food("Sirloin Steak and Eggs", 2000, 15, 4, 8, 11.99);
         foods.add(food);
-        food = new Food("Ham and Cheese Omelet", 4000, 12, 4, 8, 9.99);
+        food = new Food("Ham and Cheese Omelet", 2000, 12, 4, 8, 9.99);
         foods.add(food);
-        food = new Food("Walt's Chili", 3500, 5, 14, 8, 6.99);
+        food = new Food("Walt's Chili", 1750, 5, 14, 8, 6.99);
         foods.add(food);
-        food = new Food("Main Street Cheeseburger", 4500, 15, 4, 8, 11.99);
+        food = new Food("Main Street Cheeseburger", 1800, 15, 4, 8, 11.99);
         foods.add(food);
         
         menu2.addItem("Apple-Granola Pancakes", 10.49);
