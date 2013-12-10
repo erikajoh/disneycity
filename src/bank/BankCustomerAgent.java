@@ -97,7 +97,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	public void msgAccountOpened(int an, double amountWithdrawn){
-		balance += change;
 		change = amountWithdrawn;
 		//print("ACCOUNT OPENED "+balance);
 		accountNum = an;
@@ -107,7 +106,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	public void msgMoneyDeposited(double amountAdded, double loanAmt, int lt){
-		balance += amountAdded;
 		change = amountAdded;
 		print("MONEY DEPOSITED "+ balance);
 		state = State.leaving;
@@ -116,7 +114,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	public void msgMoneyWithdrawn(double amountWithdrawn, double loanAmt, int lt){
-		balance += change;
 		print("MONEY WITHDRAWN "+ balance);
 		state = State.leaving;
 		change = amountWithdrawn;
@@ -126,7 +123,6 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	public void msgRobbedBank(double cash, boolean success){
-		balance += cash;
 		print("GOT CASH "+ cash);
 		if(success == true){
 			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "The crook got away with the robbery!");
