@@ -29,6 +29,7 @@ public class CookGui implements Gui {
     private Point phone = new Point(405, 290);
     private Point stand = new Point(310, 70);
     private Person person;
+    double wage;
     
     private enum STATE {CARRYING, STATIONARY};
     
@@ -111,7 +112,7 @@ public class CookGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination && leaving == true) {
-        	person.msgStopWork(10);
+        	person.msgStopWork(wage);
         	leaving = false;
         }
         
@@ -162,11 +163,13 @@ public class CookGui implements Gui {
         return true;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
+    	System.out.println("do leave getting called");
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
     	leaving = true;
+    	wage = w;
     }
 
     public void GoToRefrigerator() {

@@ -15,6 +15,8 @@ public class WaiterGui implements Gui {
     
     boolean atPosition = false;
     private Person person;
+    
+    double wage;
 
     private int xPos = -20, yPos = -20;//default waiter position
     private int xHome = 0, yHome = 0;
@@ -48,7 +50,7 @@ public class WaiterGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination && leaving == true) {
-        	person.msgStopWork(10);
+        	person.msgStopWork(wage);
         	leaving = false;
         }
         if (xPos == xDestination && yPos == yDestination && !atPosition){
@@ -73,10 +75,11 @@ public class WaiterGui implements Gui {
         return true;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
+    	wage = w;
     	leaving = true;
     }
 

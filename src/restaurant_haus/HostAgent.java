@@ -29,6 +29,8 @@ public class HostAgent extends Agent {
 	public Person person;
 	private String name;
 	boolean shiftDone = false;
+	public boolean isWorking;
+	double wage;
 
 	private Menu m = new Menu();
 
@@ -69,13 +71,12 @@ public class HostAgent extends Agent {
 	}
 	// Messages
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
+		print("got msg shift done");
 		shiftDone = true;
-		if (waitingCustomers.size() == 0 && person!=null) {person.msgStopWork(10);
-			for (MyWaiter w : waiters) {
-				w.w.msgShiftDone();
-			}
-		}
+		isWorking = false;
+		wage = w;
+		stateChanged();
 	}
 
 	public void msgGiveJob(WaiterAgent waiter) {
@@ -153,22 +154,22 @@ public class HostAgent extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		if (waitingCustomers.size() == 0 && shiftDone == true) {person.msgStopWork(10);} 
-		if(isPaused) {
+		if (shiftDone == true && waitingCustomers.size()==0) {leaveWork();} 
 			try {
 				pauseSem.acquire();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
 
 		/* Think of this next rule as:
             Does there exist a table and customer,
             so that table is unoccupied and customer is waiting.
             If so seat  him at the table.
 		 */
+		
 		synchronized(waitingCustomers) {
+			
 			for(MyCustomer mc : waitingCustomers) {
 				if(mc.s == CustomerState.Leaving) {
 					for(Table table : tables) {
@@ -272,6 +273,13 @@ public class HostAgent extends Agent {
 
 	}
 	 */
+	
+	private void leaveWork() {
+		if (person!=null) person.msgStopWork(wage);
+		for (MyWaiter w : waiters) {
+			w.w.msgShiftDone(true, wage);
+		}	
+	}
 
 	private void giveBreak(MyWaiter mw) {
 		mw.s = WaiterState.Break;

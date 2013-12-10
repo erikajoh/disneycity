@@ -37,8 +37,12 @@ public class WaiterAgent extends Agent implements Waiter{
 	public HostAgent h = null;
 	public CashierAgent cashier;
 	public Person person;
-	boolean shiftDone = false;
+	boolean shiftDone = false;	
+	boolean alertedShift = false;
+	boolean alert = false;
+	double wage;
 	
+	public boolean isWorking = true;
 
 	Timer breakTimer = new Timer();
 
@@ -87,26 +91,11 @@ public class WaiterAgent extends Agent implements Waiter{
 
 	// Messages
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(boolean alertOthers, double w) {
 		shiftDone = true;
-		if (customers.size() == 0) {
-			print ("going home!");
-			waiterGui.DoLeave(person);
-			if (cook!=null) { 
-				cook.msgShiftDone(); 
-				if (cashier!=null) cashier.subtract(10); 
-			}
-			//if (host!=null) {  
-			//	if (cashier!=null) cashier.subtract(10); 
-			//}
-			if (cashier!=null) { 
-				cashier.msgShiftDone(); 
-				cashier.subtract(20);
-			}
-		}
-		else {
-			print("my shift is done! but I still have customers");
-		}
+		alert = alertOthers;
+		wage = w;
+		stateChanged();
 	}
 
 	public void msgPleaseSeatCustomer(CustomerAgent c, int table) {
@@ -392,7 +381,7 @@ public class WaiterAgent extends Agent implements Waiter{
 		}
 		
 		GoHome();
-		if (shiftDone) {msgShiftDone();}
+		if (shiftDone && !alertedShift && customers.size() == 0) {leaveWork(); alertedShift = true;}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -400,6 +389,26 @@ public class WaiterAgent extends Agent implements Waiter{
 	}
 
 	// Actions
+	
+	protected void leaveWork() {
+		if (alert) {
+			alertedShift = true;
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+			if (cook!=null) { 
+				cook.msgShiftDone(wage); 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(wage); 
+			}
+		}
+		else {
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+		}
+	}
 
 	public void EmptyTable(MyCustomer mc) {
 		h.msgTableEmpty(mc.c);
