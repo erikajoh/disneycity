@@ -89,17 +89,20 @@ public class CustomerGui implements Gui{
 	}
 	
 	public void setDrawString(String choice, boolean eating){
-		if(choice.equals("Steak")){
-			drawString = "St";
+		if(choice.contains("Apple")){
+			drawString = "A";
 		}
-		else if(choice.equals("Chicken")){
+		else if(choice.contains("Steak")){
+			drawString = "S";
+		}
+		else if(choice.contains("Omelet")){
+			drawString = "O";
+		}
+		else if(choice.equals("Chili")){
 			drawString = "C";
 		}
-		else if(choice.equals("Salad")){
-			drawString = "Sa";
-		}
-		else if(choice.equals("Pizza")){
-			drawString = "P";
+		else if(choice.contains("Cheeseburger")){
+			drawString = "B";
 		}
 		else{
 			drawString = "";

@@ -56,11 +56,13 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     boolean isOpen = true;
     public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
     
-    private Person waitingCook;
-    private Person waitingCashier;
-    private Person waitingHost;
-    private List<Person> waitingWaiters = new ArrayList<Person>();
-    private List<Person> waitingPCWaiters = new ArrayList<Person>();
+    private MyWaitingCook waitingCook;
+    private MyWaitingCashier waitingCashier;
+    private MyWaitingHost waitingHost;
+    private List<MyWaitingWaiter> waitingWaiters = new ArrayList<MyWaitingWaiter>();
+    private List<MyWaitingWaiter> waitingPCWaiters = new ArrayList<MyWaitingWaiter>();
+    private List<MyWaitingCustomer> waitingCustomers  = new ArrayList<MyWaitingCustomer>();
+    
     
     public boolean hostShiftDone = false;
     public boolean cookShiftDone = false;
@@ -98,7 +100,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public boolean isOpen() {
-    	return (!shiftsSwitching && isOpen);
+    	return (!shiftsSwitching && host!=null && cook!=null && waiters.size()!=0 && cashier!=null && isOpen);
     }
     
     public RestMenu getMenu() {
@@ -148,6 +150,20 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public boolean isChangingShifts() {
+    	if (host!=null && host.isWorking==false) {
+    		removeHost();
+    	}
+    	if (cook!=null && cook.isWorking==false) {
+    		removeCook();
+    	}
+    	if (cashier!=null && cashier.isWorking==false) {
+    		removeCashier();
+    	}
+    	for (WaiterAgent w : waiters ) {
+    		if (w.isWorking==false) {
+    			removeWaiter(w);
+    		}
+    	}
     	if (shiftsSwitching) {
     		if (host!=null && host.isWorking == true) 
     			return true;
@@ -267,7 +283,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		if (type.equals("Customer")) {
     			
     			if ((p!=null) && returningCusts.containsKey(p)) {
-    			returningCusts.get(p).getGui().setHungry();	
+    				returningCusts.get(p).getGui().setHungry();	
     			}
     			else {
     			
@@ -363,24 +379,40 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	}
     	else {
     		if (type.equals("Customer")) {
-    			
+    			waitingCustomers.add(new MyWaitingCustomer(p, name, money));
     		}
-    		if (type.equals("Customer")) {
-    			
+    		if (type.equals("Host")) {
+    			waitingHost = new MyWaitingHost(p, name);
     		}
-    		if (type.equals("Customer")) {
-    			
+    		if (type.equals("Waiter")) {
+    			waitingWaiters.add(new MyWaitingWaiter(p, name));
     		}
-    		if (type.equals("Customer")) {
-    			
+    		if (type.equals("WaiterPC")) {
+    			waitingPCWaiters.add(new MyWaitingWaiter(p, name));
     		}
-    		if (type.equals("Customer")) {
-    			
+    		if (type.equals("Cook")) {
+    			waitingCook = new MyWaitingCook(p, name);
     		}
-    		
-    	}
-    		
-    		
+    		if (type.equals("Cashier")) {
+    			waitingCashier = new MyWaitingCashier(p, name);
+    		}
+    	}		
+    }
+    
+    public void removeCashier() {
+    	cashier = null;
+    }
+    
+    public void removeHost() {
+    	host = null;
+    }
+    
+    public void removeCook() {
+    	cook = null;
+    }
+    
+    public void removeWaiter(WaiterAgent w) {
+    	waiters.remove(w);
     }
     
     public void removeMe(WaiterAgent wa, String type) {
@@ -440,7 +472,52 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	public void msgHereIsBill(Market_Douglass m, double amount) {
 		cashier.msgHereIsMarketBill(m, amount);
 	}
-
-
-
+	
+	class MyWaitingCustomer {
+		Person per;
+		String name;
+		double money;
+		
+		MyWaitingCustomer(Person p, String n, double m) {
+			per = p;
+			name = n;
+			money = m;
+		}
+	}
+	
+	class MyWaitingHost {
+		Person per;
+		String name;
+		MyWaitingHost (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
+	
+	class MyWaitingCook {
+		Person per;
+		String name;
+		MyWaitingCook (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
+	
+	class MyWaitingCashier {
+		Person per;
+		String name;
+		MyWaitingCashier (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
+	
+	class MyWaitingWaiter {
+		Person per;
+		String name;
+		MyWaitingWaiter (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
 }
