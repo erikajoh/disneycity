@@ -53,6 +53,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     public Market_Douglass market;
     String type;
     boolean isOpen = true;
+    int numWorkers = 0;
     
     private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
@@ -138,6 +139,29 @@ public class RestaurantCafe extends JPanel implements Restaurant{
         }
     }
     */
+    
+    public void removeWorkers(){
+    	if (host!=null && host.isWorking==false) {
+    		host = null;
+    		numWorkers--;
+    	}
+    	if (cook!=null && cook.isWorking==false) {
+    		cook = null;
+    		numWorkers--;
+    	}
+    	if (cashier!=null && cashier.isWorking==false) {
+    		cashier = null;
+    		numWorkers--;
+    	}
+    	synchronized(waiters) {
+    	for (WaiterAgent w : waiters ) {
+    		if (w.isWorking==false) {
+    			waiters.remove(w);
+    			numWorkers--;
+    		}
+    	}
+    	}
+    }
 
     /**
      * Adds a customer or waiter to the appropriate list
@@ -151,6 +175,12 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		cook.setAmount(choice, amount);
     }
     public void addPerson(Person p, String type, String name, double money) {
+    	removeWorkers();
+    	if (!isOpen && type.equals("Customer")) {
+    		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
+    		p.msgDoneEating(false, money);
+    		return;
+    	}
 
     	if (type.equals("Customer")) {
     		//if ((p!=null) && returningCusts.containsKey(p)) {
@@ -172,6 +202,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		//}
     	}
     	else if (type.equals("Waiter")) {
+    		numWorkers++;
     		WaiterAgentNorm w = new WaiterAgentNorm(name, this, menu, waiters.size()+1);
     		if (p!=null) w.setPerson(p);
     		WaiterGui g = new WaiterGui(w, gui);
@@ -185,6 +216,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		w.startThread();
     	}
     	else if (type.equals("WaiterPC")) {
+    		numWorkers++;
     		WaiterAgentPC w = new WaiterAgentPC(name, this, menu, waiters.size()+1);
     		WaiterGui g = new WaiterGui(w, gui);
     		if (p!=null) w.setPerson(p);
@@ -199,6 +231,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		g.updatePosition();
     	}
     	else if (type.equals("Host")) {
+    		numWorkers++;
     		if (p!=null) host.setPerson(p);
     		host = new HostAgent(name);
     		hostGui= new HostGui(host);
@@ -214,6 +247,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		host.startThread();
     	}
     	else if (type.equals("Cook")) {
+    		numWorkers++;
     		cook = new CookAgent(name, this, foods);
     		if (p!=null) cook.setPerson(p);
     		CookGui cookGui = new CookGui(cook, gui);
@@ -235,6 +269,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		
     	}
     	else if (type.equals("Cashier")) {
+    		numWorkers++;
     		cashier = new CashierAgent(name, menu);
     		if (p!=null) cashier.setPerson(p);
     	    CashierGui cashierGui = new CashierGui(cashier, gui);
@@ -342,7 +377,6 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 		}
 		if (cook!=null) {
 			cook.setMarket(m);
-			
 		}
 	}
 
@@ -359,7 +393,37 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 
 	@Override
 	public void endOfShift() {
+		System.out.println("RESTAURANT RANCHO GOT END OF SHIFT");
+		double wage;
+		if (cashier!=null) {
+			wage = cashier.balance - 500;
+			cashier.subtract(wage);
+		}
+		else wage = 0;
+		wage = wage/numWorkers;
+		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
 		isOpen = false;
+		if (host!=null) {
+			host.msgShiftDone(wage);
+			if (waiters.size() == 0) {
+				if (cook!=null) {
+					cook.msgShiftDone(wage);
+				}
+				if (cashier!=null) {
+					cashier.msgShiftDone(wage);
+				}
+			}
+		}
+		else {
+			if (cashier!=null) { cashier.msgShiftDone(wage);  }
+			for (int i = 0; i < waiters.size(); i++) {
+				WaiterAgent w = waiters.get(i);
+				w.msgShiftDone(false, wage);
+			}
+			if (cook!=null) {
+				cook.msgShiftDone(wage);
+			}
+		}
 		
 	}
 
