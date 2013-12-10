@@ -48,12 +48,18 @@ public class TransportationController extends Agent implements Transportation{
 		String endingLocation;
 		String method;
 		String character;
+		boolean likesWalking;
 
 		Mover(Person person, String startingLocation, String endingLocation, String method, String character) {
 			this.person = person;
 			this.startingLocation = startingLocation;
 			this.endingLocation = endingLocation;
 			this.method = method;
+			likesWalking = false;
+			if(this.method == "Walk") {
+				this.method = "Bus";
+				likesWalking = true;
+			}
 			this.character = character;
 			transportationState = TransportationState.REQUEST;
 
@@ -882,7 +888,7 @@ public class TransportationController extends Agent implements Transportation{
 				spawnMover(mover);
 				return;
 			}
-			if(easierToWalk(directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, directory.get(mover.startingLocation).closestBusStop.getAssociatedTile(), directory.get(mover.endingLocation).closestBusStop.getAssociatedTile())) {
+			if(easierToWalk(directory.get(mover.startingLocation).walkingTile, directory.get(mover.endingLocation).walkingTile, directory.get(mover.startingLocation).closestBusStop.getAssociatedTile(), directory.get(mover.endingLocation).closestBusStop.getAssociatedTile(), mover.likesWalking)) {
 				mover.method = "Walk";
 				spawnMover(mover);
 				return;
@@ -903,7 +909,7 @@ public class TransportationController extends Agent implements Transportation{
 		}
 	}
 
-	private boolean easierToWalk(Position start, Position end, Position startStop, Position endStop) {
+	private boolean easierToWalk(Position start, Position end, Position startStop, Position endStop, boolean likesWalking) {
 		float walkingDistance = 0.00f;
 		float busDistance = 0.00f;
 
@@ -927,6 +933,8 @@ public class TransportationController extends Agent implements Transportation{
 		while(route.peek().getX() != endStop.getX() && route.peek().getY() != endStop.getY()) {
 			route.add(route.poll());
 			busDistance += 0.25;
+			if(likesWalking)
+				busDistance += 0.25;
 		}
 
 		if(walkingDistance <= busDistance)
