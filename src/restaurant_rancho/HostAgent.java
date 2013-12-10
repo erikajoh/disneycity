@@ -27,7 +27,9 @@ public class HostAgent extends Agent {
 	private enum waiterState {working, onBreak};
 	Person person;
 	boolean shiftDone = false;
-
+	
+	public boolean isWorking = true;
+ 
 	public HostAgent(String name) {
 		super();
 
@@ -73,6 +75,7 @@ public class HostAgent extends Agent {
 	public void msgShiftDone() {
 		print("got msg shift done");
 		shiftDone = true;
+		isWorking = false;
 		if (waitingCustomers.size() == 0) {if (person!=null) person.msgStopWork(10);
 			for (MyWaiter w : waiters) {
 				w.w.msgShiftDone(true);

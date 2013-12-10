@@ -63,16 +63,16 @@ public class ManagerAgent extends Agent {
     	stateChanged();
     }
 	
-	public void msgShiftDone() {
-		print("got msg shift done");
-		shiftDone = true;
-		if (market.getWorkers().length == 0) {
-			if (person!=null) person.msgStopWork(10);
-			for (WorkerAgent w : myWorkers) {
-				w.msgShiftDone(true);
-			}
-		}
-	}
+//	public void msgShiftDone() {
+//		print("got msg shift done");
+//		shiftDone = true;
+//		if (market.getWorkers().length == 0) {
+//			if (person!=null) person.msgStopWork(10);
+//			for (WorkerAgent w : myWorkers) {
+//				w.msgShiftDone(true);
+//			}
+//		}
+//	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.

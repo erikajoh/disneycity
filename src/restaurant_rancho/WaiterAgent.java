@@ -30,6 +30,8 @@ import java.util.concurrent.Semaphore;
 		boolean alert = false;
 		boolean hasntLeft = true;
 		
+		public boolean isWorking = true;
+		
 		Person person;
 		
 		public WaiterAgent(String name, RestaurantRancho rest) {
@@ -75,6 +77,7 @@ import java.util.concurrent.Semaphore;
 			if (customers.size() == 0 && alertOthers) {
 				alertedShift = true;
 				print ("going home!");
+				isWorking = false;
 				waiterGui.DoLeave(person);
 				if (cook!=null) { 
 					cook.msgShiftDone(); 
@@ -90,6 +93,7 @@ import java.util.concurrent.Semaphore;
 			}
 			else if (customers.size()==0){
 				print ("going home!");
+				isWorking = false;
 				waiterGui.DoLeave(person);
 			}
 			else {

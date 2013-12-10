@@ -357,8 +357,8 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Pizza and Apt #4
 		grid[10][18].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[11][18].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
-		grid[10][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[11][18].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[10][19].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[11][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[10][15].setDown(true);
 
@@ -377,8 +377,8 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Cafe
 		grid[24][20].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[25][21].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
-		grid[24][20].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
+		grid[25][20].setMovement(false, false, true, false, MovementTile.MovementType.ROAD);
+		grid[24][21].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
 		grid[25][21].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 		grid[25][24].setUp(true);
 
@@ -472,7 +472,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		setCrossWalk(24, 12, false);//Bank
 
-		setCrossWalk(10, 18, false);//Pizza and Apt #4
+		setCrossWalk(10, 16, false);//Pizza and Apt #4
 		setCrossWalk(22, 18, false);//Southern Market
 
 		setCrossWalk(19, 2, true);//Apt #3 and Apt #5
@@ -481,7 +481,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		setCrossWalk(30, 24, true);//Apt #6 and Apt #7
 
-		setCrossWalk(4, 28, false);//Apt #8
+		setCrossWalk(4, 26, false);//Apt #8
 		setCrossWalk(10, 28, false);//Apt #9 and Bayou
 		setCrossWalk(22, 28, false);//Apt #10
 		setCrossWalk(28, 28, false);//Apt #11
@@ -698,7 +698,7 @@ public class TransportationController extends Agent implements Transportation{
 		}
 
 
-		CrashGui CG = new CrashGui(new Position(4,10), false, this);
+		CrashGui CG = new CrashGui(new Position(0,0), false, this);
 		master.addGui(CG);
 	}
 
@@ -742,6 +742,7 @@ public class TransportationController extends Agent implements Transportation{
 
 	public void msgCrash(MobileAgent agent1, MobileAgent agent2, Position position) {
 		crashes.add(new Crash(agent1, agent2, position, this));
+		stateChanged();
 	}
 
 	public void msgCrashCompleted(CrashGui crash) {
@@ -750,6 +751,7 @@ public class TransportationController extends Agent implements Transportation{
 				c.state = CrashState.REMOVE;
 			}
 		}
+		stateChanged();
 	}
 
 	//+++++++++++++++++SCHEDULER+++++++++++++++++
@@ -802,21 +804,21 @@ public class TransportationController extends Agent implements Transportation{
 		//message people about their crash
 		if(crash.agentCC == null) {//One person crash
 			if(crash.agentW != null) {
-				crash.agentW.msgCrash();
+				crash.agentW.crashDone();
 				crash.agentW.getPerson().msgCrash(true);
 			}
 			if(crash.agentC != null) {
-				crash.agentW.msgCrash();
+				crash.agentC.crashDone();
 				crash.agentC.getPerson().msgCrash(false);
 			}
 		}
 		if(crash.agentW == null) {//Two car crash
 			if(crash.agentCC != null) {
-				crash.agentW.msgCrash();
-				crash.agentW.getPerson().msgCrash(true);
+				crash.agentCC.crashDone();
+				crash.agentCC.getPerson().msgCrash(true);
 			}
 			if(crash.agentC != null) {
-				crash.agentW.msgCrash();
+				crash.agentC.crashDone();
 				crash.agentC.getPerson().msgCrash(true);
 			}
 		}

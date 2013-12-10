@@ -53,9 +53,9 @@ public class WalkerAgent extends MobileAgent{
 	}
 
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		//System.out.println("Releasing " + currentPosition.toString());
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
@@ -102,11 +102,13 @@ public class WalkerAgent extends MobileAgent{
 			int attempts    = 1;
 
 			MovementTile.MovementType temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
+			MovementTile.MovementType currentTile = master.getGrid()[currentPosition.getX()][currentPosition.getY()].getMovementType();
 			while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
-				if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+				if(currentTile == MovementTile.MovementType.TRAFFICCROSSROAD || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE)
 					break;
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
+				temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 			}
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 
@@ -121,10 +123,11 @@ public class WalkerAgent extends MobileAgent{
 				catch (Exception e){}
 
 				while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
-					if(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+					if(currentTile == MovementTile.MovementType.TRAFFICCROSSROAD || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE)
 						break;
 					try { Thread.sleep(1000); }
 					catch (Exception e){}
+					temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 				attempts ++;
@@ -172,9 +175,9 @@ public class WalkerAgent extends MobileAgent{
 		}
 		else
 			beginBusStop.addRider(walker, endBusStop, building);
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 			//System.out.println("Releasing " + currentPosition.toString());
 		}
 		gui.setIgnore();
@@ -194,6 +197,10 @@ public class WalkerAgent extends MobileAgent{
 	@Override
 	public Person getPerson() {
 		return walker;
+	}
+
+	public void crashDone() {
+		gui.crashDone();
 	}
 
 }

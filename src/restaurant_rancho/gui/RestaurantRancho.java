@@ -55,8 +55,22 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private RestMenu menu = new RestMenu();
     boolean isOpen = true;
     public ProducerConsumerMonitor orderStand = new ProducerConsumerMonitor();
-
-
+    
+    private MyWaitingCook waitingCook;
+    private MyWaitingCashier waitingCashier;
+    private MyWaitingHost waitingHost;
+    private List<MyWaitingWaiter> waitingWaiters = new ArrayList<MyWaitingWaiter>();
+    private List<MyWaitingWaiter> waitingPCWaiters = new ArrayList<MyWaitingWaiter>();
+    private List<MyWaitingCustomer> waitingCustomers  = new ArrayList<MyWaitingCustomer>();
+    
+    
+    public boolean hostShiftDone = false;
+    public boolean cookShiftDone = false;
+    public boolean waiterWorking = false;
+    public boolean cashierShiftDone = false;
+    
+    public boolean shiftsSwitching = false;
+    
     private SimCityGui gui;
     private CookGui cookgui;
 
@@ -86,7 +100,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public boolean isOpen() {
-    	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
+    	return (!shiftsSwitching && isOpen);
     }
     
     public RestMenu getMenu() {
@@ -133,6 +147,46 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	if(cook != null){
     		 cook.setQuantity(name, num);
     	}
+    }
+    
+    public boolean isChangingShifts() {
+    	if (host!=null && host.isWorking==false) {
+    		removeHost();
+    	}
+    	if (cook!=null && cook.isWorking==false) {
+    		removeCook();
+    	}
+    	if (cashier!=null && cashier.isWorking==false) {
+    		removeCashier();
+    	}
+    	for (WaiterAgent w : waiters ) {
+    		if (w.isWorking==false) {
+    			removeWaiter(w);
+    		}
+    	}
+    	if (shiftsSwitching) {
+    		if (host!=null && host.isWorking == true) 
+    			return true;
+    		else if (waiters.size()!=0) {
+    			for (WaiterAgent w : waiters) {
+    				if (w.isWorking == true)
+    					return true;
+    			}
+    		}
+    		else if (cook!=null && cook.isWorking == true) {
+    			return true; 
+    		}
+    		else if (cashier!=null && cashier.isWorking == true) {
+    			return true;
+    		}
+    		else {
+    			shiftsSwitching = false;
+    			return false;
+    		}
+    	}
+    	return false;
+    	
+    	
     }
     
     public String getRestaurantName() { return name; }
@@ -224,13 +278,15 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public void addPerson(Person p, String type, String name, double money) {
+    	if (!isChangingShifts()) {
 
-    	if (type.equals("Customer")) {
-    		//if ((p!=null) && returningCusts.containsKey(p)) {
-    		//	returningCusts.get(p).getGui().setHungry();	
-    		//}
-    		//else {
-    		
+    		if (type.equals("Customer")) {
+    			
+    			if ((p!=null) && returningCusts.containsKey(p)) {
+    				returningCusts.get(p).getGui().setHungry();	
+    			}
+    			else {
+    			
     			CustomerAgent c = new CustomerAgent(name);	
     			CustomerGui g = new CustomerGui(c, gui, customers.size());
     			if (p!=null) c.setPerson(p);
@@ -244,41 +300,47 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     			customers.add(c);
     			c.startThread();
     			g.updatePosition();
+    			}
+    		
     		}
+    		else if (type.equals("Waiter")) {
+    			waiterWorking = true;
+    			WaiterAgentNorm w = new WaiterAgentNorm(name, this);
+    			WaiterGui g = new WaiterGui(w, waiters.size());
+    			w.isWorking = true;
+    			if (p!=null) w.setPerson(p);
+    			gui.ranchoAniPanel.addGui(g);
+    			if (host!=null) w.setHost(host);
+    			if (cook!= null) w.setCook(cook);
+    			if (cashier!=null)w.setCashier(cashier);
+    			if (host!=null) host.addWaiter(w);
+    			w.setGui(g);
+    			waiters.add(w);
+    			w.startThread();
+    			g.updatePosition();
     		
-    	//}
-    	else if (type.equals("Waiter")) {
-    		WaiterAgentNorm w = new WaiterAgentNorm(name, this);
-    		WaiterGui g = new WaiterGui(w, waiters.size());
-    		if (p!=null) w.setPerson(p);
-    		gui.ranchoAniPanel.addGui(g);
-    		if (host!=null) w.setHost(host);
-    		if (cook!= null) w.setCook(cook);
-    		if (cashier!=null)w.setCashier(cashier);
-    		if (host!=null) host.addWaiter(w);
-    		w.setGui(g);
-    		waiters.add(w);
-    		w.startThread();
-    		g.updatePosition();
-    		
-    	}
-    	else if (type.equals("WaiterPC")) {
-    		WaiterAgentPC w = new WaiterAgentPC(name, this);
-    		WaiterGui g = new WaiterGui(w, waiters.size());
-    		if (p!=null) w.setPerson(p);
-    		gui.ranchoAniPanel.addGui(g);
-    		if (host!=null) w.setHost(host);
-    		if (cook!= null) w.setCook(cook);
-    		if (cashier!=null)w.setCashier(cashier);
-    		if (host!=null) host.addWaiter(w);
-    		w.setGui(g);
-    		waiters.add(w);
-    		w.startThread();
-    		g.updatePosition();
-    	}
-    	else if (type.equals("Host")) {
-    		if (host == null) {
+    		}
+    		else if (type.equals("WaiterPC")) {
+    			waiterWorking = true;
+    			WaiterAgentPC w = new WaiterAgentPC(name, this);
+    			WaiterGui g = new WaiterGui(w, waiters.size());
+    			w.isWorking = true;
+    			if (p!=null) w.setPerson(p);
+    			gui.ranchoAniPanel.addGui(g);
+    			if (host!=null) w.setHost(host);
+    			if (cook!= null) w.setCook(cook);
+    			if (cashier!=null)w.setCashier(cashier);
+    			if (host!=null) host.addWaiter(w);
+    			w.setGui(g);
+    			waiters.add(w);
+    			w.startThread();
+    			g.updatePosition();
+    		}
+    		else if (type.equals("Host")) {
+    		//if (host == null) {
+    			hostShiftDone = true;
     			host = new HostAgent(name);
+    			host.isWorking = true;
       			if (p!=null) host.setPerson(p);
     			host.startThread();
     			initRestLabel();
@@ -287,11 +349,12 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     				w.setHost(host);
     			}
     		}
-    	}
-    	else if (type.equals("Cook")) {
-    		if (cook == null) {
+    //	}
+    		else if (type.equals("Cook")) {
+    			cookShiftDone = true;
     			cook = new CookAgent(name, this, market);
     			cookgui = new CookGui(cook);
+    			cook.isWorking = true;
     			if (p!=null) cook.setPerson(p);
     			cook.setGui(cookgui);
     			//cookgui.updatePosition();
@@ -301,9 +364,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     			gui.ranchoAniPanel.addGui(cookgui);
     			cook.startThread();
     		}
-    	}
-    	else if (type.equals("Cashier")) {
-    		if (cashier == null) {
+    		else if (type.equals("Cashier")) {
+    			cashierShiftDone = true;
     			cashier = new CashierAgent(name, this);
     			if (p!=null) cashier.setPerson(p);
     			if (bank!=null) cashier.setBank(bank);
@@ -313,10 +375,44 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     			}
 
     			cashier.startThread();
-    		}
     	}
-    		
-    		
+    	}
+    	else {
+    		if (type.equals("Customer")) {
+    			waitingCustomers.add(new MyWaitingCustomer(p, name, money));
+    		}
+    		if (type.equals("Host")) {
+    			waitingHost = new MyWaitingHost(p, name);
+    		}
+    		if (type.equals("Waiter")) {
+    			waitingWaiters.add(new MyWaitingWaiter(p, name));
+    		}
+    		if (type.equals("WaiterPC")) {
+    			waitingPCWaiters.add(new MyWaitingWaiter(p, name));
+    		}
+    		if (type.equals("Cook")) {
+    			waitingCook = new MyWaitingCook(p, name);
+    		}
+    		if (type.equals("Cashier")) {
+    			waitingCashier = new MyWaitingCashier(p, name);
+    		}
+    	}		
+    }
+    
+    public void removeCashier() {
+    	cashier = null;
+    }
+    
+    public void removeHost() {
+    	host = null;
+    }
+    
+    public void removeCook() {
+    	cook = null;
+    }
+    
+    public void removeWaiter(WaiterAgent w) {
+    	waiters.remove(w);
     }
     
     public void removeMe(WaiterAgent wa, String type) {
@@ -350,7 +446,6 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	
 	@Override
 	public void msgEndOfShift() {
-		isOpen = false;
 		System.out.println("RESTAURANT RANCHO GOT END OF SHIFT");
 
 		if (host!=null) {
@@ -377,7 +472,52 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	public void msgHereIsBill(Market_Douglass m, double amount) {
 		cashier.msgHereIsMarketBill(m, amount);
 	}
-
-
-
+	
+	class MyWaitingCustomer {
+		Person per;
+		String name;
+		double money;
+		
+		MyWaitingCustomer(Person p, String n, double m) {
+			per = p;
+			name = n;
+			money = m;
+		}
+	}
+	
+	class MyWaitingHost {
+		Person per;
+		String name;
+		MyWaitingHost (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
+	
+	class MyWaitingCook {
+		Person per;
+		String name;
+		MyWaitingCook (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
+	
+	class MyWaitingCashier {
+		Person per;
+		String name;
+		MyWaitingCashier (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
+	
+	class MyWaitingWaiter {
+		Person per;
+		String name;
+		MyWaitingWaiter (Person p, String n) {
+			per = p;
+			name = n;
+		}
+	}
 }

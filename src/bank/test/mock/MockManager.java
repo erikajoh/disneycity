@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import simcity.gui.SimCityGui;
-import bank.TellerAgent;
 import bank.gui.Account;
 import bank.gui.Bank;
 import bank.interfaces.BankCustomer;
@@ -41,7 +40,7 @@ public class MockManager extends Mock {
 
 			List<WaitingCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<WaitingCustomer>());;
 			enum State{entered, waiting, leaving, busy, idle};
-			enum Action{newAccount, deposit, withdraw};
+			enum Action{newAccount, deposit, withdraw, rob};
 
 			class MyTeller {
 				MockTeller teller;
@@ -144,6 +143,17 @@ public class MockManager extends Mock {
 			}
 		}
 		
+		public void msgThief(MockBankCustomer bc, double amount){
+			   for(WaitingCustomer wc : waitingCustomers){
+				   if(wc.bankCustomer == bc){
+					   wc.setAccountNum(-1);
+					   wc.setRequestAmt(amount);
+					   wc.action = Action.rob;
+					   break;
+				   }
+			   }
+		}
+		
 
 		/**
 		 * Scheduler.  Determine what action is called for, and do it.
@@ -201,6 +211,9 @@ public class MockManager extends Mock {
 			else if(wc.action == Action.withdraw){
 				log.add(new LoggedEvent("RA: "+wc.requestAmt));
 				wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
+			}
+			else if(wc.action == Action.rob){
+				wc.bankCustomer.msgThief(wc.requestAmt);
 			}
 
 			wc.state = State.busy;
