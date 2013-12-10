@@ -41,5 +41,6 @@ public interface Person {
 	// from Market
 	public void msgHereIsOrder(String order, int quantity);
 	
+	public void msgCrash(boolean b);
 
 }
