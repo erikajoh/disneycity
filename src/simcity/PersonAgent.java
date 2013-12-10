@@ -486,6 +486,7 @@ public class PersonAgent extends Agent implements Person {
 				
 				// I'm hungry
 				if(!isNourished) {
+					log.add(new LoggedEvent("!isNourished"));
 					if(currentLocation.equals(targetLocation)) {
 						print("Deciding to eat");
 						// I want to eat at home

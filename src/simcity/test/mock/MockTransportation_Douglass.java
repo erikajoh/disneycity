@@ -35,11 +35,12 @@ public class MockTransportation_Douglass extends Mock_Douglass implements Transp
 				+ "method = " + mover));
 		final Person thePerson = person;
 		final String theLocation = endLocation;
+		log.add(new LoggedEvent("msgPayFare() called; fare"));
 		timer.schedule(new TimerTask() {
 			public void run() {
 				thePerson.msgReachedDestination(theLocation);
 			}
-		}, 1000);
+		}, 100);
 	}
 
 	@Override

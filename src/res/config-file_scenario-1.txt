@@ -3,11 +3,11 @@ RanchoHost1|Main St Apartments #1|OwnerResident
 RanchoWaiter1|Main St Apartments #1|Renter
 RanchoCashier1|Main St Apartments #1|Renter
 RanchoCook1|Main St Apartments #1|Renter
-RanchoHost2|Main St Apartments #2|OwnerResident
-RanchoWaiter2|Main St Apartments #2|Renter
-RanchoCashier2|Main St Apartments #2|Renter
-RanchoCook2|Main St Apartments #2|Renter
+HausHost2|Main St Apartments #2|OwnerResident
+HausWaiter2|Main St Apartments #2|Renter
+HausCashier2|Main St Apartments #2|Renter
+HausCook2|Main St Apartments #2|Renter
 2
 Main St Apartments #1|RanchoHost1|RanchoHost1|RanchoWaiter1|RanchoCashier1|RanchoCook1
-Main St Apartments #2|RanchoHost2|RanchoHost2|RanchoWaiter2|RanchoCashier2|RanchoCook2
+Main St Apartments #2|HausHost2|HausHost2|HausWaiter2|HausCashier2|HausCook2
 Friday

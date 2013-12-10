@@ -53,13 +53,20 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 			waitingCustomers.add(newCustomer);
 		}
 		final Person finalPerson = personAgent; 
-		final double finalMoney = moneyOnHand; 
+		
+		double price = 8;
+		if(moneyOnHand >= 13) {
+			price = 13;
+		}
+		else if(moneyOnHand >= 10) {
+			price = 10;
+		}
+		final double finalMoney = moneyOnHand - price; 
 		timer.schedule(new TimerTask() {
 			public void run() {
-				finalPerson.msgSetHungry();
 				finalPerson.msgDoneEating(true, finalMoney);
 			}
-	    }, Constants.SECOND / 2);
+	    }, Constants.SECOND / 10);
 	}
 	
 	class MyCustomer {
@@ -76,7 +83,7 @@ public class MockRestaurant_Douglass extends Mock_Douglass implements Restaurant
 	@Override
 	public String getRestaurantName() {
 		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
 
 	@Override
