@@ -133,7 +133,7 @@ public class ResidentAgent extends Agent {
 			log.add(new LoggedEvent("No food"));
 			state = State.idle;
 			Do("No food");
-			housing.msgFoodDone(this, false);
+			FoodDone(false);
 			return true;
 		}
 		else if(state == State.foodDone){
@@ -141,7 +141,7 @@ public class ResidentAgent extends Agent {
 			state = State.idle;
 			Do("Food done");
 			GoToTable();
-			housing.msgFoodDone(this, true);
+			FoodDone(true);
 			return true;
 		}
 		else if(state == State.wantsMaintenance){
@@ -155,7 +155,7 @@ public class ResidentAgent extends Agent {
 			log.add(new LoggedEvent("Maintenance done"));
 			state = State.idle;
 			Do("Maintenance done");
-			housing.msgFinishedMaintenance(this);
+			MaintenanceDone();
 //			state = State.goingToBed; //hack
 			return true;
 		}
@@ -177,14 +177,14 @@ public class ResidentAgent extends Agent {
 			log.add(new LoggedEvent("Left"));
 			state = State.idle;
 			Do("Left house");
-			housing.msgLeft(this);
+			LeftHouse();
 			return true;
 		}
 		return false;
 	}
 
 	// Actions
-	
+
 	private void EnterHouse(){
 		if (renterGui != null) renterGui.DoEnterHouse();
 		try {
@@ -209,6 +209,10 @@ public class ResidentAgent extends Agent {
 		stateChanged();
 	}
 	
+	private void FoodDone(boolean success){
+		housing.msgFoodDone(this, success);
+	}
+	
 	private void GoToTable(){
 		if (renterGui != null) renterGui.DoGoToTable();
 		try {
@@ -231,6 +235,10 @@ public class ResidentAgent extends Agent {
 		stateChanged();
 	}
 	
+	private void MaintenanceDone(){
+		housing.msgFinishedMaintenance(this);
+	}
+	
 	private void GoToBed(){
 		if (renterGui != null) renterGui.DoGoToBed();
 		try {
@@ -251,6 +259,10 @@ public class ResidentAgent extends Agent {
 			e.printStackTrace();
 		}
 		stateChanged();
+	}
+	
+	private void LeftHouse(){
+		housing.msgLeft(this);
 	}
 
 	// Accessors, etc.

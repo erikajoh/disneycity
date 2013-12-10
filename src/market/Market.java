@@ -223,29 +223,29 @@ public class Market implements Market_Douglass {
     	return inventoryList.toArray(new String[0]);
     }
     
-    public void msgEndOfShift() {
-		isOpen = false;
-		System.out.println("MARKET GOT END OF SHIFT");
-
-		if (manager!=null) {
-			manager.msgShiftDone();
-			for (int i = 0; i < workers.size(); i++) {
-				if (cashier!=null) cashier.subtract(10);
-			}
-		}
-		else {
-			if (cashier!=null) {
-				cashier.msgShiftDone();
-				cashier.subtract(10);
-			}
-			for (int i = 0; i < workers.size(); i++) {
-				WorkerAgent w = workers.get(i);
-				w.msgShiftDone(false);
-				if (cashier!=null) cashier.subtract(10);
-			}
-		}
-		
-	}
+//    public void msgEndOfShift() {
+//		isOpen = false;
+//		System.out.println("MARKET GOT END OF SHIFT");
+//
+//		if (manager!=null) {
+////			manager.msgShiftDone();
+//			for (int i = 0; i < workers.size(); i++) {
+//				if (cashier!=null) cashier.subtract(10);
+//			}
+//		}
+//		else {
+//			if (cashier!=null) {
+////				cashier.msgShiftDone();
+//				cashier.subtract(10);
+//			}
+//			for (int i = 0; i < workers.size(); i++) {
+//				WorkerAgent w = workers.get(i);
+//				w.msgShiftDone(false);
+//				if (cashier!=null) cashier.subtract(10);
+//			}
+//		}
+//		
+//	}
     
     public String[] getWorkers(){
         List<String> marketWorkers = new ArrayList<String>();

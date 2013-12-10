@@ -32,7 +32,7 @@ public class CustomerAgent extends Agent implements Customer {
 	
 	public int table;
 
-	public enum State {idle, entering, moveUp, ordering, paying, leaving};
+	public enum State {idle, entering, moveUp, ordering, gotItemAndBill, paying, leaving};
 	private State state = State.idle;
 	
 	/**
@@ -119,15 +119,9 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 	
 	public void msgHereIsItemAndBill(int num, double amt) { // from worker
-		if (rest != null) {
-			rest.msgHereIsBill(market, amt);
-			state = State.idle;
-		} else {
-			quantity = num;
-			amtDue = amt;
-			if (wallet.getAmt() < amtDue) state = State.leaving;
-			else state = State.paying;
-		}
+		state = State.gotItemAndBill;
+		quantity = num;
+		amtDue = amt;
 		stateChanged();
 	}
 	
@@ -183,19 +177,44 @@ public class CustomerAgent extends Agent implements Customer {
 			PlaceOrder();
 			return true;
 		}
+		else if (state == State.gotItemAndBill){
+			if (rest != null) {
+				SendBill();
+			} else {
+				LeaveOrPay();
+			}
+		}
 		else if (state == State.paying){
 			print("Paying");
-			cashier.msgHereIsMoney(this, wallet.getAmt());
-			state = State.idle;
+			PayMoney();
 			return true;
 		}
 		else if (state == State.leaving){
 			print("Leaving");
 			LeaveMarket();
-			market.msgLeaving(this);
+			SayGoodbye();
 			return true;
 		}
 		return false;
+	}
+	
+	private void PayMoney() {
+		cashier.msgHereIsMoney(this, wallet.getAmt());
+		state = State.idle;
+	}
+	
+	private void LeaveOrPay() {
+		if (wallet.getAmt() < amtDue) state = State.leaving;
+		else state = State.paying;
+	}
+	
+	private void SendBill() {
+		rest.msgHereIsBill(market, amtDue);
+		state = State.idle;
+	}
+	
+	private void SayGoodbye() {
+		market.msgLeaving(this);
 	}
 
 	private void EnterMarket() {
