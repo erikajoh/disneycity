@@ -145,7 +145,7 @@ public class CashierAgent extends Agent implements Cashier{
 	
 		//rules 
 		try{
-		
+		/*
 		if (money>400) {
 			if (accountNum==-1 && bs != bankState.waitingForBank) {
 				print("requesting account from bank");
@@ -170,6 +170,7 @@ public class CashierAgent extends Agent implements Cashier{
 				return true;
 			}
 		}
+		*/
 		
 		if (!bills.isEmpty()) {
 			synchronized(bills) {

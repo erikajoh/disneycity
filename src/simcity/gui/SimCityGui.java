@@ -390,7 +390,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
         restPizza.addPerson(null, "Waiter", "pw", 50);
         restPizza.addPerson(null, "Cashier", "pcash", 50);
         restPizza.addPerson(null, "Host", "pHost", 50);
-		restPizza.addPerson(null, "Customer", "pSally", 50);
+		//restPizza.addPerson(null, "Customer", "pSally", 50);
 		
         restBayou.addPerson(null, "Cook", "cook", 50);
         restBayou.addPerson(null, "WaiterPC", "w", 50);

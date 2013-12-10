@@ -63,7 +63,7 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
         housingList = new JComboBox(SimCityGui.simCityPanel.getAllHousing());
         settings.add(housingList);
         
-        label = new JLabel("Staring money");
+        label = new JLabel("Starting money");
 		settings.add(label);
         
         SpinnerModel startMoneySpinner = new SpinnerNumberModel(START_MONEY, 0, 100, 1);

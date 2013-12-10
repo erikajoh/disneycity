@@ -1,0 +1,15 @@
+8
+RanchoHost1|Main St Apartments #1|OwnerResident
+RanchoWaiter1|Main St Apartments #1|Renter
+RanchoCashier1|Main St Apartments #1|Renter
+RanchoCook1|Main St Apartments #1|Renter
+Narwhal_Secundus|Haunted Mansion|OwnerResident
+One|Cinderella Castle|OwnerResident
+PirateTeller1|Main St Apartments #2|OwnerResident
+PirateTeller2|Main St Apartments #2|Renter
+4
+Main St Apartments #1|RanchoHost1|RanchoHost1|RanchoWaiter1|RanchoCashier1|RanchoCook1
+Main St Apartments #2|PirateTeller1|PirateTeller1|PirateTeller2
+Haunted Mansion|Narwhal_Secundus|Narwhal_Secundus
+Cinderella Castle|One|One
+Friday

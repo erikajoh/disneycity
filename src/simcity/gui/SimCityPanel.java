@@ -89,6 +89,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	ArrayList<Bank> banks = new ArrayList<Bank>();
 	
 	ArrayList<JPanel> animationPanelsList = new ArrayList<JPanel>();
+	
+	boolean isScenario7 = false;
 	 
 	public SimCityPanel(SimCityGui gui) {
 		
@@ -203,13 +205,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			fileName = "config-file_scenario-6.txt"; // TODO
 		}
 		if(scenarioInd == 5) {
-			fileName = "config-file_scenario-7.txt"; // TODO
+			fileName = "config-file_scenario-7.txt";
+			isScenario7 = true;
 		}
 		if(scenarioInd == 6) {
 			fileName = "config-file_scenario-10.txt";
 		}
 		
-		startButton.setEnabled(false);
 		initializeFromConfigFile(fileName);
 		newDay();
 	}
@@ -612,13 +614,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	//timing
 	private static final long START_OF_DAY		= 1;
 	private static final long MORNING			= START_OF_DAY		+ 40; //41
-	private static final long WORK_ONE_START	= MORNING			+ 90;//131
-	private static final long NOON				= WORK_ONE_START	+ 180;//311
-	private static final long WORK_ONE_END		= NOON				+ 180;//491
-	private static final long WORK_TWO_START	= WORK_ONE_END		+ 190;//681
-	private static final long EVENING			= WORK_TWO_START	+ 180;//861
-	private static final long WORK_TWO_END		= EVENING			+ 180;//1041
-	private static final long NIGHT				= WORK_TWO_END		+ 190;//1231
+	private static final long WORK_ONE_START	= MORNING			+ 80;//131
+	private static final long NOON				= WORK_ONE_START	+ 240;//311
+	private static final long WORK_ONE_END		= NOON				+ 240;//491
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 250;//681
+	private static final long EVENING			= WORK_TWO_START	+ 240;//861
+	private static final long WORK_TWO_END		= EVENING			+ 240;//1041
+	private static final long NIGHT				= WORK_TWO_END		+ 250;//1231
 	private static final long END_OF_DAY		= NIGHT				+ 800;//2031
 	// length of day 1911 = appx. 4 minutes
 	
@@ -701,13 +703,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		if(numTicks >= NIGHT)
 			return "Night";
 		if(numTicks >= WORK_TWO_END)
-			return "End of Work Phase 2";
+			return "End Phase 2";
 		if(numTicks >= EVENING)
 			return "evening";
 		if(numTicks >= WORK_TWO_START)
 			return "Work Phase 2";
 		if(numTicks >= WORK_ONE_END)
-			return "End of Work Phase 1";
+			return "End Phase 1";
 		if(numTicks >= NOON)
 			return "noon";
 		if(numTicks >= WORK_ONE_START)
