@@ -169,7 +169,9 @@ public class TellerAgent extends Agent implements Teller {
 		stateChanged();
 	}
 	
-	public void	msgClose(){
+	public void	msgClose(Bank b){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Teller should leave");
+		bank = b;
 		shouldLeave = true;
 		stateChanged();
 	}
@@ -207,6 +209,7 @@ public class TellerAgent extends Agent implements Teller {
 		}
 		
 		if(shouldLeave == true){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Teller should leave called from sched");
 			leaveBank();
 			return true;
 		}
@@ -299,6 +302,7 @@ public class TellerAgent extends Agent implements Teller {
 	
 	
 	private void leaveBank(){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Teller leave bank called");
 		tellerGui.DoLeaveBank();
 		shouldLeave = false;
 		bank.msgTellerLeftBank(this);

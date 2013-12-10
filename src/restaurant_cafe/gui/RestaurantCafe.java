@@ -222,12 +222,14 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     		for (WaiterAgent w : waiters) { 
     			w.setCook(cook);
     		}
+    		/*
     		 for(int i = 0; i<3; i++){
     	            MarketAgent market = new MarketAgent(i, menu, 5);
     	            market.setCashier(cashier);
     	            market.startThread();
     	            cook.addMarket(market);
-    	     }
+    	     }*/
+    		cook.setMarket(market);
             cook.startThread();
     	    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "COOK", "COOK's thread started ");
     		
@@ -242,7 +244,9 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     	    for (CustomerAgent c : customers) {
     	    	c.setCashier(cashier);
     	    }
+    	 
     		cashier.setGui(cashierGui);
+    		cashier.setRestaurant(this);
     		gui.cafeAniPanel.addGui(cashierGui);
             cashier.startThread();
     		
@@ -326,18 +330,21 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 		addPerson(p, type, name, money);
 	}
 
-
-
-	@Override
-	public void setMarket(Market_Douglass m) {
-		market = m;
-	}
 	
 	public String getType() {
 		return type;
 	}
 
-
+	public void setMarket(Market_Douglass m) {
+		market = m;
+		if (cashier!=null) {
+			//cashier.setMarket(m);
+		}
+		if (cook!=null) {
+			cook.setMarket(m);
+			
+		}
+	}
 
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
@@ -346,12 +353,12 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void StartOfShift() {
+	public void startOfShift() {
 		isOpen = true;
 	}
 
 	@Override
-	public void EndOfShift() {
+	public void endOfShift() {
 		isOpen = false;
 		
 	}

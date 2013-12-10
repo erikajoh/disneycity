@@ -15,6 +15,7 @@ import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Bank_Douglass;
 
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -47,6 +48,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
         manager.startThread();
         tellerAmt = ta;
         
+        /*
         for(int i = 0; i<tellerAmt; i++){
         	String name = "Teller"+i;
         	TellerAgent t = new TellerAgent(name);	
@@ -58,6 +60,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		manager.addTeller(t);
     		t.startThread();
         }
+        */
     }
     
     public void msgThief(Person person, double reqAmt, boolean present){
@@ -93,16 +96,21 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	
 	public void msgClose(){
 		for(TellerAgent teller : tellers){
-			teller.msgClose();
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Bank telling teller to leave");
+			teller.msgClose(this);
 		}
 	}
 	
 	public void msgTellerLeftBank(TellerAgent teller){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Teller left bank");
 		tellers.remove(teller);
 		if(tellers.size() == 0){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Tellers should be clear");
 			open = false;
-			//gui.SimCityPanel.msgBankClosed();
-			tellers = null;
+			// tell people bank is closed
+			ArrayList<PersonAgent> people = gui.getSimCityPanel().getPeople();
+			for(int i = 0; i < people.size(); i++)
+				people.get(i).msgSetBanksOpen(false);
 		}
 	}
     
@@ -149,6 +157,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void addPerson(Person person){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "ADD TELLER");
     		TellerAgent t = new TellerAgent(person, person.getName());	
     		TellerGui g = new TellerGui(t, gui, tellers.size());
     		gui.bankAniPanel.addGui(g);
@@ -157,8 +166,11 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		t.setGui(g);
     		manager.addTeller(t);
     		t.startThread();
+			// tell people bank is open
     		if(tellers.size()==1){
-    			//gui.SimCityPanel.msgBankOpened();
+    			ArrayList<PersonAgent> people = gui.getSimCityPanel().getPeople();
+    			for(int i = 0; i < people.size(); i++)
+    				people.get(i).msgSetBanksOpen(true);
     		}
     		open = true;
     }

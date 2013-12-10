@@ -189,7 +189,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void goToTeller(){
 		animState = AnimState.walking;
-		customerGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY());
+		customerGui.DoGoToTeller(teller.getGui().getBaseX(), teller.getGui().getBaseY()+45);
 		state = State.openingAccount;
 //	    simCityGui.updateInfoPanel(this);
 	}

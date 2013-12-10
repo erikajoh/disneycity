@@ -27,6 +27,7 @@ public class CookGui implements Gui {
     private Point stove = new Point(325, 125);
     private Point plating = new Point(310, 115);
     private Point phone = new Point(405, 290);
+    private Point stand = new Point(310, 70);
     private Person person;
     
     private enum STATE {CARRYING, STATIONARY};
@@ -219,4 +220,11 @@ public class CookGui implements Gui {
     public int getYPos() {
         return yPos;
     }
+
+	public void goToStand() {
+		// TODO Auto-generated method stub
+		xDestination = stand.x;
+    	yDestination = stand.y;
+    	atDestination = false;
+	}
 }

@@ -106,9 +106,9 @@ public class WalkerAgent extends MobileAgent{
 			while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
 				if(currentTile == MovementTile.MovementType.TRAFFICCROSSROAD || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE)
 					break;
+				gui.setStill();
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
-				gui.setStill();
 				temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 			}
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
@@ -126,9 +126,9 @@ public class WalkerAgent extends MobileAgent{
 				while(temp == MovementTile.MovementType.TRAFFICCROSSROAD || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
 					if(currentTile == MovementTile.MovementType.TRAFFICCROSSROAD || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE)
 						break;
+					gui.setStill();
 					try { Thread.sleep(1000); }
 					catch (Exception e){}
-					gui.setStill();
 					temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());

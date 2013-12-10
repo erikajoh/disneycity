@@ -63,7 +63,7 @@ public class PersonTest extends TestCase
 		person.setMoney(5);
 		person.setFoodPreference("Chinese", false);
 		person.setIsNourished(false);
-		person.addBank(mockBank, "BankCustomer");
+		person.addBank(mockBank, "Customer", 0);
 		person.addHousing(mockHousing1, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
 		person.addRestaurant(mockRestaurant, "Customer", 0);
 		
@@ -213,7 +213,7 @@ public class PersonTest extends TestCase
 		// setup
 		person.setMoney(500);
 		person.setIsNourished(true);
-		person.addBank(mockBank, "BankCustomer");
+		person.addBank(mockBank, "Customer", 0);
 		person.addHousing(mockHousing1, "OwnerResident");
 		
 		assertEquals("Person: 500 dollars at start",
