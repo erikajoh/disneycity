@@ -24,7 +24,7 @@ public class CarGui implements Gui{
 		this.yDestination = yPos * 25;
 		this.xLast = xPos * 25;
 		this.yLast = yPos * 25;
-		speed = 1.8f;
+		speed = 2.50f;
 		this.agent = agent;		
 		reachedHalfway = true;
 		reachedDestination = true;
@@ -99,7 +99,7 @@ public class CarGui implements Gui{
 		//Change animation
 		//Change boolean to prevent position updating
 		if(!reachedHalfway) {
-			agent.msgHalfway();
+//			agent.msgHalfway();
 			reachedHalfway = true;
 		}
 		animModule.changeAnimation("Crash", 40);

@@ -50,7 +50,7 @@ public class CarAgent extends MobileAgent{
 	}
 
 	@Override
-	public void msgCrash() {
+	public void crash() {
 		gui.crash();
 	}
 	
@@ -91,7 +91,13 @@ public class CarAgent extends MobileAgent{
 				temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 			}
 			gotPermit = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-			
+			Random random = new Random();
+			int randomInt = random.nextInt(100);
+			if(!gotPermit && randomInt <= crashChance) {
+				gotPermit = true;
+//				if(aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].availablePermits() == 0)
+//					aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].release();
+			}
 			//Did not get lock. Lets make n attempts.
 			while (!gotPermit && attempts < 3) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " got NO permit for " + tmpPath.toString() + " on attempt " + attempts);
@@ -110,20 +116,15 @@ public class CarAgent extends MobileAgent{
 					attempts ++;
 			}
 			
-			Random random = new Random();
-			int randomInt = random.nextInt(100);
+			randomInt = random.nextInt(100);
 			//Did not get lock after trying n attempts. So recalculating path.            
-			if (!gotPermit && randomInt != 0) {
+			if (!gotPermit) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " No Luck even after " + attempts + " attempts! Lets recalculate");
 				if(tmpPath.getX() == endPosition.getX() && tmpPath.getY() == endPosition.getY())
 					goToEndPosition(null);
 				else
 					goToEndPosition(tmpPath);
 				break;
-			}
-			
-			if(!gotPermit && randomInt <= crashChance) {//it goes anyway and causes a crash
-				aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].release();
 			}
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());

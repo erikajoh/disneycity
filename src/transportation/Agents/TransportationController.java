@@ -148,23 +148,26 @@ public class TransportationController extends Agent implements Transportation{
 				agentC = (CarAgent)agent1;
 				agentCC = (CarAgent)agent2;
 				gui = new CrashGui(position, false, controller);
-				agent1.msgCrash();
-				agent2.msgCrash();
+				agent1.crash();
+				agent2.crash();
 				controller.master.addGui(gui);
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Car Crash between " + agentC.getPerson().getName() + " and " + agentCC.getPerson().getName());
 			}
 			else if(agent1 instanceof CarAgent && agent2 instanceof WalkerAgent) {
 				agentW = (WalkerAgent)agent2;
 				agentC = (CarAgent)agent1;
 				gui = new CrashGui(position, true, controller);
 				controller.master.addGui(gui);
-				agent2.msgCrash();
+				agentW.crash();
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Pedestrian Crash between " + agentC.getPerson().getName() + " and " + agentW.getPerson().getName());
 			}
 			else if(agent2 instanceof CarAgent && agent1 instanceof WalkerAgent) {
 				agentW = (WalkerAgent)agent1;
 				agentC = (CarAgent)agent2;
 				gui = new CrashGui(position, true, controller);
 				controller.master.addGui(gui);
-				agent1.msgCrash();
+				agentW.crash();
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Pedestrian Crash between " + agentC.getPerson().getName() + " and " + agentW.getPerson().getName());
 			}
 			else {
 				state = CrashState.DONE;
@@ -713,8 +716,8 @@ public class TransportationController extends Agent implements Transportation{
 		}
 
 
-		CrashGui CG = new CrashGui(new Position(0,0), false, this);
-		master.addGui(CG);
+//		CrashGui CG = new CrashGui(new Position(0,0), false, this);
+//		master.addGui(CG);
 	}
 
 	//+++++++++++++++++MESSAGES+++++++++++++++++
@@ -823,7 +826,7 @@ public class TransportationController extends Agent implements Transportation{
 				crash.agentW.getPerson().msgCrash(true);
 			}
 			if(crash.agentC != null) {
-				crash.agentC.crashDone();
+				//crash.agentC.crashDone();
 				crash.agentC.getPerson().msgCrash(false);
 			}
 		}

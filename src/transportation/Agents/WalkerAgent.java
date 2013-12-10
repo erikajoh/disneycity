@@ -20,7 +20,7 @@ public class WalkerAgent extends MobileAgent{
 	boolean arrived;
 	WalkerTraversal aStar;
 
-	Semaphore animSem;
+	public Semaphore animSem;
 	BusStop beginBusStop, endBusStop;
 	String building;
 
@@ -62,14 +62,15 @@ public class WalkerAgent extends MobileAgent{
 	}
 
 	public void msgDestination() {
-		animSem.release();
+		if(animSem.availablePermits() == 0)
+			animSem.release();
 	}
 
 	@Override
-	public void msgCrash() {
+	public void crash() {
 		gui.crash();
 	}
-	
+
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {
@@ -148,6 +149,8 @@ public class WalkerAgent extends MobileAgent{
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
 			//currentPosition.release(aStar.getGrid());
+			if(getPerson().getName().equals("RanchoWaiter1"))
+				System.out.println(tmpPath);
 			master.getGrid()[tmpPath.getX()][tmpPath.getY()].addOccupant(this);
 			gui.setMoving();
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
