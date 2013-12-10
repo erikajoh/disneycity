@@ -149,8 +149,6 @@ public class WalkerAgent extends MobileAgent{
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
 			//currentPosition.release(aStar.getGrid());
-			if(getPerson().getName().equals("RanchoWaiter1"))
-				System.out.println(tmpPath);
 			master.getGrid()[tmpPath.getX()][tmpPath.getY()].addOccupant(this);
 			gui.setMoving();
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());

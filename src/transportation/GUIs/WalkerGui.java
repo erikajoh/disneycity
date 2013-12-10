@@ -114,7 +114,6 @@ public class WalkerGui implements Gui{
 		//Change animation
 		//Change boolean to prevent position updating
 		if(!reachedHalfway) {
-			System.out.println("BLAH");
 			agent.msgHalfway();
 			reachedHalfway = true;
 		}
