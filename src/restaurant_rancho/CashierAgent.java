@@ -55,6 +55,8 @@ public class CashierAgent extends Agent implements Cashier{
 	private Bank_Douglass bank;
 	private Market_Douglass market;
 	
+	public boolean isWorking = true;
+	
 	public void setMarket(Market_Douglass m) {
 		market = m;
 	}
@@ -87,6 +89,7 @@ public class CashierAgent extends Agent implements Cashier{
 		shiftDone = true;
 		if (checks.size()==0) {
 			person.msgStopWork(10);
+			isWorking = false; 
 		}
 	}
 	
@@ -146,7 +149,7 @@ public class CashierAgent extends Agent implements Cashier{
 		//rules 
 		try{
 		
-		if (money>400 || shiftDone) {
+		if (money>400) {
 			if (accountNum==-1 && bs != bankState.waitingForBank) {
 				print("requesting account from bank");
 				bank.msgRequestAccount(person, money-100, false);
@@ -211,7 +214,7 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 		catch(ConcurrentModificationException e) {
 		}
-		if (shiftDone) { person.msgStopWork(10.0);}
+		if (shiftDone) { isWorking = false; person.msgStopWork(10.0);}
 		
 
 		return false;
