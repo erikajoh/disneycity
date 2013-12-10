@@ -151,4 +151,10 @@ public class WaiterGui implements Gui {
     public int getYPos() {
         return yPos;
     }
+
+	public void GoToStand() {
+		xDestination = 255;
+        yDestination = 70;
+        atPosition = false;
+	}
 }

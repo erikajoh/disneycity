@@ -26,7 +26,7 @@ public class WaiterAgent extends Agent implements Waiter{
 	//Later we will see how it is implemented
 
 	private String name;
-	private Semaphore atDestination = new Semaphore(0,true);
+	protected Semaphore atDestination = new Semaphore(0,true);
 
 	private enum BreakState {Working, WantBreak, Asked, OnBreak, TakeBreak, DeniedBreak};
 	BreakState breakState = BreakState.Working;
@@ -612,7 +612,7 @@ public class WaiterAgent extends Agent implements Waiter{
 		waiterGui.setHome(xHome, yHome);
 	}
 
-	private class MyCustomer {
+	class MyCustomer {
 		CustomerAgent c;
 		int table;
 		String choice;

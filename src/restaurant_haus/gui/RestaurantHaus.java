@@ -4,6 +4,8 @@ import restaurant_haus.CashierAgent;
 import restaurant_haus.CookAgent;
 import restaurant_haus.CustomerAgent;
 import restaurant_haus.HostAgent;
+import restaurant_haus.OrderStand;
+import restaurant_haus.PCWaiterAgent;
 import restaurant_haus.WaiterAgent;
 import bank.gui.Bank;
 import simcity.PersonAgent;
@@ -46,6 +48,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     String type;
     boolean isOpen = true;
+    OrderStand orderStand;
     
     private boolean isPaused = false;
     
@@ -73,6 +76,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
         this.gui = gui;
         this.name = name;
         type = "German";
+        orderStand = new OrderStand();
         
         menu.addItem("Pastrami Cheeseburger", 11.49);
         menu.addItem("Chicken Sausage Pretzel Roll", 8.99);
@@ -185,6 +189,19 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     		waiters.add(w);
     		w.startThread();
     	}
+    	if(type.equals("WaiterPC")) {
+    		WaiterAgent w = new PCWaiterAgent(name, orderStand);
+    		if (p!=null) w.setPerson(p);
+    		WaiterGui g = new WaiterGui(w, gui);    		
+    		gui.hausAniPanel.addGui(g);// dw
+    		if (host!=null) w.setHost(host);
+    		if (cashier!= null) w.setCashier(cashier);
+    		w.setGui(g);
+    		if (host!=null) host.msgGiveJob(w);
+    		if (cook!= null) w.setCook(cook);
+    		waiters.add(w);
+    		w.startThread();
+    	}
     	else if (type.equals("Host")) {
     		host = new HostAgent(name);
     		if (p!=null) host.setPerson(p);
@@ -197,7 +214,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     		host.startThread();
     	}
     	else if (type.equals("Cook")) { 
-    		cook = new CookAgent(name, this);
+    		cook = new CookAgent(name, this, orderStand);
     		if (p!=null) cook.setPerson(p);
     		CookGui cG = new CookGui(cook, gui);
     		gui.hausAniPanel.addGui(cG);
