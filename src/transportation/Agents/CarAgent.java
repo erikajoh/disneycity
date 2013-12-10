@@ -36,8 +36,8 @@ public class CarAgent extends MobileAgent{
 	}
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
 		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
@@ -138,8 +138,8 @@ public class CarAgent extends MobileAgent{
 
 	public void tauntAndLeave() {
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
-			master.grid[currentPosition.getX()][currentPosition.getY()].release();
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+			master.grid[currentPosition.getX()][currentPosition.getY()].release();
 		}
 		master.msgArrivedAtDestination(driver);
 		gui.setIgnore();
