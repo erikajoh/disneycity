@@ -177,15 +177,15 @@ public class MarketAgent extends Agent implements Market {
 		o.cook.msgFulfilledOrder(o.food.food, o.amountToGive);
 		double total = 0.5*(o.food.food.getPrice()*o.amountToGive);
 		total = Math.round(total * 100.0) / 100.0;
-		cashier.msgBillFromMarket(this, total);
+	//need	cashier.msgBillFromMarket(this, total);
 		orders.remove(o);
 	}
 	private void clearBill(){
 		  if(cashierPaid == CashierPaid.yes){
-		    cashier.msgClearBill(this, true);
+	//need	    cashier.msgClearBill(this, true);
 		  }
 		  else  {
-		    cashier.msgClearBill(this, false);	
+	//need	    cashier.msgClearBill(this, false);	
 		  }
 		
 		cashierPaid = CashierPaid.no;

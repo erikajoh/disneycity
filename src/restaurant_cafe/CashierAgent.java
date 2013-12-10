@@ -10,10 +10,13 @@ import restaurant_cafe.gui.Food;
 import restaurant_cafe.gui.HostGui;
 import restaurant_cafe.gui.Menu;
 import restaurant_cafe.gui.MenuItem;
+import restaurant_cafe.gui.RestaurantCafe;
 import restaurant_cafe.interfaces.Cashier;
 import restaurant_cafe.interfaces.Customer;
-import restaurant_cafe.interfaces.Market;
 import restaurant_cafe.interfaces.Waiter;
+import restaurant_rancho.CashierAgent.MarketBill;
+import restaurant_rancho.test.mock.LoggedEvent;
+import simcity.interfaces.Market_Douglass;
 import simcity.PersonAgent;
 import simcity.interfaces.Person;
 
@@ -29,6 +32,7 @@ import java.util.concurrent.Semaphore;
 
 public class CashierAgent extends Agent implements Cashier {
 	static final int NTABLES = 3; //a global for the number of tables.
+	RestaurantCafe restaurant;
 	
 	public class MyCustomer {
 		Customer customer;
@@ -53,11 +57,11 @@ public class CashierAgent extends Agent implements Cashier {
 	private double balance = 100.00;
 	
 	public class Bill {
-		Market market;
+		Market_Douglass market;
 		double total;
 		boolean paid;
 		
-		public Bill(Market m, double t){
+		public Bill(Market_Douglass m, double t){
 			market = m;
 			total = t;
 			paid = false;
@@ -102,14 +106,21 @@ public class CashierAgent extends Agent implements Cashier {
 		shiftDone = true;
 		if (!pickAndExecuteAnAction()) {if (person!=null) person.msgStopWork(10); print("cashier going home");}
 	}
-	
-	public void msgBillFromMarket(Market market, double total){
+	/*
+	public void msgBillFromMarket(Market_Douglass market, double total){
 		bills.add(new Bill(market, total));
 		print("BILL $"+total+" FROM "+market.getName());
 		stateChanged();
 	}
+	*/
 	
-	public void msgClearBill(Market market, boolean accepted){
+	public void msgHereIsMarketBill(Market_Douglass m, double amount){
+		//log.add(new LoggedEvent("Received Market Bill."));
+		bills.add(new Bill(m, amount));
+		stateChanged();
+	}
+	
+	public void msgClearBill(Market_Douglass market, boolean accepted){
 		synchronized(bills){
 		for(Bill bill : bills){
 			if(bill.market == market){
@@ -240,6 +251,15 @@ public class CashierAgent extends Agent implements Cashier {
 				  return true;
 			  }
 		}
+		
+		if (!bills.isEmpty()) {
+			synchronized(bills) {
+				for (Bill bill : bills) {
+					payBill(bill);
+					return true;
+				}
+			}
+		}
 		if(clearBill != null){
 			clearBill();
 			return true;
@@ -292,6 +312,7 @@ public class CashierAgent extends Agent implements Cashier {
 		customer.waiter.msgHereIsCheck(customer.customer, customer.check);
 		customer.state = CustomerState.idle;
 	}
+	/*
 	private void payBill(Bill bill){
 	  if(balance >= bill.total){
 		  balance-= bill.total;  
@@ -303,7 +324,14 @@ public class CashierAgent extends Agent implements Cashier {
 		  balance = 0.00;
 	  }
 	  bill.paid = true;
-}
+}*/
+	private void payBill(Bill bill) {
+		bill.market.msgHereIsPayment(restaurant, bill.total);
+		balance -= bill.total;
+		print ("Paid market, I have " + balance + " dollars now");
+		bills.remove(bill);
+		stateChanged();
+	}
 	
 	private void clearBill(){
 		bills.remove(clearBill);
@@ -323,6 +351,10 @@ public class CashierAgent extends Agent implements Cashier {
 	//utilities
 		public void setGui(CashierGui gui) {
 			cashierGui = gui;
+		}
+		
+		public void setRestaurant(RestaurantCafe rest) {
+			restaurant = rest;
 		}
 
 		public CashierGui getGui() {

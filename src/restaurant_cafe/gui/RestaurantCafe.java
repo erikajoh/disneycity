@@ -244,7 +244,9 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     	    for (CustomerAgent c : customers) {
     	    	c.setCashier(cashier);
     	    }
+    	 
     		cashier.setGui(cashierGui);
+    		cashier.setRestaurant(this);
     		gui.cafeAniPanel.addGui(cashierGui);
             cashier.startThread();
     		
