@@ -65,6 +65,11 @@ public class WalkerAgent extends MobileAgent{
 		animSem.release();
 	}
 
+	@Override
+	public void msgCrash() {
+		gui.crash();
+	}
+	
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {

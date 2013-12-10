@@ -133,9 +133,11 @@ public class TransportationController extends Agent implements Transportation{
 			
 			if(agent1 instanceof CarAgent && agent2 instanceof CarAgent) {
 				gui = new CrashGui(position, false, controller);
+				agent1.msgCrash();
+				agent2.msgCrash();
 				controller.master.addGui(gui);
 			}
-			else {
+			else if((agent1 instanceof CarAgent && !(agent2 instanceof CarAgent)) || (agent2 instanceof CarAgent && !(agent1 instanceof CarAgent))) {
 				gui = new CrashGui(position, true, controller);
 				controller.master.addGui(gui);
 			}

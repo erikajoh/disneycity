@@ -6,15 +6,15 @@ import AnimationTools.AnimationModule;
 import transportation.Agents.CarAgent;
 
 public class CarGui implements Gui{
-	
+
 	private float xPos, yPos, xDestination, yDestination, xLast, yLast, speed;
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
-	
-	
+	boolean crashed = false;
+
 	CarAgent agent;
 	boolean isPresent = true;
-	
+
 	public CarGui(float xPos, float yPos, CarAgent agent) {
 		this.xPos = xPos * 25;
 		this.yPos = yPos * 25;
@@ -26,43 +26,45 @@ public class CarGui implements Gui{
 		this.agent = agent;		
 		reachedHalfway = true;
 		reachedDestination = true;
-		
+
 		animModule = new AnimationModule("Car", "Down", 10);
 	}
-	
+
 	public void updatePosition() {
-		if(Math.abs(xDestination - xPos) <= speed)
-			xPos = xDestination;
-		else if(xPos < xDestination) {
-			xPos += speed;
-			animModule.changeAnimation("Right");
-		}
-		else if(xPos > xDestination) {
-			xPos -= speed;
-			animModule.changeAnimation("Left");
-		}
-		
-		if(Math.abs(yDestination - yPos) <= speed)
-			yPos = yDestination;
-		if(yPos < yDestination) {
-			yPos += speed;
-			animModule.changeAnimation("Down");
-		}
-		else if(yPos > yDestination) {
-			yPos -= speed;
-			animModule.changeAnimation("Up");
-		}
-		
-		if((Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed) && !reachedHalfway) {
-			agent.msgHalfway();
-			reachedHalfway = true;
-		}
-		
-		if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
-			xLast = xDestination;
-			yLast = yDestination;
-			reachedDestination = true;
-			agent.msgDestination();
+		if(!crashed) {
+			if(Math.abs(xDestination - xPos) <= speed)
+				xPos = xDestination;
+			else if(xPos < xDestination) {
+				xPos += speed;
+				animModule.changeAnimation("Right");
+			}
+			else if(xPos > xDestination) {
+				xPos -= speed;
+				animModule.changeAnimation("Left");
+			}
+
+			if(Math.abs(yDestination - yPos) <= speed)
+				yPos = yDestination;
+			if(yPos < yDestination) {
+				yPos += speed;
+				animModule.changeAnimation("Down");
+			}
+			else if(yPos > yDestination) {
+				yPos -= speed;
+				animModule.changeAnimation("Up");
+			}
+
+			if((Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed) && !reachedHalfway) {
+				agent.msgHalfway();
+				reachedHalfway = true;
+			}
+
+			if(xPos == xDestination && yPos == yDestination && !reachedDestination) {
+				xLast = xDestination;
+				yLast = yDestination;
+				reachedDestination = true;
+				agent.msgDestination();
+			}
 		}
 	}
 
@@ -82,12 +84,25 @@ public class CarGui implements Gui{
 		reachedHalfway = false;
 		reachedDestination = false;
 	}
-	
+
 	public void setIgnore() {
 		isPresent = false;
 	}
-	
+
 	public boolean isPresent() {
 		return isPresent;
+	}
+
+	public void crash() {
+		//Release other semaphore if haven't already
+		//Change animation
+		//Change boolean to prevent position updating
+		if(!reachedHalfway) {
+			agent.msgHalfway();
+			reachedHalfway = true;
+		}
+		animModule.changeAnimation("Crash", 10);
+		animModule.setNoLoop();
+		crashed = true;
 	}
 }
