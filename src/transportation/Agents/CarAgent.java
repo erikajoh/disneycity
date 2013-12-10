@@ -153,6 +153,8 @@ public class CarAgent extends MobileAgent{
 		// TODO Auto-generated method stub
 		return "car";
 	}
+	
+	@Override
 	public Person getPerson() {
 		return driver;
 	}

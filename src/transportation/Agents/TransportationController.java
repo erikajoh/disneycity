@@ -43,7 +43,7 @@ public class TransportationController extends Agent implements Transportation{
 		public Person person;
 		MobileAgent mobile;
 		javax.swing.Timer timer;
-		
+
 		String startingLocation;
 		String endingLocation;
 		String method;
@@ -56,15 +56,15 @@ public class TransportationController extends Agent implements Transportation{
 			this.method = method;
 			this.character = character;
 			transportationState = TransportationState.REQUEST;
-			
+
 			timer = new Timer(500, this);
 		}
-		
+
 		public void waitingForSpawn() {
 			timer.start();
 			transportationState = TransportationState.TIMERIDLING;
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			transportationState = TransportationState.REQUEST;
@@ -116,42 +116,61 @@ public class TransportationController extends Agent implements Transportation{
 	public TruckAgent truckMickey;
 	public TruckAgent truckMinnie;
 	private TrafficLight trafficLight;
-	
+
 	private class Crash {
-		MobileAgent agent1;
-		MobileAgent agent2;
-		Position position;
+		public MobileAgent agent1;
+		public MobileAgent agent2;
+		public WalkerAgent agentW;
+		public CarAgent agentC;
+		public CarAgent agentCC;
+		public Position position;
 		CrashState state;
 		CrashGui gui;
 		TransportationController controller;
-		
+
 		public Crash(MobileAgent agent1, MobileAgent agent2, Position position, TransportationController controller) {
 			this.agent1 = agent1;
 			this.agent2 = agent2;
+			agentW = null;
+			agentC = null;
+			agentCC = null;
 			this.position = position;
 			this.controller = controller;
-			
+
 			if(agent1 instanceof CarAgent && agent2 instanceof CarAgent) {
+				agentC = (CarAgent)agent1;
+				agentCC = (CarAgent)agent2;
 				gui = new CrashGui(position, false, controller);
 				agent1.msgCrash();
 				agent2.msgCrash();
 				controller.master.addGui(gui);
 			}
-			else if((agent1 instanceof CarAgent && !(agent2 instanceof CarAgent)) || (agent2 instanceof CarAgent && !(agent1 instanceof CarAgent))) {
+			else if(agent1 instanceof CarAgent && agent2 instanceof WalkerAgent) {
+				agentW = (WalkerAgent)agent2;
+				agentC = (CarAgent)agent1;
 				gui = new CrashGui(position, true, controller);
 				controller.master.addGui(gui);
+				agent2.msgCrash();
 			}
+			else if(agent2 instanceof CarAgent && agent1 instanceof WalkerAgent) {
+				agentW = (WalkerAgent)agent1;
+				agentC = (CarAgent)agent2;
+				gui = new CrashGui(position, true, controller);
+				controller.master.addGui(gui);
+				agent1.msgCrash();
+			}
+
 			state = CrashState.ONGOING;
 			master.addGui(gui);
 		}
 	}
-	
+
 	enum CrashState {
 		ONGOING,
 		DONE,
 		REMOVE
 	}
-	
+
 	List<Crash> crashes;
 
 	public TransportationController(TransportationPanel panel) {
@@ -648,7 +667,7 @@ public class TransportationController extends Agent implements Transportation{
 			master.addGui(truckGui);
 		truckMickey.setGui(truckGui);
 		truckMickey.startThread();
-		
+
 		truckMinnie = new TruckAgent(new Position(19, 20), this, new FlyingTraversal(grid), 20, 21);
 		truckGui = new TruckGui(19, 20, truckMinnie);
 		if(master != null)
@@ -675,8 +694,8 @@ public class TransportationController extends Agent implements Transportation{
 			grid[x+1][y+1].setMovement(true, true, false, false, MovementType.CROSSWALK);
 		}
 
-		
-		CrashGui CG = new CrashGui(new Position(4,10), true, this);
+
+		CrashGui CG = new CrashGui(new Position(4,10), false, this);
 		master.addGui(CG);
 	}
 
@@ -721,7 +740,7 @@ public class TransportationController extends Agent implements Transportation{
 	public void msgCrash(MobileAgent agent1, MobileAgent agent2, Position position) {
 		crashes.add(new Crash(agent1, agent2, position, this));
 	}
-	
+
 	public void msgCrashCompleted(CrashGui crash) {
 		for(Crash c : crashes) {
 			if(c.gui == crash) {
@@ -733,6 +752,15 @@ public class TransportationController extends Agent implements Transportation{
 	//+++++++++++++++++SCHEDULER+++++++++++++++++
 	@Override
 	public boolean pickAndExecuteAnAction() {
+		synchronized(crashes) {
+			for(Crash crash : crashes) {
+				if(crash.state == CrashState.REMOVE) {
+					removeCrash(crash);
+					return true;
+				}
+			}
+		}
+
 		synchronized(movingObjects) {
 			for(Mover mover : movingObjects) {
 				if(mover.transportationState == TransportationState.REQUEST) {
@@ -763,6 +791,35 @@ public class TransportationController extends Agent implements Transportation{
 				return true;
 		}
 		return false;
+	}
+
+	private void removeCrash(Crash crash) {
+		//Remove crash from the map
+		//Open up semaphore of the crash
+		//message people about their crash
+		if(crash.agentCC == null) {//One person crash
+			if(crash.agentW != null) {
+				crash.agentW.msgCrash();
+				crash.agentW.getPerson().msgCrash(true);
+			}
+			if(crash.agentC != null) {
+				crash.agentW.msgCrash();
+				crash.agentC.getPerson().msgCrash(false);
+			}
+		}
+		if(crash.agentW == null) {//Two car crash
+			if(crash.agentCC != null) {
+				crash.agentW.msgCrash();
+				crash.agentW.getPerson().msgCrash(true);
+			}
+			if(crash.agentC != null) {
+				crash.agentW.msgCrash();
+				crash.agentC.getPerson().msgCrash(true);
+			}
+		}
+		if(grid[crash.position.getX()][crash.position.getY()].availablePermits() == 0)
+		grid[crash.position.getX()][crash.position.getY()].release();
+		crash.state = CrashState.DONE;
 	}
 
 	private void spawnMover(Mover mover) {

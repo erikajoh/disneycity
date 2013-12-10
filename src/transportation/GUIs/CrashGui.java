@@ -31,7 +31,7 @@ public class CrashGui implements Gui{
 		crashPosition = new Position(position.getX(), position.getY());
 		this.controller = controller;
 		if(skipExplosion) {//Celes just falls from the sky
-			xPos = position.getX() * 25 - 7;
+			xPos = position.getX() * 25 - 10;
 			yPos = position.getY() * 25 - 112;
 			
 			animModule = new AnimationModule("Celes", "Fall", 8);
@@ -53,7 +53,7 @@ public class CrashGui implements Gui{
 		case EXPLOSION:
 			if(animModule.getLastFrame()) {
 				state = CrashState.FALL;
-				xPos = crashPosition.getX() * 25 - 7;
+				xPos = crashPosition.getX() * 25 - 10;
 				yPos = crashPosition.getY() * 25 - 112;
 				animModule.setCharacter("Celes");
 				animModule.changeAnimation("Fall", 8);
@@ -72,7 +72,7 @@ public class CrashGui implements Gui{
 		case LAND:
 			if(animModule.getLastFrame()) {
 				state = CrashState.PRAY;
-				animModule.changeAnimation("Praying", 8);
+				animModule.changeAnimation("Praying", 5);
 			}
 			break;
 		case PRAY:
@@ -81,7 +81,7 @@ public class CrashGui implements Gui{
 			if(prayLooping == 100) {
 				prayLooping = 0;
 				state = CrashState.CAST;
-				animModule.changeAnimation("Cast", 5);
+				animModule.changeAnimation("Cast", 3);
 			}
 			break;
 		case CAST:

@@ -190,6 +190,7 @@ public class WalkerAgent extends MobileAgent{
 		return "walker";
 	}
 
+	@Override
 	public Person getPerson() {
 		return walker;
 	}
