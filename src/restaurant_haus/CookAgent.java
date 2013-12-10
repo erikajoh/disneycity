@@ -27,6 +27,8 @@ public class CookAgent extends Agent {
 	private Semaphore atDestination = new Semaphore(0, true);
 	boolean needToCheckStand = false;
 	private OrderStand orderStand;
+	double wage;
+	public boolean isWorking;
 	
 	int nextID = 0;
 	
@@ -148,9 +150,11 @@ public class CookAgent extends Agent {
 		//Add new order to list of orders
 	}
 
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
 		shiftDone = true;
-		if (orders.size() == 0) {person.msgStopWork(10);}
+		isWorking = false;
+		wage = w;
+		cookGui.DoLeave(person, wage);
 	}
 
 	public void msgFoodDone (Order o) {
