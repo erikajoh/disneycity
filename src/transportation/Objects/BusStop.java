@@ -1,12 +1,16 @@
 package transportation.Objects;
 
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.*;
 
 import astar.astar.Position;
 import simcity.PersonAgent;
 import simcity.interfaces.Person;
+import transportation.TransportationPanel;
+import transportation.GUIs.Gui;
 
-public class BusStop {
+public class BusStop implements Gui{
 	public List<BusRider> busWaiters;
 	String name;
 	List<String> nearbyBuildings;
@@ -50,5 +54,29 @@ public class BusStop {
 	
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public void updatePosition() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void draw(Graphics2D g, Point offset) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isPresent() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setPanel(TransportationPanel transportationPanel) {
+		// TODO Auto-generated method stub
+		
 	}
 }

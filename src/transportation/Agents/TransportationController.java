@@ -175,6 +175,7 @@ public class TransportationController extends Agent implements Transportation{
 
 	public TransportationController(TransportationPanel panel) {
 		master = panel;
+		crashes = Collections.synchronizedList(new ArrayList<Crash>());
 		movingObjects = Collections.synchronizedList(new ArrayList<Mover>());
 
 		//++++++++++++++++++++++BEGIN CREATION OF GRID++++++++++++++++++++++
