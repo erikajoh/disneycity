@@ -33,6 +33,7 @@ public class CookGui implements Gui{
 	String curText = "";
 	
 	String custText = "";
+	double wage;
 	
 	
 	public CookGui(CookAgent c){ //HostAgent m) {
@@ -66,7 +67,7 @@ public class CookGui implements Gui{
 
 		if (xPos == xDestination && yPos == yDestination && leaving == true) {
 				//System.out.println("cook going home ugh");
-	        	if (person!=null) person.msgStopWork(10);
+	        	if (person!=null) person.msgStopWork(wage);
 	        	leaving =false; 
 	        	actionInProgress = false;
 	    }
@@ -126,13 +127,14 @@ public class CookGui implements Gui{
 		isPresent = p;
 	}
 	
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	System.out.println("do leave getting called");
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
     	leaving = true;
     	actionInProgress = true;
+    	wage = w;
     }
 	
 

@@ -38,6 +38,7 @@ public class CookAgent extends Agent implements Cook{
 	public boolean inMarket;
 	int curID;
 	boolean shiftDone = false;
+	double wage;
 	
 	public boolean isWorking = true;
 	
@@ -94,11 +95,12 @@ public class CookAgent extends Agent implements Cook{
 
 	// Messages
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
 		print("got msg shift done, have " + orders.size());
 		shiftDone = true;
 		isWorking = false;
-		gui.DoLeave(person);
+		wage = w;
+		gui.DoLeave(person, wage);
 	}
 	
 	public void msgAtLoc() {

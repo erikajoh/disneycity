@@ -82,14 +82,14 @@ public class MockBankCustomer extends Mock {
 		animState = AnimState.go; 
 	}
 	public void msgAccountOpened(int an, double amountWithdrawn){
-		balance += change;
+		//balance += change;
 		change = amountWithdrawn;
 		log.add(new LoggedEvent("ACCOUNT OPENED "+balance));
 		accountNum = an;
 		state = State.leaving;
 	}
 	public void msgMoneyDeposited(double amountAdded, double loanAmt, int lt){
-		balance += amountAdded;
+		//balance += amountAdded;
 		change = amountAdded;
 		log.add(new LoggedEvent("MONEY DEPOSITED "+ balance));
 		loanAmount = loanAmt;
@@ -111,7 +111,7 @@ public class MockBankCustomer extends Mock {
 	
 	public void msgRobbedBank(double cash, boolean success){
 		log.add(new LoggedEvent("ROBBED BANK? "+success));
-		balance += cash;
+		//balance += cash;
 		if(success == true){
 			change = cash;
 			state = State.leaving;

@@ -108,6 +108,7 @@ public class WalkerAgent extends MobileAgent{
 					break;
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
+				gui.setStill();
 				temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 			}
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
@@ -127,6 +128,7 @@ public class WalkerAgent extends MobileAgent{
 						break;
 					try { Thread.sleep(1000); }
 					catch (Exception e){}
+					gui.setStill();
 					temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
