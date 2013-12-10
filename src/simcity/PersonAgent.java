@@ -323,6 +323,7 @@ public class PersonAgent extends Agent implements Person {
 	// TODO check this
 	public void msgCrash(boolean atHome) {
 		if(atHome) {
+			print("CRASHING, returning home");
 			currentLocation = myHome.name;
 			mapLocationToEnum(currentLocation);
 			updateCurrentMyObject(currentLocation);
