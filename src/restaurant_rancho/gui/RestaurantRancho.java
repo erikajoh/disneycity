@@ -440,12 +440,12 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	}
 
 	@Override
-	public void msgStartOfShift() {
+	public void StartOfShift() {
 		isOpen = true;
 	}
 	
 	@Override
-	public void msgEndOfShift() {
+	public void EndOfShift() {
 		System.out.println("RESTAURANT RANCHO GOT END OF SHIFT");
 
 		if (host!=null) {

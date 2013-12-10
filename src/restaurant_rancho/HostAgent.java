@@ -76,12 +76,9 @@ public class HostAgent extends Agent {
 		print("got msg shift done");
 		shiftDone = true;
 		isWorking = false;
-		if (waitingCustomers.size() == 0) {if (person!=null) person.msgStopWork(10);
-			for (MyWaiter w : waiters) {
-				w.w.msgShiftDone(true);
-			}
-		}
+		stateChanged();
 	}
+	
 	public void msgIWantFood(CustomerAgent cust, int num) {
 		waitingCustomers.add(new MyCustomer(cust, num));
 		stateChanged();
@@ -159,12 +156,18 @@ public class HostAgent extends Agent {
 			//return true;
 			
 		}
-		if (shiftDone == true) {msgShiftDone();} 
+		if (shiftDone == true) {leaveWork();} 
 		return false;
 
 	}
 
 	// Actions
+	private void leaveWork() {
+		if (person!=null) person.msgStopWork(10);
+		for (MyWaiter w : waiters) {
+			w.w.msgShiftDone(true);
+		}	
+	}
 	private void askToWait(MyCustomer c) {
 		print("asking " +c.cust.getName() + " to wait because restaurant is full");
 		c.cs = customerState.askedToWait;

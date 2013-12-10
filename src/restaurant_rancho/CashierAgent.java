@@ -87,10 +87,8 @@ public class CashierAgent extends Agent implements Cashier{
 	public void msgShiftDone() {
 		print("got msg shift done");
 		shiftDone = true;
-		if (checks.size()==0) {
-			person.msgStopWork(10);
-			isWorking = false; 
-		}
+		stateChanged();
+	
 	}
 	
 	public void msgComputeCheck(Waiter w, Customer c, String choice, RestMenu menu) {
@@ -214,7 +212,7 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 		catch(ConcurrentModificationException e) {
 		}
-		if (shiftDone) { isWorking = false; person.msgStopWork(10.0);}
+		if (shiftDone) {leaveWork();}
 		
 
 		return false;
@@ -222,6 +220,10 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 
 	// Actions
+	private void leaveWork() {
+		person.msgStopWork(10);
+		isWorking = false; 
+	}
 	private void makeCheck(final Check check) {
 		check.cs = checkState.pending;
 		checkTimer.schedule(new TimerTask() {

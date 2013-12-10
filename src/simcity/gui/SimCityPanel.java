@@ -165,7 +165,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		
 		animationPanelsList = gui.animationPanelsList;
 		
-		initializeFromConfigFile("simcity_config.txt");
+		initializeFromConfigFile("simcity_config_v2_main.txt");
 		
 	    setLayout(new GridLayout());
 	
