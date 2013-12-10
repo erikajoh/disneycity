@@ -53,11 +53,11 @@ public class PersonAgent extends Agent implements Person {
 	private double moneyToDeposit = 0.0;
 	private double rentToPay = 0.0;
 	private double fareToPay = 0.0;
-	private MyRestaurant workplace = null;
+	private MyObject workplace = null;
 	private String targetLocation;
 	private enum RestaurantState		{ None, WantToEat, WantToWork }
 	private enum MarketState			{ None, WantToBuy, WantToWork };
-	private enum BankState				{ None, NeedTransaction };
+	private enum BankState				{ None, NeedTransaction, WantToWork };
 	private enum TransportationState	{ None, NeedToPayFare };
 	private RestaurantState restState = RestaurantState.None;
 	private MarketState marketState = MarketState.None;
@@ -132,6 +132,11 @@ public class PersonAgent extends Agent implements Person {
 			}
 			else if(myObjectsArray[i] instanceof MyMarket) {
 				MyMarket temp = (MyMarket)myObjectsArray[i];
+				if(temp.workSession != 0)
+					return true;
+			}
+			else if(myObjectsArray[i] instanceof MyBank) {
+				MyBank temp = (MyBank)myObjectsArray[i];
 				if(temp.workSession != 0)
 					return true;
 			}
@@ -211,8 +216,9 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	public void msgSetBanksOpen(boolean open) {
-		log.add(new LoggedEvent("Banks are now closed"));
+		log.add(new LoggedEvent("Banks open? " + open));
 		isBankOpen = open;
+		stateChanged();
 	}
 
 	public void msgGoToWork(int i) {
@@ -226,10 +232,18 @@ public class PersonAgent extends Agent implements Person {
 		log.add(new LoggedEvent("Stopping work; got paid " + amount));
 		print("Stopping work; got paid " + amount);
 		moneyOnHand += amount; 
-		restState = RestaurantState.None;
+		if(workplace instanceof MyRestaurant)
+			restState = RestaurantState.None;
+		if(workplace instanceof MyBank)
+			bankState = BankState.None;
 		workplace = null;
 		event = PersonEvent.makingDecision;
 		stateChanged();
+	}
+	
+	// TODO msgSwitchRole
+	public void msgSwitchRole(String role, String location) {
+		
 	}
 	
 	// from Housing
@@ -298,6 +312,17 @@ public class PersonAgent extends Agent implements Person {
 		stateChanged();
 	}
 	
+	// TODO check this
+	public void msgCrash(boolean atHome) {
+		if(atHome) {
+			currentLocation = myHome.name;
+			mapLocationToEnum(currentLocation);
+			updateCurrentMyObject(currentLocation);
+			event = PersonEvent.makingDecision;
+			stateChanged();
+		}
+	}
+	
 	public void msgPayFare(double fare) {
 		log.add(new LoggedEvent("msgPayFare() called; fare = " + fare));
 		fareToPay += fare;
@@ -349,15 +374,6 @@ public class PersonAgent extends Agent implements Person {
 		else
 			itemsOnHand.put(order, itemsOnHand.get(order) + quantity);
 		stateChanged();
-	}
-	
-	public void msgCrash(boolean b) {
-		
-	}
-	
-	// from gui
-	public void msgSwitchRole(String role, String location){
-		
 	}
 	
 	// ************************* SCHEDULER ***********************************
@@ -599,13 +615,33 @@ public class PersonAgent extends Agent implements Person {
 	private void checkGoingToWork(int workPeriod) {
 		print("Is it time for me to work? Time period: " + workPeriod);
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Is it time for me to work? Time period: " + workPeriod);
-		MyRestaurant workplace = findWorkplace(workPeriod); // TODO only restaurants are workplaces now
-		if(workplace != null) {
+		
+		MyRestaurant workplaceRestaurant = findWorkplaceRestaurant(workPeriod);
+		if(workplaceRestaurant != null) {
 			restState = RestaurantState.WantToWork;
 			print("I am going to work at restaurant");
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I am going to work at restaurant");
-			targetLocation = workplace.name;
-			this.workplace = workplace;
+			targetLocation = workplaceRestaurant.name;
+			this.workplace = workplaceRestaurant;
+			return;
+		}
+		MyBank workplaceBank = findWorkplaceBank(workPeriod);
+		if(workplaceBank != null) {
+			bankState = BankState.WantToWork;
+			print("I am going to work at bank");
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I am going to work at bank");
+			targetLocation = workplaceBank.name;
+			this.workplace = workplaceBank;
+			return;
+		}
+		MyMarket workplaceMarket = findWorkplaceMarket(workPeriod);
+		if(workplaceMarket != null) {
+			marketState = MarketState.WantToWork;
+			print("I am going to work at market");
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I am going to work at market");
+			targetLocation = workplaceMarket.name;
+			this.workplace = workplaceMarket;
+			return;
 		}
 	}
 
@@ -642,6 +678,8 @@ public class PersonAgent extends Agent implements Person {
 			bankState = BankState.NeedTransaction;
 			targetLocation = targetBank.name;
 		}
+		else
+			isBankOpen = false;
 	}
 	
 	private void hungryToMarket() {
@@ -653,10 +691,13 @@ public class PersonAgent extends Agent implements Person {
 			if(moneyOnHand < price) {
 				log.add(new LoggedEvent("Want to buy food at market; not enough money"));
 				MyBank targetBank = chooseBank();
-				if(targetBank != null)
+				if(targetBank != null) {
 					targetLocation = targetBank.name;
 					moneyWanted = price - moneyOnHand;
 					bankState = BankState.NeedTransaction;
+				}
+				else
+					isBankOpen = false;
 			}
 			else {
 				print("I have enough money to buy food from market");
@@ -675,6 +716,8 @@ public class PersonAgent extends Agent implements Person {
 			bankState = BankState.NeedTransaction;
 			targetLocation = targetBank.name;
 		}
+		else
+			isBankOpen = false;
 	}
 
 	private void doMaintenance() {
@@ -723,6 +766,8 @@ public class PersonAgent extends Agent implements Person {
 					bankState = BankState.NeedTransaction;
 					targetLocation = targetBank.name;
 				}
+				else
+					isBankOpen = false;
 			}
 			else {
 				print("I have enough money to buy from restaurant");
@@ -840,12 +885,6 @@ public class PersonAgent extends Agent implements Person {
 		return pricesArray[0].doubleValue();
 	}
 	
-	private double getPersonalLoans() {
-		if(myPersonalBankAccount == null)
-			return 0;
-		return myPersonalBankAccount.loanNeeded;
-	}
-	
 	private MyRestaurant chooseRestaurant() {
 		// TODO: refine criteria for choosing restaurant:
 		/*
@@ -880,6 +919,23 @@ public class PersonAgent extends Agent implements Person {
 		return chosenRestaurant;
 	}
 	
+	private MyBank chooseBank() {
+		ArrayList<MyBank> bankList = new ArrayList<MyBank>();
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++)
+			if(myObjectsArray[i] instanceof MyBank) {
+				MyBank tempMyBank = (MyBank)myObjectsArray[i];
+				if(myPersonalBankAccount != null && myPersonalBankAccount.bank.equals(tempMyBank.bank) && tempMyBank.bank.isOpen())
+					return tempMyBank;
+				bankList.add((MyBank)myObjectsArray[i]);
+			}
+		if(bankList.size() == 0)
+			return null;
+		int randomInd = getRandomInt(0, bankList.size());
+		return bankList.get(randomInd);
+	}
+
+	// TODO what if market is closed?
 	private MyMarket chooseMarket() {
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)
@@ -888,27 +944,37 @@ public class PersonAgent extends Agent implements Person {
 		return null;
 	}
 	
-	private MyBank chooseBank() {
-		ArrayList<MyBank> bankList = new ArrayList<MyBank>();
-		MyObject[] myObjectsArray = getObjects();
-		for(int i = 0; i < myObjectsArray.length; i++)
-			if(myObjectsArray[i] instanceof MyBank) {
-				MyBank tempMyBank = (MyBank)myObjectsArray[i];
-				if(myPersonalBankAccount != null && myPersonalBankAccount.bank.equals(tempMyBank.bank))
-					return tempMyBank;
-				bankList.add((MyBank)myObjectsArray[i]);
-			}
-		int randomInd = getRandomInt(0, bankList.size());
-		return bankList.get(randomInd);
-	}
-	
-	private MyRestaurant findWorkplace(int session) {
+	private MyRestaurant findWorkplaceRestaurant(int session) {
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)
 			if(myObjectsArray[i] instanceof MyRestaurant) {
 				MyRestaurant tempRest = (MyRestaurant)myObjectsArray[i];
 				if(tempRest.workSession == session) {
 					return tempRest;
+				}
+			}
+		return null;
+	}
+	
+	private MyBank findWorkplaceBank(int session) {
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++)
+			if(myObjectsArray[i] instanceof MyBank) {
+				MyBank temp = (MyBank)myObjectsArray[i];
+				if(temp.workSession == session) {
+					return temp;
+				}
+			}
+		return null;
+	}
+	
+	private MyMarket findWorkplaceMarket(int session) {
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++)
+			if(myObjectsArray[i] instanceof MyMarket) {
+				MyMarket temp = (MyMarket)myObjectsArray[i];
+				if(temp.workSession == session) {
+					return temp;
 				}
 			}
 		return null;
@@ -928,7 +994,6 @@ public class PersonAgent extends Agent implements Person {
 		String name;
 	}
 	
-	// TODO interact with housing more
 	private class MyHousing extends MyObject {
 		Housing_Douglass housing;
 		String occupantType;
@@ -941,7 +1006,6 @@ public class PersonAgent extends Agent implements Person {
 		}
 	}
 	
-	// TODO: Use and update stuff in this class
 	private class MyBankAccount extends MyObject {
 		MyBank theBank;
 		String accountType;

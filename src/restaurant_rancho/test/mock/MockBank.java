@@ -38,4 +38,11 @@ public class MockBank extends Mock implements Bank_Douglass {
 			log.add(new LoggedEvent("Received msg Leave"));
 			
 		}
+
+
+		@Override
+		public boolean isOpen() {
+			// TODO Auto-generated method stub
+			return false;
+		}
 }
