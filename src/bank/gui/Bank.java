@@ -96,13 +96,16 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	
 	public void msgClose(){
 		for(TellerAgent teller : tellers){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Bank telling teller to leave");
 			teller.msgClose();
 		}
 	}
 	
 	public void msgTellerLeftBank(TellerAgent teller){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Teller left bank");
 		tellers.remove(teller);
 		if(tellers.size() == 0){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Tellers should be clear");
 			open = false;
 			// tell people bank is closed
 			ArrayList<PersonAgent> people = gui.getSimCityPanel().getPeople();
