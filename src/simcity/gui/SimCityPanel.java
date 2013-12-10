@@ -106,7 +106,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 								"7-Market deliver fail",
 								"10-50 people",
 								"DEBUG-eating",
-								"DEBUG-50ppl"};
+								"DEBUG-CRASH"};
 		// Create the combo box, select item at index 0.
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
@@ -218,6 +218,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		}
 		if(scenarioInd == 8) {
 			fileName = "crash.txt";
+			transportation.setCrashing();
 		}
 		initializeFromConfigFile(fileName);
 		newDay();

@@ -29,6 +29,7 @@ import simcity.gui.trace.AlertTag;
 public class TransportationController extends Agent implements Transportation{
 
 	TransportationPanel master;
+	boolean crashAll = false;
 
 	public enum TransportationState {
 		REQUEST,
@@ -49,6 +50,7 @@ public class TransportationController extends Agent implements Transportation{
 		String method;
 		String character;
 		boolean likesWalking;
+		
 
 		Mover(Person person, String startingLocation, String endingLocation, String method, String character) {
 			this.person = person;
@@ -853,7 +855,7 @@ public class TransportationController extends Agent implements Transportation{
 			if(grid[directory.get(mover.startingLocation).vehicleTile.getX()][directory.get(mover.startingLocation).vehicleTile.getY()].tryAcquire()) {
 				CarTraversal aStar = new CarTraversal(grid);
 				mover.transportationState = TransportationState.MOVING;
-				CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar);
+				CarAgent driver = new CarAgent(mover.person, directory.get(mover.startingLocation).vehicleTile, directory.get(mover.endingLocation).vehicleTile, this, aStar, crashAll);
 				CarGui carGui = new CarGui(directory.get(mover.startingLocation).vehicleTile.getX(), directory.get(mover.startingLocation).vehicleTile.getY(), driver);
 				if(master != null)
 					master.addGui(carGui);
@@ -990,5 +992,11 @@ public class TransportationController extends Agent implements Transportation{
 	public void msgPayFare(Person person, float fare) {
 		buses.get(0).msgPayFare(person, fare);
 		buses.get(1).msgPayFare(person, fare);
+	}
+
+	@Override
+	public void setCrashing() {
+		trafficLight.stop();
+		crashAll = true;
 	}
 }

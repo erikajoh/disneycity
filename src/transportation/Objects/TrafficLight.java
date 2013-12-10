@@ -182,4 +182,14 @@ public class TrafficLight implements ActionListener, Gui{
 	public String returnType() {
 		return "Traffic Light";
 	}
+
+	public void stop() {
+		timer.stop();
+		light = LightState.UPDOWN;
+		changeCrossWalk(0, -2, MovementTile.MovementType.TRAFFICCROSSROAD);
+		changeCrossWalk(0, 2, MovementTile.MovementType.TRAFFICCROSSROAD);
+		changeCrossWalk(-2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
+		changeCrossWalk(2, 0, MovementTile.MovementType.TRAFFICCROSSWALK);
+		
+	}
 }
