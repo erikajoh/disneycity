@@ -15,6 +15,7 @@ import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Bank_Douglass;
 
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -103,7 +104,10 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 		tellers.remove(teller);
 		if(tellers.size() == 0){
 			open = false;
-			//gui.SimCityPanel.msgBankClosed();
+			// tell people bank is closed
+			ArrayList<PersonAgent> people = gui.getSimCityPanel().getPeople();
+			for(int i = 0; i < people.size(); i++)
+				people.get(i).msgSetBanksOpen(false);
 			tellers = null;
 		}
 	}
@@ -160,8 +164,11 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		t.setGui(g);
     		manager.addTeller(t);
     		t.startThread();
+			// tell people bank is open
     		if(tellers.size()==1){
-    			//gui.SimCityPanel.msgBankOpened();
+    			ArrayList<PersonAgent> people = gui.getSimCityPanel().getPeople();
+    			for(int i = 0; i < people.size(); i++)
+    				people.get(i).msgSetBanksOpen(true);
     		}
     		open = true;
     }

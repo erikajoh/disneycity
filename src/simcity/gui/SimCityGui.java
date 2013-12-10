@@ -461,6 +461,10 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 	public void updateDayInfo(String day, String phase) {
 		zoomLabel.setText("It is currently " + phase + " on this " + day + ".");
 	}
+	
+	public SimCityPanel getSimCityPanel() {
+		return simCityPanel;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
