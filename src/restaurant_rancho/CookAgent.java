@@ -99,7 +99,6 @@ public class CookAgent extends Agent implements Cook{
 		shiftDone = true;
 		isWorking = false;
 		gui.DoLeave(person);
-			//person.msgStopWork(10);
 	}
 	
 	public void msgAtLoc() {
@@ -135,7 +134,7 @@ public class CookAgent extends Agent implements Cook{
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-	
+	        if (isWorking==false) return false;
 			if (!orders.isEmpty()) {
 				synchronized(orders) {
 					for (Order order :orders ) {

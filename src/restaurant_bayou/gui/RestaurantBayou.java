@@ -86,7 +86,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     	return name;
     }
     
-	public void msgStartOfShift() {
+	public void StartOfShift() {
 		isOpen = true;
 	}
     
@@ -365,7 +365,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void msgEndOfShift() {
+	public void EndOfShift() {
 		isOpen = false;
 		System.out.println("RESTAURANT BAYOU GOT END OF SHIFT");
 

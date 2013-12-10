@@ -352,12 +352,12 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	}
 
 	@Override
-	public void msgStartOfShift() {
+	public void StartOfShift() {
 		isOpen = true;
 	}
 
 	@Override
-	public void msgEndOfShift() {
+	public void EndOfShift() {
 		isOpen = false;
 		System.out.println("RESTAURANT GOT END OF SHIFT");
 

@@ -165,7 +165,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		
 		animationPanelsList = gui.animationPanelsList;
 		
-		initializeFromConfigFile("simcity_config.txt");
+		initializeFromConfigFile("simcity_config_v2_main.txt");
 		
 	    setLayout(new GridLayout());
 	
@@ -509,11 +509,11 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift Start");
-				theRestaurant.msgStartOfShift();
+				theRestaurant.StartOfShift();
 			}
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift End");
-				theRestaurant.msgEndOfShift();
+				theRestaurant.EndOfShift();
 			}
 		}
 		
