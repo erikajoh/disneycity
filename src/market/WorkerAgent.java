@@ -91,7 +91,7 @@ public class WorkerAgent extends Agent {
 		stateChanged();
 	}
 	
-//	public void msgShiftDone(boolean alertOthers) {
+	public void msgShiftDone(boolean alertOthers) {
 //		shiftDone = true;
 //		alert = alertOthers;
 //		if (orders.size() == 0 && alertOthers) {
@@ -113,7 +113,7 @@ public class WorkerAgent extends Agent {
 //		else {
 //			print("my shift is done! but I still have customers");
 //		}
-//	}
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.

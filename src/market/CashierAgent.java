@@ -72,13 +72,13 @@ public class CashierAgent extends Agent {
 		stateChanged();
 	}
 	
-//	public void msgShiftDone() {
+	public void msgShiftDone() {
 //		print("got msg shift done");
 //		shiftDone = true;
 //		if (marketBills.size()==0) {
 //			person.msgStopWork(10);
 //		}
-//	}
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.

@@ -63,7 +63,7 @@ public class ManagerAgent extends Agent {
     	stateChanged();
     }
 	
-//	public void msgShiftDone() {
+	public void msgShiftDone() {
 //		print("got msg shift done");
 //		shiftDone = true;
 //		if (market.getWorkers().length == 0) {
@@ -72,7 +72,7 @@ public class ManagerAgent extends Agent {
 //				w.msgShiftDone(true);
 //			}
 //		}
-//	}
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
