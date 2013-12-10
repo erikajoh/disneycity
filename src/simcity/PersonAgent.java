@@ -731,6 +731,7 @@ public class PersonAgent extends Agent implements Person {
 	private void haveMoneyToDeposit() {
 		print("I have excess money to deposit");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have excess money to deposit");
+		log.add(new LoggedEvent("I have excess money to deposit"));
 		MyBank targetBank = chooseBank();
 		if(targetBank != null) {
 			moneyToDeposit = moneyOnHand - MONEY_ON_HAND_LIMIT;

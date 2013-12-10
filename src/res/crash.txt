@@ -1,0 +1,58 @@
+41
+Narwhal_Prime|Rabbit Hole|OwnerResident
+Edgar_Prime|Haunted Mansion|OwnerResident
+ImSoRich|Space Mountain|Renter
+ImSoPoor|Cinderella Castle|OwnerResident
+CafeWaiter1|Main St Apartments #1|OwnerResident
+CafeCashier1|Main St Apartments #1|Renter
+CafeCook1|Main St Apartments #1|Renter
+CafeHost1|Main St Apartments #1|Renter
+BayouWaiter1|Main St Apartments #2|OwnerResident
+BayouCashier1|Main St Apartments #2|Renter
+BayouCook1|Main St Apartments #2|Renter
+BayouHost1|Main St Apartments #2|Renter
+HausWaiter1|Main St Apartments #3|OwnerResident
+HausCashier1|Main St Apartments #3|Renter
+HausCook1|Main St Apartments #3|Renter
+HausHost1|Main St Apartments #3|Renter
+RanchoHost1|Main St Apartments #4|OwnerResident
+RanchoWaiter1|Main St Apartments #4|Renter
+RanchoCashier1|Main St Apartments #4|Renter
+RanchoCook1|Main St Apartments #4|Renter
+RanchoHost2|Main St Apartments #5|OwnerResident
+RanchoWaiter2|Main St Apartments #5|Renter
+RanchoCashier2|Main St Apartments #5|Renter
+RanchoCook2|Main St Apartments #5|Renter
+PizzaHost1|Main St Apartments #6|OwnerResident
+PizzaWaiter1|Main St Apartments #6|Renter
+PizzaCashier1|Main St Apartments #6|Renter
+PizzaCook1|Main St Apartments #6|Renter
+PizzaHost2|Main St Apartments #7|OwnerResident
+PizzaWaiter2|Main St Apartments #7|Renter
+PizzaCashier2|Main St Apartments #7|Renter
+PizzaCook2|Main St Apartments #7|Renter
+BayouWaiter2|Main St Apartments #8|OwnerResident
+BayouCashier2|Main St Apartments #8|Renter
+BayouCook2|Main St Apartments #8|Renter
+BayouHost2|Main St Apartments #8|Renter
+PirateTeller1|Main St Apartments #9|OwnerResident
+PirateTeller2|Main St Apartments #9|Renter
+StartWithCar2|Main St Apartments #10|OwnerResident
+StartWithCar3|Main St Apartments #10|Renter
+StartWithCar4|Main St Apartments #10|Renter
+14
+Rabbit Hole|Narwhal_Prime|Narwhal_Prime
+Haunted Mansion|Edgar_Prime|Edgar_Prime
+Space Mountain|Edgar_Prime|ImSoRich
+Cinderella Castle|ImSoPoor|ImSoPoor
+Main St Apartments #1|CafeWaiter1|CafeWaiter1|CafeCashier1|CafeCook1|CafeHost1
+Main St Apartments #2|BayouWaiter1|BayouWaiter1|BayouCashier1|BayouCook1|BayouHost1
+Main St Apartments #3|HausWaiter1|HausWaiter1|HausCashier1|HausCook1|HausHost1
+Main St Apartments #4|RanchoHost1|RanchoHost1|RanchoWaiter1|RanchoCashier1|RanchoCook1
+Main St Apartments #5|RanchoHost2|RanchoHost2|RanchoWaiter2|RanchoCashier2|RanchoCook2
+Main St Apartments #6|PizzaHost1|PizzaHost1|PizzaWaiter1|PizzaCashier1|PizzaCook1
+Main St Apartments #7|PizzaHost2|PizzaHost2|PizzaWaiter2|PizzaCashier2|PizzaCook2
+Main St Apartments #8|BayouWaiter2|BayouWaiter2|BayouHost2|BayouCashier2|BayouCook2
+Main St Apartments #9|PirateTeller1|PirateTeller1|PirateTeller2
+Main St Apartments #10|StartWithCar2|StartWithCar2|StartWithCar3|StartWithCar4
+Friday

@@ -438,12 +438,62 @@ public class PersonTest extends TestCase
 		person.msgSetBanksOpen(true);
 		assertTrue("Call scheduler, deciding hunger, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		assertTrue("Call scheduler, query restaurants, not enough money, scheduler returns true",
+		assertTrue("Call scheduler, query restaurants, have enough money, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		assertTrue("Contains log: want to go to restaurant but not enough money",
-				person.log.containsString("!isNourished"));
+		
+		assertTrue("Contains log: I have excess money to deposit",
+				person.log.containsString("I have excess money to deposit"));
 		
 		person.msgDoneLeaving();
+		assertEquals("Person: 6 event logs",
+				6, person.log.size());
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
+		
+		assertTrue("Call scheduler, set target destination to bank, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		assertTrue("Contains log: describes going from house to bank",
+				person.log.containsString("Going from Mock House 1 to Mock Bank 1"));
+		
+		assertFalse("Call scheduler, in transit, on hold, scheduler returns false",
+				person.pickAndExecuteAnAction());
+		assertEquals("Mock House 1", person.getCurrLocation());
+		
+		long startTime = System.currentTimeMillis();
+		while(System.currentTimeMillis() - startTime < 200);
+
+		// step 2: person is at bank, deposits money into account
+			// step 2a: person requests account from bank, blocks
+			// step 2b: after brief delay, bank messages that deposit amd new account are approved
+			// step 2c: person gets updated and released
+		
+		assertEquals("Mock Bank 1", person.getCurrLocation());
+		assertEquals("Transportation: 2 event log",
+				2, mockTransportation.log.size());
+		assertTrue("", person.log.containsString("Received msgReachedDestination: destination = Mock Bank 1"));
+		
+		assertTrue("Call scheduler, enter bank to create account, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		
+		assertTrue("Person: creates account",
+				person.log.containsString("Creating account"));
+		
+		assertTrue("Call scheduler, now realizes need to withdraw money, scheduler returns true",
+				person.pickAndExecuteAnAction());
+		assertTrue("Call scheduler, the actual withdraw money action, scheduler returns true",
+				person.pickAndExecuteAnAction());
+
+		// step 2 post-conditions and step 3 pre-conditions
+		
+		assertEquals("Person: currentLocation = Mock Bank 1",
+				"Mock Bank 1", person.getCurrLocation());
+		assertEquals("Person: currentLocationState = Bank",
+				"Bank", person.getCurrLocationState());
+		assertTrue("Person: event = makingDecision", 
+				person.event.toString().equals("makingDecision"));
+		
+		assertEquals("Person: 16 event logs",
+				16, person.log.size());
 	}
 	
 	// TEST #3
