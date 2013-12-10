@@ -90,7 +90,7 @@ public class WalkerGui implements Gui{
 	}
 
 	public void doTauntAndLeave() {
-		animModule.changeAnimation("Taunt", 10);
+		animModule.changeAnimation("Taunt", 4);
 	}
 
 	public void setIgnore() {

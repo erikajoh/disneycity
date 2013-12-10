@@ -79,7 +79,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public final static int NUM_MARKETS = 1;
 	public final static int NUM_BANKS = 2;
 	
-	public final static String MAIN_CONFIG_FILE = "simcity_config_v2_main.txt";
+	public final static String MAIN_CONFIG_FILE = "config-file-rancho-two-shifts.txt";
 
 	// lists to hold all the different buildings
 	ArrayList<PersonAgent> people = new ArrayList<PersonAgent>();

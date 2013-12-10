@@ -284,7 +284,6 @@ public class ManagerAgent extends Agent implements Manager {
 	public void addTeller(TellerAgent t){
 		MyTeller mt = new MyTeller(t);
 		tellers.add(mt); //?
-		//tellers.add(new MyTeller(t));
 		stateChanged();
 	}
 	

@@ -144,6 +144,7 @@ public class MockManager extends Mock {
 		}
 		
 		public void msgThief(MockBankCustomer bc, double amount){
+			log.add(new LoggedEvent("Thief"));
 			   for(WaitingCustomer wc : waitingCustomers){
 				   if(wc.bankCustomer == bc){
 					   wc.setAccountNum(-1);
@@ -213,6 +214,7 @@ public class MockManager extends Mock {
 				wc.bankCustomer.msgRequestWithdraw(wc.requestAmt, wc.accountNum);
 			}
 			else if(wc.action == Action.rob){
+				log.add(new LoggedEvent("Manager-there's a robbery"));
 				wc.bankCustomer.msgThief(wc.requestAmt);
 			}
 

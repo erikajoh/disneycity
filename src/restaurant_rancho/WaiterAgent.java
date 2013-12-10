@@ -74,31 +74,7 @@ import java.util.concurrent.Semaphore;
 		public void msgShiftDone(boolean alertOthers) {
 			shiftDone = true;
 			alert = alertOthers;
-			if (customers.size() == 0 && alertOthers) {
-				alertedShift = true;
-				print ("going home!");
-				isWorking = false;
-				waiterGui.DoLeave(person);
-				if (cook!=null) { 
-					cook.msgShiftDone(); 
-					if (cashier!=null) cashier.subtract(10.0); 
-				}
-				if (host!=null) { 
-					if (cashier!=null) cashier.subtract(10.0); 
-				}
-				if (cashier!=null) { 
-					cashier.msgShiftDone(); 
-					cashier.subtract(20);
-				}
-			}
-			else if (customers.size()==0){
-				print ("going home!");
-				isWorking = false;
-				waiterGui.DoLeave(person);
-			}
-			else {
-				print("my shift is done! but I still have customers");
-			}
+			stateChanged();
 		}
 		
 		public void msgCreateCustomer(Customer c, int t, int l) {
@@ -239,13 +215,37 @@ import java.util.concurrent.Semaphore;
 			catch(ConcurrentModificationException e) {
 				return false;
 			}
-			if (shiftDone && !alertedShift) {msgShiftDone(alert); alertedShift = true;}
+			if (shiftDone && !alertedShift && customers.size() == 0) {leaveWork(); alertedShift = true;}
 			return false;
 
 		}
 
 		// Actions
-
+		
+		protected void leaveWork() {
+			if (alert) {
+				alertedShift = true;
+				print ("going home!");
+				isWorking = false;
+				waiterGui.DoLeave(person);
+				if (cook!=null) { 
+					cook.msgShiftDone(); 
+					if (cashier!=null) cashier.subtract(10.0); 
+				}
+				if (host!=null) { 
+					if (cashier!=null) cashier.subtract(10.0); 
+				}
+				if (cashier!=null) { 
+					cashier.msgShiftDone(); 
+					cashier.subtract(20);
+				}
+			}
+			else {
+				print ("going home!");
+				isWorking = false;
+				waiterGui.DoLeave(person);
+			}
+		}
 		protected void seatCustomer(Customer c, int table, int loc) {
 			c.msgSitAtTable(this, menu);
 			DoGoToCustomer(loc);

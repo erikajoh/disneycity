@@ -15,7 +15,7 @@ public class MockTeller extends Mock {
 	  public enum CustomerState {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
 	  enum State{shouldEnter, shouldLeave, working};
 	  State state = State.working;
-	  private boolean success;
+	  private boolean success = true;
 
 		class Customer {
 		  MockBankCustomer bankCustomer;
@@ -124,6 +124,7 @@ public class MockTeller extends Mock {
 		}
 		
 		public void msgRobBank(double cash){
+			log.add(new LoggedEvent("Teller being robbed"));
 			customer.requestAmt = cash;
 			customer.state = CustomerState.robbingBank; 
 		}
