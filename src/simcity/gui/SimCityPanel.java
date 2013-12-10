@@ -513,9 +513,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// restaurants themselves will know whether they are open or not
 			if(currTicks == START_OF_DAY) {
 				if(currentDay == DayOfTheWeek.Sunday)
-					person.msgSetBanksOpen(false);
+					person.msgIsSunday(true);
 				else
-					person.msgSetBanksOpen(true);
+					person.msgIsSunday(false);
 			}
 			
 			// hunger signals
