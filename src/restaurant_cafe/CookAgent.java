@@ -10,7 +10,6 @@ import restaurant_cafe.interfaces.Customer;
 import market.Market;
 import simcity.interfaces.Market_Douglass;
 import restaurant_cafe.interfaces.Waiter;
-import restaurant_rancho.CookAgent.MarketOrder;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
@@ -121,6 +120,7 @@ public class CookAgent extends Agent implements Cook {
 					}
 				}
 				f.setAmount(amount);
+				f.setOrderAttempts(0);
 				print("removing a market order whee");
 				marketOrders.remove(mo);
 			} 
@@ -200,13 +200,22 @@ public class CookAgent extends Agent implements Cook {
 			  }
 		  }
 		}
-		synchronized(orders){
+		/*synchronized(orders){
 		  for(Order order : orders){
 			  if(order.s == OrderState.reorder && order.food.getOrderAttempts()<=markets.size()){
 				  makeOrder(order);
 				  return true;
 			  }
 		  }
+		}*/
+		synchronized(marketOrders) {
+			for (MarketOrder mo : marketOrders){ 
+				if (mo.state == MktOrderState.pending) {
+					print("Ordering "+mo.amount+" "+mo.food+"'s");
+					createPersonAs(mo);
+					return true;
+				}
+			}
 		}
 
 		Order newOrder = restaurant.orderStand.remove();
@@ -243,16 +252,20 @@ public class CookAgent extends Agent implements Cook {
 		if(o.food.getAmount() == 0){
 			print("NO MORE "+ o.food.getName() + " TO COOK");
 			o.waiter.msgOutOfFood(o.food);
-			o.s = OrderState.reorder;
+			marketOrders.add(new MarketOrder(o.food.getName(), o.food.getCapacity()));
+			orders.remove(o);
+			//o.s = OrderState.reorder;
 			return;
 		}
 		o.food.decreaseAmount();
 		if(o.food.getAmount() <= o.food.getLowAmt()){
 			o.exclude = -1;
-			makeOrder(o);
+			marketOrders.add(new MarketOrder(o.food.getName(), o.food.getCapacity()-o.food.getAmount()));
+			o.food.setOrderAttempts(o.food.getOrderAttempts()+1);
+			//makeOrder(o);
 		}
 		  AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "COOK TIME: "+o.food.getCookingTime());
-		o.s = OrderState.done;
+		  o.s = OrderState.done;
 
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -261,7 +274,7 @@ public class CookAgent extends Agent implements Cook {
 			}
 		}, o.food.getCookingTime());
 	}
-	
+	/*
 	private void makeOrder(Order o){
 		o.food.setOrderAttempts(o.food.getOrderAttempts()+1);
 		int num = (int) (Math.random() * markets.size());
@@ -269,23 +282,28 @@ public class CookAgent extends Agent implements Cook {
 			num = (int) (Math.random() * markets.size());
 		}
 		print("INCREASE "+ o.food.getName() + " AMT "+num);
-		/*
-		Market market = null;
-		synchronized(markets){
-			int count = 0;
-			for(Market m : markets){
-				if(count == num){
-					market = m; break;
-				}
-				count++;
-			}
-		}*/
+		
+		//Market market = null;
+		//synchronized(markets){
+			//int count = 0;
+			//for(Market m : markets){
+				//if(count == num){
+					//market = m; break;
+				//}
+				//count++;
+			//}
+		//}
 		int orderAmt = o.food.getCapacity()-o.food.getAmount();
 		market.msgHereIsOrder(this, o.food, orderAmt);
 		if(market.getFoodAmount(o.food) < orderAmt && o.food.getOrderAttempts() == 1){
 			o.exclude = num;
 			makeOrder(o);
 		}
+	}
+	*/
+	private void createPersonAs(MarketOrder mo){
+		mo.state = MktOrderState.ordered;
+		market.personAs(restaurant, "Mexican", mo.amount, mo.id);
 	}
 	
 	private void plateIt(Order o){

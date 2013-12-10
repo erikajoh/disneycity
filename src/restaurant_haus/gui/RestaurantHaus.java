@@ -4,7 +4,6 @@ import restaurant_haus.CashierAgent;
 import restaurant_haus.CookAgent;
 import restaurant_haus.CustomerAgent;
 import restaurant_haus.HostAgent;
-import restaurant_haus.MarketAgent;
 import restaurant_haus.WaiterAgent;
 import bank.gui.Bank;
 import simcity.PersonAgent;
@@ -42,7 +41,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private CashierAgent cashier;
     CookAgent cook;
     private Hashtable<Person, CustomerAgent> returningCusts = new Hashtable<Person, CustomerAgent>();
-    private Vector<MarketAgent> markets = new Vector<MarketAgent>();
+    private Vector<Market_Douglass> markets = new Vector<Market_Douglass>();
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     String type;
@@ -63,27 +62,17 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     private ImageIcon personalPicture; 
     private RestMenu menu = new RestMenu();
     String name;
-    Market_Douglass market;
     Bank_Douglass bank;
+    
+    double money;
     
     private JTabbedPane restruantPane = new JTabbedPane();
 
     public RestaurantHaus(SimCityGui gui, String name) {
+    	money = 500.00d;
         this.gui = gui;
         this.name = name;
         type = "German";
-        MarketAgent tempMarket;
-        tempMarket = new MarketAgent("Best Market", 5000, 10, 0, 6, 10);
-        tempMarket.startThread();
-        markets.add(tempMarket);
-        
-        tempMarket = new MarketAgent("The Other Market", 7000, 7, 4, 8, 0);
-        tempMarket.startThread();
-        markets.add(tempMarket);
-        
-        tempMarket = new MarketAgent("Easy & Fresh", 10000, 3, 6, 4, 9);
-        tempMarket.startThread();
-        markets.add(tempMarket);
         
         menu.addItem("Pastrami Cheeseburger", 11.49);
         menu.addItem("Chicken Sausage Pretzel Roll", 8.99);
@@ -208,16 +197,15 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     		host.startThread();
     	}
     	else if (type.equals("Cook")) { 
-    		cook = new CookAgent(name);
+    		cook = new CookAgent(name, this);
     		if (p!=null) cook.setPerson(p);
     		CookGui cG = new CookGui(cook, gui);
     		gui.hausAniPanel.addGui(cG);
     	    cook.setGui(cG);
             if (host!=null) cook.setMenu(host.getMenu());
             if (cashier!=null) cook.setCashier(cashier);
-            for (MarketAgent m : markets) {
+            for (Market_Douglass m : markets) {
             	cook.addMarket(m);
-            	m.setCook(cook);
             }
             for (WaiterAgent w : waiters) {
             	w.setCook(cook);
@@ -225,7 +213,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     	    cook.startThread();
     	}
     	else if (type.equals("Cashier")) { 
-    		cashier = new CashierAgent(name);
+    		cashier = new CashierAgent(name, this, money);
     		if (p!=null) cashier.setPerson(p);
     		if (host!=null) cashier.setMenu(host.getMenu());
     		for (WaiterAgent w : waiters) {
@@ -337,8 +325,8 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 
 	@Override
 	public void setMarket(Market_Douglass m) {
-		market = m;
-		
+		markets.add(m);
+		cook.addMarket(m);
 	}
 
 	public String getType() {
@@ -347,7 +335,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 
 	@Override
 	public void msgHereIsOrder(String food, int quantity, int ID) {
-		// TODO Auto-generated method stub
+		cook.msgOrderDelivered(food, quantity, ID);
 		
 	}
 
@@ -384,7 +372,6 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 
 	@Override
 	public void msgHereIsBill(Market_Douglass m, double amt) {
-		// TODO Auto-generated method stub
-		
+		cashier.msgYourBillIs(m, amt);
 	}
 }

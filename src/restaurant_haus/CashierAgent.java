@@ -1,12 +1,13 @@
 package restaurant_haus;
 
 import agent_haus.Agent;
+import restaurant_haus.gui.RestaurantHaus;
 import restaurant_haus.gui.WaiterGui;
 import restaurant_haus.interfaces.Cashier;
 import restaurant_haus.interfaces.Customer;
-import restaurant_haus.interfaces.Market;
 import restaurant_haus.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 
 import java.util.*;
@@ -25,6 +26,7 @@ public class CashierAgent extends Agent implements Cashier{
 	public double money;
 	public Person person;
 	boolean shiftDone = false;
+	RestaurantHaus rest;
 
 
 	Menu m;
@@ -49,11 +51,11 @@ public class CashierAgent extends Agent implements Cashier{
 	public enum CheckState {Requested, WithWaiter, Payed};
 
 	public class Bill {
-		Market market;
+		Market_Douglass market;
 		public double bill;
 		public BillState state;
 
-		Bill(Market market, double bill) {
+		Bill(Market_Douglass market, double bill) {
 			this.market = market;
 			this.bill = bill;
 			state = BillState.Outstanding;
@@ -63,10 +65,11 @@ public class CashierAgent extends Agent implements Cashier{
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 	public enum BillState {Outstanding, PayASAP, Payed};
 
-	public CashierAgent(String name) {
+	public CashierAgent(String name, RestaurantHaus rest, double money) {
 		super();
 		this.name = name;
-		money = 90.00f;
+		this.rest = rest;
+		this.money = money;
 	}
 
 	public void setPerson(Person p) {
@@ -107,7 +110,7 @@ public class CashierAgent extends Agent implements Cashier{
 		money -= amount;
 	}
 
-	public void msgYourBillIs(Market market, double bill) {
+	public void msgYourBillIs(Market_Douglass market, double bill) {
 		bills.add(new Bill(market, bill));
 		stateChanged();
 	}
@@ -122,15 +125,6 @@ public class CashierAgent extends Agent implements Cashier{
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		}
-
-		synchronized(bills) {
-			for(Bill bill : bills) {
-				if(bill.state == BillState.PayASAP && money > 0.00f) {
-					MakePayment(bill);
-					return true;
-				}
 			}
 		}
 
@@ -186,25 +180,9 @@ public class CashierAgent extends Agent implements Cashier{
 		checks.remove(check);
 	}
 
-	private void MakePayment(Bill bill) {
-		if(money >= bill.bill) {
-			print("Here's the final part of the money the restaurant owes.");
-			bill.market.msgFinalPayment();
-			money -= bill.bill;
-			money = (double)((int)(money*100))/100;
-			bills.remove(bill);
-		}
-		else if(money > 0) {
-			print("I'm making a payment on the order you delivered.");
-			bill.market.msgIncrementalPayment(money);
-			bill.bill -= money;
-			money = 0.00f;
-		}
-	}
-
 	private void FulfillBill(Bill bill) {
 		if(money >= bill.bill) {
-			bill.market.msgOrderPayment(bill.bill, true);
+			bill.market.msgHereIsPayment(rest, bill.bill);
 			money -= bill.bill;
 			money = (double)((int)(money*100))/100;
 			print("Here's the payment for the order.");
@@ -212,11 +190,10 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 		else {
 			print("I can't pay everything right now. I'll pay as soon as I can. Here's all I have.");
-			bill.market.msgOrderPayment(money, false);
+			bill.market.msgHereIsPayment(rest, money);
 			bill.bill -= money;
-			bill.bill += 10.00f;
-			money = 0.00f;
-			bill.state = BillState.PayASAP;
+			money = 0.00d;
+			bills.remove(bill);
 		}
 	}
 
