@@ -24,7 +24,7 @@ public class CarGui implements Gui{
 		this.yDestination = yPos * 25;
 		this.xLast = xPos * 25;
 		this.yLast = yPos * 25;
-		speed = 1.25f;
+		speed = 2.5f;
 		this.agent = agent;		
 		reachedHalfway = true;
 		reachedDestination = true;

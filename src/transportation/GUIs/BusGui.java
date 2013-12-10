@@ -23,7 +23,7 @@ public class BusGui implements Gui{
 		this.yDestination = yPos * 25 + 2;
 		this.xLast = xPos * 25;
 		this.yLast = yPos * 25 + 2;
-		speed = 4.0f;
+		speed = 4.20f;
 		this.agent = agent;		
 		reachedHalfway = true;
 		reachedDestination = true;
