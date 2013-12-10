@@ -1,4 +1,4 @@
-32
+36
 Narwhal_Prime|Rabbit Hole|OwnerResident
 Edgar_Prime|Haunted Mansion|OwnerResident
 ImSoRich|Space Mountain|Renter
@@ -31,7 +31,11 @@ PizzaHost2|Main St Apartments #7|OwnerResident
 PizzaWaiter2|Main St Apartments #7|Renter
 PizzaCashier2|Main St Apartments #7|Renter
 PizzaCook2|Main St Apartments #7|Renter
-11
+BayouWaiter2|Main St Apartments #8|OwnerResident
+BayouCashier2|Main St Apartments #8|Renter
+BayouCook2|Main St Apartments #8|Renter
+BayouHost2|Main St Apartments #8|Renter
+12
 Rabbit Hole|Narwhal_Prime|Narwhal_Prime
 Haunted Mansion|Edgar_Prime|Edgar_Prime
 Space Mountain|Edgar_Prime|ImSoRich
@@ -43,4 +47,5 @@ Main St Apartments #4|RanchoHost1|RanchoHost1|RanchoWaiter1|RanchoCashier1|Ranch
 Main St Apartments #5|RanchoHost2|RanchoHost2|RanchoWaiter2|RanchoCashier2|RanchoCook2
 Main St Apartments #6|PizzaHost1|PizzaHost1|PizzaWaiter1|PizzaCashier1|PizzaCook1
 Main St Apartments #7|PizzaHost2|PizzaHost2|PizzaWaiter2|PizzaCashier2|PizzaCook2
+Main St Apartments #8|BayouWaiter2|BayouWaiter2|BayouHost2|BayouCashier2|BayouCook2
 Friday

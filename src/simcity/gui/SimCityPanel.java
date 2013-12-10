@@ -40,6 +40,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	SimCityGui gui = null;
 	
 	JComboBox scenarioList;
+	JButton startButton = new JButton("Start");
 
 	RestaurantRancho restRancho;
 	RestaurantPizza restPizza;
@@ -93,14 +94,22 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		
 		/* Scenario panel */
 		JPanel selection = new JPanel();
-		String[] scenarios = { "Scenario 1", "Scenario 2", "Scenario 3", "Scenario 5", "Scenario 6", "Scenario 7", "Scenario 10" };
+		String[] scenarios = {	"1-One person go",
+								"2-Three people go",
+								"3-CookCashierMarket",
+								"5-Bus stops",
+								"6-Closed places",
+								"7-Market deliver fail",
+								"10-50 people" };
 		// Create the combo box, select item at index 0.
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
 		scenarioList.addActionListener(this);
 		selection.setLayout(new FlowLayout());
-		selection.add(new JLabel("Choose a scenario:"));
+		selection.add(new JLabel(""));
 		selection.add(scenarioList);
+		startButton.addActionListener(this);
+	    selection.add(startButton);
 		add(selection);
 		
 		String foodPrefMexican = "Mexican";
@@ -165,12 +174,40 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		
 		animationPanelsList = gui.animationPanelsList;
 		
-		initializeFromConfigFile("simcity_config.txt");
-		
 	    setLayout(new GridLayout());
+	    
+	    //beginSimulation();
+	}
 	
-		/* timing */
-	    newDay();
+	public void beginSimulation() {
+		String scenario = (String)scenarioList.getSelectedItem();
+		String fileName = MAIN_CONFIG_FILE;
+		
+		if(scenario.equals("Scenario 1 - Fully employed, 1 person")) {
+			
+		}
+		if(scenario.equals("Scenario 2 - Fully employed, 3 people")) {
+			fileName = "config-file_scenario-2.txt";
+		}
+		if(scenario.equals("Scenario 3 - Cook Cashier Market")) {
+			
+		}
+		if(scenario.equals("Scenario 5 - Bus stops")) {
+			
+		}
+		if(scenario.equals("Scenario 6 - Avoid closed places")) {
+			
+		}
+		if(scenario.equals("Scenario 7 - Market delivery fails")) {
+			
+		}
+		if(scenario.equals("Scenario 10 - 50 people")) {
+			fileName = "config-file_50_people.txt";
+		}
+		
+		startButton.setEnabled(false);
+		initializeFromConfigFile(fileName);
+		newDay();
 	}
 	
 	public void setTransPanel(TransportationPanel tp) {
@@ -221,8 +258,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	// Configuration file parsing
 	// Upon instantiation, pass all pointers to all things (restaurants, markets, housings, banks) to the person as follows:
 	public void initializeFromConfigFile(String fileName) {
-		resetAllElements(); // TODO: are we using this?
-		
 		try {			
 			// begin new parser
 			// from CSCI 201 website
@@ -292,6 +327,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 						personToAdd.addMarket(m, marketRole, marketShift); // key step
 				}
 				
+				// parsing banks
+				
 				people.add(personToAdd);
 			}
 				
@@ -328,10 +365,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		}
 	}
 
-	// TODO reset all elements
-	public void resetAllElements() {
-		
-	}
 	
 	public Housing mapStringToHousing(String houseName) {
 		if(houseName.equals("Haunted Mansion")){
@@ -701,6 +734,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			JComboBox cb = (JComboBox)e.getSource();
 	        String scenarioName = (String)cb.getSelectedItem();
 			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Changed to "+scenarioName);
+		}
+		if (e.getSource() instanceof JButton) {
+			beginSimulation();
 		}
 	}
 }
