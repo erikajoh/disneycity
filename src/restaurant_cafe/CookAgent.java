@@ -98,9 +98,7 @@ public class CookAgent extends Agent implements Cook {
 	    for(Order o : orders){
 		    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "order state: "+o.s);
 	    }
-	   if(pickAndExecuteAnAction()==true){
 	    	stateChanged();
-	    }
 	}
 	public void msgAddOrder(Order o){
 		orders.add(o);
@@ -124,13 +122,6 @@ public class CookAgent extends Agent implements Cook {
 	    }
 		stateChanged();
 	}
-	public void msgFoodDone(Order o){
-		AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "Food is done");
-		o.s = OrderState.done;
-		if(pickAndExecuteAnAction()==true){
-			stateChanged();
-		 }
-	}
 	
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -143,7 +134,7 @@ public class CookAgent extends Agent implements Cook {
 		 */
 	    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "sched orders size is "+orders.size());
 
-		synchronized(orders){
+	    synchronized(orders){
 		  for(Order order : orders){
 			    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "order state is " +order.s);
 			  if(order.s == OrderState.done){
@@ -170,6 +161,7 @@ public class CookAgent extends Agent implements Cook {
 			  }
 		  }
 		}
+
 		Order newOrder = restaurant.orderStand.remove();
 		if (newOrder!=null) {
 			AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "New stand order");
@@ -189,12 +181,12 @@ public class CookAgent extends Agent implements Cook {
 	// Actions
 	
 	private void waitTimer() {
+		AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "WaitTimer being called");
 		standTimer.schedule(new TimerTask() {
 			public void run() {
 				stateChanged();
 			}
-		},
-		5000);
+		}, 5000);
 	}
 	
 	private void cookIt(final Order o){
@@ -212,10 +204,11 @@ public class CookAgent extends Agent implements Cook {
 			o.exclude = -1;
 			makeOrder(o);
 		}
-		o.s = OrderState.cooking;
+		  AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "COOK TIME: "+o.food.getCookingTime());
+		o.s = OrderState.done;
+
 		timer.schedule(new TimerTask() {
 			public void run() {
-				msgFoodDone(o);
 				cookGui.DoneGrilling();
 				stateChanged();
 			}
