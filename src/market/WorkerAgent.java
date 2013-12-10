@@ -7,6 +7,8 @@ import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
 import simcity.Restaurant;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import market.gui.WorkerGui;
 import market.interfaces.Customer;
 
@@ -120,6 +122,7 @@ public class WorkerAgent extends Agent {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		for (MyOrder o: orders) {
+			AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Getting "+o.item+" for "+o.c.toString());
 			GetItemAndReturn(o);
 			return true;
 		}

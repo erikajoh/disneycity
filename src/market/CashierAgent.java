@@ -10,6 +10,8 @@ import java.util.concurrent.Semaphore;
 import market.interfaces.Customer;
 import simcity.PersonAgent;
 import simcity.Restaurant;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 
 public class CashierAgent extends Agent {
 	private String name;
@@ -66,6 +68,7 @@ public class CashierAgent extends Agent {
 	
 	public void msgHereIsMoney(Customer c, double amount){ // from customer
 		log.add(new LoggedEvent("Received msgHereIsMoney"));
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Received payment from customer");
 		customer = c;
 		amt = amount;
 		state = State.rcvdPayment;

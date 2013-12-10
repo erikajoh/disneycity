@@ -7,6 +7,8 @@ import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
 import simcity.Restaurant;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import market.gui.CustomerGui;
 import market.interfaces.Customer;
 import restaurant_rancho.CookAgent;
@@ -163,6 +165,7 @@ public class CustomerAgent extends Agent implements Customer {
 	protected boolean pickAndExecuteAnAction() {
 		if (state == State.entering){
 			print("Entering market");
+			AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Entering market");
 			EnterMarket();
 			if (numInLine == 0) state = State.ordering;
 			return true;
@@ -174,6 +177,7 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		else if (state == State.ordering){
 			print("Ordering items");
+			AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Ordering items");
 			PlaceOrder();
 			return true;
 		}
@@ -186,11 +190,13 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		else if (state == State.paying){
 			print("Paying");
+			AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Paying");
 			PayMoney();
 			return true;
 		}
 		else if (state == State.leaving){
 			print("Leaving");
+			AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Leaving");
 			LeaveMarket();
 			SayGoodbye();
 			return true;
