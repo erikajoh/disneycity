@@ -106,6 +106,9 @@ public class BusAgent extends MobileAgent{
 	}
 
 	private void pickUpRiders() {
+		gui.setStill();
+		try { Thread.sleep(500); }
+		catch (Exception e){}
 		List<BusRider> tempList = currentBusStop.getBusWaiters();
 		for(BusRider busRider : tempList) {
 			System.out.println("gotRider");
