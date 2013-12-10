@@ -504,6 +504,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "It's " + currentDay.name() + "; banks are closed today.");
 		}
 		
+		if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
+			AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift Start");
+		}
+		
 		// handle ticks for people
 		for(int i = 0; i < people.size(); i++) {
 			final PersonAgent person = people.get(i);
@@ -513,9 +517,9 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// restaurants themselves will know whether they are open or not
 			if(currTicks == START_OF_DAY) {
 				if(currentDay == DayOfTheWeek.Sunday)
-					person.msgSetBanksOpen(false);
+					person.msgIsSunday(true);
 				else
-					person.msgSetBanksOpen(true);
+					person.msgIsSunday(false);
 			}
 			
 			// hunger signals
@@ -577,16 +581,22 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
-				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift Start");
 				theRestaurant.startOfShift();
 			}
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
-				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift End");
 				theRestaurant.endOfShift();
 			}
 		}
 		
 		//handle ticks for banks
+		for(int i = 0; i < banks.size(); i++) {
+			Bank theBank = banks.get(i);
+			// rent is due signal: at the start of every Saturday
+			// TODO whole rent system needs to be tested with actual PersonAgents
+			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
+				theBank.msgClose();
+			}
+		}
 	}
 	
 	/* all time-related variables and methods */
@@ -599,16 +609,17 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	private static final int TICK_DELAY = 125; // one tick = 1/8 second
 	
 	// these are start times for each of the day phases
+	//timing
 	private static final long START_OF_DAY		= 1;
 	private static final long MORNING			= START_OF_DAY		+ 40; //41
-	private static final long WORK_ONE_START	= MORNING			+ 150;//191
-	private static final long NOON				= WORK_ONE_START	+ 150;//341
-	private static final long WORK_ONE_END		= NOON				+ 150;//491
-	private static final long WORK_TWO_START	= WORK_ONE_END		+ 160;//651
-	private static final long EVENING			= WORK_TWO_START	+ 150;//801
-	private static final long WORK_TWO_END		= EVENING			+ 150;//951
-	private static final long NIGHT				= WORK_TWO_END		+ 160;//1111
-	private static final long END_OF_DAY		= NIGHT				+ 800;//1911
+	private static final long WORK_ONE_START	= MORNING			+ 180;//221
+	private static final long NOON				= WORK_ONE_START	+ 180;//401
+	private static final long WORK_ONE_END		= NOON				+ 180;//581
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 190;//771
+	private static final long EVENING			= WORK_TWO_START	+ 180;//951
+	private static final long WORK_TWO_END		= EVENING			+ 180;//1131
+	private static final long NIGHT				= WORK_TWO_END		+ 190;//1321
+	private static final long END_OF_DAY		= NIGHT				+ 800;//2121
 	// length of day 1911 = appx. 4 minutes
 	
 	// for setting random delay for eating

@@ -65,6 +65,7 @@ public class PersonAgent extends Agent implements Person {
 	private TransportationState transportationState = TransportationState.None;
 	private boolean houseNeedsMaintenance = false;
 	private boolean isBankOpen = false;
+	private boolean isSunday = false;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -219,6 +220,13 @@ public class PersonAgent extends Agent implements Person {
 		log.add(new LoggedEvent("Banks open? " + open));
 		isBankOpen = open;
 		stateChanged();
+	}
+	
+	public void msgIsSunday(boolean sunday) {
+		if(sunday) {
+			isSunday = true;
+			stateChanged();
+		}
 	}
 
 	public void msgGoToWork(int i) {
@@ -533,7 +541,7 @@ public class PersonAgent extends Agent implements Person {
 			}
 			
 			if(currentLocationState == LocationState.Bank) { // at bank
-				if(bankState != BankState.WantToWork && isBankOpen)
+				if(bankState != BankState.WantToWork && !isBankOpen)
 					bankState = BankState.None;
 				switch(bankState) {
 					case NeedTransaction: // Has business at the bank
@@ -638,7 +646,7 @@ public class PersonAgent extends Agent implements Person {
 			return;
 		}
 		MyBank workplaceBank = findWorkplaceBank(workPeriod);
-		if(workplaceBank != null) {
+		if(workplaceBank != null && !isSunday) {
 			bankState = BankState.WantToWork;
 			print("I am going to work at bank");
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I am going to work at bank");
