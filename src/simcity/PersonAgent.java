@@ -244,6 +244,8 @@ public class PersonAgent extends Agent implements Person {
 			restState = RestaurantState.None;
 		if(workplace instanceof MyBank)
 			bankState = BankState.None;
+		if(workplace instanceof MyMarket)
+			marketState = MarketState.None;
 		workplace = null;
 		event = PersonEvent.makingDecision;
 		stateChanged();
@@ -617,7 +619,8 @@ public class PersonAgent extends Agent implements Person {
 						event = PersonEvent.onHoldInMarket;
 						break;
 					case WantToWork:
-						// TODO handle going to work at market
+						goToWorkInMarket();
+						event = PersonEvent.onHoldInMarket;
 						break;
 				}
 				print("Market: event onHold set");
@@ -872,6 +875,13 @@ public class PersonAgent extends Agent implements Person {
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Entering market");
 		MyMarket myMarket = (MyMarket)currentMyObject;
 		myMarket.theMarket.personAs(this, name, moneyOnHand, foodPreference, MARKET_PURCHASE_QUANTITY);
+	}
+	
+	private void goToWorkInMarket() {
+		print("Working at market");
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Working at market");
+		MyMarket myMarket = (MyMarket)currentMyObject;
+		myMarket.theMarket.addPerson(this, "Worker", name);
 	}
 	
 	// ************************* UTILITIES ***********************************
