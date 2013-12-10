@@ -446,6 +446,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     		System.out.println("removing waiter " + wa.getName());
     	}
     }
+    
 	@Override
 	public void setMarket(Market_Douglass m) {
 		market = m;
@@ -453,10 +454,8 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 			cashier.setMarket(m);
 		}
 		if (cook!=null) {
-			cook.setMarket(m);
-			
+			cook.setMarket(m);	
 		}
-		
 	}
 
 	@Override
