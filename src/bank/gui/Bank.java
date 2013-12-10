@@ -111,7 +111,6 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 			ArrayList<PersonAgent> people = gui.getSimCityPanel().getPeople();
 			for(int i = 0; i < people.size(); i++)
 				people.get(i).msgSetBanksOpen(false);
-			tellers = null;
 		}
 	}
     
