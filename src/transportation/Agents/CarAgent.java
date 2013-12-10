@@ -35,9 +35,10 @@ public class CarAgent extends MobileAgent{
 		this.aStar = aStar;
 	}
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
@@ -79,11 +80,13 @@ public class CarAgent extends MobileAgent{
 			//Try and get lock for the next step.
 			int attempts    = 1;
 			MovementTile.MovementType temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
+			MovementTile.MovementType currentTile = master.getGrid()[currentPosition.getX()][currentPosition.getY()].getMovementType();
 			while(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
-				if(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+				if(currentTile == MovementTile.MovementType.TRAFFICCROSSWALK || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE || currentTile == MovementTile.MovementType.TRAFFICCROSSINTERSECTION)
 					break;
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
+				temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 			}
 			gotPermit = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 			
@@ -95,10 +98,11 @@ public class CarAgent extends MobileAgent{
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
 				while(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
-					if(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+					if(currentTile == MovementTile.MovementType.TRAFFICCROSSWALK || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE || currentTile == MovementTile.MovementType.TRAFFICCROSSINTERSECTION)
 						break;
 					try { Thread.sleep(1000); }
 					catch (Exception e){}
+					temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 					attempts ++;
@@ -137,9 +141,10 @@ public class CarAgent extends MobileAgent{
 	}
 
 	public void tauntAndLeave() {
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
-			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		master.msgArrivedAtDestination(driver);
 		gui.setIgnore();
@@ -159,5 +164,9 @@ public class CarAgent extends MobileAgent{
 	@Override
 	public Person getPerson() {
 		return driver;
+	}
+	public void crashDone() {
+		gui.crashDone();
+		
 	}
 }

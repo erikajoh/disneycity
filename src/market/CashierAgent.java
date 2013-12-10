@@ -72,13 +72,13 @@ public class CashierAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
-		print("got msg shift done");
-		shiftDone = true;
-		if (marketBills.size()==0) {
-			person.msgStopWork(10);
-		}
-	}
+//	public void msgShiftDone() {
+//		print("got msg shift done");
+//		shiftDone = true;
+//		if (marketBills.size()==0) {
+//			person.msgStopWork(10);
+//		}
+//	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -88,13 +88,17 @@ public class CashierAgent extends Agent {
 			for (Bill b: marketBills){
 				if (b.cust == customer){
 					ProcessPayment(b, amt);
-					marketBills.remove(b);
-					state = State.idle;
+					UpdateInventory(b);
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+	
+	public void UpdateInventory(Bill b) {
+		marketBills.remove(b);
+		state = State.idle;
 	}
 	
 	public class CashRegister {

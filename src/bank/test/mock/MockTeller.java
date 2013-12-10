@@ -12,17 +12,19 @@ public class MockTeller extends Mock {
 	
 	  public EventLog log;
 	  MockManager manager;
-	  public enum CustomerState {deciding, openingAccount, depositingCash, withdrawingCash, leaving, idle};
+	  public enum CustomerState {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
 	  enum State{shouldEnter, shouldLeave, working};
 	  State state = State.working;
+	  private boolean success;
 
 		class Customer {
 		  MockBankCustomer bankCustomer;
 		  Account account;
 		  int creditRating;
 		  double requestAmt;
+		  boolean success;
 		  
-		  CustomerState CustomerState;
+		  CustomerState state;
 		  
 		  public Customer(MockBankCustomer p){
 			  bankCustomer = p;
@@ -40,7 +42,7 @@ public class MockTeller extends Mock {
 			      }
 			  }
 			  		  
-			  CustomerState = CustomerState.idle;
+			  state = CustomerState.idle;
 		  }
 		}
 		
@@ -70,7 +72,7 @@ public class MockTeller extends Mock {
 				if(cust.bankCustomer == bankCustomer){
 					log.add(new LoggedEvent("CUSTOMER IS "+bankCustomer.toString()));
 					customer = cust;
-					customer.CustomerState = CustomerState.idle;
+					customer.state = CustomerState.idle;
 				}
 			}
 			if(customer == null){
@@ -86,7 +88,7 @@ public class MockTeller extends Mock {
 			for(Customer cust : customers){
 				if(cust.bankCustomer == bankCustomer){
 					customer = cust;
-					customer.CustomerState = CustomerState.openingAccount;
+					customer.state = CustomerState.openingAccount;
 					found = true; break;
 				}
 			}
@@ -106,7 +108,7 @@ public class MockTeller extends Mock {
 					customer.account = acc; break;
 				}
 			}
-			customer.CustomerState = CustomerState.depositingCash; 
+			customer.state = CustomerState.depositingCash; 
 		}
 		
 		public void	msgWithdrawCash(int accountNum, double cash){
@@ -118,12 +120,17 @@ public class MockTeller extends Mock {
 					customer.account = acc; break;
 				}
 			}
-			customer.CustomerState = CustomerState.withdrawingCash; 
+			customer.state = CustomerState.withdrawingCash; 
+		}
+		
+		public void msgRobBank(double cash){
+			customer.requestAmt = cash;
+			customer.state = CustomerState.robbingBank; 
 		}
 		
 		public void	msgLeavingBank(){
 			log.add(new LoggedEvent("LEAVING"));
-			customer.CustomerState = CustomerState.leaving;
+			customer.state = CustomerState.leaving;
 		}
 		
 		public void msgOpen(){
@@ -139,19 +146,23 @@ public class MockTeller extends Mock {
 		 */
 		public boolean pickAndExecuteAnAction() {
 			if(customer != null){
-			    if(customer.CustomerState == CustomerState.openingAccount){
+			    if(customer.state == CustomerState.openingAccount){
 				   openAccount();
 				   return true;
 			    }
-			   else if(customer.CustomerState == CustomerState.depositingCash){
+			   else if(customer.state == CustomerState.depositingCash){
 				   depositCash();
 				   return true;
 			    }
-			   else if(customer.CustomerState == CustomerState.withdrawingCash){
+			   else if(customer.state == CustomerState.withdrawingCash){
 				   withdrawCash();
 				   return true;
 			    }
-			  else if(customer.CustomerState == CustomerState.leaving){
+			   else if(customer.state == CustomerState.robbingBank){
+				   robBank();
+				   return true;
+			    }
+			  else if(customer.state == CustomerState.leaving){
 				   customerLeaving();
 				   return true;
 			  }
@@ -170,7 +181,7 @@ public class MockTeller extends Mock {
 			customer.account = newAccount;
 			customer.account.change = -customer.requestAmt;
 			customer.bankCustomer.msgAccountOpened(newAccount.number, customer.account.change);
-			customer.CustomerState = CustomerState.deciding;
+			customer.state = CustomerState.deciding;
 		}
 
 		private void depositCash(){
@@ -195,7 +206,7 @@ public class MockTeller extends Mock {
 		  
 		    customer.account.change = -customer.requestAmt;
 			customer.bankCustomer.msgMoneyDeposited(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
-			customer.CustomerState = CustomerState.deciding;
+			customer.state = CustomerState.deciding;
 		}
 
 		private void withdrawCash(){
@@ -225,7 +236,14 @@ public class MockTeller extends Mock {
 				customer.account.loanTime--; //double jeopardy as loan time gets worse as well
 			}
 			customer.bankCustomer.msgMoneyWithdrawn(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
-			customer.CustomerState = CustomerState.deciding;
+			customer.state = CustomerState.deciding;
+		}
+		
+		private void robBank(){
+			double cash = customer.requestAmt;
+			customer.success = success;
+			customer.bankCustomer.msgRobbedBank(cash, customer.success);
+			customer.state = CustomerState.deciding;
 		}
 
 		private void customerLeaving(){
@@ -235,6 +253,9 @@ public class MockTeller extends Mock {
 		
 		
 		//utilities
+		public void setSuccess(boolean suc){
+			success = suc;
+		}
 		public void setGui(TellerGui gui) {
 			tellerGui = gui;	
 		}

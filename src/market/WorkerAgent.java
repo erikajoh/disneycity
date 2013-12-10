@@ -91,59 +91,66 @@ public class WorkerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgShiftDone(boolean alertOthers) {
-		shiftDone = true;
-		alert = alertOthers;
-		if (orders.size() == 0 && alertOthers) {
-			alertedShift = true;
-			print ("going home!");
-			workerGui.DoLeave(); //need to fix
-			if (manager!=null) { 
-				if (cashier!=null) cashier.subtract(10.0); 
-			}
-			if (cashier!=null) { 
-				cashier.msgShiftDone(); 
-				cashier.subtract(20);
-			}
-		}
-		else if (orders.size() == 0){
-			print ("going home!");
-			workerGui.DoLeave();
-		}
-		else {
-			print("my shift is done! but I still have customers");
-		}
-	}
+//	public void msgShiftDone(boolean alertOthers) {
+//		shiftDone = true;
+//		alert = alertOthers;
+//		if (orders.size() == 0 && alertOthers) {
+//			alertedShift = true;
+//			print ("going home!");
+//			workerGui.DoLeave(); //need to fix
+//			if (manager!=null) { 
+//				if (cashier!=null) cashier.subtract(10.0); 
+//			}
+//			if (cashier!=null) { 
+////				cashier.msgShiftDone(); 
+//				cashier.subtract(20);
+//			}
+//		}
+//		else if (orders.size() == 0){
+//			print ("going home!");
+//			workerGui.DoLeave();
+//		}
+//		else {
+//			print("my shift is done! but I still have customers");
+//		}
+//	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		for (MyOrder o: orders) {
-			int numItems = GetItem(o.item, o.quantity, o.virtual);
-			try {
-				working.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (numItems == 0) o.c.msgOutOfItem();
-			else {
-				o.c.msgHereIsItemAndBill(numItems, market.getPrice(o.item)*numItems);
-				cashier.msgHereIsBill(o.c, market.getPrice(o.item)*numItems);
-			}
-			orders.remove(o);
-			workerGui.DoGoToHome();
-			try {
-				moving.acquire();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			GetItemAndReturn(o);
 			return true;
 		}
-		if (shiftDone && !alertedShift) {msgShiftDone(alert); alertedShift = true;}
+//		if (shiftDone && !alertedShift) {
+//			msgShiftDone(alert);
+//			alertedShift = true;
+//		}
 		return false;
+	}
+	
+	public void GetItemAndReturn(MyOrder o) {
+		int numItems = GetItem(o.item, o.quantity, o.virtual);
+		try {
+			working.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (numItems == 0) o.c.msgOutOfItem();
+		else {
+			o.c.msgHereIsItemAndBill(numItems, market.getPrice(o.item)*numItems);
+			cashier.msgHereIsBill(o.c, market.getPrice(o.item)*numItems);
+		}
+		orders.remove(o);
+		workerGui.DoGoToHome();
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public int GetItem(String item, int quantity, boolean virtual) {
