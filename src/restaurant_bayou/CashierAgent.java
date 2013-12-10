@@ -27,6 +27,9 @@ public class CashierAgent extends Agent {
 	private Person person;
 	boolean shiftDone = false;
 	public EventLog log = new EventLog();
+	double wage;
+	public boolean isWorking;
+	public double balance;
 
 	/**
 	 * Constructor for CookAgent class
@@ -37,12 +40,15 @@ public class CashierAgent extends Agent {
 		super();
 		this.name = name;
 		r = new CashRegister(amt);
+		balance = amt;
 		myMenu = m;
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
+		print("got msg shift done");
 		shiftDone = true;
-		if (!pickAndExecuteAnAction()) {if (person!=null) person.msgStopWork(10); print("cashier going home");}
+		wage = w;
+		stateChanged();
 	}
 	
 	public void setPerson(Person p) {
@@ -77,6 +83,7 @@ public class CashierAgent extends Agent {
 	public void msgHereIsChange(double change){
 		log.add(new LoggedEvent("Received msgHereIsChange"));
 		r.update(change);
+		balance = r.balance;
 		stateChanged();
 	}
 	
@@ -134,7 +141,13 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
+		if (shiftDone) {leaveWork();}
 		return false;
+	}
+	
+	private void leaveWork() {
+		person.msgStopWork(wage);
+		isWorking = false; 
 	}
 	
 	public class CashRegister {
@@ -197,6 +210,7 @@ public class CashierAgent extends Agent {
 			} else {
 				change = amt - cost;
 				r.increase(cost);
+				balance = r.balance;
 				state = CheckState.Paid;
 			}
 //			ti.schedule(new TimerTask() {

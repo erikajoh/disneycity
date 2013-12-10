@@ -36,11 +36,16 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 	private List<Integer> checksReady = new ArrayList<Integer>();
 	private Person person;
 	boolean shiftDone = false;
+	boolean alertedShift = false;
+	boolean alert = false;
+	
+	public boolean isWorking = true;
 	
 	private boolean readyForNextTask = true;
 	private boolean wantBreak = false;
 	private boolean onBreak = false;
 	private boolean needToReorder = false;
+	double wage;
 	
 	public WaiterGui waiterGui = null;
 		
@@ -88,26 +93,11 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 		cook = c;
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(boolean alertOthers, double w) {
 		shiftDone = true;
-		if (myCustomers.size() == 0) {
-			print ("going home!");
-			waiterGui.DoLeave(person);
-			if (cook!=null) { 
-				cook.msgShiftDone(); 
-				if (cashier!=null) cashier.subtract(10); 
-			}
-			if (host!=null) { 
-				if (cashier!=null) cashier.subtract(10); 
-			}
-			if (cashier!=null) { 
-				cashier.msgShiftDone(); 
-				cashier.subtract(20);
-			}
-		}
-		else {
-			print("my shift is done! but I still have customers");
-		}
+		alert = alertOthers;
+		wage = w;
+		stateChanged();
 	}
 
 	public void msgLeavingTable(CustomerAgent cust) {
@@ -301,7 +291,7 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 				host.msgWantToGoOnBreak(this);
 				return true;
 			}
-			if (shiftDone) {msgShiftDone();}
+			if (shiftDone && !alertedShift && myCustomers.size() == 0) {leaveWork(); alertedShift = true;}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return false;
@@ -319,6 +309,28 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 //			}
 //		},
 //		time);
+	}
+	
+	protected void leaveWork() {
+		if (alert) {
+			alertedShift = true;
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+			if (cook!=null) { 
+				cook.msgShiftDone(wage); 
+			}
+			if (host!=null) { 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(wage); 
+			}
+		}
+		else {
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+		}
 	}
 
 	private void DoSeatCustomer(CustomerAgent customer, Table table, RestMenu m) {

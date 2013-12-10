@@ -31,6 +31,8 @@ public class CookAgent extends Agent {
 	private RestMenu menu = new RestMenu();
 	boolean shiftDone = false;
 	RestaurantBayou restaurant;
+	double wage; 
+	public boolean isWorking;
 
 	/**
 	 * Constructor for CookAgent class
@@ -68,12 +70,11 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
 		shiftDone = true;
-		if (orders.size() == 0) {
-			//person.msgStopWork(10);
-			cookGui.DoLeave(person);
-		}
+		isWorking = false;
+		wage = w;
+		cookGui.DoLeave(person, wage);
 	}
 	
 	public void msgHereIsMoreFood(Market mkt, String f, int amt){

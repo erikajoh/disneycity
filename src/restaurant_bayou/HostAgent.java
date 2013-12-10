@@ -37,6 +37,8 @@ public class HostAgent extends Agent {
 	private Person person;
 	boolean shiftDone = false;
 	RestaurantBayou restaurant;
+	public boolean isWorking = true;
+	double wage;
 	
 	public HostAgent(String name, RestaurantBayou rest) {
 		super();
@@ -78,15 +80,12 @@ public class HostAgent extends Agent {
 		return waiters;
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
+		print("got msg shift done");
 		shiftDone = true;
-		if (waitingCustomers.size() == 0) {
-			if (person!=null) person.msgStopWork(10);
-			print("host going home");
-			for (WaiterAgent w : waiters) {
-				w.msgShiftDone();
-			}
-		}
+		isWorking = false;
+		wage = w;
+		stateChanged();
 	}
 		
 	public void msgIAmHere(CustomerAgent cust) {
@@ -161,6 +160,7 @@ public class HostAgent extends Agent {
 				}
 			}
 		}
+		if (shiftDone == true && waitingCustomers.size()==0) {leaveWork();} 
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -168,6 +168,13 @@ public class HostAgent extends Agent {
 	}
 
 	// Actions
+	
+	private void leaveWork() {
+		if (person!=null) person.msgStopWork(wage);
+		for (WaiterAgent w : waiters) {
+			w.msgShiftDone(true, wage);
+		}	
+	}
 	
 	public void addWaiter(WaiterAgent w) {
 		//WaiterAgent w = new WaiterAgent("W"+(int)(waiters.size()+1), this);

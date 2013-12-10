@@ -37,7 +37,7 @@ public class CookAgent extends Agent implements Cook{
 	private enum moState {pending, ordered};
 	public boolean inMarket;
 	int curID;
-	boolean shiftDone = false;
+	public boolean shiftDone = false;
 	double wage;
 	
 	public boolean isWorking = true;
