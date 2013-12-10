@@ -2,6 +2,7 @@ package bank.interfaces;
 
 import bank.interfaces.BankCustomer;
 import bank.gui.Account;
+import bank.gui.Bank;
 import bank.gui.TellerGui;
 
 /**
@@ -24,7 +25,7 @@ public interface Teller {
 		
 	public void msgLeavingBank();
 		
-	public void msgClose();
+	public void msgClose(Bank b);
 	
 	public TellerGui getGui();
 

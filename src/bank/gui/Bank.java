@@ -97,7 +97,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	public void msgClose(){
 		for(TellerAgent teller : tellers){
 			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Bank telling teller to leave");
-			teller.msgClose();
+			teller.msgClose(this);
 		}
 	}
 	

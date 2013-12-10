@@ -169,8 +169,9 @@ public class TellerAgent extends Agent implements Teller {
 		stateChanged();
 	}
 	
-	public void	msgClose(){
+	public void	msgClose(Bank b){
 		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "Teller should leave");
+		bank = b;
 		shouldLeave = true;
 		stateChanged();
 	}
