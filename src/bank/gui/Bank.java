@@ -98,10 +98,10 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	}
 	
 	public void msgTellerLeftBank(TellerAgent teller){
-		//teller.getPerson.msgLeftBank();
 		tellers.remove(teller);
 		if(tellers.size() == 0){
 			open = false;
+			//gui.SimCityPanel.msgBankClosed();
 			tellers = null;
 		}
 	}
@@ -157,6 +157,9 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		t.setGui(g);
     		manager.addTeller(t);
     		t.startThread();
+    		if(tellers.size()==1){
+    			//gui.SimCityPanel.msgBankOpened();
+    		}
     		open = true;
     }
     
