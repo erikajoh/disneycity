@@ -58,6 +58,11 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 	enum BreakState{none, goOnBreak, goOffBreak};
 	BreakState breakState = BreakState.none;
 	boolean shiftDone = false;
+	public boolean isWorking = true;
+	boolean alertedShift = false;
+	boolean alert = false;
+	double wage;
+	
 	
 	RestaurantCafe restaurant;
 	
@@ -120,27 +125,13 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(boolean alertOthers, double w) {
 		shiftDone = true;
-		if (customers.size() == 0) {
-			print ("going home!");
-			waiterGui.DoLeave(person);
-			if (cook!=null) { 
-				cook.msgShiftDone(); 
-				if (cashier!=null) cashier.subtract(10); 
-			}
-			if (host!=null) { 
-				if (cashier!=null) cashier.subtract(10); 
-			}
-			if (cashier!=null) { 
-				cashier.msgShiftDone(); 
-				cashier.subtract(20);
-			}
-		}
-		else {
-			print("my shift is done! but I still have customers");
-		}
+		alert = alertOthers;
+		wage = w;
+		stateChanged();
 	}
+	
 
 	public void msgPleaseSeatCustomer(Customer cust, int tableNum) {
 		//print("Adding cust "+cust.getName() + " to list");
@@ -431,7 +422,7 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 			//optional: e.printStackTrace();
 			return false;
 		}
-		if (shiftDone) {msgShiftDone();}
+		if (shiftDone && !alertedShift && customers.size() == 0) {leaveWork(); alertedShift = true;}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -439,6 +430,28 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 	}
 
 	// Actions
+	
+	protected void leaveWork() {
+		if (alert) {
+			alertedShift = true;
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+			if (cook!=null) { 
+				cook.msgShiftDone(wage); 
+			}
+			if (host!=null) { 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(wage); 
+			}
+		}
+		else {
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+		}
+	}
 	
 	private void tryToBreak(){
 		host.msgIWantToBreak(this);

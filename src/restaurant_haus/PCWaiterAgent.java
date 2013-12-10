@@ -15,7 +15,6 @@ public class PCWaiterAgent extends WaiterAgent {
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		orderStand.addOrder(this, mc.choice, mc.table);
@@ -23,5 +22,4 @@ public class PCWaiterAgent extends WaiterAgent {
 		print(cook.getName() + ", check the stand for orders.");
 		mc.s = CustomerState.Seated;
 	}
-	// TODO Auto-generated constructor stub
 }

@@ -275,7 +275,7 @@ public class TransportationController extends Agent implements Transportation{
 		grid[5][15].setMovement(true, false, false, true, MovementTile.MovementType.ROAD);
 
 		grid[28][14].setMovement(false, true, true, false, MovementTile.MovementType.ROAD);
-		grid[29][14].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[29][14].setMovement(true, false, true, false, MovementTile.MovementType.ROAD);
 		grid[28][15].setMovement(false, true, false, true, MovementTile.MovementType.ROAD);
 		grid[29][15].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
 
@@ -370,9 +370,10 @@ public class TransportationController extends Agent implements Transportation{
 
 		//Southern Market
 		grid[22][18].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
-		grid[23][18].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
-		grid[22][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[23][18].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[22][19].setMovement(false, false, false, true, MovementTile.MovementType.ROAD);
 		grid[23][19].setMovement(true, false, false, false, MovementTile.MovementType.ROAD);
+		grid[22][15].setDown(true);
 
 		//Apt #3 and Apt #5
 		grid[0][19].setMovement(false, true, false, false, MovementTile.MovementType.ROAD);
@@ -479,16 +480,16 @@ public class TransportationController extends Agent implements Transportation{
 		setCrossWalk(24, 12, false);//Bank
 
 		setCrossWalk(10, 16, false);//Pizza and Apt #4
-		setCrossWalk(22, 18, false);//Southern Market
+		setCrossWalk(22, 16, false);//Southern Market
 
-		setCrossWalk(19, 2, true);//Apt #3 and Apt #5
+		setCrossWalk(2, 19, true);//Apt #3 and Apt #5
 
 		setCrossWalk(24, 22, false);//Cafe
 
 		setCrossWalk(30, 24, true);//Apt #6 and Apt #7
 
 		setCrossWalk(4, 26, false);//Apt #8
-		setCrossWalk(10, 28, false);//Apt #9 and Bayou
+		setCrossWalk(10, 26, false);//Apt #9 and Bayou
 		setCrossWalk(22, 28, false);//Apt #10
 		setCrossWalk(28, 28, false);//Apt #11
 

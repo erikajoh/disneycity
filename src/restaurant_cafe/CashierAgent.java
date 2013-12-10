@@ -48,13 +48,15 @@ public class CashierAgent extends Agent implements Cashier {
 			state = CustomerState.producingCheck;
 		}
 	}
+	public boolean isWorking = true;
 	enum CustomerState{idle, producingCheck, checkReady, giveCheck, paying, makeChange, giveChange, noMoney};
 	Person person;
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	public Collection<Food> foods;
 	boolean shiftDone = false;
+	double wage;
 	
-	private double balance = 100.00;
+	public double balance = 500.00;
 	
 	public class Bill {
 		Market_Douglass market;
@@ -102,9 +104,12 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	// Messages
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
+		print("got msg shift done");
 		shiftDone = true;
-		if (!pickAndExecuteAnAction()) {if (person!=null) person.msgStopWork(10); print("cashier going home");}
+		wage = w;
+		stateChanged();
+	
 	}
 	/*
 	public void msgBillFromMarket(Market_Douglass market, double total){
@@ -264,6 +269,7 @@ public class CashierAgent extends Agent implements Cashier {
 			clearBill();
 			return true;
 		}
+		if (shiftDone) {leaveWork();}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -271,6 +277,11 @@ public class CashierAgent extends Agent implements Cashier {
 	}
 
 	// Actions
+	
+	private void leaveWork() {
+		person.msgStopWork(wage);
+		isWorking = false; 
+	}
 	private void produceCheck(final MyCustomer customer){
 		double price = 0;
 		synchronized(menu.getItems()){

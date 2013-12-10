@@ -26,7 +26,7 @@ public interface Cashier {
 
 	public void subtract(double i);
 
-	public void msgShiftDone();
+	public void msgShiftDone(double d);
 	
 
 }

@@ -224,6 +224,7 @@ public class CashierAgent extends Agent implements Cashier{
 		person.msgStopWork(wage);
 		isWorking = false; 
 	}
+	
 	private void makeCheck(final Check check) {
 		check.cs = checkState.pending;
 		checkTimer.schedule(new TimerTask() {
