@@ -65,4 +65,15 @@ public class MockBank_Douglass extends Mock_Douglass implements Bank_Douglass {
 			double loanAmt, int loanTime) {
 		return;
 	}
+
+	@Override
+	public boolean isOpen() {
+		return true;
+	}
+
+	@Override
+	public void addPerson(Person person) {
+		// TODO Auto-generated method stub
+		
+	}
 }

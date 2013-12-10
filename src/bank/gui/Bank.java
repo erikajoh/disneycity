@@ -47,6 +47,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
         manager.startThread();
         tellerAmt = ta;
         
+        /*
         for(int i = 0; i<tellerAmt; i++){
         	String name = "Teller"+i;
         	TellerAgent t = new TellerAgent(name);	
@@ -58,6 +59,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		manager.addTeller(t);
     		t.startThread();
         }
+        */
     }
     
     public void msgThief(Person person, double reqAmt, boolean present){
@@ -149,6 +151,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     }
     
     public void addPerson(Person person){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "ADD TELLER");
     		TellerAgent t = new TellerAgent(person, person.getName());	
     		TellerGui g = new TellerGui(t, gui, tellers.size());
     		gui.bankAniPanel.addGui(g);

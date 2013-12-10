@@ -233,14 +233,11 @@ import java.util.concurrent.Semaphore;
 				waiterGui.DoLeave(person, wage);
 				if (cook!=null) { 
 					cook.msgShiftDone(wage); 
-					if (cashier!=null) cashier.subtract(wage); 
 				}
 				if (host!=null) { 
-					if (cashier!=null) cashier.subtract(wage); 
 				}
 				if (cashier!=null) { 
 					cashier.msgShiftDone(wage); 
-					cashier.subtract(wage*2);
 				}
 			}
 			else {

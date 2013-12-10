@@ -1,0 +1,22 @@
+13
+StartWithBus|Main St Apartments #1|OwnerResident
+StartWithCar|Main St Apartments #1|Renter
+StartWithWalk|Main St Apartments #1|Renter
+RanchoHost1|Main St Apartments #3|Renter
+CafeCashier1|Main St Apartments #4|OwnerResident
+CafeCook1|Main St Apartments #4|Renter
+CafeHost1|Main St Apartments #4|Renter
+CafeWaiter1|Main St Apartments #4|Renter
+Narwhal_Prime|Haunted Mansion|OwnerResident
+Dylan|Main St Apartments #8|OwnerResident
+One|Cinderella Castle|OwnerResident
+PirateTeller1|Main St Apartments #2|OwnerResident
+PirateTeller2|Main St Apartments #2|Renter
+6
+Main St Apartments #2|PirateTeller1|PirateTeller1|PirateTeller2
+Main St Apartments #3|Edgar_Prime|Edgar_Prime|RanchoCashier1|RanchoCook1|RanchoHost1
+Main St Apartments #4|CafeCashier1|CafeCashier1|CafeCook1|CafeHost1|CafeWaiter1
+Haunted Mansion|Narwhal_Prime|Narwhal_Prime
+Main St Apartments #8|Dylan|Dylan
+Cinderella Castle|One|One
+Friday

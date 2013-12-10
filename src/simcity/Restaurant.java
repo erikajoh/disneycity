@@ -29,9 +29,9 @@ public interface Restaurant {
 
 	public void msgHereIsOrder(String food, int quantity, int ID);
 		
-	public void StartOfShift();
+	public void startOfShift();
 	
-	public void EndOfShift();
+	public void endOfShift();
 	
 	public String[] getWorkers();
 
