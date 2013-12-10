@@ -43,4 +43,10 @@ public class WaiterAgent_PC extends WaiterAgent implements Waiter {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void msgShiftDone(boolean d) {
+		// TODO Auto-generated method stub
+		
+	}
 }

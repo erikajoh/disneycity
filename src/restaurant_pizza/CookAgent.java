@@ -34,6 +34,8 @@ public class CookAgent extends Agent {
 	
 	private String name;
 	boolean shiftDone = false;
+	public boolean isWorking = true;
+	double wage;
 	
 	public enum AgentState {Working, WorkingAndPendingOrder};
 	public AgentState state = AgentState.Working;
@@ -142,12 +144,11 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
 		shiftDone = true;
-		if (orders.size() == 0) {
-			//person.msgStopWork(10);
-			cookGui.DoLeave(person);
-		}
+		isWorking = false;
+		wage = w;
+		cookGui.DoLeave(person, wage);
 	}
 
 	public void msgOrderDone(Order o) {
@@ -216,9 +217,6 @@ public class CookAgent extends Agent {
 				}
 			}
 		}
-		// TODO Check if this leaving shift action works
-		if(shiftDone)
-			cookGui.DoLeave(person);
 		
 		// Producer-consumer handling
 		StandOrder orderFromStand = restaurant.revolvingStand.remove();

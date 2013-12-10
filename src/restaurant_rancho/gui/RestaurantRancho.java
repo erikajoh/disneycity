@@ -289,7 +289,9 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     	if (!isOpen && type.equals("Customer")) {
     		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
     		p.msgDoneEating(false, money);
+    		return;
     	}
+    	isChangingShifts();
     	
     	// if changing shifts, don't want to add new workers with pointers to old workers as workers from shift get ready to leave work
     	if (isOpen) {

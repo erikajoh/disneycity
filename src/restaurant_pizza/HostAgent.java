@@ -28,6 +28,9 @@ public class HostAgent extends Agent {
 	private int waiterPointer = 0;
 	private String name;
 	
+	public boolean isWorking = true;
+	double wage;
+	
 	public HostAgent(String name) {
 		super();
 		this.name = name;
@@ -75,15 +78,12 @@ public class HostAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
+		print("got msg shift done");
 		shiftDone = true;
-		if (waitingCustomers.size() == 0) {
-			if (person!=null) person.msgStopWork(10);
-			print("host going home");
-			for (MyWaiter w : waiters) {
-				w.waiter.msgShiftDone(true);
-			}
-		}
+		isWorking = false;
+		wage = w;
+		stateChanged();
 	}
 	
 	public void msgIWantFood(CustomerAgent cust) {
@@ -152,7 +152,7 @@ public class HostAgent extends Agent {
 	
 	// ***** SCHEDULER *****
 	protected boolean pickAndExecuteAnAction() {
-		if (waitingCustomers.size() == 0 && shiftDone == true) {if (person!=null) person.msgStopWork(10); print("host going home");} 
+		if (waitingCustomers.size() == 0 && shiftDone == true) {leaveWork(); print("host going home");} 
 		if(waiters.isEmpty())
 			return false;
 		
@@ -230,6 +230,13 @@ public class HostAgent extends Agent {
 	}
 
 	// ***** ACTIONS *****
+	
+	private void leaveWork() {
+		if (person!=null) person.msgStopWork(wage);
+		for (MyWaiter w : waiters) {
+			w.waiter.msgShiftDone(true, wage);
+		}	
+	}
 	public void assignWaiter(Table t, MyCustomer mc, WaiterAgent freeWaiter) {
 		t.setOccupant(mc.cust);
 		print("Telling waiter to seat customer " + mc.cust.getName());
