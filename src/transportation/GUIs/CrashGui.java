@@ -111,8 +111,10 @@ public class CrashGui implements Gui{
 
 	@Override
 	public void setPanel(TransportationPanel transportationPanel) {
-		// TODO Auto-generated method stub
 		
 	}
-
+	@Override
+	public String returnType() {
+		return "Crash";
+	}
 }

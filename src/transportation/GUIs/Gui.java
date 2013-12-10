@@ -12,4 +12,5 @@ public interface Gui {
     public boolean isPresent();
     //public void changeAnimation(String animation);
 	public void setPanel(TransportationPanel transportationPanel);
+	public String returnType();
 }

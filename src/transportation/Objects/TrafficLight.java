@@ -170,4 +170,9 @@ public class TrafficLight implements ActionListener, Gui{
 	public void setPanel(TransportationPanel p) {
 		panel = p;
 	}
+
+	@Override
+	public String returnType() {
+		return "Traffic Light";
+	}
 }

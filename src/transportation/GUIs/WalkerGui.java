@@ -14,7 +14,7 @@ public class WalkerGui implements Gui{
 	boolean crashed = false;
 	
 	TransportationPanel panel;
-	WalkerAgent agent;
+	public WalkerAgent agent;
 	boolean isPresent = true;
 
 	public WalkerGui(float xPos, float yPos, WalkerAgent agent) {
@@ -121,9 +121,15 @@ public class WalkerGui implements Gui{
 		animModule.changeAnimation("Crash", 10);
 		animModule.setNoLoop();
 		crashed = true;
+		agent.stopThread();
 	}
 	@Override
 	public void setPanel(TransportationPanel p) {
 		panel = p;
+	}
+
+	@Override
+	public String returnType() {
+		return "Walker";
 	}
 }

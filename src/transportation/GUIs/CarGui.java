@@ -106,10 +106,16 @@ public class CarGui implements Gui{
 		animModule.changeAnimation("Crash", 10);
 		animModule.setNoLoop();
 		crashed = true;
+		agent.stopThread();
 	}
 	
 	@Override
 	public void setPanel(TransportationPanel p) {
 		panel = p;
+	}
+	
+	@Override
+	public String returnType() {
+		return "Car";
 	}
 }

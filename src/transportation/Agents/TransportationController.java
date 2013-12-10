@@ -136,6 +136,7 @@ public class TransportationController extends Agent implements Transportation{
 			agentCC = null;
 			this.position = position;
 			this.controller = controller;
+			state = CrashState.ONGOING;
 
 			if(agent1 instanceof CarAgent && agent2 instanceof CarAgent) {
 				agentC = (CarAgent)agent1;
@@ -159,8 +160,10 @@ public class TransportationController extends Agent implements Transportation{
 				controller.master.addGui(gui);
 				agent1.msgCrash();
 			}
-
-			state = CrashState.ONGOING;
+			else {
+				state = CrashState.DONE;
+			}
+			
 			master.addGui(gui);
 		}
 	}

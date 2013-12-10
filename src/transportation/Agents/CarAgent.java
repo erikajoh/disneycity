@@ -137,8 +137,10 @@ public class CarAgent extends MobileAgent{
 	}
 
 	public void tauntAndLeave() {
-		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+		}
 		master.msgArrivedAtDestination(driver);
 		gui.setIgnore();
 		stopThread();

@@ -22,6 +22,7 @@ import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 import transportation.Agents.TransportationController;
 import transportation.GUIs.Gui;
+import transportation.GUIs.WalkerGui;
 
 public class TransportationPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener{
 	private final int WINDOWX = 400;
@@ -175,6 +176,17 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 		synchronized (guis) {
 			for(Gui gui : guis) {
+				if(gui instanceof WalkerGui) {
+					WalkerGui temp = (WalkerGui)gui;
+					//System.out.println(temp.agent.getPerson().getName());
+					if(temp.agent.getPerson().getName().equals("CafeCashier1")) {
+						System.out.println("CAFECASHIER IS HERE: " + String.valueOf(guis.indexOf(gui)));
+					}
+				}
+				System.out.println("ERROR IS HERE: " + String.valueOf(guis.indexOf(gui)));
+				if(guis.indexOf(gui) == 46)
+					System.exit(0);
+				System.out.println(gui.returnType());
 				if (gui.isPresent()) {
 					gui.updatePosition();
 				}

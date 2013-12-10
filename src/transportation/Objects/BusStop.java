@@ -79,4 +79,9 @@ public class BusStop implements Gui{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public String returnType() {
+		return "Bus Stop";
+	}
 }

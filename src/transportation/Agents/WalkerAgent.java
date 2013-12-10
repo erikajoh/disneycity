@@ -174,6 +174,7 @@ public class WalkerAgent extends MobileAgent{
 			beginBusStop.addRider(walker, endBusStop, building);
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 			//System.out.println("Releasing " + currentPosition.toString());
 		}
 		gui.setIgnore();
