@@ -400,7 +400,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		restCafe.setMarket(mickeysMarket);
 		restCafe.setBank(pirateBank);
 		restCafe.addPerson(null, "Cook", "cook", 50);
-        restCafe.addPerson(null, "WaiterNorm", "w", 50);
+        restCafe.addPerson(null, "WaiterPC", "w", 50);
         restCafe.addPerson(p, "Cashier", "cash", 50);
         restCafe.addPerson(null, "Market", "Trader Joes", 50);
         restCafe.addPerson(null, "Host", "Host", 50);

@@ -14,6 +14,8 @@ import restaurant_cafe.interfaces.Customer;
 import restaurant_cafe.interfaces.Market;
 import restaurant_cafe.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
 
 import java.awt.Point;
@@ -89,9 +91,16 @@ public class CookAgent extends Agent implements Cook {
 		}
 	}
 	public void msgHereIsOrder(Waiter w, String choice, Integer table){
+	    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "cook received msgHereIsOrder");
 		print("table "+table+" ordered "+choice);
 		orders.add(new Order(w, choice, (int)table));
-		stateChanged();
+	    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "orders size is "+orders.size());
+	    for(Order o : orders){
+		    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "order state: "+o.s);
+	    }
+	    if(pickAndExecuteAnAction()==true){
+	    	stateChanged();
+	    }
 	}
 	public void msgAddOrder(Order o){
 		orders.add(o);
@@ -116,9 +125,12 @@ public class CookAgent extends Agent implements Cook {
 		stateChanged();
 	}
 	public void msgFoodDone(Order o){
+		AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "Food is done");
 		o.s = OrderState.done;
 		print("FOOD IS DONE");
-		stateChanged();
+		 if(pickAndExecuteAnAction()==true){
+		    	stateChanged();
+		    }
 	}
 	
 	/**
@@ -130,17 +142,22 @@ public class CookAgent extends Agent implements Cook {
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
+	    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "sched orders size is "+orders.size());
+
 		synchronized(orders){
 		  for(Order order : orders){
+			    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "order state is " +order.s);
 			  if(order.s == OrderState.done){
 				  plateIt(order);
 				  return true;
 			  }
 		  }
 		}
+		
 		synchronized(orders){
 		  for(Order order : orders){
 			  if(order.s == OrderState.pending){
+				  AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "cook scheduler cookIt");
 				  cookIt(order);
 				  return true;
 			  }
@@ -182,6 +199,7 @@ public class CookAgent extends Agent implements Cook {
 	
 	private void cookIt(final Order o){
 		print("COOK " + o.food.getName() + " " + o.food.getAmount());
+		  AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "COOK COOKING");
 		cookGui.DoGrilling(o.food.getName());
 		if(o.food.getAmount() == 0){
 			print("NO MORE "+ o.food.getName() + " TO COOK");

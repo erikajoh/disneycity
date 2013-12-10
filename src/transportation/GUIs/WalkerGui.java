@@ -3,6 +3,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import AnimationTools.AnimationModule;
+import transportation.TransportationPanel;
 import transportation.Agents.WalkerAgent;
 
 public class WalkerGui implements Gui{
@@ -11,7 +12,8 @@ public class WalkerGui implements Gui{
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	boolean crashed = false;
-
+	
+	TransportationPanel panel;
 	WalkerAgent agent;
 	boolean isPresent = true;
 
@@ -119,5 +121,9 @@ public class WalkerGui implements Gui{
 		animModule.changeAnimation("Crash", 10);
 		animModule.setNoLoop();
 		crashed = true;
+	}
+	@Override
+	public void setPanel(TransportationPanel p) {
+		panel = p;
 	}
 }

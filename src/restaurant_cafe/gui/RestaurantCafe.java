@@ -14,6 +14,8 @@ import bank.gui.Bank;
 import simcity.RestMenu;
 import simcity.Restaurant;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import market.Market;
 import simcity.interfaces.Bank_Douglass;
 
@@ -227,6 +229,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     	            cook.addMarket(market);
     	     }
             cook.startThread();
+    	    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "COOK", "COOK's thread started ");
     		
     	}
     	else if (type.equals("Cashier")) {
@@ -342,7 +345,10 @@ public class RestaurantCafe extends JPanel implements Restaurant{
 		
 	}
 
-
+	@Override
+	public void msgStartOfShift() {
+		isOpen = true;
+	}
 
 	@Override
 	public void msgEndOfShift() {

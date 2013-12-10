@@ -86,6 +86,10 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     	return name;
     }
     
+	public void msgStartOfShift() {
+		isOpen = true;
+	}
+    
     public boolean isOpen() {
     	return (cook!=null && waiters.size()>0 && cashier!=null && host!=null && isOpen);
     }

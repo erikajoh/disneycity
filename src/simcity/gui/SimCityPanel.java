@@ -507,6 +507,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			Restaurant theRestaurant = restaurants.get(i);
 			// rent is due signal: at the start of every Saturday
 			// TODO whole rent system needs to be tested with actual PersonAgents
+			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift Start");
+				theRestaurant.msgStartOfShift();
+			}
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Work Shift End");
 				theRestaurant.msgEndOfShift();

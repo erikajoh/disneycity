@@ -3,6 +3,7 @@ package transportation.GUIs;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import transportation.TransportationPanel;
 import transportation.Agents.TransportationController;
 import AnimationTools.AnimationModule;
 import astar.astar.Position;
@@ -106,6 +107,12 @@ public class CrashGui implements Gui{
 	public boolean isPresent() {
 		// TODO Auto-generated method stub
 		return (state != CrashState.DONE);
+	}
+
+	@Override
+	public void setPanel(TransportationPanel transportationPanel) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

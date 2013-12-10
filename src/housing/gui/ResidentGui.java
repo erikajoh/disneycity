@@ -129,51 +129,52 @@ public class ResidentGui implements Gui{
 				walls.add(new Wall(0,0.55,0.63,0.63));
 			}
 			//horizontal apartment table sides
-			walls.add(new Wall(0.69,0.75,0.59,0.59));
-			walls.add(new Wall(0.69,0.75,0.69,0.69));
+			walls.add(new Wall(0.69,0.75,0.58,0.58));
+			walls.add(new Wall(0.69,0.75,0.65,0.65));
 			//vertical apartment walls from left to right
 			walls.add(new Wall(0.29,0.29,0,0.5));
 			walls.add(new Wall(0.6,0.6,0,0.5));
-			walls.add(new Wall(0.93,0.93,0,0.5));
+			walls.add(new Wall(0.9,0.9,0,0.5));
+//			walls.add(new Wall(0.98,0.98,0,0.5));
 			walls.add(new Wall(0.54,0.54,0.69,1));
 			//vertical apartment table sides
-			walls.add(new Wall(0.69,0.69,0.56,0.69));
-			walls.add(new Wall(0.75,0.75,0.56,0.69));
+			walls.add(new Wall(0.69,0.69,0.55,0.65));
+			walls.add(new Wall(0.75,0.75,0.55,0.65));
 			//entrance/exit wall
 			walls.add(new Wall(0.92,0.92,0.64,1));
 			if(roomNo == 0){
-				xTable = (int)(hWidth*0.62);
+				xTable = (int)(hWidth*0.63);
 				yTable = (int)(hHeight*0.59);
 				xBed = (int)(hWidth*0.16);
 				yBed = (int)(hHeight*0.15);
-				xKitchen = (int)(hWidth*0.59);
+				xKitchen = (int)(hWidth*0.64);
 				yKitchen = (int)(hHeight*0.7);
 				xMaintenance = (int)(hWidth*0.1);
 				yMaintenance = (int)(hHeight*0.37);
 			}else if(roomNo == 1){
-				xTable = (int)(hWidth*0.69);
-				yTable = (int)(hHeight*0.51);
+				xTable = (int)(hWidth*0.76);
+				yTable = (int)(hHeight*0.59);
 				xBed = (int)(hWidth*0.48);
 				yBed = (int)(hHeight*0.15);
-				xKitchen = (int)(hWidth*0.65);
+				xKitchen = (int)(hWidth*0.59);
 				yKitchen = (int)(hHeight*0.7);
 				xMaintenance = (int)(hWidth*0.42);
 				yMaintenance = (int)(hHeight*0.37);
 			}else if(roomNo == 2){
-				xTable = (int)(hWidth*0.76);
-				yTable = (int)(hHeight*0.59);
+				xTable = (int)(hWidth*0.69);
+				yTable = (int)(hHeight*0.51);
 				xBed = (int)(hWidth*0.79);
 				yBed = (int)(hHeight*0.15);
-				xKitchen = (int)(hWidth*0.71);
+				xKitchen = (int)(hWidth*0.77);
 				yKitchen = (int)(hHeight*0.7);
 				xMaintenance = (int)(hWidth*0.73);
 				yMaintenance = (int)(hHeight*0.37);
 			}else if(roomNo == 3){
 				xTable = (int)(hWidth*0.69);
-				yTable = (int)(hHeight*0.67);
+				yTable = (int)(hHeight*0.66);
 				xBed = (int)(hWidth*0.2);
 				yBed = (int)(hHeight*0.71);
-				xKitchen = (int)(hWidth*0.77);
+				xKitchen = (int)(hWidth*0.71);
 				yKitchen = (int)(hHeight*0.7);
 				xMaintenance = (int)(hWidth*0.41);
 				yMaintenance = (int)(hHeight*0.75);
@@ -359,6 +360,8 @@ public class ResidentGui implements Gui{
 	public void DoEnterHouse() {
 		xDestNext = -1;
 		yDestNext = -1;
+		xPos = xEntrance;
+		yPos = yEntrance;
 		System.out.println("Entering house");
 		setPresent(true);
 		xDestFinal = xDestination = xTable;

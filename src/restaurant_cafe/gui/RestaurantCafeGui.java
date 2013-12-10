@@ -40,8 +40,8 @@ public class RestaurantCafeGui extends JFrame implements ActionListener {
     private JCheckBox hungryBox = new JCheckBox("Hungry (only for customers)", true);
     private int BIGWINDOWX = 1240;
     private int BIGWINDOWY = 610;
-    private int WINDOWX = 550;
-    private int WINDOWY = 450;
+    private int WINDOWX = 400;
+    private int WINDOWY = 330;
   
 
     private Object currentPerson;/* Holds the agent that the info is about.

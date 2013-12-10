@@ -191,6 +191,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 
 	public void addGui (Gui gui) {
 		guis.add(gui);
+		gui.setPanel(this);
 	}
 
 	public void pauseAnim() {

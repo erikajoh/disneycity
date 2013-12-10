@@ -21,9 +21,10 @@ public class TellerAgent extends Agent implements Teller {
 	Manager manager;
 	final static double amountPerDay = 25.00;
 	private Random robberySuccess = new Random();
-
 	
-	enum State {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
+	enum State{ shouldEnter, shouldLeave, stay};
+	
+	enum CustomerState {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
 
 	class Customer {
 	  BankCustomer bankCustomer;
@@ -31,7 +32,7 @@ public class TellerAgent extends Agent implements Teller {
 	  double requestAmt;
 	  boolean success;
 	  
-	  State state;
+	  CustomerState state;
 
 	  public Customer(BankCustomer p){
 		  bankCustomer = p;
@@ -51,7 +52,7 @@ public class TellerAgent extends Agent implements Teller {
 			  }
 		  }
 		  		  
-		  state = State.idle;
+		  state = CustomerState.idle;
 	  }
 	}
 	
@@ -83,7 +84,7 @@ public class TellerAgent extends Agent implements Teller {
 			   if(cust.bankCustomer == bankCustomer){
 				   print("CUSTOMER IS "+bankCustomer.toString());
 				   customer = cust;
-				   customer.state = State.idle;
+				   customer.state = CustomerState.idle;
 			   }
 		   }
 		}
@@ -101,7 +102,7 @@ public class TellerAgent extends Agent implements Teller {
 		   for(Customer cust : customers){
 			   if(cust.bankCustomer == bankCustomer){
 				   customer = cust;
-				   customer.state = State.openingAccount;
+				   customer.state = CustomerState.openingAccount;
 				   found = true; break;
 			   }
 		   }
@@ -122,7 +123,7 @@ public class TellerAgent extends Agent implements Teller {
 		   for(Account acc : accounts){
 			   if(acc.number == accountNum){
 				   customer.account = acc;
-				   customer.state = State.depositingCash; break;
+				   customer.state = CustomerState.depositingCash; break;
 			   }
 		   }
 		}
@@ -136,26 +137,32 @@ public class TellerAgent extends Agent implements Teller {
 		synchronized(accounts){
 		   for(Account acc : accounts){
 			   if(acc.number == accountNum){
-				   customer.state = State.withdrawingCash;
+				   customer.state = CustomerState.withdrawingCash;
 				   customer.account = acc; break;
 			   }
 		   }
 		}
-		customer.state = State.withdrawingCash; 
+		customer.state = CustomerState.withdrawingCash; 
 		stateChanged();
 	}
 	
 	public void msgRobBank(double cash){
 		print("ROB BANK");
 		customer.requestAmt = cash;
-		customer.state = State.robbingBank; 
+		customer.state = CustomerState.robbingBank; 
 		stateChanged();
 	}
 
 	
 	public void	msgLeavingBank(){
 		print("LEAVING");
-		customer.state = State.leaving;
+		customer.state = CustomerState.leaving;
+		stateChanged();
+	}
+	
+	public void	msgClose(){
+		print("CLOSE BANK");
+		customer.state = CustomerState.leaving;
 		stateChanged();
 	}
 	
@@ -169,23 +176,23 @@ public class TellerAgent extends Agent implements Teller {
             If so seat him at the table.
 		 */
 		if(customer != null){
-		    if(customer.state == State.openingAccount){
+		    if(customer.state == CustomerState.openingAccount){
 			   openAccount();
 			   return true;
 		    }
-		   else if(customer.state == State.depositingCash){
+		   else if(customer.state == CustomerState.depositingCash){
 			   depositCash();
 			   return true;
 		    }
-		   else if(customer.state == State.withdrawingCash){
+		   else if(customer.state == CustomerState.withdrawingCash){
 			   withdrawCash();
 			   return true;
 		    }
-		   else if(customer.state == State.robbingBank){
+		   else if(customer.state == CustomerState.robbingBank){
 			   robBank();
 			   return true;
 		    }
-		  else if(customer.state == State.leaving){
+		  else if(customer.state == CustomerState.leaving){
 			   customerLeaving();
 			   return true;
 		  }
@@ -204,7 +211,7 @@ public class TellerAgent extends Agent implements Teller {
 		customer.account = newAccount;
 		customer.account.change = -customer.requestAmt;
 		customer.bankCustomer.msgAccountOpened(newAccount.number, customer.account.change);
-		customer.state = State.deciding;
+		customer.state = CustomerState.deciding;
 	}
 
 	private void depositCash(){
@@ -229,7 +236,7 @@ public class TellerAgent extends Agent implements Teller {
 	  
 	    customer.account.change = -customer.requestAmt;
 		customer.bankCustomer.msgMoneyDeposited(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
-		customer.state = State.deciding;
+		customer.state = CustomerState.deciding;
 	}
 
 
@@ -260,19 +267,19 @@ public class TellerAgent extends Agent implements Teller {
 			customer.account.loanTime--; //double jeopardy as loan time gets worse as well
 		}
 		customer.bankCustomer.msgMoneyWithdrawn(customer.account.change, customer.account.loanAmount, customer.account.loanTime);
-		customer.state = State.deciding;
+		customer.state = CustomerState.deciding;
 	}
 	
 	private void robBank(){
 		double cash = customer.requestAmt;
 		customer.success = robberySuccess.nextBoolean();
 		customer.bankCustomer.msgRobbedBank(cash, customer.success);
-		customer.state = State.deciding;
+		customer.state = CustomerState.deciding;
 	}
 	
 	
 	private void customerLeaving(){
-		customer.state = State.idle;
+		customer.state = CustomerState.idle;
 		manager.msgTellerFree(this, customer.bankCustomer);
 		customer = null;
 	}
