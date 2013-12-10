@@ -243,7 +243,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     public void addPerson(Person p, String type, String name, double money) {
     	if (!isOpen && type.equals("Customer")) {
     		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
-    		p.msgDoneEating(false, money);
+    		if (p != null) p.msgDoneEating(false, money);
     		return;
     	}
     	
