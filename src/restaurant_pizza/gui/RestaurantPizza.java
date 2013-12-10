@@ -250,7 +250,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 
     	if (!isOpen && type.equals("Customer")) {
     		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
-    		p.msgDoneEating(false, money);
+    		if (p!=null) p.msgDoneEating(false, money);
     		return;
     	}
     	

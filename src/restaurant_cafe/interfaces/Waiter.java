@@ -35,6 +35,6 @@ public interface Waiter {
 	
 	public Cook getCook();
 
-	public void msgShiftDone();
+	public void msgShiftDone(boolean b, double w);
 
 }

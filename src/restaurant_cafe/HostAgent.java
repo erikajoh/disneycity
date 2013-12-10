@@ -33,6 +33,8 @@ public class HostAgent extends Agent implements Host {
 		}
 	}
 	Person person;
+	public boolean isWorking = true;
+	double wage;
 	enum CustomerState{waiting, eating, done};
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	class MyWaiter {
@@ -85,15 +87,12 @@ public class HostAgent extends Agent implements Host {
 	}
 	// Messages
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
+		print("got msg shift done");
 		shiftDone = true;
-		if (customers.size() == 0) {
-			if (person!=null) person.msgStopWork(10);
-			print("host going home");
-			for (MyWaiter w : waiters) {
-				w.waiter.msgShiftDone();
-			}
-		}
+		isWorking = false;
+		wage = w;
+		stateChanged();
 	}
 
 	public void msgIWantFood(Customer cust) {
@@ -195,6 +194,7 @@ public class HostAgent extends Agent implements Host {
 			}
 		}
 		}
+		if (shiftDone == true && customers.size()==0) {leaveWork();} 
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -202,6 +202,13 @@ public class HostAgent extends Agent implements Host {
 	}
 
 	// Actions
+	private void leaveWork() {
+		if (person!=null) person.msgStopWork(wage);
+		for (MyWaiter w : waiters) {
+			w.waiter.msgShiftDone(true, wage);
+		}	
+	}
+	
 	private void assignWaiter(MyCustomer c, MyWaiter w, Table t){
 		print(c.customer + " assigned");
 		w.waiter.msgPleaseSeatCustomer(c.customer, t.tableNumber);

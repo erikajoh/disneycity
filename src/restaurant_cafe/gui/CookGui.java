@@ -24,6 +24,7 @@ public class CookGui implements Gui {
 	int aniWindowY = 330; 
 	private boolean leaving = false;
 	Person person;
+	double wage;
 
     public CookGui(CookAgent agent, SimCityGui gui) {
         this.agent = agent;
@@ -50,7 +51,7 @@ public class CookGui implements Gui {
         	}
         	if (leaving == true) {
         		leaving = false;
-        		if (person!=null) person.msgStopWork(10);
+        		if (person!=null) person.msgStopWork(wage);
         	}
         	else if(command == Command.plate){
         		plateVisible = true;
@@ -85,10 +86,11 @@ public class CookGui implements Gui {
         return true;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
+    	wage = w;
     	leaving = true;
     }
     public void DoGrilling(String name){
