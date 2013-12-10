@@ -1,26 +1,21 @@
 package restaurant_cafe;
 
 import agent_cafe.Agent;
-import restaurant_cafe.CashierAgent.MyCustomer;
-import restaurant_cafe.CookAgent.Table;
-import restaurant_cafe.CustomerAgent.AgentEvent;
 import restaurant_cafe.gui.CookGui;
 import restaurant_cafe.gui.Food;
-import restaurant_cafe.gui.HostGui;
 import restaurant_cafe.gui.Order;
 import restaurant_cafe.gui.RestaurantCafe;
 import restaurant_cafe.interfaces.Cook;
 import restaurant_cafe.interfaces.Customer;
-import restaurant_cafe.interfaces.Market;
+import market.Market;
+import simcity.interfaces.Market_Douglass;
 import restaurant_cafe.interfaces.Waiter;
-import simcity.PersonAgent;
+import restaurant_rancho.CookAgent.MarketOrder;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
 
-import java.awt.Point;
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * Restaurant Host Agent
@@ -38,8 +33,29 @@ public class CookAgent extends Agent implements Cook {
 	public Collection<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
 	public Collection<Table> tables;
 	public Collection<Food> foods;
+	List<MarketOrder> marketOrders = new ArrayList<MarketOrder> ();
 	private CookGui cookGui;
+	Market_Douglass market;
 	boolean shiftDone = false;
+	int curID;
+	public boolean inMarket;
+	
+	class MarketOrder {
+		String food;
+		int amount;
+		MktOrderState state;
+		int id;
+		MarketOrder(String f, int a) {
+			amount = a;
+			food = f;
+			id = curID;
+			curID++;
+			state = MktOrderState.pending;
+		}
+	}
+	
+	private enum MktOrderState {pending, ordered};
+
 	
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
@@ -61,6 +77,8 @@ public class CookAgent extends Agent implements Cook {
 		  }
 		}
 		foods = fds;
+		inMarket = false;
+		curID = 0;
 	}
 
 	public String getMaitreDName() {
@@ -90,6 +108,35 @@ public class CookAgent extends Agent implements Cook {
 			cookGui.DoLeave(person);
 		}
 	}
+	//msg from mkt
+	public void msgHereIsOrder(String choice, int amount, int id) {
+		print("Received a delivery of "+amount+" "+choice+"'s from the market!");
+		for (int i=0; i<marketOrders.size(); i++){
+			MarketOrder mo = marketOrders.get(i);
+			if (mo.id == id && mo.amount == amount) {
+				Food f = null;
+				for(Food food : foods){
+					if(mo.food == food.getName()){
+						f = food;
+					}
+				}
+				f.setAmount(amount);
+				print("removing a market order whee");
+				marketOrders.remove(mo);
+			} 
+			else if (mo.food == choice && mo.amount != 0) {
+				Food f = null;
+				for(Food food : foods){
+					if(mo.food == food.getName()){
+						f = food;
+					}
+				}
+				f.setAmount(amount + mo.amount);
+				mo.amount -= amount;
+			}
+		}
+	}
+	//msg from waiter
 	public void msgHereIsOrder(Waiter w, String choice, Integer table){
 	    AlertLog.getInstance().logInfo(AlertTag.RESTAURANT, "CAFE", "cook received msgHereIsOrder");
 		print("table "+table+" ordered "+choice);
@@ -222,6 +269,7 @@ public class CookAgent extends Agent implements Cook {
 			num = (int) (Math.random() * markets.size());
 		}
 		print("INCREASE "+ o.food.getName() + " AMT "+num);
+		/*
 		Market market = null;
 		synchronized(markets){
 			int count = 0;
@@ -231,7 +279,7 @@ public class CookAgent extends Agent implements Cook {
 				}
 				count++;
 			}
-		}
+		}*/
 		int orderAmt = o.food.getCapacity()-o.food.getAmount();
 		market.msgHereIsOrder(this, o.food, orderAmt);
 		if(market.getFoodAmount(o.food) < orderAmt && o.food.getOrderAttempts() == 1){
@@ -274,6 +322,10 @@ public class CookAgent extends Agent implements Cook {
 	    		}
 	    	}
 	 }
+	 
+	public void setMarket(Market_Douglass mkt){
+		market = mkt;
+	}
 	
 	public Collection<Market> getMarkets(){
 		return markets;
