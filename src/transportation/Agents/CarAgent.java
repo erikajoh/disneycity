@@ -80,11 +80,13 @@ public class CarAgent extends MobileAgent{
 			//Try and get lock for the next step.
 			int attempts    = 1;
 			MovementTile.MovementType temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
+			MovementTile.MovementType currentTile = master.getGrid()[currentPosition.getX()][currentPosition.getY()].getMovementType();
 			while(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
-				if(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+				if(currentTile == MovementTile.MovementType.TRAFFICCROSSWALK || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE || currentTile == MovementTile.MovementType.TRAFFICCROSSINTERSECTION)
 					break;
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
+				temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 			}
 			gotPermit = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 			
@@ -96,10 +98,11 @@ public class CarAgent extends MobileAgent{
 				try { Thread.sleep(1000); }
 				catch (Exception e){}
 				while(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE) {
-					if(temp == MovementTile.MovementType.TRAFFICCROSSWALK || temp == MovementTile.MovementType.TRAFFICCROSSNONE)
+					if(currentTile == MovementTile.MovementType.TRAFFICCROSSWALK || currentTile == MovementTile.MovementType.TRAFFICCROSSNONE || currentTile == MovementTile.MovementType.TRAFFICCROSSINTERSECTION)
 						break;
 					try { Thread.sleep(1000); }
 					catch (Exception e){}
+					temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
 					attempts ++;
