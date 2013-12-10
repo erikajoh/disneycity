@@ -99,8 +99,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public void msgAccountOpened(int an, double amountWithdrawn){
 		balance += change;
 		change = amountWithdrawn;
-		print("ACCOUNT OPENED "+balance);
+		//print("ACCOUNT OPENED "+balance);
 		accountNum = an;
+		loanAmount = 0;
+		loanTime = 0;
 		state = State.leaving;
 		stateChanged();
 	}
@@ -208,23 +210,19 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 		teller.msgOpenAccount(this, requestAmt);
 		state = State.idle;
-		stateChanged();
 	}
 	
 	private void depositCash(){
 		teller.msgDepositCash(accountNum, requestAmt);
 		state = State.idle;
-		stateChanged();
 	}
 	private void withdrawCash(){
 		teller.msgWithdrawCash(accountNum, requestAmt);
 		state = State.idle;
-		stateChanged();
 	}
 	private void robBank(){
 		teller.msgRobBank(requestAmt);
 		state = State.idle;
-		stateChanged();
 	}
 	private void leaveBank(){
 		animState = AnimState.walking;

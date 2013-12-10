@@ -1,6 +1,8 @@
 package bank.test.mock;
 
 import simcity.gui.SimCityGui;
+import bank.BankCustomerAgent.AnimState;
+import bank.BankCustomerAgent.State;
 import bank.gui.BankCustomerGui;
 
 public class MockBankCustomer extends Mock {
@@ -21,7 +23,7 @@ public class MockBankCustomer extends Mock {
 	public MockTeller teller = null;
 	
 	public enum State
-	{deciding, openingAccount, depositing, withdrawing, leaving, left, idle};
+	{deciding, openingAccount, depositing, withdrawing, robbing, leaving, failedRobbery, left, idle};
 	State state = State.idle;
 
 	public enum AnimState{go, walking, idle};
@@ -68,6 +70,11 @@ public class MockBankCustomer extends Mock {
 		log.add(new LoggedEvent("RA: "+requestAmt));
 		state = State.withdrawing;
 	}
+	
+	public void	msgThief(double ra){
+		requestAmt = ra;
+		state = State.robbing;
+	}
 
 	public void msgGoToTeller(MockTeller t){
 		teller = t;
@@ -100,6 +107,18 @@ public class MockBankCustomer extends Mock {
 		loanTime = lt;
 		state = State.leaving;
 	}
+	
+	public void msgRobbedBank(double cash, boolean success){
+		balance += cash;
+		if(success == true){
+			change = cash;
+			state = State.leaving;
+		}
+		else {
+			state = State.failedRobbery;
+		}		
+	}
+	
 	
 	public void msgAnimationFinishedGoToTeller(){
 		log.add(new LoggedEvent("AT TELLER " + state));
@@ -134,6 +153,14 @@ public class MockBankCustomer extends Mock {
 			   withdrawCash();
 			   return true;
 		    }
+		   else if(state == State.robbing){
+			   robBank();
+			   return true;
+		    }
+		   else if(state == State.failedRobbery){
+			   failToLeaveBank();
+			   return true;
+		   }
 		   else if(state == State.leaving){
 			   leaveBank();
 			   return true;
@@ -166,6 +193,14 @@ public class MockBankCustomer extends Mock {
 	}
 	private void withdrawCash(){
 		teller.msgWithdrawCash(accountNum, requestAmt);
+		state = State.idle;
+	}
+	private void robBank(){
+		teller.msgRobBank(requestAmt);
+		state = State.idle;
+	}
+	private void failToLeaveBank(){
+		animState = AnimState.walking;
 		state = State.idle;
 	}
 	private void leaveBank(){
