@@ -534,7 +534,7 @@ public class TransportationController extends Agent implements Transportation{
 		busStops.add(tempBusStop);
 		grid[9][25].setBusStop(busStops.get(3));
 		tempBusStop.addNearbyBuilding("Main St Apartments #9");
-		tempBusStop.addNearbyBuilding("The Blue Bayou");
+		tempBusStop.addNearbyBuilding("Blue Bayou");
 		tempBusStop.addNearbyBuilding("Space Mountain");
 
 		tempBusStop = new BusStop("Bus Stop 4");//Bottom Right Bus
@@ -618,7 +618,7 @@ public class TransportationController extends Agent implements Transportation{
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Carnation Cafe", new Position(22, 22), new Position(24, 20), busStops.get(4));
 		directory.put(tempBuilding.name, tempBuilding);
-		tempBuilding = new Building("The Blue Bayou", new Position(13, 27), new Position(11, 29), busStops.get(4));
+		tempBuilding = new Building("Blue Bayou", new Position(13, 27), new Position(11, 29), busStops.get(4));
 		directory.put(tempBuilding.name, tempBuilding);
 		tempBuilding = new Building("Pizza Port", new Position(8, 17), new Position(10, 19), busStops.get(3));
 		directory.put(tempBuilding.name, tempBuilding);

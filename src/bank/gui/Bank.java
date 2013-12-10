@@ -94,6 +94,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 		for(TellerAgent teller : tellers){
 			teller.msgClose();
 		}
+		tellers = null;
 	}
     
     public BankCustomer createBankCustomer(Person person, boolean present, boolean isThief){
@@ -136,6 +137,17 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		manager.addTeller(t);
     		t.startThread();
     	}
+    }
+    
+    public void addPerson(Person person){
+    		TellerAgent t = new TellerAgent(person, person.getName());	
+    		TellerGui g = new TellerGui(t, gui, tellers.size());
+    		gui.bankAniPanel.addGui(g);
+    		t.setManager(manager);
+    		tellers.add(t);
+    		t.setGui(g);
+    		manager.addTeller(t);
+    		t.startThread();
     }
     
     public void setTellerAmt(int amount){

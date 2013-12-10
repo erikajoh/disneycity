@@ -100,7 +100,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     }
     
     public boolean isOpen() {
-    	return (!shiftsSwitching && isOpen);
+    	return (!shiftsSwitching && host!=null && cook!=null && waiters.size()!=0 && cashier!=null && isOpen);
     }
     
     public RestMenu getMenu() {
