@@ -34,11 +34,12 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	private Map<BankCustomer, Person> spawns = new HashMap<BankCustomer, Person>();
 
 	private int tellerAmt;
+	private boolean open;
 	
     private SimCityGui gui; //reference to main gui
     
     private ManagerAgent manager;
-
+    
     public Bank(SimCityGui gui, String bankName, int ta) {
         this.gui = gui;
         this.bankName = bankName;
@@ -94,7 +95,15 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 		for(TellerAgent teller : tellers){
 			teller.msgClose();
 		}
-		tellers = null;
+	}
+	
+	public void msgTellerLeftBank(TellerAgent teller){
+		//teller.getPerson.msgLeftBank();
+		tellers.remove(teller);
+		if(tellers.size() == 0){
+			open = false;
+			tellers = null;
+		}
 	}
     
     public BankCustomer createBankCustomer(Person person, boolean present, boolean isThief){
@@ -148,9 +157,12 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		t.setGui(g);
     		manager.addTeller(t);
     		t.startThread();
-    		if(tellers.size()==1){
-    			//msgBankOpen();
-    		}
+    		open = true;
+    }
+    
+    
+    public boolean isOpen(){
+    	return open;
     }
     
     public void setTellerAmt(int amount){

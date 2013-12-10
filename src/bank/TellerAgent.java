@@ -1,6 +1,7 @@
 package bank;
 
 import agent.Agent;
+import bank.gui.Bank;
 import bank.gui.TellerGui;
 import bank.gui.Account;
 import bank.interfaces.Teller;
@@ -24,7 +25,8 @@ public class TellerAgent extends Agent implements Teller {
 	final static double amountPerDay = 25.00;
 	private Random robberySuccess = new Random();
 	
-	boolean shouldLeave = false;
+	private Bank bank;
+	private boolean shouldLeave = false;
 	
 	enum CustomerState {deciding, openingAccount, depositingCash, withdrawingCash, robbingBank, leaving, idle};
 
@@ -299,13 +301,17 @@ public class TellerAgent extends Agent implements Teller {
 	private void leaveBank(){
 		tellerGui.DoLeaveBank();
 		shouldLeave = false;
-		//person.msgLeftBankAsTeller(double moneyMade);
+		bank.msgTellerLeftBank(this);
 	}
 	
 	//utilities
 	
 	public void setPerson(Person p) {
 		person = p;
+	}
+	
+	public void setBank(Bank b){
+		bank = b;
 	}
 	
 	public void setGui(TellerGui gui) {
