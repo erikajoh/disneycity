@@ -489,7 +489,7 @@ public class TransportationController extends Agent implements Transportation{
 		setCrossWalk(30, 24, true);//Apt #6 and Apt #7
 
 		setCrossWalk(4, 26, false);//Apt #8
-		setCrossWalk(10, 28, false);//Apt #9 and Bayou
+		setCrossWalk(10, 26, false);//Apt #9 and Bayou
 		setCrossWalk(22, 28, false);//Apt #10
 		setCrossWalk(28, 28, false);//Apt #11
 

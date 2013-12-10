@@ -13,6 +13,8 @@ import market.Market;
 import astar.astar.AStarNode;
 import astar.astar.Position;
 import simcity.Restaurant;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
 import transportation.GUIs.TruckGui;
 import transportation.GUIs.WalkerGui;
@@ -79,6 +81,7 @@ public class TruckAgent extends MobileAgent{
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			timer.stop();
+			AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Truck", "Retrying delivery for: " + restaurant.getRestaurantName());
 			status = Status.DELIVERING;
 		}
 		
@@ -229,10 +232,12 @@ public class TruckAgent extends MobileAgent{
 			if(order.restaurant.isOpen()) {
 				order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
 				order.status = Status.DELIVERED;
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Truck", "Finished delivery for: " + order.restaurant.getRestaurantName());
 			}
 			else {
 				order.status = Status.RESTCLOSED;
 				order.startTimer();
+				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Truck", "Failed delivery for: " + order.restaurant.getRestaurantName());
 			}
 		}
 		gui.doDeliveryDance();
