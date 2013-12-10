@@ -20,8 +20,8 @@ public class TellerGui implements Gui{
 		agent = c;
 		setPresent(true);
 		number = num;
-		baseX = number*90+55;
-		baseY = 80;
+		baseX = number*90+49;
+		baseY = 33;
 		this.gui = gui;
 	}
 
@@ -30,7 +30,15 @@ public class TellerGui implements Gui{
 
 	public void draw(Graphics2D g) {
 		pirateTeller = Toolkit.getDefaultToolkit().getImage("res/pirateTeller.png");
-	    g.drawImage(pirateTeller, number*90+49, 33, 35, 35, null);
+	    g.drawImage(pirateTeller, baseX, baseY, 35, 35, null);
+	}
+	
+	public void DoEnterBank(){
+		baseX = number*90+49;
+	}
+	
+	public void DoLeaveBank(){
+		baseY = 500;
 	}
 	
 	public void setBaseX(int bx) {
