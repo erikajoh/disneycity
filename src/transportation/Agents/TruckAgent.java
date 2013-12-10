@@ -1,9 +1,13 @@
 package transportation.Agents;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+
+import javax.swing.Timer;
 
 import market.Market;
 import astar.astar.AStarNode;
@@ -15,7 +19,7 @@ import transportation.GUIs.WalkerGui;
 import transportation.Objects.*;
 
 public class TruckAgent extends MobileAgent{
-	
+
 	Position currentPosition;
 	Position marketPosition;
 	Position deliveryPosition;
@@ -24,14 +28,15 @@ public class TruckAgent extends MobileAgent{
 	TruckGui gui = null;
 	FlyingTraversal aStar;
 	Semaphore animSem;
-	
+
 	enum Status {
 		WAITING,
 		DELIVERING,
-		DELIVERED
+		DELIVERED,
+		RESTCLOSED
 	}
-	
-	class deliveryOrder {
+
+	class deliveryOrder implements ActionListener{
 		String food;
 		int quantity;
 		Restaurant restaurant;
@@ -40,9 +45,12 @@ public class TruckAgent extends MobileAgent{
 		int ID;
 		String location;
 		Status status;
-		
-		
-		deliveryOrder(Restaurant restaurant, String food, int quantity, Market market, int ID) {
+		TruckAgent truck;
+		Timer timer;
+
+
+		deliveryOrder(Restaurant restaurant, String food, int quantity, Market market, int ID, TruckAgent truck) {
+			timer = new Timer(30000, this);
 			this.restaurant = restaurant;
 			this.food = food;
 			this.quantity = quantity;
@@ -50,10 +58,12 @@ public class TruckAgent extends MobileAgent{
 			this.market = market;
 			this.ID = ID;
 			status = Status.WAITING;
+			this.truck = truck;
 			stateChanged();
 		}
-		
-		deliveryOrder(Person person, String food, int quantity, Market market, String location) {
+
+		deliveryOrder(Person person, String food, int quantity, Market market, String location, TruckAgent truck) {
+			timer = new Timer(30000, this);
 			this.restaurant = null;
 			this.food = food;
 			this.quantity = quantity;
@@ -61,48 +71,59 @@ public class TruckAgent extends MobileAgent{
 			this.market = market;
 			this.location = location;
 			status = Status.WAITING;
+			this.truck = truck;
 			stateChanged();
 		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			timer.stop();
+			status = Status.DELIVERING;
+		}
 		
-//		public boolean returnType() {
-//			if(person != null && restaurant == null)
-//				return true;
-//			if(person == null && restaurant != null)
-//				return false;
-//			return false;
-//		}
+		public void startTimer() {
+			timer.start();
+		}
+		//		public boolean returnType() {
+		//			if(person != null && restaurant == null)
+		//				return true;
+		//			if(person == null && restaurant != null)
+		//				return false;
+		//			return false;
+		//		}
 	}
-	
+
 	List<deliveryOrder> orders;
-	
+
 	public TruckAgent(Position marketPosition, TransportationController master, FlyingTraversal aStar, int homeX, int homeY) {
 		this.currentPosition = marketPosition;
 		this.marketPosition = marketPosition;
 		this.master = master;
 		homePosition = new Position(homeX, homeY);
-		
+
 		animSem = new Semaphore(0, true);
 		this.aStar = aStar;
-		
+
 		orders = Collections.synchronizedList(new ArrayList<deliveryOrder>());
 	}
-	
+
 	public void msgDeliverOrder(Restaurant restaurant, Market market, String food, int quantity, int ID) {
-		orders.add(new deliveryOrder(restaurant, food, quantity, market, ID));
+		orders.add(new deliveryOrder(restaurant, food, quantity, market, ID, this));
 		stateChanged();
 	}
-	
+
 	public void msgDeliverOrder(Person person, Market market, String food, int quantity, String location) {
-		orders.add(new deliveryOrder(person, food, quantity, market, location));
+		orders.add(new deliveryOrder(person, food, quantity, market, location, this));
 		stateChanged();
 	}
-	
+
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
-	
+
 	public void msgDestination() {
 		if(animSem.availablePermits() == 0) {
 			animSem.release();
@@ -120,7 +141,7 @@ public class TruckAgent extends MobileAgent{
 				}
 			}
 		}
-		
+
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.WAITING) {
@@ -129,7 +150,7 @@ public class TruckAgent extends MobileAgent{
 				}
 			}
 		}
-		
+
 		synchronized(orders) {
 			for(deliveryOrder order : orders) {
 				if(order.status == Status.DELIVERED) {
@@ -139,7 +160,7 @@ public class TruckAgent extends MobileAgent{
 				}
 			}
 		}
-		
+
 		idle();
 		return false;
 	}
@@ -160,7 +181,7 @@ public class TruckAgent extends MobileAgent{
 			//Try and get lock for the next step.
 			int attempts    = 1;
 			gotPermit       = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-			
+
 			//Did not get lock. Lets make n attempts.
 			while (!gotPermit && attempts < 3) {
 				//System.out.println("[Gaut] " + guiWaiter.getName() + " got NO permit for " + tmpPath.toString() + " on attempt " + attempts);
@@ -184,8 +205,8 @@ public class TruckAgent extends MobileAgent{
 			}
 
 			//Got the required lock. Lets move.
-//			System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
-//			currentPosition.release(aStar.getGrid());
+			//			System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
+			//			currentPosition.release(aStar.getGrid());
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			try {
 				animSem.acquire();
@@ -200,13 +221,20 @@ public class TruckAgent extends MobileAgent{
 	private void deliverOrder(deliveryOrder order) {
 		if(order.person != null) {//person order
 			goToPosition(master.directory.get(order.location).vehicleTile, null);
+			order.person.msgHereIsOrder(order.food, order.quantity);
+			order.status = Status.DELIVERED;
 		}
 		else if(order.restaurant != null) {//Restaurant order
 			goToPosition(master.directory.get(order.restaurant.getRestaurantName()).vehicleTile, null);
+			if(order.restaurant.isOpen()) {
+				order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
+				order.status = Status.DELIVERED;
+			}
+			else {
+				order.status = Status.RESTCLOSED;
+				order.startTimer();
+			}
 		}
-		if (order.person != null) order.person.msgHereIsOrder(order.food, order.quantity);
-		else if (order.restaurant != null) order.restaurant.msgHereIsOrder(order.food, order.quantity, order.ID);
-		order.status = Status.DELIVERED;
 		gui.doDeliveryDance();
 		try {
 			animSem.acquire();
@@ -215,7 +243,7 @@ public class TruckAgent extends MobileAgent{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void pickUpOrders() {
 		goToPosition(marketPosition, null);
 		for(deliveryOrder order : orders) {
@@ -223,16 +251,16 @@ public class TruckAgent extends MobileAgent{
 			stateChanged();
 		}
 	}
-	
+
 	private void deleteOrder(deliveryOrder order) {
 		orders.remove(order);
 	}
-	
+
 	private void idle() {
 		goToPosition(new Position (homePosition.getX(), homePosition.getY()), null);
 		gui.doIdle();
 	}
-	
+
 	public void setGui (TruckGui gui) {
 		this.gui = gui;
 	}

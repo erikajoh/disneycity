@@ -123,5 +123,10 @@ public class mockPerson_Daron implements Person {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void msgCrash(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
