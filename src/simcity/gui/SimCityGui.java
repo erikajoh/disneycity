@@ -45,6 +45,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
     WorkplacePropertyPanel workplacePropertyPanel;
     PersonPropertyPanel personPropertyPanel;
 	TracePanel tracePanel;
+	JFrame frame;
 	
 	JPanel cards;
 	JButton popOutB;
@@ -436,7 +437,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		remove(cityAnimation);
 		revalidate();
 		repaint();
-		JFrame frame = new JFrame("City View");
+		frame = new JFrame("City View");
 		frame.setSize(850,750);
         frame.add(cityAnimation);
         frame.addWindowListener(this);
@@ -448,6 +449,13 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
         poppedOut = false;
 		add(cityAnimation,c5);
 		cityAnimation.updateUI();
+	}
+	
+	public void closePopOut() {
+		if (poppedOut) {
+			frame.dispose();
+			popIn();
+		}
 	}
 	
 	public void updateDayInfo(String day, String phase) {

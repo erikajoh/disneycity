@@ -209,6 +209,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		System.out.println(name + ": " + String.valueOf(me.getX() + offset.getX()) + " " + String.valueOf(me.getY() + offset.getY()));
 		if(name != null)
 			gui.showPanel(name);
+		gui.closePopOut();
 	}
 
 	private String findBuilding(int x, int y) {
