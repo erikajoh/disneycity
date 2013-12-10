@@ -25,6 +25,8 @@ public class WaiterGui implements Gui {
 
 	private Image bi;
 	
+	double wage;
+	
     private int xPos = -mySize*2, yPos = -mySize*2; //default waiter position
     private int xDestination, yDestination; //default start position
     private static final int xCook = 210, yCook = 100;
@@ -66,7 +68,7 @@ public class WaiterGui implements Gui {
             yPos--;
 
         if (xPos == xDestination && yPos == yDestination && leaving == true) {
-        	if (person!=null) person.msgStopWork(10);
+        	if (person!=null) person.msgStopWork(wage);
         	System.out.println("waiter going home");
         	leaving = false;
         }
@@ -108,10 +110,11 @@ public class WaiterGui implements Gui {
     	return onBreak;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
+    	wage = w;
     	leaving = true;
     }
     

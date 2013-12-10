@@ -96,7 +96,6 @@ public class CookAgent extends Agent implements Cook{
 	// Messages
 	
 	public void msgShiftDone(double w) {
-		print("got msg shift done, have " + orders.size());
 		shiftDone = true;
 		isWorking = false;
 		wage = w;

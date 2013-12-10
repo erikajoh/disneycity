@@ -15,6 +15,8 @@ import bank.gui.Bank;
 import simcity.PersonAgent;
 import agent_pizza.Agent;
 import simcity.gui.SimCityGui;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 import simcity.interfaces.Bank_Douglass;
@@ -246,6 +248,12 @@ public class RestaurantPizza extends JPanel implements Restaurant {
      */
     public void addPerson(Person p, String type, String name, double money) {
 
+    	if (!isOpen && type.equals("Customer")) {
+    		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
+    		p.msgDoneEating(false, money);
+    		return;
+    	}
+    	
     	if (type.equals("Customer")) {
     		//if ((p!=null) && returningCusts.containsKey(p)) {
     		//	returningCusts.get(p).getGui().setHungry();	
@@ -269,7 +277,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Waiter")) {
     		WaiterAgent newWaiter;
-    		
+    		numWorkers++;
     		// alterante spawning normal and Producer-Consumer waiter
     		if(spawnNormalWaiter)
     			newWaiter = new WaiterAgent_Normal(name);
@@ -295,6 +303,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Host")) {
     		host = new HostAgent(name);
+    		numWorkers++;
     		if (p!=null) host.setPerson(p);
     		for (CustomerAgent c: customers) {
     			c.setHost(host);
@@ -306,6 +315,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		host.startThread();
     	}
     	else if (type.equals("Cook")) {
+    		numWorkers++;
     		cook = new CookAgent(name);
     		cookGui = new CookGui(cook);
     		if (p!=null) cook.setPerson(p);
@@ -319,6 +329,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		cook.startThread();
     	}
     	else if (type.equals("Cashier")) {
+    		numWorkers++;
     		cashier = new CashierAgent(name);
     		if (p!=null) cashier.setPerson(p);
     		for (WaiterAgent w: waiters) {
@@ -349,6 +360,25 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	 public void removeWorkers() {
+	    	if (host!=null && host.isWorking==false) {
+	    		host= null;
+	    	}
+	    	if (cook!=null && cook.isWorking==false) {
+	    		cook = null;
+	    	}
+	    	if (cashier!=null && cashier.isWorking==false) {
+	    		cashier = null;
+	    	}
+	    	synchronized(waiters) {
+	    	for (WaiterAgent w : waiters ) {
+	    		if (w.isWorking==false) {
+	    			waiters.remove(w);
+	    		}
+	    	}
+	    	}	
+	    }
 
 	@Override
 	public void startOfShift() {
@@ -358,24 +388,35 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	@Override
 	public void endOfShift() {
 		isOpen = false;
-		System.out.println("RESTAURANT PIZZA GOT END OF SHIFT");
-
+		System.out.println("RESTAURANT RANCHO GOT END OF SHIFT");
+		double wage;
+		if (cashier!=null) {
+			wage = cashier.totalMoney - 500;
+			cashier.subtract(wage);
+		}
+		else wage = 0;
+		wage = wage/numWorkers;
+		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
+		isOpen = false;
 		if (host!=null) {
-			host.msgShiftDone();
-			for (int i = 0; i < waiters.size(); i++) {
-				if (cashier!=null) cashier.subtract(10);
+			host.msgShiftDone(wage);
+			if (waiters.size() == 0) {
+				if (cook!=null) {
+					cook.msgShiftDone(wage);
+				}
+				if (cashier!=null) {
+					cashier.msgShiftDone(wage);
+				}
 			}
 		}
 		else {
-			if (cashier!=null) { cashier.msgShiftDone(); cashier.subtract(10); }
+			if (cashier!=null) { cashier.msgShiftDone(wage);  }
 			for (int i = 0; i < waiters.size(); i++) {
 				WaiterAgent w = waiters.get(i);
-				w.msgShiftDone(false);
-				if (cashier!=null) cashier.subtract(10);
+				w.msgShiftDone(false, wage);
 			}
 			if (cook!=null) {
-				cook.msgShiftDone();
-				if (cashier!=null) cashier.subtract(10);
+				cook.msgShiftDone(wage);
 			}
 		}
 		

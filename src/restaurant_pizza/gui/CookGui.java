@@ -22,6 +22,7 @@ public class CookGui implements Gui {
     public Command command = Command.noCommand;
 
 	private Image bi;
+	double wage;
 	
     private int xPos = -mySize*2, yPos = -mySize*2; //default waiter position
     private int xDestination, yDestination; //default start position
@@ -54,7 +55,7 @@ public class CookGui implements Gui {
         else if (yPos > yDestination)
             yPos--;
         if (xPos == xDestination && yPos == yDestination && leaving) {
-        	if (person!=null) person.msgStopWork(10);
+        	if (person!=null) person.msgStopWork(wage);
         	System.out.println("cook going home1");
         	leaving = false; 
         }
@@ -109,10 +110,11 @@ public class CookGui implements Gui {
         readyToMove = true;
     }
     
-    public void DoLeave(Person p) {
+    public void DoLeave(Person p, double w) {
     	xDestination = -50;
     	yDestination = -50; 
     	person = p;
+    	wage = w;
     	leaving = true;
     }
     

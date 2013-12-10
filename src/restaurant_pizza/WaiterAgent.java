@@ -47,6 +47,9 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 	public RestMenu menu = new RestMenu();
 	Person person;
 	boolean shiftDone = false;
+	
+	public boolean isWorking = true;
+	double wage = 0;
 
 	public RestaurantPizza restaurant;
 
@@ -189,32 +192,11 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 		stateChanged();
 	}
 	
-	public void msgShiftDone(boolean alertOthers) {
+	public void msgShiftDone(boolean alertOthers, double w) {
 		shiftDone = true;
 		alert = alertOthers;
-		if (myCustomers.size() == 0 && alertOthers) {
-			alertedShift = true;
-			print ("going home!");
-			waiterGui.DoLeave(person);
-			if (cook!=null) { 
-				cook.msgShiftDone(); 
-				if (cashier!=null) cashier.subtract(10.0); 
-			}
-			if (host!=null) { 
-				if (cashier!=null) cashier.subtract(10.0); 
-			}
-			if (cashier!=null) { 
-				cashier.msgShiftDone(); 
-				cashier.subtract(20);
-			}
-		}
-		else if (myCustomers.size()==0){
-			print ("going home!");
-			waiterGui.DoLeave(person);
-		}
-		else {
-			print("my shift is done! but I still have customers");
-		}
+		wage = w;
+		stateChanged();
 	}
 	
 	public void msgAtDestination() {
@@ -326,7 +308,7 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 					}
 				}
 			}
-			if (shiftDone && !alertedShift) {msgShiftDone(alert); alertedShift = true;}
+			if (shiftDone && !alertedShift && myCustomers.size()==0) {msgShiftDone(alert); alertedShift = true;}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return true;
@@ -338,6 +320,28 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 	}
 
 	// ***** ACTIONS *****
+	
+	protected void leaveWork() {
+		if (alert) {
+			alertedShift = true;
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+			if (cook!=null) { 
+				cook.msgShiftDone(wage); 
+			}
+			if (host!=null) { 
+			}
+			if (cashier!=null) { 
+				cashier.msgShiftDone(wage); 
+			}
+		}
+		else {
+			print ("going home!");
+			isWorking = false;
+			waiterGui.DoLeave(person, wage);
+		}
+	}
 
 	private void goToTableToTakeOrder(CustomerAgent customer, int tableNumber) {
 		print("Calling action goToTableToTakeOrder");

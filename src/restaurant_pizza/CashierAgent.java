@@ -37,12 +37,14 @@ public class CashierAgent extends Agent implements Cashier {
 	private String name;
 	Person person;
 	boolean shiftDone = false;
+	double wage;
+	public boolean isWorking = true;
 
 	
 	// TODO: CashierMarket interaction MarketAgent added stuff
 	// TODO: CashierMarket interaction what is CheckTwo? A new class?
 	private List<FoodBill> billsToPay = Collections.synchronizedList(new ArrayList<FoodBill>());
-	private double totalMoney = 200.0; // keeps track of the money received
+	public double totalMoney = 500.0; // keeps track of the money received
 	private double totalDebt = 0.0; // keeps track of the money received
 	
 	public CashierAgent(String name) {
@@ -105,9 +107,11 @@ public class CashierAgent extends Agent implements Cashier {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double w) {
+		print("got msg shift done");
 		shiftDone = true;
-		if (!pickAndExecuteAnAction()) {if (person!=null) person.msgStopWork(10); print("cashier going home");}
+		wage = w;
+		stateChanged();
 	}
 
 	@Override
@@ -222,6 +226,7 @@ public class CashierAgent extends Agent implements Cashier {
 				}
 			}
 		}
+		if (shiftDone) {leaveWork();}
 		return false;
 	}
 
@@ -229,6 +234,10 @@ public class CashierAgent extends Agent implements Cashier {
 		aCheck.waiter.msgHereIsCheck(aCheck);
 	}
 	
+	private void leaveWork() {
+		person.msgStopWork(wage);
+		isWorking = false; 
+	}
 	public void handleValidPayment(Check aCheck) {
 		print("handle valid");
 		log.add(new LoggedEvent("handleValidPayment called"));
