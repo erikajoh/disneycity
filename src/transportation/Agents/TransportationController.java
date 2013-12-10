@@ -164,7 +164,6 @@ public class TransportationController extends Agent implements Transportation{
 				state = CrashState.DONE;
 			}
 			
-			master.addGui(gui);
 		}
 	}
 
