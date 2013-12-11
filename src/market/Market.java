@@ -187,6 +187,7 @@ public class Market implements Market_Douglass {
     		if (manager == null) {
     			manager = new ManagerAgent(name);
     			manager.setPerson(p);
+    			manager.setMarket(this);
     			manager.startThread();
     			for (int i=0; i<workers.size(); i++) {
     				WorkerAgent w = workers.get(i);
@@ -199,6 +200,7 @@ public class Market implements Market_Douglass {
     			cashier = new CashierAgent(name, 100, p);
     			CashierGui g = new CashierGui(cashier);
     			gui.markAniPanel.addGui(g);
+    			cashier.setPerson(p);
     			cashier.setMarket(this);
     			cashier.startThread();
     			for (int i=0; i<workers.size(); i++) {

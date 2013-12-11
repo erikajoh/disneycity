@@ -42,7 +42,7 @@ public class CashierGui implements Gui{
 		else if (yPos > yDestination)
 			yPos--;
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command != Command.leave) agent.msgAnimationFinished();
+			if (command != Command.noCommand && command != Command.enter) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
 	}
