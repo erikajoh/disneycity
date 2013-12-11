@@ -229,7 +229,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	}
 	
 	public void addPerson(String aName, String housingName, double startMoney, String foodPreference,
-			boolean preferEatAtHome, char commute, String personality, String mickeyMarketRole, int mickeyMarketShift) {
+			boolean preferEatAtHome, char commute, String personality, String workplace, String role, int shift) {
 		
 		Housing h = mapStringToHousing(housingName);
 		if(h.getNumResidents() >= 4 && h.isApartment() || h.getNumResidents() >= 1 && !h.isApartment())
@@ -253,15 +253,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			
 			for(int restInd = 0; restInd < NUM_RESTAURANTS; restInd++) {
 				Restaurant r = restaurants.get(restInd);
-				personToAdd.addRestaurant(r, "Customer", 0);
+				if(r.getRestaurantName().equals(workplace))
+					personToAdd.addRestaurant(r, role, shift);
 			}
 			
 			for(int marketInd = 0; marketInd < NUM_MARKETS; marketInd++) {
 				Market m = markets.get(marketInd);
-				if(m.getName().equals("Mickey's Market"))
-					personToAdd.addMarket(m, mickeyMarketRole, mickeyMarketShift);
-				else
-					personToAdd.addMarket(m, "Customer", 0);
+				if(m.getName().equals(workplace))
+					personToAdd.addMarket(m, role, shift);
 			}
 			
 			personToAdd.setPersonality(personality);
