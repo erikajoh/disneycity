@@ -4,12 +4,15 @@ import agent_haus.Agent;
 import restaurant_haus.gui.Gui;
 import restaurant_haus.gui.WaiterGui;
 import restaurant_haus.interfaces.*;
+import restaurant_haus.test.mock.LoggedEvent;
 import simcity.PersonAgent;
 import simcity.interfaces.Person;
 
 import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import junit.framework.TestCase;
 
 /**
  * Restaurant Host Agent
@@ -88,7 +91,19 @@ public class WaiterAgent extends Agent implements Waiter{
 	public int getNumberOfCustomers() {
 		return customers.size();
 	}
-
+	
+	public boolean TESTforceOrder(Object test, Order order) {
+		if(!(test instanceof TestCase)) {
+			System.out.println("You should NOT be calling this");
+			return false;
+		}
+		MyCustomer temp = new MyCustomer(null, order.table);
+		customers.add(temp);
+		temp.choice = order.choice;
+		temp.s = CustomerState.Ordered;
+		return true;
+	}
+	
 	// Messages
 	
 	public void msgShiftDone(boolean alertOthers, double w) {
@@ -247,7 +262,7 @@ public class WaiterAgent extends Agent implements Waiter{
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		if(isPaused) {
 			try {
 				pauseSem.acquire();
@@ -496,6 +511,8 @@ public class WaiterAgent extends Agent implements Waiter{
 		cook.msgPlaceOrder(this, mc.choice, mc.table);
 		print(cook.getName() + ", please cook " + mc.choice + " for table " + String.valueOf(mc.table) + ".");
 		mc.s = CustomerState.Seated;
+		
+		log.add(new LoggedEvent("NORM order added directly to cook"));
 	}
 
 	public void RetakeOrder(MyCustomer mc) {

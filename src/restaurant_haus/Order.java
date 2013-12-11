@@ -7,7 +7,7 @@ public class Order {
 	int table;
 	State s;
 
-	Order(WaiterAgent w, String choice, int table) {
+	public Order(WaiterAgent w, String choice, int table) {
 		this.w = w;
 		this.choice = choice;
 		this.table = table;
@@ -21,4 +21,8 @@ public class Order {
 		Plated,
 		PickedUp
 	};
+	
+	public String getChoice() {
+		return choice;
+	}
 }

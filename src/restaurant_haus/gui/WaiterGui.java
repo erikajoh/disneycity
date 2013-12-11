@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class WaiterGui implements Gui {
 	
-    private WaiterAgent agent = null;
+    protected WaiterAgent agent = null;
     private SimCityGui gui;
     
     boolean atPosition = false;

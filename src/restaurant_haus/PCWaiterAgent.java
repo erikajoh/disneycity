@@ -2,6 +2,7 @@ package restaurant_haus;
 
 import restaurant_haus.WaiterAgent.CustomerState;
 import restaurant_haus.WaiterAgent.MyCustomer;
+import restaurant_haus.test.mock.LoggedEvent;
 
 public class PCWaiterAgent extends WaiterAgent {
 	OrderStand orderStand;
@@ -21,5 +22,6 @@ public class PCWaiterAgent extends WaiterAgent {
 		cook.msgCheckStand();
 		print(cook.getName() + ", check the stand for orders.");
 		mc.s = CustomerState.Seated;
+		log.add(new LoggedEvent("PC order added to stand"));
 	}
 }
