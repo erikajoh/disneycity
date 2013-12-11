@@ -150,8 +150,8 @@ public class TransportationController extends Agent implements Transportation{
 				agentC = (CarAgent)agent1;
 				agentCC = (CarAgent)agent2;
 				gui = new CrashGui(position, false, controller);
-				agent1.crash();
-				agent2.crash();
+				agentC.crash(position, false);
+				agentCC.crash(position, false);
 				controller.master.addGui(gui);
 				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Car Crash between " + agentC.getPerson().getName() + " and " + agentCC.getPerson().getName());
 			}
@@ -160,7 +160,8 @@ public class TransportationController extends Agent implements Transportation{
 				agentC = (CarAgent)agent1;
 				gui = new CrashGui(position, true, controller);
 				controller.master.addGui(gui);
-				agentW.crash();
+				agentW.crash(position);
+				agentC.crash(position, true);
 				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Pedestrian Crash between " + agentC.getPerson().getName() + " and " + agentW.getPerson().getName());
 			}
 			else if(agent2 instanceof CarAgent && agent1 instanceof WalkerAgent) {
@@ -168,7 +169,8 @@ public class TransportationController extends Agent implements Transportation{
 				agentC = (CarAgent)agent2;
 				gui = new CrashGui(position, true, controller);
 				controller.master.addGui(gui);
-				agentW.crash();
+				agentW.crash(position);
+				agentC.crash(position, true);
 				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Pedestrian Crash between " + agentC.getPerson().getName() + " and " + agentW.getPerson().getName());
 			}
 			else if(agent1 instanceof BusAgent || agent2 instanceof BusAgent) {
@@ -176,14 +178,14 @@ public class TransportationController extends Agent implements Transportation{
 					gui = new CrashGui(position, false, controller);
 					controller.master.addGui(gui);
 					agentC = (CarAgent)agent1;
-					agentC.crash();
+					agentC.crash(position, false);
 					AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Car crashed into bus: " + agentC.getPerson().getName());
 				}
 				else if(agent2 instanceof CarAgent) {
 					gui = new CrashGui(position, false, controller);
 					controller.master.addGui(gui);
 					agentC = (CarAgent)agent2;
-					agentC.crash();
+					agentC.crash(position, false);
 					AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Car crashed into bus: " + agentC.getPerson().getName());
 				}
 			}
@@ -861,8 +863,6 @@ public class TransportationController extends Agent implements Transportation{
 				crash.agentC.getPerson().msgCrash(true);
 			}
 		}
-		if(grid[crash.position.getX()][crash.position.getY()].availablePermits() == 0)
-		grid[crash.position.getX()][crash.position.getY()].release();
 		crash.state = CrashState.DONE;
 	}
 

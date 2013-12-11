@@ -56,7 +56,11 @@ public class CarGui implements Gui{
 				animModule.changeAnimation("Up");
 			}
 
-			if((Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed) && !reachedHalfway) {
+			if(xDestination == xPos && Math.abs(yDestination-yPos) <= speed && !reachedHalfway) {
+				agent.msgHalfway();
+				reachedHalfway = true;
+			}
+			if(Math.abs(xDestination-xPos) <= speed && yDestination == yPos && !reachedHalfway) {
 				agent.msgHalfway();
 				reachedHalfway = true;
 			}
@@ -94,25 +98,26 @@ public class CarGui implements Gui{
 		return isPresent;
 	}
 
-	public void crash() {
+	public void crash(boolean pedestrian) {
 		//Release other semaphore if haven't already
 		//Change animation
 		//Change boolean to prevent position updating
-		if(!reachedHalfway) {
-			agent.msgHalfway();
-			reachedHalfway = true;
+		if(!pedestrian) {
+			crashed = true;
+			animModule.changeAnimation("Crash", 40);
+			animModule.setNoLoop();
 		}
-		animModule.changeAnimation("Crash", 40);
-		animModule.setNoLoop();
-		crashed = true;
-//		agent.stopThread();
+		agent.crashRemoval(reachedHalfway, pedestrian);
+		reachedHalfway = true;
+
+		//		agent.stopThread();
 	}
-	
+
 	@Override
 	public void setPanel(TransportationPanel p) {
 		panel = p;
 	}
-	
+
 	@Override
 	public String returnType() {
 		return "Car";

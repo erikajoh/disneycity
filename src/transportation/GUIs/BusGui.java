@@ -54,7 +54,11 @@ public class BusGui implements Gui{
 			animModule.changeAnimation("Up");
 		}
 		
-		if(Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed && !reachedHalfway) {
+		if(xDestination == xPos && Math.abs(yDestination-yPos) <= speed && !reachedHalfway) {
+			agent.msgHalfway();
+			reachedHalfway = true;
+		}
+		if(Math.abs(xDestination-xPos) <= speed && yDestination == yPos && !reachedHalfway) {
 			agent.msgHalfway();
 			reachedHalfway = true;
 		}

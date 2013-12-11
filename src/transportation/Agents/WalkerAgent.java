@@ -19,7 +19,10 @@ public class WalkerAgent extends MobileAgent{
 	WalkerGui gui;
 	boolean arrived;
 	WalkerTraversal aStar;
-
+	
+	Position crashPosition = null;
+	Position nextPosition = null;
+	
 	public Semaphore animSem;
 	BusStop beginBusStop, endBusStop;
 	String building;
@@ -61,13 +64,31 @@ public class WalkerAgent extends MobileAgent{
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
 
+	public void crashRemoval(boolean reachedHalfway) {//Ensures that everywhere the thing could be is removed
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+		master.getGrid()[nextPosition.getX()][nextPosition.getY()].removeOccupant(this);
+		if(!(nextPosition.getX() == crashPosition.getX() && nextPosition.getY() == crashPosition.getY())) {//if it's not sitting still we need to release the semaphore its acquired
+			master.getGrid()[nextPosition.getX()][nextPosition.getY()].release();
+		}
+		if(!(crashPosition.getX() == currentPosition.getX() && crashPosition.getY() == currentPosition.getY()) && !reachedHalfway) {//This agent is the one causing the crash
+			//We release as msgHalway would
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+		}
+	}
+	
 	public void msgDestination() {
 		if(animSem.availablePermits() == 0)
 			animSem.release();
 	}
 
+	public void crashDone() {
+		master.getGrid()[crashPosition.getX()][crashPosition.getY()].release();
+		gui.crashDone();
+	}
+	
 	@Override
-	public void crash() {
+	public void crash(Position position) {
+		crashPosition = position;
 		gui.crash();
 	}
 
@@ -152,6 +173,7 @@ public class WalkerAgent extends MobileAgent{
 			master.getGrid()[tmpPath.getX()][tmpPath.getY()].addOccupant(this);
 			gui.setMoving();
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
+			nextPosition = tmpPath;
 			//System.out.println("DESTINATION: " + tmpPath.toString());
 			try {
 				animSem.acquire();
@@ -200,10 +222,6 @@ public class WalkerAgent extends MobileAgent{
 	@Override
 	public Person getPerson() {
 		return walker;
-	}
-
-	public void crashDone() {
-		gui.crashDone();
 	}
 
 }

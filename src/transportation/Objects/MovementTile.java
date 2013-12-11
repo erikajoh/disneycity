@@ -62,8 +62,6 @@ public class MovementTile extends Semaphore{
 				controller.msgCrash(occupants.get(0), occupants.get(1), position);
 				System.out.println(position);
 				occupants = Collections.synchronizedList(new ArrayList<MobileAgent>());
-//				occupants.remove(1);
-//				occupants.remove(0);
 			}
 		}
 	}

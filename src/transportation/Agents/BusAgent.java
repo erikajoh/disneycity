@@ -67,7 +67,6 @@ public class BusAgent extends MobileAgent{
 		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-			//System.out.println(currentPosition);
 		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
@@ -145,6 +144,7 @@ public class BusAgent extends MobileAgent{
 				e.printStackTrace();
 			}
 			grid[nextPosition.getX()][nextPosition.getY()].addOccupant(this);
+//			System.out.println("ACQUIRING: " + nextPosition);
 			gui.setDestination(nextPosition.getX(), nextPosition.getY());
 			try {
 				animSem.acquire();
