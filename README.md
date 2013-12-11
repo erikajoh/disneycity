@@ -52,7 +52,7 @@ Kelsey Rose <br>
 	+ Added Person Properties Panel on the GUI to add people to the simulation after the program has started.
 
 	
-+ **_Daron (Transportation and City Panel):_** 
++ **_Daron (Transportation and City Panel on GUI):_** 
 	+ The locations in the City Panel (top-left panel) are all clickable on the locations to change the building window.
 	+ Transportation spawns transportation agents when receiving messages from people to go somewhere.
 	+ A* is implemented for each type of transportation agent so that each only moves on certain tiles and prevent (almost all) collisions.
@@ -87,16 +87,19 @@ Kelsey Rose <br>
 	+ **Unit Tests:** I designed a complete BankCustomerTest and ManagerTest. TellerTest was too repetitive and didn't prove anything since BankCustomerTest passed all of its tests. See the intro of BankCustomerTest.java for more details.
 	
 
-+ **_Erika (Markets, Housing):_** 
++ **_Erika (Markets, Housing, and Logger and Pop-Out on the GUI):_** 
 	+ Designed and implemented the Housing and Market components, incl. related agents, animations, graphics and tests; took over the Market component when a team member dropped out of the class a few days into the project.
-	+ Housing serves as the "default" location for the Person, so it is unique in that it passes the control back to the Person each time it completes a task. Thus, the Person has control over the ResidentAgent's actions by sending messages to the Housing class. Housing provides a choice between a "house" which accomodates one Person, or an "apartment" which accomodates up to four Persons.
-	+ Markets can serve in-person customers, "virtual" (i.e. home delivery) customers, and restaurant delivery customers. When Markets receive an in-person order, the Worker brings the item(s) to the Cashier station to give to the Customer. When Markets receive "virtual"/delivery orders, the Worker brings the item(s) to the truck loading zone, and the Market's truck is sent to deliver the item(s).
-	+ Debugged the Bank component and fixed issues such as multiple bank customers being spawned.
+	+ Housing serves as the "default" location for the Person, so it is unique in that it passes the control back to the Person each time it completes a task. Thus, the Person has control over the ResidentAgent's actions by sending messages to the Housing class. Housing provides a choice between a "house" which accomodates one Person, or an "apartment" which accomodates up to four Persons. There are 6 houses and 11 apartments and each one has a different graphical design. Within houses, specialized path-finding is used (via adding "walls" and algorithm that avoids "walls" during movement) so the residents do not run into objects. The apartment houses up to 4 residents, and each one has his own spot at the table and in the kitchen, so they don't sit on top of each other or cook on top of each other. In both the apartments and houses, residents can cook, eat, do maintenance (in apartments, residents go to their desk in their bedrooms; in houses, they go to the couch), and go to sleep. Residents in apartments have the same table, kitchen, entrance/exit, and refrigerator (i.e. food inventory).
+	+ Markets can serve in-person customers, "virtual" (i.e. home delivery) customers, and restaurant delivery customers. When Markets receive an in-person order, the Worker brings the item(s) to the Cashier station to give to the Customer. When Markets receive "virtual"/delivery orders, the Worker brings the item(s) to the truck loading zone, and the Market's truck is sent to deliver the item(s). The market employs a manager, a cashier (represented on the GUI by a Mickey character), and workers (represented on the GUI by another Mickey character). The market can be open or closed, and when it is open it operates normally; when it is closed it rejects customers. There are two markets. Employees in the market (manager, cashier, and workers) change shifts and are paid at the end of their shift. Market customers wait in line in the GUI and move up accordingly when other customers finish and leave. Workers have a home position and go to one of the three shelves to retrieve items.
+	+ Debugged the Bank component and fixed issues such as multiple bank customers being spawned. 
 	+ Added to the Restaurant and Transportation components (CookAgent, CashierAgent, TransportationController, TruckAgent) for the Restaurant-Market and Transportation-Market interactions.
-	+ Contributed to the main GUI zoom panel creation.
-	+ Created logger in bottom of GUI
+	+ Contributed to the main GUI city zoom panel creation.
+	+ Created the "pop-out" screen that displays a full-sized view of the main city GUI that functions similarly to the normal screen. The normal screen updates when the pop-out screen is closed, and the pop-out screen automatically closes when a building is clicked (for immediate viewing of the zoom animation for the building you just clicked).
+	+ Created logger panel in bottom of the GUI.
+	+ Helped with Person Property Panel and scenario selection in the GUI.
+	+ Implemented Producer-Consumer behavior in the Blue Bayou restaurant (aka restaurant_bayou).
 
-+ **_Kelsey (Restaurants, Front-end Lead):_** 
++ **_Kelsey (Restaurants, Front-End Lead on the GUI):_** 
 	+ Integrated all 5 restaurants using a base Restaurant interface. 
 	+ Updated and upgraded animations in all restaurants 
 	+ Upgraded Douglass's restaurant fully (Pizza Port) in order to accept and release workers for shifts (see issues for glitch), and wrote framework to upgrade all restaurants to accept and release workers for shifts
