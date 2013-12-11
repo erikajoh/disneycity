@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -49,6 +51,14 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	int selectedMenuItemIndex = 0;
 	String[] menu;
 	
+	String selectedTeller = "";
+	int selectedTellerIndex = 0;
+	String[] tellerWorkers;
+	
+	String selectedPersonForTeller = "";
+	int selectedPersonForTellerIndex = 0;
+	String[] peopleForTellers;
+	
 	String selectedRestWorker = "";
 	int selectedRestWorkerIndex = 0;
 	String[] restWorkers;
@@ -60,7 +70,6 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JSpinner mktSpinner;
 	JSpinner foodQtySpinner;
 	JSpinner restBalSpinner;
-	JSpinner tellerSpinner;
 	
 	public class ComboBox {
 		JComboBox comboBox;
@@ -86,6 +95,8 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JComboBox peopleForMktList;
 	JComboBox restWorkersList;
 	JComboBox peopleForRestList;
+	JComboBox tellersList;
+	JComboBox peopleForTellersList;
 	JComboBox menuItemsList;
 	JCheckBox close;
 
@@ -94,6 +105,13 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JButton swapRestJobs;
 	JButton setFoodQtyAndBalance;
 	JButton setTellerAmt;
+	JButton swapTellersJobs;
+	JButton changeRobberyState;
+	
+	ButtonGroup radioGroup;
+	JRadioButton success;
+	JRadioButton fail;
+	JRadioButton random;
 	
 	JPanel properties = new JPanel();
 	JPanel inventory = new JPanel();
@@ -102,7 +120,8 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JPanel swapMktWorkers = new JPanel();
 	JPanel swapRestWorkers = new JPanel();
 
-	JPanel tellers = new JPanel();
+	JPanel swapTellerWorkers = new JPanel();
+	JPanel setHandleThief = new JPanel();
 	JPanel menuItems = new JPanel();
 	JPanel editMenuItems = new JPanel();
 		
@@ -118,6 +137,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		updateGui();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void updateGui(){
 	    clear();
 		properties.removeAll();
@@ -129,7 +149,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 
 		JPanel workplace = new JPanel();
 		
-		workplaces = new String[]{ "1) Mickey's Market", "2) Carnation Cafe", "4) Blue Bayou", "8) Pirate Bank", "9) Rancho Del Zocalo", "12) Village Haus", "14) Pizza Port" };
+		workplaces = new String[]{ "7) Mickey's Market", "8) Minnie's Market", "9) Rancho Del Zocalo", "10) Village Haus", "11) Carnation Cafe", "12) Blue Bayou", "13) Pizza Port", "14) Pirate Bank", "26) Buccaneer Bank"};
 		workplaceList = new JComboBox(workplaces);
 		workplaceList.setFont(workplaceList.getFont().deriveFont(12.0f));
 
@@ -231,21 +251,65 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		   properties.add(swapMktWorkers);
 		}
 		else if(type == WorkplaceType.Bank){
-			tellers = new JPanel();
-			tellers.setLayout(new FlowLayout());
-			label = new JLabel("Set Teller Amount:");
-		    label.setFont(label.getFont().deriveFont(12.0f));
-			tellers.add(label);
-			SpinnerModel model = new SpinnerNumberModel(4, 1, 4, 1);     
-
-		    tellerSpinner = new JSpinner(model);
-			tellerSpinner.setFont(tellerSpinner.getFont().deriveFont(12.0f));
-			tellers.add(tellerSpinner);
-			setTellerAmt = new JButton("Set");
-			setTellerAmt.setFont(setTellerAmt.getFont().deriveFont(12.0f));
-			setTellerAmt.addActionListener(this);
-			tellers.add(setTellerAmt);
-			properties.add(tellers);
+			swapTellerWorkers = new JPanel();
+			swapTellerWorkers.setLayout(new FlowLayout());
+			tellerWorkers = SimCityGui.pirateBank.getTellers();
+			tellersList = new JComboBox(tellerWorkers);
+			   tellersList.setFont(tellersList.getFont().deriveFont(12.0f));
+			   
+			   if(tellersList.getItemCount() != 0){
+				   tellersList.setSelectedIndex(selectedTellerIndex);
+			       
+			       if(selectedTeller.equals("")){
+					   selectedTeller = tellersList.getSelectedItem().toString();
+				   }
+			   }
+			   
+			   tellersList.addActionListener(this);
+			   swapTellerWorkers.add(tellersList);
+			   label = new JLabel("and");
+			   label.setFont(label.getFont().deriveFont(12.0f));
+			   swapTellerWorkers.add(label);
+			   
+			   peopleForTellers = SimCityGui.simCityPanel.getAllUnemployedPeople();
+			   peopleForTellersList = new JComboBox(peopleForTellers);
+			   peopleForTellersList.setFont(peopleForTellersList.getFont().deriveFont(12.0f));
+			   
+			   if(peopleForTellersList.getItemCount() != 0){
+			       peopleForTellersList.setSelectedIndex(selectedPersonForTellerIndex);
+			       
+				   if(selectedPersonForTeller.equals("")){
+					   selectedPersonForTeller = peopleForTellersList.getSelectedItem().toString();
+				   }
+			   }
+			   
+			   peopleForTellersList.addActionListener(this);
+			   swapTellerWorkers.add(peopleForTellersList);
+			   swapTellersJobs = new JButton("Swap");
+			   swapTellersJobs.setFont(swapTellersJobs.getFont().deriveFont(12.0f));
+			   swapTellersJobs.addActionListener(this);
+			   swapTellerWorkers.add(swapTellersJobs);
+			   properties.add(swapTellerWorkers);
+			   
+			   setHandleThief = new JPanel();
+			   radioGroup= new ButtonGroup();
+			   label = new JLabel("Robbery Success:");
+			   setHandleThief.add(label);
+			   success = new JRadioButton("True");
+			   fail = new JRadioButton("False");
+			   random = new JRadioButton("Random");
+			   random.setSelected(true);
+			   radioGroup.add(success);
+			   radioGroup.add(fail);
+			   radioGroup.add(random);
+			   setHandleThief.add(success);
+			   setHandleThief.add(fail);
+			   setHandleThief.add(random);
+			   changeRobberyState = new JButton("Change");
+			   changeRobberyState.setFont(changeRobberyState.getFont().deriveFont(12.0f));
+			   changeRobberyState.addActionListener(this);
+			   setHandleThief.add(changeRobberyState);
+			   properties.add(setHandleThief);
 		}
 		else if(type == WorkplaceType.Restaurant){
 			int foodQty = 0;
@@ -380,7 +444,8 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		properties.remove(inventory);
 		properties.remove(editInventory);
 		properties.remove(swapMktWorkers);
-		properties.remove(tellers);
+		properties.remove(swapTellerWorkers);
+		properties.remove(setHandleThief);
 		properties.remove(menuItems);
 		properties.remove(editMenuItems);
 		properties.revalidate();
@@ -418,7 +483,12 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	if(b!= null){
 	  if(b == setMktQuantity){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set "+ selectedMktItem +" quantity to "+(Integer)mktSpinner.getValue());
-		SimCityGui.mickeysMarket.setInventory(selectedMktItem, (Integer)mktSpinner.getValue());
+		if (selectedWorkplace.contains("Mickey")){
+			SimCityGui.mickeysMarket.setInventory(selectedMktItem, (Integer)mktSpinner.getValue());
+		}
+		if (selectedWorkplace.contains("Minnie")){
+			SimCityGui.minniesMarket.setInventory(selectedMktItem, (Integer)mktSpinner.getValue());
+		}
 		updateGui();
 	  }
 	  else if(b == swapMktJobs){
@@ -455,6 +525,45 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			}
 		}
 	  }
+	  else if(b == swapTellersJobs){
+		ArrayList<PersonAgent> people = SimCityGui.simCityPanel.getPeople();
+		String role = "Teller";
+		String workplace = selectedWorkplace.substring(selectedWorkplace.indexOf(' ')+1, selectedWorkplace.length());
+		for(PersonAgent person : people){
+			if(person.getName().equals(selectedTeller)){
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedTeller + " should switch role to unemployed");
+				person.msgSwitchRole("unemployed", "");
+			}
+			else if(person.getName().equals(selectedPersonForRest)){
+				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedPersonForRest + " should switch role to "+role+ " at "+workplace);
+				person.msgSwitchRole(role, workplace);
+			}
+		}
+	  }
+	  else if(b == changeRobberyState){
+		if (selectedWorkplace.contains("Pirate")){
+			if(success.isSelected()){
+				SimCityGui.pirateBank.setRobberySuccess("true");
+			}
+			else if(fail.isSelected()){
+				SimCityGui.pirateBank.setRobberySuccess("false");
+			}
+			else {
+				SimCityGui.pirateBank.setRobberySuccess("random");
+			}
+		}
+		if (selectedWorkplace.contains("Buccaneer")){
+			if(success.isSelected()){
+				SimCityGui.buccaneerBank.setRobberySuccess("true");
+			}
+			else if(fail.isSelected()){
+				SimCityGui.buccaneerBank.setRobberySuccess("false");
+			}
+			else {
+				SimCityGui.buccaneerBank.setRobberySuccess("random");
+			}
+		}
+	  }
 	  else if(b == setFoodQtyAndBalance){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set "+ selectedMenuItem +" quantity to "+(Integer)foodQtySpinner.getValue()+ " and the balance to "+(Double)restBalSpinner.getValue());
 		if (selectedWorkplace.contains("Bayou")){
@@ -472,11 +581,6 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		else if (selectedWorkplace.contains("Rancho")){
 			SimCityGui.restRancho.setQuantityAndBalance(selectedMenuItem, (Integer)foodQtySpinner.getValue(), (Double)restBalSpinner.getValue());
 		}
-	  }
-	  else if(b == setTellerAmt){
-		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set teller amt to "+(Integer)tellerSpinner.getValue());
-		SimCityGui.pirateBank.setTellerAmt((Integer)tellerSpinner.getValue());
-		updateGui();
 	  }
 	}
     if(cb != null){
@@ -521,6 +625,26 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		     }
 	     }
     }
+    else if(cb == tellersList){
+	     for(int i = 0; i<tellerWorkers.length; i++){
+		     if(tellerWorkers[i].equals(name)){
+			     selectedTeller = name;
+			     selectedTellerIndex = i;
+			     updateGui();
+			     break;
+		     }
+	     }
+    }
+   else if(cb == peopleForTellersList){
+	     for(int i = 0; i<peopleForTellers.length; i++){
+		     if(peopleForTellers[i].equals(name)){
+			     selectedPersonForTeller = name;
+			     selectedPersonForTellerIndex = i;
+			     updateGui();
+			     break;
+		     }
+	     }
+   }
     else if(cb == restWorkersList){
 	     for(int i = 0; i<restWorkers.length; i++){
 		     if(restWorkers[i].equals(name)){
@@ -559,6 +683,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
     		if(workplace.contains("Mickey") && SimCityGui.mickeysMarket.isOpen()){
     			SimCityGui.mickeysMarket.endOfShift();
     		}
+    		else if(workplace.contains("Minnie") && SimCityGui.mickeysMarket.isOpen()){
+    			SimCityGui.minniesMarket.endOfShift();
+    		}
     		else if(workplace.contains("Cafe") && SimCityGui.restCafe.isOpen()){
     			SimCityGui.restCafe.endOfShift();
     		}
@@ -567,6 +694,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
     		}
     		else if(workplace.contains("Pirate") && SimCityGui.pirateBank.isOpen()){
     			SimCityGui.pirateBank.msgClose();
+    		}
+    		else if(workplace.contains("Buccaneer") && SimCityGui.pirateBank.isOpen()){
+    			SimCityGui.buccaneerBank.msgClose();
     		}
       		else if(workplace.contains("Haus") && SimCityGui.restHaus.isOpen()){
     			SimCityGui.restHaus.endOfShift();

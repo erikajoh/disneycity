@@ -9,6 +9,7 @@ import simcity.interfaces.Person;
 
 import javax.swing.*;
 
+import market.WorkerAgent;
 import simcity.gui.SimCityGui;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
@@ -17,6 +18,7 @@ import simcity.interfaces.Bank_Douglass;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -37,6 +39,10 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	private int tellerAmt;
 	private boolean open;
 	
+	private enum RobberySuccess{Success, Fail, Random};
+	
+	RobberySuccess robberySuccess;
+	
     private SimCityGui gui; //reference to main gui
     
     private ManagerAgent manager;
@@ -47,6 +53,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
         manager = new ManagerAgent("Bank", this, gui);
         manager.startThread();
         tellerAmt = ta;
+        robberySuccess = RobberySuccess.Random;
         
         /*
         for(int i = 0; i<tellerAmt; i++){
@@ -150,6 +157,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		TellerGui g = new TellerGui(t, gui, tellers.size());
     		gui.bankAniPanel.addGui(g);
     		t.setManager(manager);
+    		t.setBank(this);
     		tellers.add(t);
     		t.setGui(g);
     		manager.addTeller(t);
@@ -165,6 +173,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		t.setManager(manager);
     		tellers.add(t);
     		t.setGui(g);
+    		t.setBank(this);
     		manager.addTeller(t);
     		t.startThread();
 			// tell people bank is open
@@ -188,6 +197,44 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     public void setManager(ManagerAgent m){
     	manager = m;
     }
+    
+    public String[] getTellers(){
+        List<String> tellersList = new ArrayList<String>();
+        
+    	for(TellerAgent teller : tellers){
+    		String tellerName = "Teller: "+teller.getName();
+    		tellersList.add(tellerName);
+    	}
+    	String[] list = new String[tellersList.size()];
+    	list = tellersList.toArray(list);
+   
+    	return list;
+    }
+    
+    public void setRobberySuccess(String condition){
+    	if(condition.toLowerCase().equals("true")){
+    		robberySuccess = RobberySuccess.Success;
+    	}
+    	else if(condition.toLowerCase().equals("false")){
+    		robberySuccess = RobberySuccess.Fail;
+    	}
+    	else {
+    		robberySuccess = RobberySuccess.Random;
+    	}
+    }
+    
+    public String getRobberySuccess(){
+    	if(robberySuccess == RobberySuccess.Success){
+    		return "true";
+    	}
+    	else if(robberySuccess == RobberySuccess.Fail){
+    		return "false";
+    	}
+    	else {
+    		return "random";
+    	}
+    }
+    
     
     public void actionPerformed(ActionEvent e) {
     }

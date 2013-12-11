@@ -82,6 +82,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public void	msgThief(double ra){
 		requestAmt = ra;
 		print("ROBBING: "+requestAmt);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "MSG THIEF");
 		state = State.robbing;
 		stateChanged();
 	}

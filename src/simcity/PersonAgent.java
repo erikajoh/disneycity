@@ -39,7 +39,7 @@ public class PersonAgent extends Agent implements Person {
 	private final static double MONEY_ON_HAND_LIMIT = 80.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
 	private final static double MONEY_TO_ROB = 300.00;
-	private final static int SPAM_RESET = 10;
+	private final static int SPAM_RESET = 4;
 	
 	// Transportation
 	private Transportation transportation;
@@ -68,7 +68,7 @@ public class PersonAgent extends Agent implements Person {
 	private boolean houseNeedsMaintenance = false;
 	private boolean isBankOpen = false;
 	private boolean isSunday = false;
-	private int spamCounter = 10;
+	private int spamCounter = 3;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -330,7 +330,6 @@ public class PersonAgent extends Agent implements Person {
 		stateChanged();
 	}
 	
-	// TODO check this
 	public void msgCrash(boolean atHome) {
 		if(atHome) {
 			print("CRASHING, returning home");
@@ -804,7 +803,6 @@ public class PersonAgent extends Agent implements Person {
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm hungry and I want to eat at restaurant");
 		MyRestaurant targetRestaurant = chooseRestaurant();
 		
-		// TODO: Added this in case no restaurants available; need to test this works
 		if(targetRestaurant == null)
 			preferEatAtHome = !preferEatAtHome;
 		else {
@@ -858,7 +856,6 @@ public class PersonAgent extends Agent implements Person {
 	private void payFare() {
 		print("Paying fare");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Paying fare");
-		// TODO transportation paying fare message
 		transportation.msgPayFare(this, (float)fareToPay);
 	}
 	
@@ -961,7 +958,6 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	private MyRestaurant chooseRestaurant() {
-		// TODO: refine criteria for choosing restaurant:
 		/*
 		 	Follow these rules in order below:
 		 	
@@ -1002,17 +998,15 @@ public class PersonAgent extends Agent implements Person {
 				MyBank tempMyBank = (MyBank)myObjectsArray[i];
 				if(myPersonalBankAccount != null && myPersonalBankAccount.bank.equals(tempMyBank.bank) && tempMyBank.bank.isOpen())
 					return tempMyBank;
-				bankList.add((MyBank)myObjectsArray[i]);
+				if(tempMyBank.bank.isOpen())
+					bankList.add((MyBank)myObjectsArray[i]);
 			}
 		if(bankList.size() == 0)
 			return null;
 		int randomInd = getRandomInt(0, bankList.size());
-		// TODO Change this once both banks are working
-		return bankList.get(0);
-		//return bankList.get(randomInd);
+		return bankList.get(randomInd);
 	}
 
-	// TODO what if market is closed?
 	private MyMarket chooseMarket() {
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)

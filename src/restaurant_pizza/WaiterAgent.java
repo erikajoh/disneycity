@@ -309,7 +309,7 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 					}
 				}
 			}
-			if (shiftDone && !alertedShift && myCustomers.size()==0) {msgShiftDone(alert); alertedShift = true;}
+			if (shiftDone && !alertedShift && myCustomers.size()==0) {leaveWork(); alertedShift = true;}
 			return false;
 		} catch (ConcurrentModificationException e) {
 			return true;

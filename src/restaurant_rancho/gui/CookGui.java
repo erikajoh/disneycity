@@ -65,15 +65,13 @@ public class CookGui implements Gui{
 		else if (yPos > yDestination)
 			yPos--;
 
-		if (xPos == xDestination && yPos == yDestination && leaving == true) {
-				//System.out.println("cook going home ugh");
-	        	if (person!=null) person.msgStopWork(wage);
-	        	leaving =false; 
-	        	actionInProgress = false;
-	    }
 		if (xPos == xDestination && yPos == yDestination) {
 			cook.msgAtLoc();
 			actionInProgress = false;
+			if (leaving == true) {
+				if (person!=null) person.msgStopWork(wage);
+				leaving =false; 
+			}
 		}
 		}
 	}

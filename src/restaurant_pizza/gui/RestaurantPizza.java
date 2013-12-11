@@ -249,7 +249,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     public void addPerson(Person p, String type, String name, double money) {
   
     	removeWorkers();
-
+    	
     	if (!isOpen && type.equals("Customer")) {
     		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
     		if (p!=null) p.msgDoneEating(false, money);
@@ -339,6 +339,10 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		}
     		cashier.startThread();
     	}
+    	if (isOpen()) {
+    		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " is fully staffed and open");
+    	}
+
     }
 
 	@Override
@@ -367,19 +371,23 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	 public void removeWorkers() {
 	    	if (host!=null && host.isWorking==false) {
 	    		host.stopThread();
+	    		numWorkers --;
 	    		host= null;
 	    	}
 	    	if (cook!=null && cook.isWorking==false) {
 	    		cook.stopThread();
+	    		numWorkers --;
 	    		cook = null;
 	    	}
 	    	if (cashier!=null && cashier.isWorking==false) {
 	    		cashier.stopThread();
+	    		numWorkers --;
 	    		cashier = null;
 	    	}
 	    	synchronized(waiters) {
 	    	for (WaiterAgent w : waiters ) {
 	    		if (w.isWorking==false) {
+	    			numWorkers --;
 	    			w.stopThread();
 	    			waiters.remove(w);
 	    		}
@@ -405,7 +413,8 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 		if (wage!=0) {
 			wage = wage/numWorkers;
 		}
-		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
+		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Shift over, there are " + numWorkers + " workers, each gets paid " + wage);;
+
 		isOpen = false;
 		if (host!=null) {
 			host.msgShiftDone(wage);

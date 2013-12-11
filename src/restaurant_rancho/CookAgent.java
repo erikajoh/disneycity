@@ -11,6 +11,8 @@ import restaurant_rancho.CustomerAgent.AgentEvent;
 import restaurant_rancho.CustomerAgent.AgentState;
 import restaurant_rancho.gui.CookGui;
 import simcity.PersonAgent;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
 import restaurant_rancho.gui.RestaurantRancho;
 import market.Market;
@@ -167,9 +169,9 @@ public class CookAgent extends Agent implements Cook{
 				return true;
 			}
 		
-			//Order newO = restaurant.orderStand.remove();
-			//if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
-			if (timerCalled ==false ){timerCalled = true; waitTimer();}
+			Order newO = restaurant.orderStand.remove();
+			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Found order on revolving stand"); return true;}
+			else if (timerCalled == false){timerCalled = true; waitTimer();}
 			
 		return false;
 	
@@ -267,16 +269,6 @@ public class CookAgent extends Agent implements Cook{
 	private void waitTimer() {
 		checkTimer.schedule(new TimerTask() {
 			public void run() {
-				gui.DoGoToRevolvingStand();
-				try{
-					cooking.acquire();
-				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				Order newO = restaurant.orderStand.remove();
-				if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); }
-				DoGoToHome();
 				timerCalled = false;
 				stateChanged();
 			}

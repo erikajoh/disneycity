@@ -289,7 +289,22 @@ public class TellerAgent extends Agent implements Teller {
 	
 	private void robBank(){
 		double cash = customer.requestAmt;
-		customer.success = robberySuccess.nextBoolean();
+		if(bank == null){
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", "BANK IS NULL");
+		}
+		else{
+			AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", " "+bank.getRobberySuccess());
+		}
+		if(bank.getRobberySuccess().equals("true")){
+			customer.success = true;
+		}
+		else if(bank.getRobberySuccess().equals("false")){
+			customer.success = false;
+		}
+		else {
+			customer.success = robberySuccess.nextBoolean();
+		}
+		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", ""+customer.success+" "+bank.getRobberySuccess());
 		customer.bankCustomer.msgRobbedBank(cash, customer.success);
 		customer.state = CustomerState.deciding;
 	}

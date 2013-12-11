@@ -39,7 +39,7 @@ public class ResidentGui implements Gui{
 			xEnd = (int)(hWidth*xe);
 			yStart = (int)(hHeight*ys);
 			yEnd = (int)(hHeight*ye);
-			panel.addLine(xStart, xEnd, yStart, yEnd); // for testing
+//			panel.addLine(xStart, xEnd, yStart, yEnd); // for testing
 		}
 		boolean hitsHfromBelow(int xPos, int yPos) {
 			if (yStart == yEnd && yPos == yStart+1 && xPos >= xStart && xPos <= xEnd) {

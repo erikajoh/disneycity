@@ -29,7 +29,6 @@ public class CashierGui implements Gui{
 		yPos = -30;
 		xDestination = (int)(mWidth*0.18);
 		yDestination = (int)(mHeight*0.2);
-		command = Command.enter;
 	}
 
 	public void updatePosition() {
@@ -42,7 +41,7 @@ public class CashierGui implements Gui{
 		else if (yPos > yDestination)
 			yPos--;
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command != Command.leave) agent.msgAnimationFinished();
+			if (command != Command.noCommand) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
 	}

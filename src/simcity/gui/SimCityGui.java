@@ -127,6 +127,9 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 	public static Bank pirateBank;
 	public BankAnimationPanel bankAniPanel = new BankAnimationPanel();
 	
+	public static Bank buccaneerBank;
+	public BankAnimationPanel bankAniPanel2 = new BankAnimationPanel();
+	
 	private final static int tellerAmt = 4;
 	
 	TransportationPanel cityAniPanel = new TransportationPanel(this);
@@ -188,6 +191,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		cards.add(markAniPanel, "Mickey's Market");
 		cards.add(markAniPanel2, "Minnie's Market");
 		cards.add(bankAniPanel, "Pirate Bank");
+		cards.add(bankAniPanel2, "Buccaneer Bank");
 		cards.add(ranchoAniPanel, "Rancho Del Zocalo");
 		cards.add(cafeAniPanel, "Carnation Cafe");
 		cards.add(bayouAniPanel, "Blue Bayou");
@@ -214,6 +218,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		animationPanelsList.add(markAniPanel);
 		animationPanelsList.add(markAniPanel2);
 		animationPanelsList.add(bankAniPanel);
+		animationPanelsList.add(bankAniPanel2);
 		animationPanelsList.add(ranchoAniPanel);
 		animationPanelsList.add(cafeAniPanel);
 		animationPanelsList.add(bayouAniPanel);
@@ -248,6 +253,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
 		minniesMarket = new Market(this, "Minnie's Market", cityAniPanel.getTransportation());
 		pirateBank = new Bank(this, "Pirate Bank", tellerAmt);
+		buccaneerBank = new Bank(this, "Buccaneer Bank", tellerAmt);
 		
 		simCityPanel = new SimCityPanel(this);
 		workplacePropertyPanel = new WorkplacePropertyPanel(this);
@@ -391,40 +397,39 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
         //restRancho.addPerson(null, "Host", "Host", 50);
         //restRancho.addPerson(null, "Customer", "Sally", 50);
 		
-		restPizza.addPerson(null, "Cook", "pcook", 50);
-        restPizza.addPerson(null, "Waiter", "pw", 50);
-        restPizza.addPerson(null, "Cashier", "pcash", 50);
-        restPizza.addPerson(null, "Host", "pHost", 50);
+		//restPizza.addPerson(null, "Cook", "pcook", 50);
+        //restPizza.addPerson(null, "Waiter", "pw", 50);
+        //restPizza.addPerson(null, "Cashier", "pcash", 50);
+        //restPizza.addPerson(null, "Host", "pHost", 50);
 		//restPizza.addPerson(null, "Customer", "pSally", 50);
 		
-        restBayou.addPerson(null, "Cook", "cook", 50);
-        restBayou.addPerson(null, "WaiterPC", "w", 50);
-        restBayou.addPerson(null, "Cashier", "cash", 50);
-        restBayou.addPerson(null, "Market", "Trader Joes", 50);
-        restBayou.addPerson(null, "Host", "Host", 50);
-        restBayou.addPerson(null, "Customer", "Sally", 50);
+        //restBayou.addPerson(null, "Cook", "cook", 50);
+        //restBayou.addPerson(null, "WaiterPC", "w", 50);
+        //restBayou.addPerson(null, "Cashier", "cash", 50);
+        //restBayou.addPerson(null, "Market", "Trader Joes", 50);
+        //restBayou.addPerson(null, "Host", "Host", 50);
+        //restBayou.addPerson(null, "Customer", "Sally", 50);
         
-		restCafe.setMarket(mickeysMarket);
-		restCafe.setBank(pirateBank);
-		restCafe.addPerson(null, "Cook", "cook", 50);
-        restCafe.addPerson(null, "WaiterPC", "w", 50);
-        restCafe.addPerson(p, "Cashier", "cash", 50);
-        restCafe.addPerson(null, "Market", "Trader Joes", 50);
-        restCafe.addPerson(null, "Host", "Host", 50);
+		//restCafe.setMarket(mickeysMarket);
+		//restCafe.setBank(pirateBank);
+		//restCafe.addPerson(null, "Cook", "cook", 50);
+        //restCafe.addPerson(null, "WaiterPC", "w", 50);
+        //restCafe.addPerson(p, "Cashier", "cash", 50);
+        //restCafe.addPerson(null, "Market", "Trader Joes", 50);
+        //restCafe.addPerson(null, "Host", "Host", 50);
         //restCafe.addPerson(null, "Customer", "Sally", 50);
 
-		restHaus.addPerson(null, "Cook", "cook", 50);
-        restHaus.addPerson(null, "Waiter", "w", 50);
-        restHaus.addPerson(null, "Cashier", "cash", 50);
-        restHaus.addPerson(null, "Host", "Host", 50);
-        restHaus.setMarket(mickeysMarket);
-        restPizza.setMarket(mickeysMarket);
+		//restHaus.addPerson(null, "Cook", "cook", 50);
+        //restHaus.addPerson(null, "Waiter", "w", 50);
+        //restHaus.addPerson(null, "Cashier", "cash", 50);
+        //restHaus.addPerson(null, "Host", "Host", 50);
+        //restHaus.setMarket(mickeysMarket);
+        //restPizza.setMarket(mickeysMarket);
 		//restHaus.addPerson(null, "Customer", "Sally", 50);
 		
 //		mickeysMarket.addPerson(null, "Manager", "MRAWP");
 //		mickeysMarket.addPerson(null, "Cashier", "Kapow");
 //		mickeysMarket.addPerson(null, "Worker", "Bleep");
-//		mickeysMarket.addPerson(null, "Worker", "Meep");
 //		mickeysMarket.addPerson(null, "Worker", "Meep");
 //		mickeysMarket.addPerson(p, "ehe", 500, "Italian", 1);
 		
