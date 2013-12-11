@@ -9,6 +9,7 @@ import simcity.interfaces.Person;
 
 import javax.swing.*;
 
+import market.WorkerAgent;
 import simcity.gui.SimCityGui;
 import simcity.gui.trace.AlertLog;
 import simcity.gui.trace.AlertTag;
@@ -17,6 +18,7 @@ import simcity.interfaces.Bank_Douglass;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -187,6 +189,19 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     
     public void setManager(ManagerAgent m){
     	manager = m;
+    }
+    
+    public String[] getTellers(){
+        List<String> tellersList = new ArrayList<String>();
+        
+    	for(TellerAgent teller : tellers){
+    		String tellerName = "Teller: "+teller.getName();
+    		tellersList.add(tellerName);
+    	}
+    	String[] list = new String[tellersList.size()];
+    	list = tellersList.toArray(list);
+   
+    	return list;
     }
     
     public void actionPerformed(ActionEvent e) {
