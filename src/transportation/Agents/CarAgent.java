@@ -24,9 +24,9 @@ public class CarAgent extends MobileAgent{
 	CarTraversal aStar;
 	Semaphore animSem;
 	
-	final int crashChance = 100;
+	int crashChance = 2;
 	
-	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, CarTraversal aStar) {
+	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, CarTraversal aStar, boolean crashAll) {
 		this.driver = person;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
@@ -35,6 +35,9 @@ public class CarAgent extends MobileAgent{
 		
 		animSem = new Semaphore(0, true);
 		this.aStar = aStar;
+		
+		if(crashAll)
+			crashChance = 100;
 	}
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
 		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);

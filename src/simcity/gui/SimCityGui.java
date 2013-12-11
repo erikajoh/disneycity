@@ -186,6 +186,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		cards.add(housAniPanel16, "Main St Apartments #10");
 		cards.add(housAniPanel17, "Main St Apartments #11");
 		cards.add(markAniPanel, "Mickey's Market");
+		cards.add(markAniPanel2, "Minnie's Market");
 		cards.add(bankAniPanel, "Pirate Bank");
 		cards.add(ranchoAniPanel, "Rancho Del Zocalo");
 		cards.add(cafeAniPanel, "Carnation Cafe");
@@ -211,12 +212,15 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		animationPanelsList.add(housAniPanel16);
 		animationPanelsList.add(housAniPanel17);
 		animationPanelsList.add(markAniPanel);
+		animationPanelsList.add(markAniPanel2);
 		animationPanelsList.add(bankAniPanel);
 		animationPanelsList.add(ranchoAniPanel);
 		animationPanelsList.add(cafeAniPanel);
 		animationPanelsList.add(bayouAniPanel);
 		animationPanelsList.add(pizzaAniPanel);
 		animationPanelsList.add(hausAniPanel);
+		
+		showPanel("Mickey's Market");
 		
 		// Restaurants etc. must be created before simCityPanel is constructed, as demonstrated below
 		restRancho = new RestaurantRancho(this, "Rancho Del Zocalo");
@@ -242,6 +246,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		mainStApts10 = new Housing(housAniPanel16, "Main St Apartments #10");
 		mainStApts11 = new Housing(housAniPanel17, "Main St Apartments #11");
 		mickeysMarket = new Market(this, "Mickey's Market", cityAniPanel.getTransportation());
+		minniesMarket = new Market(this, "Minnie's Market", cityAniPanel.getTransportation());
 		pirateBank = new Bank(this, "Pirate Bank", tellerAmt);
 		
 		simCityPanel = new SimCityPanel(this);
@@ -378,7 +383,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		PersonAgent p = new PersonAgent("PersonCashier", hauntedMansion, 100, "Italian", true, "", null, 'c');
 		restRancho.setMarket(mickeysMarket);
 		restRancho.setBank(pirateBank);
-		restCafe.setMarket(mickeysMarket);
+		restCafe.setMarket(minniesMarket);
 		//restRancho.addPerson(null, "Cook", "cook", 50);
         //restRancho.addPerson(null, "WaiterPC", "w", 50);
         //restRancho.addPerson(p, "Cashier", "cash", 50);
@@ -407,8 +412,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
         restCafe.addPerson(null, "Market", "Trader Joes", 50);
         restCafe.addPerson(null, "Host", "Host", 50);
         //restCafe.addPerson(null, "Customer", "Sally", 50);
-	
-        
+
 		restHaus.addPerson(null, "Cook", "cook", 50);
         restHaus.addPerson(null, "Waiter", "w", 50);
         restHaus.addPerson(null, "Cashier", "cash", 50);
@@ -418,10 +422,8 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		
 		mickeysMarket.addPerson(null, "Manager", "MRAWP");
 		mickeysMarket.addPerson(null, "Cashier", "Kapow");
-		mickeysMarket.addPerson(null, "Worker", "Bleep");
-		mickeysMarket.addPerson(null, "Worker", "Meep");
-		
-		
+//		mickeysMarket.addPerson(null, "Worker", "Bleep");
+//		mickeysMarket.addPerson(null, "Worker", "Meep");
 		
 	}
 	

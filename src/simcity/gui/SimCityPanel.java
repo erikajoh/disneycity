@@ -106,7 +106,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 								"7-Market deliver fail",
 								"10-50 people",
 								"DEBUG-eating",
-								"DEBUG-50ppl"};
+								"DEBUG-CRASH"};
 		// Create the combo box, select item at index 0.
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
@@ -218,6 +218,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		}
 		if(scenarioInd == 8) {
 			fileName = "crash.txt";
+			transportation.setCrashing();
 		}
 		initializeFromConfigFile(fileName);
 		newDay();
@@ -228,7 +229,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	}
 	
 	public void addPerson(String aName, String housingName, double startMoney, String foodPreference,
-			boolean preferEatAtHome, char commute, String personality) {
+			boolean preferEatAtHome, char commute, String personality, String mickeyMarketRole, int mickeyMarketShift) {
 		
 		Housing h = mapStringToHousing(housingName);
 		if(h.getNumResidents() >= 4 && h.isApartment() || h.getNumResidents() >= 1 && !h.isApartment())
@@ -257,7 +258,10 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			
 			for(int marketInd = 0; marketInd < NUM_MARKETS; marketInd++) {
 				Market m = markets.get(marketInd);
-				personToAdd.addMarket(m, "Customer", 0);
+				if(m.getName().equals("Mickey's Market"))
+					personToAdd.addMarket(m, mickeyMarketRole, mickeyMarketShift);
+				else
+					personToAdd.addMarket(m, "Customer", 0);
 			}
 			
 			personToAdd.setPersonality(personality);

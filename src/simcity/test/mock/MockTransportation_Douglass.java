@@ -60,4 +60,10 @@ public class MockTransportation_Douglass extends Mock_Douglass implements Transp
 		person.msgPayFare(fareToPay);
 	}
 
+	@Override
+	public void setCrashing() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

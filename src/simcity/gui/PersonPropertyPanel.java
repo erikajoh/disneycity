@@ -37,6 +37,8 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 	JComboBox personalityList;
 	JCheckBox preferAtHomeCheckBox;
 	JComboBox transportationList;
+	JComboBox mickeyMarketRoleList;
+	JComboBox mickeyMarketShiftList;
 	
 	JButton addPersonButton = new JButton("Create person");
 	
@@ -96,6 +98,20 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
         String[] transportationArray = {"Walk", "Bus", "Car"};
         transportationList = new JComboBox(transportationArray);
         settings.add(transportationList);
+        
+        label = new JLabel("Mickey's Market Role");
+		settings.add(label);
+        
+        String[] marketRoleArray = {"Customer", "Worker", "Cashier"};
+        mickeyMarketRoleList = new JComboBox(marketRoleArray);
+        settings.add(mickeyMarketRoleList);
+        
+        label = new JLabel("Mickey's Market Shift");
+		settings.add(label);
+        
+        String[] shiftArray = {"0", "1", "2"};
+        mickeyMarketShiftList = new JComboBox(shiftArray);
+        settings.add(mickeyMarketShiftList);
 		
         addPersonButton.addActionListener(this);
         settings.add(addPersonButton);
@@ -115,7 +131,8 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 			gui.simCityPanel.addPerson(personName, (String)housingList.getSelectedItem(), 
 					(Double)moneySpinner.getValue(), (String)foodPreferenceList.getSelectedItem(),
 					preferAtHomeCheckBox.isSelected(), ((String)transportationList.getSelectedItem()).charAt(0),
-					(String)personalityList.getSelectedItem());
+					(String)personalityList.getSelectedItem(), (String)mickeyMarketRoleList.getSelectedItem(),
+					Integer.parseInt((String)mickeyMarketShiftList.getSelectedItem()));
 		}
 	}
 }

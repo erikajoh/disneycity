@@ -14,4 +14,6 @@ public interface Transportation{
 
 	public abstract void msgSendDelivery(Person person, Market market, String food, int quantity, String location);
 
+	public abstract void setCrashing();
+
 }
