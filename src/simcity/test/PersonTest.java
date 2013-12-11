@@ -498,14 +498,28 @@ public class PersonTest extends TestCase
 	}
 	
 	// TEST #3
-	// Person: start with surplus money, go to market, deposit, return home, done
-	public void testNormative_HomeBankMarketHome() {
-		
-	}
-	
-	// TEST #4
-	// Person: it's Friday morning, perform maintenance, return to original default position, done
+	// Person: perform maintenance, return to original default position, done
 	public void testNormative_HomeMaintenance() {
+		person = new PersonAgent("Narwhal Prime", mockHousing1, 0, "Chinese", false, "OwnerResident", mockTransportation, 'C');
+		person.setMoney(5);
+		person.setFoodPreference("Chinese", false);
+		person.setIsNourished(false);
+		person.addBank(mockBank, "Customer", 0);
+		person.addHousing(mockHousing1, "OwnerResident"); // TODO: There are three types; OwnerResident, Owner, Renter
+		person.addRestaurant(mockRestaurant, "Customer", 0);
 		
+		// step 1 pre-conditions
+		assertEquals("Person: 5 dollars at start",
+				5.00, person.getMoney());
+		assertFalse("Person: not nourished at start", 
+				person.getIsNourished());
+		assertEquals("Restaurant: 3 food items", 
+				3, mockRestaurant.getMenu().menuItems.size());
+		
+		// step 1: perform maintenance
+		person.msgNeedMaintenance();
+		
+		assertTrue("Contains log: msgNeedMaintenance() called",
+				person.log.containsString("msgNeedMaintenance() called"));
 	}
 }
