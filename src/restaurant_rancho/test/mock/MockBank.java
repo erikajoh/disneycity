@@ -52,4 +52,11 @@ public class MockBank extends Mock implements Bank_Douglass {
 			// TODO Auto-generated method stub
 			
 		}
+
+
+		@Override
+		public void msgThief(Person person, double reqAmt, boolean present) {
+			// TODO Auto-generated method stub
+			
+		}
 }

@@ -1,0 +1,23 @@
+15
+MickeyCashier1|Main St Apartments #10|OwnerResident
+MickeyManager1|Main St Apartments #10|Renter
+MickeyWorker1|Main St Apartments #11|OwnerResident
+MickeyCashier2|Main St Apartments #11|Renter
+MickeyManager2|Main St Apartments #11|Renter
+MickeyWorker2|Main St Apartments #11|Renter
+RanchoHost1|Main St Apartments #1|OwnerResident
+RanchoWaiter1|Main St Apartments #1|Renter
+RanchoCashier1|Main St Apartments #1|Renter
+RanchoCook1|Main St Apartments #1|Renter
+HausHost2|Main St Apartments #2|OwnerResident
+HausWaiter2|Main St Apartments #2|Renter
+HausCashier2|Main St Apartments #2|Renter
+HausCook2|Main St Apartments #2|Renter
+Edgar_Prime|Rabbit Hole|OwnerResident
+5
+Main St Apartments #1|RanchoHost1|RanchoHost1|RanchoWaiter1|RanchoCashier1|RanchoCook1
+Main St Apartments #2|HausHost2|HausHost2|HausWaiter2|HausCashier2|HausCook2
+Main St Apartments #10|MickeyCashier1|MickeyCashier1|MickeyManager1
+Main St Apartments #11|MickeyWorker1|MickeyWorker1|MickeyCashier2|MickeyManager2|MickeyWorker2
+Rabbit Hole|Edgar_Prime|Edgar_Prime
+Friday

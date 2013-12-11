@@ -39,6 +39,7 @@ public class PersonAgent extends Agent implements Person {
 	private final static double MONEY_ON_HAND_LIMIT = 80.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
 	private final static double MONEY_TO_ROB = 300.00;
+	private final static int SPAM_RESET = 10;
 	
 	// Transportation
 	private Transportation transportation;
@@ -67,6 +68,7 @@ public class PersonAgent extends Agent implements Person {
 	private boolean houseNeedsMaintenance = false;
 	private boolean isBankOpen = false;
 	private boolean isSunday = false;
+	private int spamCounter = 10;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -727,6 +729,7 @@ public class PersonAgent extends Agent implements Person {
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm hungry and I want to buy food at market and cook at home");
 		MyMarket targetMarket = chooseMarket();
 		if(targetMarket != null) {
+			spamCounter = SPAM_RESET;
 			double price = targetMarket.theMarket.getPrice(foodPreference);
 			if(moneyOnHand < price) {
 				log.add(new LoggedEvent("Want to buy food at market; not enough money"));
@@ -743,6 +746,14 @@ public class PersonAgent extends Agent implements Person {
 				print("I have enough money to buy food from market");
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have enough money to buy food from market");
 				targetLocation = targetMarket.name;
+			}
+		}
+		else {
+			preferEatAtHome = !preferEatAtHome;
+			spamCounter--;
+			if(spamCounter == 0) {
+				spamCounter = SPAM_RESET;
+				isNourished = true; // hack to prevent decision paralysis
 			}
 		}
 	}
@@ -904,7 +915,7 @@ public class PersonAgent extends Agent implements Person {
 		print("Working at market");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Working at market");
 		MyMarket myMarket = (MyMarket)currentMyObject;
-		myMarket.theMarket.addPerson(this, "Worker", name);
+		myMarket.theMarket.addPerson(this, myMarket.personType, name);
 	}
 	
 	// ************************* UTILITIES ***********************************
@@ -1005,8 +1016,11 @@ public class PersonAgent extends Agent implements Person {
 	private MyMarket chooseMarket() {
 		MyObject[] myObjectsArray = getObjects();
 		for(int i = 0; i < myObjectsArray.length; i++)
-			if(myObjectsArray[i] instanceof MyMarket)
-				return (MyMarket)myObjectsArray[i];
+			if(myObjectsArray[i] instanceof MyMarket){
+				MyMarket temp = (MyMarket)myObjectsArray[i];
+				if(temp.theMarket.isOpen())
+					return temp;
+			}
 		return null;
 	}
 	

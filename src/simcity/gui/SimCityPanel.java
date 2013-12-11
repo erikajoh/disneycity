@@ -100,7 +100,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		JPanel selection = new JPanel();
 		String[] scenarios = {	"1-One person go",
 								"2-Three people go",
-								"3-CookCashierMarket",
+								"TEST-Jobs",
 								"5-Bus stops",
 								"6-Closed places",
 								"7-Market deliver fail",
@@ -192,13 +192,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		String fileName = MAIN_CONFIG_FILE;
 		
 		if(scenarioInd == 0) {
-			fileName = "config-file_scenario-1.txt"; // TODO
+			fileName = "config-file_scenario-1.txt";
 		}
 		if(scenarioInd == 1) {
 			fileName = "config-file_scenario-2.txt";
 		}
 		if(scenarioInd == 2) {
-			fileName = "config-file_scenario-3.txt"; // TODO
+			fileName = "config-file_test_jobs.txt"; // TODO
 		}
 		if(scenarioInd == 3) {
 			fileName = "config-file_scenario-5.txt"; // TODO
