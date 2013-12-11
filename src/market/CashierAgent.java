@@ -100,8 +100,8 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
-		print("no customers left: "+market.noCustomers());
-		print("shiftdone? "+shiftDone);
+//		print("no customers left: "+market.noCustomers());
+//		print("shiftdone? "+shiftDone);
 		if (shiftDone) {
 			if (market.noCustomers()) {
 				ShiftDone();
