@@ -173,6 +173,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		t.setManager(manager);
     		tellers.add(t);
     		t.setGui(g);
+    		t.setBank(this);
     		manager.addTeller(t);
     		t.startThread();
 			// tell people bank is open
