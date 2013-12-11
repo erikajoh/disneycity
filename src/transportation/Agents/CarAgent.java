@@ -14,7 +14,7 @@ import transportation.Objects.*;
 import transportation.Objects.MovementTile.MovementType;
 
 public class CarAgent extends MobileAgent{
-	
+
 	Person driver;
 	Position currentPosition;
 	Position endPosition;
@@ -23,19 +23,22 @@ public class CarAgent extends MobileAgent{
 	CarGui gui = null;
 	CarTraversal aStar;
 	Semaphore animSem;
-	
+
+	Position crashPosition = null;
+	Position nextPosition = null;
+
 	int crashChance = 2;
-	
+
 	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, CarTraversal aStar, boolean crashAll) {
 		this.driver = person;
 		this.currentPosition = currentPosition;
 		this.endPosition = endPosition;
 		this.master = master;
 		arrived = false;
-		
+
 		animSem = new Semaphore(0, true);
 		this.aStar = aStar;
-		
+
 		if(crashAll)
 			crashChance = 100;
 	}
@@ -43,20 +46,45 @@ public class CarAgent extends MobileAgent{
 		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+			//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
+	}
+
+	public void crashRemoval(boolean reachedHalfway, boolean pedestrian){ 
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+		master.getGrid()[nextPosition.getX()][nextPosition.getY()].removeOccupant(this);
+		if(!pedestrian) {
+			if(!(crashPosition.getX() == currentPosition.getX() && crashPosition.getY() == currentPosition.getY())) {//we're the cars causing the crash
+				//no need to release previous position until later
+				//we didn't acquire the semaphore either. Nothing to be done for now
+
+			}
+			if(!(crashPosition.getX() == nextPosition.getX() && crashPosition.getY() == nextPosition.getY())) {//we're the cars getting hit
+				//Release the next position since we're not using it
+				master.getGrid()[nextPosition.getX()][nextPosition.getY()].release();
+			}
+		}
+		else {//Pedestrian Collision
+			//release as if halfway since reachedHalfway is getting set to true
+			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+		}
+	}
+
+	public void crashDone() {
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+		gui.crashDone();
 	}
 
 	public void msgDestination() {
 		animSem.release();
 	}
 
-	@Override
-	public void crash() {
-		gui.crash();
+	public void crash(Position position, boolean pedestrian) {//if it hits a pedestrian we need to not release the semaphore of the crash.
+		crashPosition = position;
+		gui.crash(pedestrian);
 	}
-	
+
 	//Remember to release semaphores to tiles when despawning
 	@Override
 	protected boolean pickAndExecuteAnAction() {
@@ -98,8 +126,8 @@ public class CarAgent extends MobileAgent{
 			int randomInt = random.nextInt(100);
 			if(!gotPermit && randomInt <= crashChance) {
 				gotPermit = true;
-//				if(aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].availablePermits() == 0)
-//					aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].release();
+				//				if(aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].availablePermits() == 0)
+				//					aStar.getGrid()[tmpPath.getX()][tmpPath.getY()].release();
 			}
 			//Did not get lock. Lets make n attempts.
 			while (!gotPermit && attempts < 3) {
@@ -116,9 +144,9 @@ public class CarAgent extends MobileAgent{
 					temp = master.getGrid()[tmpPath.getX()][tmpPath.getY()].getMovementType();
 				}
 				gotPermit   = new Position(tmpPath.getX(), tmpPath.getY()).moveInto(aStar.getGrid());
-					attempts ++;
+				attempts ++;
 			}
-			
+
 			randomInt = random.nextInt(100);
 			//Did not get lock after trying n attempts. So recalculating path.            
 			if (!gotPermit) {
@@ -132,6 +160,7 @@ public class CarAgent extends MobileAgent{
 			//Got the required lock. Lets move.
 			//System.out.println("[Gaut] " + guiWaiter.getName() + " got permit for " + tmpPath.toString());
 			//currentPosition.release(aStar.getGrid());
+			nextPosition = tmpPath;
 			master.getGrid()[tmpPath.getX()][tmpPath.getY()].addOccupant(this);
 			gui.setDestination(tmpPath.getX(), tmpPath.getY());
 			try {
@@ -142,7 +171,7 @@ public class CarAgent extends MobileAgent{
 			}
 			currentPosition = new Position(tmpPath.getX(), tmpPath.getY ());
 		}
-		
+
 		arrived = true;
 	}
 
@@ -150,7 +179,7 @@ public class CarAgent extends MobileAgent{
 		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.grid[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.grid[currentPosition.getX()][currentPosition.getY()].release();
-//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+			//			master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		}
 		master.msgArrivedAtDestination(driver);
 		gui.setIgnore();
@@ -166,13 +195,9 @@ public class CarAgent extends MobileAgent{
 		// TODO Auto-generated method stub
 		return "car";
 	}
-	
+
 	@Override
 	public Person getPerson() {
 		return driver;
-	}
-	public void crashDone() {
-		gui.crashDone();
-		
 	}
 }

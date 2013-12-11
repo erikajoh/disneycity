@@ -12,7 +12,7 @@ public class WalkerGui implements Gui{
 	private AnimationModule animModule;
 	boolean reachedHalfway, reachedDestination;
 	boolean crashed = false;
-	
+
 	TransportationPanel panel;
 	public WalkerAgent agent;
 	boolean isPresent = true;
@@ -56,7 +56,11 @@ public class WalkerGui implements Gui{
 				animModule.changeAnimation("WalkUp");
 			}
 
-			if((Math.abs(((xDestination + xLast)/2)-xPos) <= speed || Math.abs(((yDestination + yLast)/2)-yPos) <= speed) && !reachedHalfway) {
+			if(xDestination == xPos && Math.abs(yDestination-yPos) <= speed && !reachedHalfway) {
+				agent.msgHalfway();
+				reachedHalfway = true;
+			}
+			if(Math.abs(xDestination-xPos) <= speed && yDestination == yPos && !reachedHalfway) {
 				agent.msgHalfway();
 				reachedHalfway = true;
 			}
@@ -113,15 +117,13 @@ public class WalkerGui implements Gui{
 		//Release other semaphore if haven't already
 		//Change animation
 		//Change boolean to prevent position updating
-		if(!reachedHalfway) {
-			agent.msgHalfway();
-			reachedHalfway = true;
-		}
+		crashed = true;
+		agent.crashRemoval(reachedHalfway);
+		reachedHalfway = true;
 		animModule.changeAnimation("Crash", 10);
 		animModule.setNoLoop();
-		crashed = true;
-//		agent.animSem.release();
-//		agent.stopThread();
+		//		agent.animSem.release();
+		//		agent.stopThread();
 	}
 	@Override
 	public void setPanel(TransportationPanel p) {
