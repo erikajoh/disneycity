@@ -272,6 +272,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     	}
     	
     	else if (type.equals("Waiter")) {
+    		numWorkers++;
     		WaiterAgentNorm w = new WaiterAgentNorm(name, this);
         	WaiterGui waiterGui = new WaiterGui(w, gui, waiters.size());
         	if (p!=null) w.setPerson(p);
@@ -283,6 +284,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
         	w.startThread();
     	}
     	else if (type.equals("WaiterPC")) {
+    		numWorkers++;
     		WaiterAgentPC w = new WaiterAgentPC(name, this);
         	WaiterGui waiterGui = new WaiterGui(w, gui, waiters.size());
         	if (p!=null) w.setPerson(p);
@@ -295,6 +297,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
         	w.startThread();
     	}
     	else if (type.equals("Host")) {
+    		numWorkers++;
     		host = new HostAgent(name, this);
     		if (p!=null) host.setPerson(p);
     		if (cashierGui!=null) host.setGui(cashierGui);
@@ -310,6 +313,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
             host.startThread();
     	}
     	else if (type.equals("Cook")) {
+    		numWorkers++;
     		cook = new CookAgent(name, this, menu);
     		cookGui = new CookGui();
     		if (p!=null) cook.setPerson(p);
@@ -327,6 +331,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     		
     	}
     	else if (type.equals("Cashier")) {
+    		numWorkers++;
     		cashier = new CashierAgent(name, menu, 100);
     		cashierGui = new CashierGui(host);
     		if (p!=null) cashier.setPerson(p);
@@ -340,6 +345,7 @@ public class RestaurantBayou extends JPanel implements Restaurant{
     	}
     	
     	else if (type.equals("Market")) { 
+    		numWorkers++;
     		market = (new MarketAgent(name, menu));
     		if (cook!=null) cook.addMarket(market);
     		market.startThread();

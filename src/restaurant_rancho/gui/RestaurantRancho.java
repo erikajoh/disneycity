@@ -66,7 +66,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     private List<MyWaitingWaiter> waitingPCWaiters = new ArrayList<MyWaitingWaiter>();
     private List<MyWaitingCustomer> waitingCustomers  = new ArrayList<MyWaitingCustomer>();
     
-    private int numWorkers;
+    private int numWorkers= 0;
     
     public boolean hostShiftDone = false;
     public boolean cookShiftDone = false;
