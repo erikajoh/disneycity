@@ -13,6 +13,8 @@ import java.util.concurrent.Semaphore;
 
 import restaurant_pizza.gui.CookGui;
 import restaurant_pizza.gui.RestaurantPizza;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 import simcity.RestMenu;
@@ -276,6 +278,7 @@ public class CookAgent extends Agent {
 	// ***** ACTIONS *****
 	
 	private void goToMarket(RestaurantPizza r, String type, int amount, int id) {
+		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " is ordering " + type+ " from the Market.");
 		market.personAs(r, type, amount, id);
 	}
 	

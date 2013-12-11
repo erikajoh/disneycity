@@ -13,6 +13,8 @@ import restaurant_rancho.interfaces.Cashier;
 import restaurant_rancho.interfaces.Customer;
 import restaurant_rancho.interfaces.Waiter;
 import simcity.PersonAgent;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
 import simcity.Restaurant;
 import restaurant_rancho.test.mock.EventLog;
@@ -238,6 +240,7 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 	
 	private void payBill(MarketBill bill) {
+		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " is paying Market for order");
 		bill.market.msgHereIsPayment(restaurant, bill.amount);
 		money -= bill.amount;
 		print ("Paid market, I have " + money + " dollars now");
