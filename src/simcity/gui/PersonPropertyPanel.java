@@ -51,7 +51,7 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 	public void updateGui(){
 	    clear();
 		settings.removeAll();
-		settings.setLayout(new GridLayout(10, 2));
+		settings.setLayout(new GridLayout(11, 2));
         Dimension panelDim = new Dimension(354,50);  
         
 		JLabel label = new JLabel("Name");
