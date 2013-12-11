@@ -211,6 +211,10 @@ public class Market implements Market_Douglass {
     	gui.updateGui();
     }
     
+    public int getCustomers() {
+    	return customers.size();
+    }
+    
     public double getPrice(String f) {
     	return prices.get(f);
     }

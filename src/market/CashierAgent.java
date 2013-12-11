@@ -27,8 +27,9 @@ public class CashierAgent extends Agent {
 	private Market market;
 	private CashierGui cashierGui;
 	double wage;
+	boolean shiftDone;
 	
-	enum State {idle, rcvdPayment, shiftDone, left};
+	enum State {idle, rcvdPayment, left};
 	State state = State.idle;
 	
 	public EventLog log = new EventLog();
@@ -80,7 +81,7 @@ public class CashierAgent extends Agent {
 	}
 	
 	public void msgShiftDone(double wage) {
-		state = State.shiftDone;
+		shiftDone = true;
 		this.wage = wage;
 		stateChanged();
 	}
@@ -98,7 +99,7 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
-		if (state == State.shiftDone) {
+		if (shiftDone && market.getCustomers() == 0) {
 			ShiftDone();
 			return true;
 		}

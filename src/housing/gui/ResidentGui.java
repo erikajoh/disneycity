@@ -39,7 +39,7 @@ public class ResidentGui implements Gui{
 			xEnd = (int)(hWidth*xe);
 			yStart = (int)(hHeight*ys);
 			yEnd = (int)(hHeight*ye);
-//			panel.addLine(xStart, xEnd, yStart, yEnd); // for testing
+			panel.addLine(xStart, xEnd, yStart, yEnd); // for testing
 		}
 		boolean hitsHfromBelow(int xPos, int yPos) {
 			if (yStart == yEnd && yPos == yStart+1 && xPos >= xStart && xPos <= xEnd) {
@@ -104,9 +104,9 @@ public class ResidentGui implements Gui{
 			xMaintenance = (int)(hWidth*0.23);
 			yMaintenance = (int)(hHeight*0.2);
 			walls.add(new Wall(0.17,0.17,0.45,0.64));
-			walls.add(new Wall(0.35,0.35,0.45,0.64));
-			walls.add(new Wall(0.17,0.35,0.49,0.49));
-			walls.add(new Wall(0.17,0.35,0.64,0.64));
+			walls.add(new Wall(0.34,0.34,0.45,0.64));
+			walls.add(new Wall(0.17,0.34,0.49,0.49));
+			walls.add(new Wall(0.17,0.34,0.64,0.64));
 			walls.add(new Wall(0.53,0.53,0,0.5));
 			walls.add(new Wall(0.66,1,0.46,0.46));
 			walls.add(new Wall(0.01,0.1,0.9,0.9));
