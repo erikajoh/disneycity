@@ -167,9 +167,9 @@ public class CookAgent extends Agent implements Cook{
 				return true;
 			}
 		
-			//Order newO = restaurant.orderStand.remove();
-			//if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
-			if (timerCalled ==false ){timerCalled = true; waitTimer();}
+			Order newO = restaurant.orderStand.remove();
+			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
+			else if (timerCalled == false){timerCalled = true; waitTimer();}
 			
 		return false;
 	
@@ -267,16 +267,6 @@ public class CookAgent extends Agent implements Cook{
 	private void waitTimer() {
 		checkTimer.schedule(new TimerTask() {
 			public void run() {
-				gui.DoGoToRevolvingStand();
-				try{
-					cooking.acquire();
-				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				Order newO = restaurant.orderStand.remove();
-				if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); }
-				DoGoToHome();
 				timerCalled = false;
 				stateChanged();
 			}
