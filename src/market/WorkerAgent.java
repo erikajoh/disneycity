@@ -23,10 +23,10 @@ public class WorkerAgent extends Agent {
 	private List<MyOrder> orders = new ArrayList<MyOrder>();
 	private Semaphore moving = new Semaphore(0, true);
 	private Semaphore working = new Semaphore(0, true);
-	int num;
-	boolean shiftDone = false;
-	boolean alert = false;
-	boolean alertedShift = false;
+	private enum State {idle, shiftDone, left;}
+	private State state = State.idle;
+	private int num;
+	private double wage;
 		
 	class MyOrder {
 		Customer c;
@@ -87,14 +87,22 @@ public class WorkerAgent extends Agent {
 		stateChanged();
 	}
 	
+	public void msgAnimationLeavingFinished() {
+		//from animation
+		moving.release();
+		state = State.left;
+		stateChanged();
+	}
+	
 	public void msgGoGetItem(Customer cust, String c, int quantity, boolean virtual) { // from customer
 		print("rcvd msgGoGetItem");
 		orders.add(new MyOrder(cust, c, quantity, virtual));
 		stateChanged();
 	}
 	
-	public void msgShiftDone(boolean alertOthers) {
-		shiftDone = true;
+	public void msgShiftDone(double wage) {
+		state = State.shiftDone;
+		this.wage = wage;
 		stateChanged();
 	}
 
@@ -107,14 +115,31 @@ public class WorkerAgent extends Agent {
 			GetItemAndReturn(o);
 			return true;
 		}
-		if (shiftDone) {
+		if (state == State.shiftDone) {
 			ShiftDone();
+			return true;
+		}
+		if (state == State.left) {
+			StopWork();
+			return true;
 		}
 		return false;
 	}
 	
 	public void ShiftDone() {
-		// TODO
+		state = State.idle;
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		workerGui.DoLeave();
+	}
+	
+	public void StopWork() {
+		state = State.idle;
+		person.msgStopWork(wage);
 	}
 	
 	public void GetItemAndReturn(MyOrder o) {

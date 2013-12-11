@@ -69,6 +69,10 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
     	guis.add(gui);
     }
     
+    public void addGui(CashierGui gui) {
+    	guis.add(gui);
+    }
+    
     public void addGui(CustomerGui gui) {
     	System.out.println("added gui");
     	guis.add(gui);

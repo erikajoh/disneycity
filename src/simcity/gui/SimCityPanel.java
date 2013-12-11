@@ -601,6 +601,19 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			}
 		}
 		
+		// handle ticks for restaurants
+		for(int i = 0; i < markets.size(); i++) {
+			Market theMarket = markets.get(i);
+			// rent is due signal: at the start of every Saturday
+			// TODO whole rent system needs to be tested with actual PersonAgents
+			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
+				theMarket.startOfShift();
+			}
+			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
+				theMarket.endOfShift();
+			}
+		}
+		
 		//handle ticks for banks
 		for(int i = 0; i < banks.size(); i++) {
 			Bank theBank = banks.get(i);

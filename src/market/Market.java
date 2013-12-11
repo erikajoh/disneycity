@@ -4,6 +4,7 @@ import market.CashierAgent;
 import market.CustomerAgent;
 import market.ManagerAgent;
 import market.WorkerAgent;
+import market.gui.CashierGui;
 import market.gui.CustomerGui;
 import market.gui.WorkerGui;
 import simcity.PersonAgent;
@@ -42,6 +43,7 @@ public class Market implements Market_Douglass {
     private List<WorkerAgent> workers = new ArrayList<WorkerAgent>();
     private List<CustomerAgent> customers = new ArrayList<CustomerAgent>();
     private List<CustomerAgent> virtualCustomers = new ArrayList<CustomerAgent>();
+//    private List<CustomerAgent> waitingCustomers = new ArrayList<CustomerAgent>(); // when market is between shifts
     private Hashtable<String, Integer> inventory = new Hashtable<String, Integer>();
     private Hashtable<String, Double> prices = new Hashtable<String, Double>();
     private Hashtable<String, Integer> locations = new Hashtable<String, Integer>();
@@ -76,6 +78,10 @@ public class Market implements Market_Douglass {
 		for (CustomerAgent cust: customers) {
 			cust.msgLineMoved();
 		}
+	}
+	
+	public void startOfShift() {
+		isOpen = true;
 	}
 
     private SimCityGui gui;
@@ -162,11 +168,11 @@ public class Market implements Market_Douglass {
     public void addPerson(PersonAgent p, String type, String name) {
 
     	if (type.equals("Worker")) {
+    		AlertLog.getInstance().logDebug(AlertTag.MARKET, name, "added worker to market");
     		WorkerAgent w = new WorkerAgent(name, manager, workers.size());
     		WorkerGui g = new WorkerGui(w);
     		gui.markAniPanel.addGui(g);
     		if (cashier!=null) w.setCashier(cashier);
-    		w.setGui(g);
     		w.setPerson(p);
     		w.setMarket(this);
     		workers.add(w);
@@ -184,12 +190,17 @@ public class Market implements Market_Douglass {
     			}
     		}
     	}
-    	else if (type.equals("Cashier")) {    		
+    	else if (type.equals("Cashier")) {   
     		if (cashier == null) {
     			cashier = new CashierAgent(name, 100);
+    			CashierGui g = new CashierGui(cashier);
+    			gui.markAniPanel.addGui(g);
     			cashier.setPerson(p);
     			cashier.setMarket(this);
     			cashier.startThread();
+    			for (WorkerAgent w : workers) {
+    				w.setCashier(cashier);
+    			}
     		}
     	}	
     	gui.updateGui();
@@ -223,27 +234,25 @@ public class Market implements Market_Douglass {
     	return inventoryList.toArray(new String[0]);
     }
     
-    public void EndOfShift() {
+    public void endOfShift() {
 		isOpen = false;
+		double totalMoney = cashier.getMoney();
+		int numEmployees = 2 + workers.size();
+		double wage = totalMoney/numEmployees;
 		System.out.println("MARKET GOT END OF SHIFT");
+		for (int i = 0; i < workers.size(); i++) {
+			WorkerAgent w = workers.get(i);
+			w.msgShiftDone(wage);
+			workers.remove(w);
+		}
 		if (manager!=null) {
-			manager.msgShiftDone();
-			for (int i = 0; i < workers.size(); i++) {
-//				if (cashier!=null) cashier.subtract(10);
-			}
+			manager.msgShiftDone(wage);
+			manager = null;
 		}
-		else {
-			if (cashier!=null) {
-				cashier.msgShiftDone();
-//				cashier.subtract(10);
-			}
-			for (int i = 0; i < workers.size(); i++) {
-				WorkerAgent w = workers.get(i);
-				w.msgShiftDone(false);
-//				if (cashier!=null) cashier.subtract(10);
-			}
-		}
-		
+		if (cashier!=null) {
+			cashier.msgShiftDone(wage);
+			cashier = null;
+		}		
 	}
     
     public String[] getWorkers(){

@@ -7,6 +7,7 @@ import housing.test.mock.EventLog;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import market.gui.CashierGui;
 import market.interfaces.Customer;
 import simcity.PersonAgent;
 import simcity.Restaurant;
@@ -18,14 +19,16 @@ public class CashierAgent extends Agent {
 	private CashRegister r;
 	private double amt;
 	public List<Bill> marketBills = Collections.synchronizedList(new ArrayList<Bill>());
-	private boolean shiftDone = false;
+	private Semaphore moving = new Semaphore(0, true);
 	
 	private PersonAgent person;
 	private Customer customer;
 	private Restaurant rest;
 	private Market market;
+	private CashierGui cashierGui;
+	double wage;
 	
-	enum State {idle, rcvdPayment};
+	enum State {idle, rcvdPayment, shiftDone, left};
 	State state = State.idle;
 	
 	public EventLog log = new EventLog();
@@ -52,12 +55,13 @@ public class CashierAgent extends Agent {
 	public void setRestaurant(Restaurant rest) {
 		this.rest = rest;
 	}
-	
-	public void subtract(double amount) {
-		r.balance -= amount;
-	}
 
 	// Messages
+	
+	public void msgAnimationFinished() { // from gui
+		moving.release();
+		state = State.left;
+	}
 	
 	public void msgHereIsBill(Customer c, double amount){ // from worker
 		log.add(new LoggedEvent("Received msgHereIsBill"));
@@ -75,8 +79,9 @@ public class CashierAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgShiftDone() {
-		shiftDone = true;
+	public void msgShiftDone(double wage) {
+		state = State.shiftDone;
+		this.wage = wage;
 		stateChanged();
 	}
 
@@ -93,12 +98,31 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
-		if (shiftDone) ShiftDone();
+		if (state == State.shiftDone) {
+			ShiftDone();
+			return true;
+		}
+		if (state == State.left) {
+			StopWork();
+			return true;
+		}
 		return false;
 	}
 	
+	public void StopWork() {
+		state = State.idle;
+		person.msgStopWork(wage);
+	}
+	
 	public void ShiftDone() {
-		
+		state = State.idle;
+		try {
+			moving.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cashierGui.DoLeave();
 	}
 	
 	public void UpdateInventory(Bill b) {
@@ -137,6 +161,15 @@ public class CashierAgent extends Agent {
 			r.increase(b.amt);
 			b.cust.msgHereIsChange(amtRcvd - b.amt);
 		}
+	}
+	
+	public void setGui(CashierGui gui) {
+		cashierGui = gui;
+		cashierGui.setPresent(true);
+	}
+	
+	public double getMoney() {
+		return r.getMoney();
 	}
 	
 	public String getName() {

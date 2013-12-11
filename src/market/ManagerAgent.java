@@ -24,6 +24,7 @@ public class ManagerAgent extends Agent {
 	private List<WorkerAgent> myWorkers = new ArrayList<WorkerAgent>();
 	private List<Order> myOrders = new ArrayList<Order>();
 	private boolean shiftDone = false;
+	double wage;
 	
 	class Order {
 		Customer c;
@@ -63,8 +64,9 @@ public class ManagerAgent extends Agent {
     	stateChanged();
     }
 	
-	public void msgShiftDone() {
+	public void msgShiftDone(double wage) {
 		shiftDone = true;
+		this.wage = wage;
 		stateChanged();
 	}
 
@@ -91,7 +93,7 @@ public class ManagerAgent extends Agent {
 	// Actions
 	
 	public void ShiftDone() {
-		
+		person.msgStopWork(wage);
 	}
 	
 	public void AssignWorkerToOrder(Order o) {

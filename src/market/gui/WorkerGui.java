@@ -16,7 +16,7 @@ public class WorkerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, getItem, bringItem, deliverItem, goHome, leave};
+	private enum Command {noCommand, enter, getItem, bringItem, deliverItem, goHome, leave};
 	private Command command=Command.noCommand;
 	
 	public static final int mWidth = 400;
@@ -26,9 +26,10 @@ public class WorkerGui implements Gui{
 		agent = w;
 		agent.setGui(this);
 		xPos = (int)(mWidth*0.57) - agent.getNum()*mWidth/15;
-		yPos = (int)(mHeight*0.15);
+		yPos = -30;
 		xDestination = (int)(mWidth*0.57) - agent.getNum()*mWidth/15;
 		yDestination = (int)(mHeight*0.15);
+		command = Command.enter;
 	}
 
 	public void updatePosition() {
@@ -54,7 +55,8 @@ public class WorkerGui implements Gui{
 			
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command == Command.bringItem || command == Command.deliverItem) agent.msgAnimationDeliveredFinished();
-			else if (command != Command.noCommand) agent.msgAnimationFinished();
+			else if (command == Command.leave) agent.msgAnimationLeavingFinished();
+			else if (command != Command.noCommand && command != Command.enter) agent.msgAnimationFinished();
 			command=Command.noCommand;
 		}
 	}
@@ -105,7 +107,7 @@ public class WorkerGui implements Gui{
     }
     
     public void DoLeave() {
-		yDestination = 0;
+		yDestination = -30;
     	command = Command.leave;
     }
 
