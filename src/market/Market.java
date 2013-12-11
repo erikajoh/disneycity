@@ -135,37 +135,43 @@ public class Market implements Market_Douglass {
     }
     
     public void addPerson(Restaurant r, String name, String choice, int quantity, int id) {
-    	CustomerAgent cust = new CustomerAgent(name, choice, quantity, virtualCustomers.size(), id);	
-		if (manager!=null) cust.setManager(manager);
-		if (cashier!=null) cust.setCashier(cashier);
-		cust.setRest(r);
-		cust.setMarket(this);
-		virtualCustomers.add(cust);
-		cust.startThread();
+//    	if (isOpen) {
+    		CustomerAgent cust = new CustomerAgent(name, choice, quantity, virtualCustomers.size(), id);	
+			if (manager!=null) cust.setManager(manager);
+			if (cashier!=null) cust.setCashier(cashier);
+			cust.setRest(r);
+			cust.setMarket(this);
+			virtualCustomers.add(cust);
+			cust.startThread();
+//    	}
     }
     
     public void addPerson(PersonAgent p, String name, double money, String choice, int quantity) {
-		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
-		CustomerGui g = new CustomerGui(c);
-		gui.markAniPanel.addGui(g);
-		if (manager!=null) c.setManager(manager);
-		c.setGui(g);
-		if (cashier!=null) c.setCashier(cashier);
-		c.setPerson(p);
-		c.setMarket(this);
-		customers.add(c);
-		c.startThread();
-		g.updatePosition();
+//    	if (isOpen) {
+			CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
+			CustomerGui g = new CustomerGui(c);
+			gui.markAniPanel.addGui(g);
+			if (manager!=null) c.setManager(manager);
+			c.setGui(g);
+			if (cashier!=null) c.setCashier(cashier);
+			c.setPerson(p);
+			c.setMarket(this);
+			customers.add(c);
+			c.startThread();
+			g.updatePosition();
+//    	}
     }
     
     public void addPerson(PersonAgent p, String name, double money, String choice, int quantity, String location) {
-		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), location);	
-		if (manager!=null) c.setManager(manager);
-		if (cashier!=null) c.setCashier(cashier);
-		c.setPerson(p);
-		c.setMarket(this);
-		virtualCustomers.add(c);
-		c.startThread();    
+//		if (isOpen) {
+    		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), location);	
+			if (manager!=null) c.setManager(manager);
+			if (cashier!=null) c.setCashier(cashier);
+			c.setPerson(p);
+			c.setMarket(this);
+			virtualCustomers.add(c);
+			c.startThread();
+//    	}
     }
    
     public void addPerson(PersonAgent p, String type, String name) {
@@ -187,6 +193,7 @@ public class Market implements Market_Douglass {
     		if (manager == null) {
     			manager = new ManagerAgent(name);
     			manager.setPerson(p);
+    			manager.setMarket(this);
     			manager.startThread();
     			for (int i=0; i<workers.size(); i++) {
     				WorkerAgent w = workers.get(i);
@@ -199,6 +206,7 @@ public class Market implements Market_Douglass {
     			cashier = new CashierAgent(name, 100, p);
     			CashierGui g = new CashierGui(cashier);
     			gui.markAniPanel.addGui(g);
+    			cashier.setPerson(p);
     			cashier.setMarket(this);
     			cashier.startThread();
     			for (int i=0; i<workers.size(); i++) {
@@ -251,17 +259,26 @@ public class Market implements Market_Douglass {
 		for (int i = 0; i < workers.size(); i++) {
 			WorkerAgent w = workers.get(i);
 			w.msgShiftDone(wage);
-			workers.remove(w);
 		}
 		if (manager!=null) {
 			manager.msgShiftDone(wage);
-			manager = null;
 		}
 		if (cashier!=null) {
 			cashier.msgShiftDone(wage);
-			cashier = null;
-		}		
+		}
 	}
+    
+    public void removeMe(CashierAgent c) {
+    	cashier = null;
+    }
+    
+    public void removeMe(ManagerAgent m) {
+    	manager = null;
+    }
+    
+    public void removeMe(WorkerAgent w) {
+    	workers.remove(w);
+    }
     
     public String[] getWorkers(){
         List<String> marketWorkers = new ArrayList<String>();

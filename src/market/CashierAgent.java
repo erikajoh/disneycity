@@ -27,7 +27,7 @@ public class CashierAgent extends Agent {
 	private Market market;
 	private CashierGui cashierGui;
 	double wage;
-	boolean shiftDone;
+	boolean shiftDone = false;
 	
 	enum State {idle, rcvdPayment, left};
 	State state = State.idle;
@@ -82,9 +82,9 @@ public class CashierAgent extends Agent {
 	}
 	
 	public void msgShiftDone(double wage) {
-		shiftDone = true;
-		this.wage = wage;
-		stateChanged();
+//		shiftDone = true;
+//		this.wage = wage;
+//		stateChanged();
 	}
 
 	/**
