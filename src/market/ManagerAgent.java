@@ -65,9 +65,9 @@ public class ManagerAgent extends Agent {
     }
 	
 	public void msgShiftDone(double wage) {
-		shiftDone = true;
-		this.wage = wage;
-		stateChanged();
+//		shiftDone = true;
+//		this.wage = wage;
+//		stateChanged();
 	}
 
 	/**

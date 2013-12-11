@@ -101,9 +101,9 @@ public class WorkerAgent extends Agent {
 	}
 	
 	public void msgShiftDone(double wage) {
-		state = State.shiftDone;
-		this.wage = wage;
-		stateChanged();
+//		state = State.shiftDone;
+//		this.wage = wage;
+//		stateChanged();
 	}
 
 	/**
