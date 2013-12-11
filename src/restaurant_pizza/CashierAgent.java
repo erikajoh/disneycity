@@ -9,14 +9,17 @@ import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
+import restaurant_pizza.gui.RestaurantPizza;
 import restaurant_pizza.interfaces.Cashier;
 import restaurant_pizza.interfaces.Customer;
 import restaurant_pizza.interfaces.Market;
 import restaurant_pizza.interfaces.Waiter;
 import restaurant_pizza.test.mock.EventLog;
 import restaurant_pizza.test.mock.LoggedEvent;
+import restaurant_rancho.CashierAgent.MarketBill;
 import simcity.RestMenu;
 import simcity.PersonAgent;
+import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 
 public class CashierAgent extends Agent implements Cashier {
@@ -39,17 +42,31 @@ public class CashierAgent extends Agent implements Cashier {
 	boolean shiftDone = false;
 	double wage;
 	public boolean isWorking = true;
+	
+	RestaurantPizza restaurant;
 
 	
 	// TODO: CashierMarket interaction MarketAgent added stuff
 	// TODO: CashierMarket interaction what is CheckTwo? A new class?
 	private List<FoodBill> billsToPay = Collections.synchronizedList(new ArrayList<FoodBill>());
+	private List<MarketBill> bills = Collections.synchronizedList(new ArrayList<MarketBill>());
 	public double totalMoney = 500.0; // keeps track of the money received
 	private double totalDebt = 0.0; // keeps track of the money received
 	
-	public CashierAgent(String name) {
+	public static class MarketBill {
+		public Market_Douglass market;
+		double amount; 
+		
+		public MarketBill(Market_Douglass m, double am) {
+			market = m;
+			amount = am;
+		}
+	}
+	
+	public CashierAgent(String name, RestaurantPizza restaurant) {
 		super();
 		this.name = name;
+		this.restaurant = restaurant;
 		//initializeMenu();
 	}
 	
@@ -147,6 +164,12 @@ public class CashierAgent extends Agent implements Cashier {
 		stateChanged();
 	}
 	
+	public void msgHereIsMarketBill(Market_Douglass m, double amount){
+		log.add(new LoggedEvent("Received Market Bill."));
+		bills.add(new MarketBill(m, amount));
+		stateChanged();
+	}
+	
 	// ***** SCHEDULER *****
 	// changed from protected to public for JUnit testing
 	@Override
@@ -200,7 +223,12 @@ public class CashierAgent extends Agent implements Cashier {
 		
 		// loop through all waiting customers and tables
 		synchronized (checks) {
-		
+			
+			for(int indBill = 0; indBill<bills.size(); indBill++) {
+				MarketBill bill = bills.get(indBill);
+				payBill(bill);
+				return true;
+			}	
 			for(int indCheck = 0; indCheck < checks.size(); indCheck++) {
 				Check aCheck = checks.get(indCheck);
 				if(aCheck.state == CheckState.NewCheck) {
@@ -228,6 +256,14 @@ public class CashierAgent extends Agent implements Cashier {
 		}
 		if (shiftDone) {leaveWork();}
 		return false;
+	}
+	
+	private void payBill(MarketBill bill) {
+		bill.market.msgHereIsPayment(restaurant, bill.amount);
+		totalMoney -= bill.amount;
+		print ("Paid market, I have " + totalMoney + " dollars now");
+		bills.remove(bill);
+		stateChanged();
 	}
 
 	public void deliverCheck(Waiter freeWaiter, Check aCheck) {

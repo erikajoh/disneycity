@@ -332,7 +332,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     	}
     	else if (type.equals("Cashier")) {
     		numWorkers++;
-    		cashier = new CashierAgent(name);
+    		cashier = new CashierAgent(name, this);
     		if (p!=null) cashier.setPerson(p);
     		for (WaiterAgent w: waiters) {
     			w.setCashier(cashier);
