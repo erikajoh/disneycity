@@ -367,19 +367,23 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	 public void removeWorkers() {
 	    	if (host!=null && host.isWorking==false) {
 	    		host.stopThread();
+	    		numWorkers --;
 	    		host= null;
 	    	}
 	    	if (cook!=null && cook.isWorking==false) {
 	    		cook.stopThread();
+	    		numWorkers --;
 	    		cook = null;
 	    	}
 	    	if (cashier!=null && cashier.isWorking==false) {
 	    		cashier.stopThread();
+	    		numWorkers --;
 	    		cashier = null;
 	    	}
 	    	synchronized(waiters) {
 	    	for (WaiterAgent w : waiters ) {
 	    		if (w.isWorking==false) {
+	    			numWorkers --;
 	    			w.stopThread();
 	    			waiters.remove(w);
 	    		}

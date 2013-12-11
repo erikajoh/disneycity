@@ -260,20 +260,24 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     
     public void removeWorkers() {
     	if (host!=null && host.isWorking==false) {
+    		numWorkers--;
     		host.stopThread();
     		host = null;
     	}
     	if (cook!=null && cook.isWorking==false) {
+    		numWorkers--;
     		cook.stopThread();
     		cook = null;
     	}
     	if (cashier!=null && cashier.isWorking==false) {
+    		numWorkers--;
     		cashier.stopThread();
     		cashier = null;
     	}
     	synchronized(waiters) {
     	for (WaiterAgent w : waiters ) {
     		if (w.isWorking==false) {
+    			numWorkers--;
     			w.stopThread();
     			waiters.remove(w);
     		}
