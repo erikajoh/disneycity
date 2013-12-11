@@ -63,6 +63,13 @@ public class CashierAgent extends Agent implements Cashier {
 		}
 	}
 	
+	public CashierAgent(String name) {
+		super();
+		this.name = name;
+		this.restaurant = restaurant;
+		//initializeMenu();
+	}
+	
 	public CashierAgent(String name, RestaurantPizza restaurant) {
 		super();
 		this.name = name;

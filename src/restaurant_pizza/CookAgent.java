@@ -69,11 +69,11 @@ public class CookAgent extends Agent {
     		inventory.put(menu.menuList.get(i), startAmount);
     	}
     	foods = Collections.synchronizedList(new ArrayList<Food>());
-    	foods.add(new Food("Marsinara with Meatballs", 0, 0, 6, 7000));
-		foods.add(new Food("Chicken Fusilli", 0, 0, 6, 6000));
-		foods.add(new Food("Pepperoni Pizza", 0, 0, 6, 4000));
-		foods.add(new Food("Celestial Caesar Chicken Salad", 0, 0, 6, 7000));
-		foods.add(new Food("Bread Sticks", 7, 0, 6, 2500));
+    	foods.add(new Food("Marsinara with Meatballs", 5, 4, 6, 7000));
+		foods.add(new Food("Chicken Fusilli", 5, 4, 6, 6000));
+		foods.add(new Food("Pepperoni Pizza", 5, 4, 6, 4000));
+		foods.add(new Food("Celestial Caesar Chicken Salad", 5, 4, 6, 7000));
+		foods.add(new Food("Bread Sticks", 5, 4, 6, 2500));
     	recipeTimes.put("Marsinara with Meatballs", 30);
     	recipeTimes.put("Chicken Fusilli", 30);
     	recipeTimes.put("Pepperoni Pizza", 40);
