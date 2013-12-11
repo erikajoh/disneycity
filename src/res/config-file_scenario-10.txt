@@ -1,4 +1,4 @@
-41
+47
 Narwhal_Prime|Rabbit Hole|OwnerResident
 Edgar_Prime|Haunted Mansion|OwnerResident
 ImSoRich|Space Mountain|Renter
@@ -40,11 +40,18 @@ PirateTeller2|Main St Apartments #9|Renter
 StartWithCar2|Main St Apartments #10|OwnerResident
 StartWithCar3|Main St Apartments #10|Renter
 StartWithCar4|Main St Apartments #10|Renter
-14
+MickeyCashier1|Main St Apartments #10|Renter
+MickeyManager1|Main St Apartments #11|OwnerResident
+MickeyWorker1|Main St Apartments #11|Renter
+MickeyCashier2|Main St Apartments #11|Renter
+MickeyManager2|Main St Apartments #11|Renter
+MickeyWorker2|Pirate's Suite|OwnerResident
+16
 Rabbit Hole|Narwhal_Prime|Narwhal_Prime
 Haunted Mansion|Edgar_Prime|Edgar_Prime
 Space Mountain|Edgar_Prime|ImSoRich
 Cinderella Castle|ImSoPoor|ImSoPoor
+Pirate's Suite|MickeyWorker2|MickeyWorker2
 Main St Apartments #1|CafeWaiter1|CafeWaiter1|CafeCashier1|CafeCook1|CafeHost1
 Main St Apartments #2|BayouWaiter1|BayouWaiter1|BayouCashier1|BayouCook1|BayouHost1
 Main St Apartments #3|HausWaiter1|HausWaiter1|HausCashier1|HausCook1|HausHost1
@@ -54,5 +61,6 @@ Main St Apartments #6|PizzaHost1|PizzaHost1|PizzaWaiter1|PizzaCashier1|PizzaCook
 Main St Apartments #7|PizzaHost2|PizzaHost2|PizzaWaiter2|PizzaCashier2|PizzaCook2
 Main St Apartments #8|BayouWaiter2|BayouWaiter2|BayouHost2|BayouCashier2|BayouCook2
 Main St Apartments #9|PirateTeller1|PirateTeller1|PirateTeller2
-Main St Apartments #10|StartWithCar2|StartWithCar2|StartWithCar3|StartWithCar4
+Main St Apartments #10|StartWithCar2|StartWithCar2|StartWithCar3|StartWithCar4|MickeyCashier1
+Main St Apartments #11|MickeyManager1|MickeyManager1|MickeyWorker1|MickeyCashier2|MickeyManager2
 Friday
