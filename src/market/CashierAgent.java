@@ -39,10 +39,9 @@ public class CashierAgent extends Agent {
 	 *
 	 * @param name name of the cashier
 	 */
-	public CashierAgent(String name, double amt, PersonAgent person){
+	public CashierAgent(String name, double amt){
 		super();
 		this.name = name;
-		this.person = person;
 		r = new CashRegister(amt);
 	}
 	
@@ -82,9 +81,9 @@ public class CashierAgent extends Agent {
 	}
 	
 	public void msgShiftDone(double wage) {
-//		shiftDone = true;
-//		this.wage = wage;
-//		stateChanged();
+		shiftDone = true;
+		this.wage = wage;
+		stateChanged();
 	}
 
 	/**
@@ -92,7 +91,8 @@ public class CashierAgent extends Agent {
 	 */
 	public boolean pickAndExecuteAnAction() {
 		if (state == State.rcvdPayment){
-			for (Bill b: marketBills){
+			for (int i=0; i<marketBills.size(); i++){
+				Bill b = marketBills.get(i);
 				if (b.cust == customer){
 					ProcessPayment(b, amt);
 					UpdateInventory(b);
@@ -100,8 +100,13 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
-		if (shiftDone && market.getCustomers() == 0) {
-			ShiftDone();
+		print("no customers left: "+market.noCustomers());
+		print("shiftdone? "+shiftDone);
+		if (shiftDone) {
+			if (market.noCustomers()) {
+				ShiftDone();
+				shiftDone = false;
+			}
 			return true;
 		}
 		if (state == State.left) {
@@ -114,17 +119,18 @@ public class CashierAgent extends Agent {
 	public void StopWork() {
 		state = State.idle;
 		person.msgStopWork(wage);
+		market.removeMe(this);
 	}
 	
 	public void ShiftDone() {
 		state = State.idle;
+		cashierGui.DoLeave();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		cashierGui.DoLeave();
 	}
 	
 	public void UpdateInventory(Bill b) {

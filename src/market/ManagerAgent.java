@@ -3,6 +3,7 @@ package market;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import market.CashierAgent.State;
 import market.interfaces.Customer;
 import simcity.PersonAgent;
 import agent.Agent;
@@ -65,9 +66,9 @@ public class ManagerAgent extends Agent {
     }
 	
 	public void msgShiftDone(double wage) {
-//		shiftDone = true;
-//		this.wage = wage;
-//		stateChanged();
+		shiftDone = true;
+		this.wage = wage;
+		stateChanged();
 	}
 
 	/**
@@ -79,11 +80,18 @@ public class ManagerAgent extends Agent {
             such that table is unoccupied, customer is waiting, and waiter is ready.
             If so, tell waiter to seat customer at table.
 		 */
-		for (Order o: myOrders) {
+		for (int i=0; i<myOrders.size(); i++) {
+			Order o = myOrders.get(i);
 	    	AssignWorkerToOrder(o);
 	    	return true;
 		}
-		if (shiftDone && market.getCustomers() == 0) ShiftDone();
+		if (shiftDone) {
+			if (market.noCustomers()) {
+				ShiftDone();
+				shiftDone = false;
+			}
+			return true;
+		}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -94,6 +102,7 @@ public class ManagerAgent extends Agent {
 	
 	public void ShiftDone() {
 		person.msgStopWork(wage);
+		market.removeMe(this);
 	}
 	
 	public void AssignWorkerToOrder(Order o) {

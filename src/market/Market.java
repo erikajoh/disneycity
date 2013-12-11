@@ -120,7 +120,7 @@ public class Market implements Market_Douglass {
     }
     
     public boolean isOpen() {
-		return (workers.size() > 0 && manager != null && cashier != null);
+		return (isOpen && workers.size() > 0 && manager != null && cashier != null);
 	}
     
     public String getName() { return name; }
@@ -137,7 +137,7 @@ public class Market implements Market_Douglass {
     }
     
     public void addPerson(Restaurant r, String name, String choice, int quantity, int id) {
-//    	if (isOpen) {
+    	if (isOpen()) {
     		CustomerAgent cust = new CustomerAgent(name, choice, quantity, virtualCustomers.size(), id);	
 			if (manager!=null) cust.setManager(manager);
 			if (cashier!=null) cust.setCashier(cashier);
@@ -145,11 +145,11 @@ public class Market implements Market_Douglass {
 			cust.setMarket(this);
 			virtualCustomers.add(cust);
 			cust.startThread();
-//    	}
+    	}
     }
     
     public void addPerson(PersonAgent p, String name, double money, String choice, int quantity) {
-//    	if (isOpen) {
+    	if (isOpen()) {
 			CustomerAgent c = new CustomerAgent(name, money, choice, quantity, customers.size());	
 			CustomerGui g = new CustomerGui(c);
 			gui.markAniPanel.addGui(g);
@@ -161,11 +161,13 @@ public class Market implements Market_Douglass {
 			customers.add(c);
 			c.startThread();
 			g.updatePosition();
-//    	}
+    	} else {
+    		p.msgHereIsOrder(choice, 0);
+    	}
     }
     
     public void addPerson(PersonAgent p, String name, double money, String choice, int quantity, String location) {
-//		if (isOpen) {
+		if (isOpen()) {
     		CustomerAgent c = new CustomerAgent(name, money, choice, quantity, virtualCustomers.size(), location);	
 			if (manager!=null) c.setManager(manager);
 			if (cashier!=null) c.setCashier(cashier);
@@ -173,7 +175,9 @@ public class Market implements Market_Douglass {
 			c.setMarket(this);
 			virtualCustomers.add(c);
 			c.startThread();
-//    	}
+    	} else {
+    		p.msgHereIsOrder(choice, 0);
+    	}
     }
    
     public void addPerson(PersonAgent p, String type, String name) {
@@ -187,7 +191,7 @@ public class Market implements Market_Douglass {
     		w.setPerson(p);
     		w.setMarket(this);
     		workers.add(w);
-    		manager.addWorker(w);
+    		if (manager != null) manager.addWorker(w);
     		w.startThread();
     		g.updatePosition();
     	}
@@ -196,20 +200,23 @@ public class Market implements Market_Douglass {
     			manager = new ManagerAgent(name);
     			manager.setPerson(p);
     			manager.setMarket(this);
+    			if (cashier != null) manager.setCashier(cashier);
     			manager.startThread();
     			for (int i=0; i<workers.size(); i++) {
     				WorkerAgent w = workers.get(i);
+    				manager.addWorker(w);
     				w.setManager(manager);
     			}
     		}
     	}
     	else if (type.equals("Cashier")) {   
     		if (cashier == null) {
-    			cashier = new CashierAgent(name, 100, p);
+    			cashier = new CashierAgent(name, 100);
     			CashierGui g = new CashierGui(cashier);
     			gui.markAniPanel.addGui(g);
     			cashier.setPerson(p);
     			cashier.setMarket(this);
+    			if (manager != null) manager.setCashier(cashier);
     			cashier.startThread();
     			for (int i=0; i<workers.size(); i++) {
     				WorkerAgent w = workers.get(i);
@@ -220,8 +227,8 @@ public class Market implements Market_Douglass {
     	gui.updateGui();
     }
     
-    public int getCustomers() {
-    	return customers.size();
+    public boolean noCustomers() {
+    	return (customers.size() == 0 && virtualCustomers.size() == 0);
     }
     
     public double getPrice(String f) {
@@ -253,21 +260,21 @@ public class Market implements Market_Douglass {
     }
     
     public void endOfShift() {
-//		isOpen = false;
-//		double totalMoney = cashier.getMoney();
-//		int numEmployees = 2 + workers.size();
-//		double wage = totalMoney/numEmployees;
-//		System.out.println("MARKET GOT END OF SHIFT");
-//		for (int i = 0; i < workers.size(); i++) {
-//			WorkerAgent w = workers.get(i);
-//			w.msgShiftDone(wage);
-//		}
-//		if (manager!=null) {
-//			manager.msgShiftDone(wage);
-//		}
-//		if (cashier!=null) {
-//			cashier.msgShiftDone(wage);
-//		}
+		isOpen = false;
+		double totalMoney = cashier.getMoney();
+		int numEmployees = 2 + workers.size();
+		double wage = totalMoney/numEmployees;
+		System.out.println("MARKET GOT END OF SHIFT");
+		for (int i = 0; i < workers.size(); i++) {
+			WorkerAgent w = workers.get(i);
+			w.msgShiftDone(wage);
+		}
+		if (manager!=null) {
+			manager.msgShiftDone(wage);
+		}
+		if (cashier!=null) {
+			cashier.msgShiftDone(wage);
+		}
 	}
     
     public void removeMe(CashierAgent c) {
@@ -289,7 +296,8 @@ public class Market implements Market_Douglass {
     		String cashierName = "Cashier: "+cashier.getName();
     		marketWorkers.add(cashierName);
     	}
-    	for(WorkerAgent worker : workers){
+    	for(int i=0; i<workers.size(); i++){
+    		WorkerAgent worker = workers.get(i);
     		String workerName = "Worker: "+worker.getName();
     		marketWorkers.add(workerName);
     	}

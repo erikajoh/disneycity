@@ -23,10 +23,11 @@ public class WorkerAgent extends Agent {
 	private List<MyOrder> orders = new ArrayList<MyOrder>();
 	private Semaphore moving = new Semaphore(0, true);
 	private Semaphore working = new Semaphore(0, true);
-	private enum State {idle, shiftDone, left;}
+	private enum State {idle, left;}
 	private State state = State.idle;
 	private int num;
 	private double wage;
+	private boolean shiftDone = false;
 		
 	class MyOrder {
 		Customer c;
@@ -91,7 +92,6 @@ public class WorkerAgent extends Agent {
 		//from animation
 		moving.release();
 		state = State.left;
-		stateChanged();
 	}
 	
 	public void msgGoGetItem(Customer cust, String c, int quantity, boolean virtual) { // from customer
@@ -101,22 +101,28 @@ public class WorkerAgent extends Agent {
 	}
 	
 	public void msgShiftDone(double wage) {
-//		state = State.shiftDone;
-//		this.wage = wage;
-//		stateChanged();
+		shiftDone = true;
+		this.wage = wage;
+		stateChanged();
 	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	protected boolean pickAndExecuteAnAction() {
-		for (MyOrder o: orders) {
+		for (int i=0; i<orders.size(); i++) {
+			MyOrder o = orders.get(i);
 			AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Getting "+o.item+" for "+o.c.toString());
 			GetItemAndReturn(o);
 			return true;
 		}
-		if (state == State.shiftDone) {
-			ShiftDone();
+		print("worker shift done? "+shiftDone);
+		print("market no customers? "+market.noCustomers());
+		if (shiftDone) {
+			if (market.noCustomers()) {
+				ShiftDone();
+				shiftDone = false;
+			}
 			return true;
 		}
 		if (state == State.left) {
@@ -128,18 +134,19 @@ public class WorkerAgent extends Agent {
 	
 	public void ShiftDone() {
 		state = State.idle;
+		workerGui.DoLeave();
 		try {
 			moving.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		workerGui.DoLeave();
 	}
 	
 	public void StopWork() {
 		state = State.idle;
 		person.msgStopWork(wage);
+		market.removeMe(this);
 	}
 	
 	public void GetItemAndReturn(MyOrder o) {
