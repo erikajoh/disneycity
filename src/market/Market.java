@@ -118,8 +118,8 @@ public class Market implements Market_Douglass {
     }
     
     public boolean isOpen() {
-    	return isOpen;
-    }
+		return (workers.size() > 0 && manager != null && cashier != null);
+	}
     
     public String getName() { return name; }
     
