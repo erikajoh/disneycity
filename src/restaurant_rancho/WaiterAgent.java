@@ -234,8 +234,6 @@ import java.util.concurrent.Semaphore;
 				if (cook!=null) { 
 					cook.msgShiftDone(wage); 
 				}
-				if (host!=null) { 
-				}
 				if (cashier!=null) { 
 					cashier.msgShiftDone(wage); 
 				}

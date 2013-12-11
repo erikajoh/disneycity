@@ -247,6 +247,8 @@ public class RestaurantPizza extends JPanel implements Restaurant {
      * @param name name of person
      */
     public void addPerson(Person p, String type, String name, double money) {
+  
+    	removeWorkers();
 
     	if (!isOpen && type.equals("Customer")) {
     		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " told to go home because Rancho de Zocalo is now closed"); 
@@ -324,7 +326,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		for (WaiterAgent w : waiters) {
     			w.setCook(cook);
     		}
-    		cook.setMarkets(markets);
+    		cook.setMarket(market);
     		cook.setRestaurant(this);
     		cook.startThread();
     	}
@@ -363,17 +365,21 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	
 	 public void removeWorkers() {
 	    	if (host!=null && host.isWorking==false) {
+	    		host.stopThread();
 	    		host= null;
 	    	}
 	    	if (cook!=null && cook.isWorking==false) {
+	    		cook.stopThread();
 	    		cook = null;
 	    	}
 	    	if (cashier!=null && cashier.isWorking==false) {
+	    		cashier.stopThread();
 	    		cashier = null;
 	    	}
 	    	synchronized(waiters) {
 	    	for (WaiterAgent w : waiters ) {
 	    		if (w.isWorking==false) {
+	    			w.stopThread();
 	    			waiters.remove(w);
 	    		}
 	    	}

@@ -240,6 +240,9 @@ public class RestaurantHaus extends JPanel implements Restaurant{
             for (WaiterAgent w : waiters) {
             	w.setCook(cook);
             }
+            for (Market_Douglass m : markets) {
+            	cook.addMarket(m);
+            }
     	    cook.startThread();
     	}
     	else if (type.equals("Cashier")) { 
@@ -373,7 +376,7 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 	@Override
 	public void setMarket(Market_Douglass m) {
 		markets.add(m);
-		cook.addMarket(m);
+		if (cook!=null) cook.addMarket(m);
 	}
 
 	public String getType() {

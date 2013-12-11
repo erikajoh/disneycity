@@ -158,7 +158,7 @@ public class CookAgent extends Agent implements Cook{
 						if (mo.os == moState.pending) {
 							print("Ordering "+mo.amount+" "+mo.food+"'s");
 							mo.os = moState.ordered;
-							market.personAs(restaurant, "Mexican", mo.amount, mo.id);
+							goToMarket(restaurant, "Mexican", mo.amount, mo.id);
 							return true;
 						}
 					}
@@ -173,6 +173,11 @@ public class CookAgent extends Agent implements Cook{
 	}
 
 	// Actions
+	
+	private void goToMarket(RestaurantRancho r, String type, int amount, int id) {
+		market.personAs(r, type, amount, id);
+	}
+	
 
 	private void cookIt(final Order o) {
 		if (findFood(o.choice).amount == 0) {

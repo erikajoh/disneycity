@@ -13,6 +13,7 @@ import java.util.concurrent.Semaphore;
 
 import restaurant_pizza.gui.CookGui;
 import restaurant_pizza.gui.RestaurantPizza;
+import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 import simcity.RestMenu;
 
@@ -23,8 +24,6 @@ public class CookAgent extends Agent {
 	// Note: time is in seconds. Constant of 1000 gets multiplied when determining timeFinish
 	private Map<String, Integer> recipeTimes = Collections.synchronizedMap(new HashMap<String, Integer>());
 	private Map<String, Integer> inventory = Collections.synchronizedMap(new HashMap<String, Integer>());
-	private Map<String, Integer> designatedMarkets = Collections.synchronizedMap(new HashMap<String, Integer>()); // food type, index of market in myMarkets
-	public List<MyMarket> myMarkets = Collections.synchronizedList(new LinkedList<MyMarket>());
 	private List<Order> orders = Collections.synchronizedList(new LinkedList<Order>());
 	Person person;
 	
@@ -37,6 +36,9 @@ public class CookAgent extends Agent {
 	public boolean isWorking = true;
 	double wage;
 	
+	List<MarketOrder> marketOrders = new ArrayList<MarketOrder> ();
+	Market_Douglass market;
+	RestaurantPizza pizza;
 	public enum AgentState {Working, WorkingAndPendingOrder};
 	public AgentState state = AgentState.Working;
 	public enum OrderState {NotReady, UnableToBeSupplied, BeingPrepared, Cooking, Ready, GoingToPlating};
@@ -44,6 +46,10 @@ public class CookAgent extends Agent {
 	Timer timer = new Timer();
 	Semaphore atDestination = new Semaphore(0, true);
 	Semaphore pauseAction = new Semaphore(0, true);
+	List<Food> foods;
+	
+	private enum moState {pending, ordered};
+	int curID = 0;
 	
 	RestaurantPizza restaurant;
 	
@@ -60,20 +66,23 @@ public class CookAgent extends Agent {
     	for (int i = 0; i< menu.menuList.size(); i++) {
     		inventory.put(menu.menuList.get(i), startAmount);
     	}
+    	foods = Collections.synchronizedList(new ArrayList<Food>());
+    	foods.add(new Food("Citrus Fire-Grilled Chicken", 0, 0, 6, 7000));
+		foods.add(new Food("Red Chile Enchilada Platter", 0, 0, 6, 6000));
+		foods.add(new Food("Soft Tacos Monterrey", 0, 0, 6, 4000));
+		foods.add(new Food("Burrito Sonora", 0, 0, 6, 7000));
+		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 6, 2500));
     	recipeTimes.put("Marsinara with Meatballs", 30);
     	recipeTimes.put("Chicken Fusilli", 30);
     	recipeTimes.put("Pepperoni Pizza", 40);
     	recipeTimes.put("Celestial Caesar Chicken Salad", 20);
     	recipeTimes.put("Bread Sticks",  20);
+    	//market = m;
+    	//restaurant = rest;
 	}
 	
 	public void setRestaurant(RestaurantPizza rest) {
 		restaurant = rest;
-	}
-	
-	public void setMarkets(List<MarketAgent> marketAgents) {
-		for(MarketAgent ma : marketAgents)
-			myMarkets.add(new MyMarket(ma));
 	}
 	
 	public RestMenu getMenu() {
@@ -87,6 +96,11 @@ public class CookAgent extends Agent {
 	 public void setAmount(String choice, int amount) {
 	    // TODO This is empty, needed for WorkplacePropertiesPanel
 	 }
+	 
+	 public void setMarket(Market_Douglass m) {
+			print("setting market " + m.getName());
+			market = m;
+		}
 	
 	public void initializeMaps() throws Exception {
 		URL fileURL = getClass().getResource("/res/MenuTextFile.txt");
@@ -101,7 +115,7 @@ public class CookAgent extends Agent {
 			int itemCookTime = Integer.parseInt(st.nextToken());
 			recipeTimes.put(itemName, itemCookTime);
 			inventory.put(itemName, startAmount);
-			designatedMarkets.put(itemName, 0);
+			//designatedMarkets.put(itemName, 0);
 		}
 		br.close();
 	}
@@ -126,7 +140,7 @@ public class CookAgent extends Agent {
 	public void msgNewOrder(WaiterAgent w, int tableNum, String order) {
 		print("msgNewOrder() from Waiter " + w.getName());
 		long timeFinish = -1;
-		if(menu.menuItems.containsKey(order) && inventory.get(order) > 0) {
+		if(findFood(order).amount > 0) {
 			timeFinish = (System.currentTimeMillis() + (long)((menu.menuItems.get(order))*Constants.SECOND));
 			int previousInventoryAmount = inventory.get(order);
 			inventory.put(order, previousInventoryAmount - 1);
@@ -134,12 +148,20 @@ public class CookAgent extends Agent {
 
 			Order incomingOrder = new Order(w, tableNum, order, timeFinish);
 			orders.add(incomingOrder);
+			Food f = findFood(order);
+			f.amount--;
+			if (f.amount <= f.low ) {
+				marketOrders.add(new MarketOrder(f.choice, f.capacity-f.amount));
+				f.ordered = true;
+			}
 		}
 		else {
 			Order incomingOrder = new Order(w, tableNum, order, timeFinish);
 			incomingOrder.state = OrderState.UnableToBeSupplied;
 			menu.menuList.remove(order);
 			orders.add(incomingOrder);
+			Food f = findFood(order);
+			marketOrders.add(new MarketOrder(f.choice, f.capacity-f.amount));
 		}
 		stateChanged();
 	}
@@ -156,7 +178,24 @@ public class CookAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgHereIsResupply(MarketOrder mo) {
+	public void msgHereIsOrder(String choice, int amount, int id) {
+		print("Received a delivery of "+amount+" "+choice+"'s from the market!");
+		for (int i=0; i<marketOrders.size(); i++){
+			MarketOrder mo = marketOrders.get(i);
+			if (mo.id == id && mo.amount == amount) {
+				Food f = findFood(mo.food);
+				f.amount = amount;
+				print("removing a market order whee");
+				marketOrders.remove(mo);
+			} else if (mo.food == choice && mo.amount != 0) {
+				Food f = findFood(mo.food);
+				f.amount = amount + mo.amount;
+				mo.amount -= amount;
+			}
+		}
+	}
+	
+	/*public void msgHereIsResupply(MarketOrder mo) {
 		if(mo.amount == 0) {
 			int indObsoleteMarket = designatedMarkets.get(mo.foodType);
 			designatedMarkets.put(mo.foodType, indObsoleteMarket+1);
@@ -169,6 +208,7 @@ public class CookAgent extends Agent {
 		state = AgentState.Working;
 		stateChanged();
 	}
+	*/
 	
 	public void msgAtDestination() {
 		atDestination.release();
@@ -178,20 +218,7 @@ public class CookAgent extends Agent {
 	// ***** SCHEDULER *****
 	
 	protected boolean pickAndExecuteAnAction() {
-	
-		if(state == AgentState.Working) {
-			Set<String> foodsSet = inventory.keySet();
-			synchronized (foodsSet) {
-				for(String foodType : foodsSet) {
-					int amount = inventory.get(foodType);
-					if(amount < minimumStock) {
-						Restock(new MarketOrder(foodType, restockAmount));
-						state = AgentState.WorkingAndPendingOrder;
-						return true;
-					}
-				}
-			}
-		}
+
 		synchronized (orders) {
 			for(Order o : orders) {
 				if(o.state == OrderState.UnableToBeSupplied) {
@@ -217,7 +244,16 @@ public class CookAgent extends Agent {
 				}
 			}
 		}
-		
+		synchronized(marketOrders) {
+			for (MarketOrder mo : marketOrders){ 
+				if (mo.os == moState.pending) {
+					print("Ordering "+mo.amount+" "+mo.food+"'s");
+					mo.os = moState.ordered;
+					goToMarket(restaurant, "Italian", mo.amount, mo.id);
+					return true;
+				}
+			}
+		}
 		// Producer-consumer handling
 		StandOrder orderFromStand = restaurant.revolvingStand.remove();
 		if(orderFromStand != null) {
@@ -237,6 +273,10 @@ public class CookAgent extends Agent {
 	}
 
 	// ***** ACTIONS *****
+	
+	private void goToMarket(RestaurantPizza r, String type, int amount, int id) {
+		market.personAs(r, type, amount, id);
+	}
 	
 	private void AddNewOrderFromStand(Order newStandOrder) {
 		print("Retrieving order from stand");
@@ -316,7 +356,7 @@ public class CookAgent extends Agent {
 		orders.remove(o);
 	}
 
-	private void Restock(MarketOrder mo) {
+/*	private void Restock(MarketOrder mo) {
 		print("Restock() called");
 		int indMarketToQuery = designatedMarkets.get(mo.foodType);
 		if(indMarketToQuery < myMarkets.size()) {
@@ -324,6 +364,7 @@ public class CookAgent extends Agent {
 			theMarket.market.msgNeedFood(mo);
 		}
 	}
+	*/
 	
 	// animations
 	
@@ -344,13 +385,23 @@ public class CookAgent extends Agent {
 	
 	// utilities
 	
-	public int getQuantity(String name){
-	   return inventory.get(name);
-	} 
-	
+	 public int getQuantity(String name){
+		 for(Food food : foods){
+			 if(food.choice.equals(name)){
+				 return food.amount;
+			 } 
+		 }
+	   	return 0;
+	 } 
+	 
 	 public void setQuantity(String name, int num){
-		inventory.put(name, num);
+		 for(Food food : foods){
+			 if(food.choice.equals(name)){
+				  food.amount = num;
+			 } 
+		 }
 	 }
+	
 
 	public void setGui(CookGui gui) {
 		cookGui = gui;
@@ -377,5 +428,59 @@ public class CookAgent extends Agent {
 			state = OrderState.NotReady;
 			finishTime = aFinishTime;
 		}
+	}
+	
+	
+	 class Food {
+		String choice;
+		int cookingTime;
+		int amount; 
+		int capacity; 
+		int low; 
+		boolean ordered;
+		
+		Food (String ch, int am, int lo, int cap, int ct) {
+			choice = ch; 
+			amount = am;
+			low = lo;
+			capacity = cap;
+			cookingTime = ct;
+			ordered = false;
+		}
+		
+		public void setOrdered(boolean ord) {
+			ordered = ord;
+		}
+	 }
+
+	
+	class MarketOrder {
+		String food;
+		int amount;
+		moState os;
+		int id;
+		MarketOrder(String f, int a) {
+			amount = a;
+			food = f;
+			id = curID;
+			curID++;
+			os = moState.pending;
+		}
+		
+		
+	}
+	//utilities
+
+	
+	    
+	public Food findFood(String ch) {
+		synchronized(foods) {
+			for (Food f : foods) {
+				if (f.choice==ch) {
+					return f;
+				}
+			}
+		}
+		return null;
 	}
 }
