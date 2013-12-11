@@ -253,21 +253,21 @@ public class Market implements Market_Douglass {
     }
     
     public void endOfShift() {
-		isOpen = false;
-		double totalMoney = cashier.getMoney();
-		int numEmployees = 2 + workers.size();
-		double wage = totalMoney/numEmployees;
-		System.out.println("MARKET GOT END OF SHIFT");
-		for (int i = 0; i < workers.size(); i++) {
-			WorkerAgent w = workers.get(i);
-			w.msgShiftDone(wage);
-		}
-		if (manager!=null) {
-			manager.msgShiftDone(wage);
-		}
-		if (cashier!=null) {
-			cashier.msgShiftDone(wage);
-		}
+//		isOpen = false;
+//		double totalMoney = cashier.getMoney();
+//		int numEmployees = 2 + workers.size();
+//		double wage = totalMoney/numEmployees;
+//		System.out.println("MARKET GOT END OF SHIFT");
+//		for (int i = 0; i < workers.size(); i++) {
+//			WorkerAgent w = workers.get(i);
+//			w.msgShiftDone(wage);
+//		}
+//		if (manager!=null) {
+//			manager.msgShiftDone(wage);
+//		}
+//		if (cashier!=null) {
+//			cashier.msgShiftDone(wage);
+//		}
 	}
     
     public void removeMe(CashierAgent c) {

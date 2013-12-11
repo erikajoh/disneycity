@@ -13,11 +13,32 @@ Erika Johnson <br>
 Kelsey Rose <br>
 
 ##Map legend (useful for tracking locations)
-+ 1 = Market (Mickey's Market)
-+ 2, 4, 9, 12 = Restaurants (in this version 9 and 14 demonstrate key functionality)
-+ 3, 6, 7, 10, 11, 13 = Apartments
-+ 5 = House
-+ 8 = Bank
++ (1) Tiki Hut
++ (2) Haunted Mansion
++ (3) Pirate's Suite
++ (4) Space Mountain
++ (5) Cinderella Castle
++ (6) Rabbit Hole
++ (7) Mickey's Market
++ (8) Minnie's Market
++ (9) Rancho Del Zocalo
++ (10) Village Haus
++ (11) Carnation Cafe
++ (12) Blue Bayou
++ (13) Pizza Port
++ (14) Pirate Bank
++ (15) Main St Apartments #1
++ (16) Main St Apartments #6
++ (17) Main St Apartments #7
++ (18) Main St Apartments #11
++ (19) Main St Apartments #10
++ (20) Main St Apartments #4
++ (21) Main St Apartments #9
++ (22) Main St Apartments #8
++ (23) Main St Apartments #5
++ (24) Main St Apartments #3
++ (25) Main St Apartments #2
++ (26) Buccaneer Bank
 
 ##Description
 
