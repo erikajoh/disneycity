@@ -398,7 +398,7 @@ public class PersonTest extends TestCase
 	}
 
 	// TEST #2
-	// Person: start with surplus money, go to bank, deposit
+	// Person: start with surplus money, go to bank, ROB THE BANK, deposit money, done
 	public void testNormative_SurplusMoney() {
 		// setup
 		person.setMoney(500);
@@ -474,26 +474,27 @@ public class PersonTest extends TestCase
 		
 		assertTrue("Call scheduler, enter bank to create account, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		
 		assertTrue("Person: creates account",
 				person.log.containsString("Creating account"));
 		
-		assertTrue("Call scheduler, now realizes need to withdraw money, scheduler returns true",
+		assertTrue("Call scheduler, now realizes need to go to bank, scheduler returns true",
 				person.pickAndExecuteAnAction());
-		assertTrue("Call scheduler, the actual withdraw money action, scheduler returns true",
+		assertFalse("Call scheduler, should be right outside his home, scheduler returns false",
 				person.pickAndExecuteAnAction());
+		assertEquals("Person: has 920 dollars",
+				920.0, person.getMoney());
 
 		// step 2 post-conditions and step 3 pre-conditions
 		
 		assertEquals("Person: currentLocation = Mock Bank 1",
 				"Mock Bank 1", person.getCurrLocation());
-		assertEquals("Person: currentLocationState = Bank",
-				"Bank", person.getCurrLocationState());
-		assertTrue("Person: event = makingDecision", 
-				person.event.toString().equals("makingDecision"));
+		assertEquals("Person: currentLocationState = Transit",
+				"Transit", person.getCurrLocationState());
+		assertTrue("Person: event = onHoldInTransportation", 
+				person.event.toString().equals("onHoldInTransportation"));
 		
-		assertEquals("Person: 16 event logs",
-				16, person.log.size());
+		assertEquals("Person: 13 event logs",
+				13, person.log.size());
 	}
 	
 	// TEST #3
@@ -505,13 +506,6 @@ public class PersonTest extends TestCase
 	// TEST #4
 	// Person: it's Friday morning, perform maintenance, return to original default position, done
 	public void testNormative_HomeMaintenance() {
-		
-	}
-	
-	// TEST #5
-	// Person: it's time to pay rent, renter and owner recieve appropriate messages
-	// Their money amounts are updated accordingly
-	public void testNormative_PayRent() {
 		
 	}
 }
