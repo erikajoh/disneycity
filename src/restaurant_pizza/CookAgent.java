@@ -67,11 +67,11 @@ public class CookAgent extends Agent {
     		inventory.put(menu.menuList.get(i), startAmount);
     	}
     	foods = Collections.synchronizedList(new ArrayList<Food>());
-    	foods.add(new Food("Citrus Fire-Grilled Chicken", 0, 0, 6, 7000));
-		foods.add(new Food("Red Chile Enchilada Platter", 0, 0, 6, 6000));
-		foods.add(new Food("Soft Tacos Monterrey", 0, 0, 6, 4000));
-		foods.add(new Food("Burrito Sonora", 0, 0, 6, 7000));
-		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 6, 2500));
+    	foods.add(new Food("Marsinara with Meatballs", 0, 0, 6, 7000));
+		foods.add(new Food("Chicken Fusilli", 0, 0, 6, 6000));
+		foods.add(new Food("Pepperoni Pizza", 0, 0, 6, 4000));
+		foods.add(new Food("Celestial Caesar Chicken Salad", 0, 0, 6, 7000));
+		foods.add(new Food("Bread Sticks", 7, 0, 6, 2500));
     	recipeTimes.put("Marsinara with Meatballs", 30);
     	recipeTimes.put("Chicken Fusilli", 30);
     	recipeTimes.put("Pepperoni Pizza", 40);
@@ -249,6 +249,7 @@ public class CookAgent extends Agent {
 				if (mo.os == moState.pending) {
 					print("Ordering "+mo.amount+" "+mo.food+"'s");
 					mo.os = moState.ordered;
+					print ("COWABUNGA ordering from market");
 					goToMarket(restaurant, "Italian", mo.amount, mo.id);
 					return true;
 				}
