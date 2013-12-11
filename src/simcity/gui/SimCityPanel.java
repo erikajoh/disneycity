@@ -40,6 +40,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	SimCityGui gui = null;
 	
 	JComboBox scenarioList;
+	JComboBox dayList;
 	JButton startButton = new JButton("Start");
 
 	RestaurantRancho restRancho;
@@ -67,6 +68,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	Housing mainStApts11;
 	
 	Bank pirateBank;
+	Bank buccaneerBank;
 	
 	Market mickeysMarket;
 
@@ -77,7 +79,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	public final static int NEW_DAY_DELAY = 3000;	 
 	public final static int NUM_RESTAURANTS = 5;
 	public final static int NUM_MARKETS = 1;
-	public final static int NUM_BANKS = 1;
+	public final static int NUM_BANKS = 2;
 	
 	public final static String MAIN_CONFIG_FILE = "simcity_config_v2_main.txt";
 
@@ -102,7 +104,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 								"2-Three people go",
 								"TEST-Jobs",
 								"5-Bus stops",
-								"6-Closed places",
 								"7-Market deliver fail",
 								"10-50 people",
 								"DEBUG-eating",
@@ -111,12 +112,17 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
 		scenarioList.addActionListener(this);
-		selection.setLayout(new FlowLayout());
-		selection.add(new JLabel(""));
+		selection.setLayout(new GridLayout(2, 3));
+		//selection.add(new JLabel(""));
 		selection.add(scenarioList);
 		startButton.addActionListener(this);
 	    selection.add(startButton);
-		add(selection);
+	    
+	    String[] days = new String[]{"Sunday", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+	    dayList = new JComboBox(days);
+	    selection.add(dayList);
+	    
+	    add(selection);
 		
 		String foodPrefMexican = "Mexican";
 		String foodPrefItalian = "Italian";
@@ -172,11 +178,13 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		housings.add(mainStApts11);
 		
 		pirateBank = gui.pirateBank;
+		buccaneerBank = gui.buccaneerBank;
 		
 		mickeysMarket = gui.mickeysMarket;
 		markets.add(mickeysMarket);
 		
 		banks.add(pirateBank);
+		banks.add(buccaneerBank);
 		
 		transportation = gui.cityAniPanel.getTransportation();
 		
@@ -198,29 +206,27 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			fileName = "config-file_scenario-2.txt";
 		}
 		if(scenarioInd == 2) {
-			fileName = "config-file_test_jobs.txt"; // TODO
+			fileName = "config-file_test_jobs.txt";
 		}
 		if(scenarioInd == 3) {
 			fileName = "config-file_scenario-5.txt"; // TODO
 		}
 		if(scenarioInd == 4) {
-			fileName = "config-file_scenario-6.txt"; // TODO
-		}
-		if(scenarioInd == 5) {
 			fileName = "config-file_scenario-7.txt";
 			isScenario7 = true;
 		}
-		if(scenarioInd == 6) {
+		if(scenarioInd == 5) {
 			fileName = "config-file_scenario-10.txt";
 		}
-		if(scenarioInd == 7) {
+		if(scenarioInd == 6) {
 			
 		}
-		if(scenarioInd == 8) {
+		if(scenarioInd == 7) {
 			fileName = "crash.txt";
 			transportation.setCrashing();
 		}
 		initializeFromConfigFile(fileName);
+		setDay((String)dayList.getSelectedItem());
 		newDay();
 	}
 	
@@ -347,21 +353,45 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				
 				// parsing banks
 				for(int bankInd = 1; bankInd <= NUM_BANKS; bankInd++) {
-					String bankName = props.getProperty("bank" + bankInd + "_name");
-					if(bankName == null) bankName = "Pirate Bank";
-					
-					String bankRole = props.getProperty("bank" + bankInd + "_role");
-					if(bankRole == null) bankRole = "Customer";
-					
-					String bankShiftString = props.getProperty("bank" + bankInd + "_shift");
-					int bankShift = 0;
-					if(bankShiftString != null)
-						bankShift = Integer.parseInt(bankShiftString);
-					
-					if(bankName != null) {
-						Bank b = mapStringToBank(bankName);
-						if(b != null)
-							personToAdd.addBank(b, bankRole, bankShift); // key step
+					String bankName, bankRole, bankShiftString;
+					int bankShift;
+					switch(bankInd) {
+						case 1:
+							bankName = props.getProperty("bank" + bankInd + "_name");
+							if(bankName == null) bankName = "Pirate Bank";
+							
+							bankRole = props.getProperty("bank" + bankInd + "_role");
+							if(bankRole == null) bankRole = "Customer";
+							
+							bankShiftString = props.getProperty("bank" + bankInd + "_shift");
+							bankShift = 0;
+							if(bankShiftString != null)
+								bankShift = Integer.parseInt(bankShiftString);
+							
+							if(bankName != null) {
+								Bank b = mapStringToBank(bankName);
+								if(b != null)
+									personToAdd.addBank(b, bankRole, bankShift); // key step
+							}
+						break;
+						case 2:
+							bankName = props.getProperty("bank" + bankInd + "_name");
+							if(bankName == null) bankName = "Buccaneer Bank";
+							
+							bankRole = props.getProperty("bank" + bankInd + "_role");
+							if(bankRole == null) bankRole = "Customer";
+							
+							bankShiftString = props.getProperty("bank" + bankInd + "_shift");
+							bankShift = 0;
+							if(bankShiftString != null)
+								bankShift = Integer.parseInt(bankShiftString);
+							
+							if(bankName != null) {
+								Bank b = mapStringToBank(bankName);
+								if(b != null)
+									personToAdd.addBank(b, bankRole, bankShift); // key step
+							}
+						break;
 					}
 				}
 				
