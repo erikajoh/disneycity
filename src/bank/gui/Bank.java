@@ -41,7 +41,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	
 	private enum RobberySuccess{Success, Fail, Random};
 	
-	RobberySuccess robberySuccess = RobberySuccess.Random;
+	RobberySuccess robberySuccess;
 	
     private SimCityGui gui; //reference to main gui
     
@@ -53,6 +53,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
         manager = new ManagerAgent("Bank", this, gui);
         manager.startThread();
         tellerAmt = ta;
+        robberySuccess = RobberySuccess.Random;
         
         /*
         for(int i = 0; i<tellerAmt; i++){
