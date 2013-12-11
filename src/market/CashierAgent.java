@@ -39,9 +39,10 @@ public class CashierAgent extends Agent {
 	 *
 	 * @param name name of the cashier
 	 */
-	public CashierAgent(String name, double amt){
+	public CashierAgent(String name, double amt, PersonAgent person){
 		super();
 		this.name = name;
+		this.person = person;
 		r = new CashRegister(amt);
 	}
 	

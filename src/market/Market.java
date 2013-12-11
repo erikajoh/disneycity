@@ -196,10 +196,9 @@ public class Market implements Market_Douglass {
     	}
     	else if (type.equals("Cashier")) {   
     		if (cashier == null) {
-    			cashier = new CashierAgent(name, 100);
+    			cashier = new CashierAgent(name, 100, p);
     			CashierGui g = new CashierGui(cashier);
     			gui.markAniPanel.addGui(g);
-    			cashier.setPerson(p);
     			cashier.setMarket(this);
     			cashier.startThread();
     			for (int i=0; i<workers.size(); i++) {

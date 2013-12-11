@@ -187,6 +187,7 @@ public class CustomerAgent extends Agent implements Customer {
 			} else {
 				LeaveOrPay();
 			}
+			return true;
 		}
 		else if (state == State.paying){
 			print("Paying");

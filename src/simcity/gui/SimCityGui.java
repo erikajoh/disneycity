@@ -421,10 +421,12 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
         restPizza.setMarket(mickeysMarket);
 		//restHaus.addPerson(null, "Customer", "Sally", 50);
 		
-		//mickeysMarket.addPerson(null, "Manager", "MRAWP");
-		//mickeysMarket.addPerson(null, "Cashier", "Kapow");
-		//mickeysMarket.addPerson(null, "Worker", "Bleep");
-		//mickeysMarket.addPerson(null, "Worker", "Meep");
+		mickeysMarket.addPerson(null, "Manager", "MRAWP");
+		mickeysMarket.addPerson(null, "Cashier", "Kapow");
+		mickeysMarket.addPerson(null, "Worker", "Bleep");
+		mickeysMarket.addPerson(null, "Worker", "Meep");
+		mickeysMarket.addPerson(null, "Worker", "Meep");
+		mickeysMarket.addPerson(p, "ehe", 500, "Italian", 1);
 		
 	}
 	

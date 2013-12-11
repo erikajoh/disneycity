@@ -83,7 +83,7 @@ public class ManagerAgent extends Agent {
 	    	AssignWorkerToOrder(o);
 	    	return true;
 		}
-		if (shiftDone) ShiftDone();
+		if (shiftDone && market.getCustomers() == 0) ShiftDone();
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
