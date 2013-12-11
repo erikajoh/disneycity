@@ -1,4 +1,4 @@
-SimCity201 Project Team 01: Edgar in Disneyland
+SimCity201 Project Team 01: Just Push It
 ===============================================
 
 All sprites are the property of their respective owners.
@@ -42,13 +42,16 @@ Kelsey Rose <br>
 
 ##Description
 
-+ **_Douglass (Person):_**
++ **_Douglass (Person and Person Property Panel on the GUI):_**
 	+ The entirety of the PersonAgent design - data, scheduler, messages, actions
 	+ Since PersonAgent is the middleman of all the other buildings in the city, the PersonAgent is responsible for integrating all of the markets/restaurants/etc. together
 	+ A Person tracks money on hand, hungry or not, whether he has jobs or not, preferred transportation method, etc.
 	+ A Person has pointers to all other locations in the city and avoids shared data via wrapper classes (e.g. MyBank objects for each Bank)
 	+ Our design philosophy is to make the PersonAgent class an abstraction that tracks individual data for each person in the city and holds the entire city system together. A Person does not "enter" a location (including Transportation) but rather spawns a copy of himself with the necessary data that serves to link the PersonAgent with any other class in the city. This serves to decouple our design and prevent sharing of data which would break our Agent methodology.
+	+ Created central config file (for all people) and person properties files (for each individual person) that are read in at run time.
+	+ Added Person Properties Panel on the GUI to add people to the simulation after the program has started.
 
+	
 + **_Daron (Transportation and City Panel):_** 
 	+ The locations in the City Panel (top-left panel) are all clickable on the locations to change the building window.
 	+ Transportation spawns transportation agents when receiving messages from people to go somewhere.
@@ -61,18 +64,24 @@ Kelsey Rose <br>
 	+ The truck goes to an idle position next to the market.
 	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
 	+ Unit tests for the animation system and the transportation controller are located in src/transportation/Tests/
+	+ Redesigned city view for new buildings
+	+ Created dynamic camera panning feature for city view
+
 	
-+ **_Dylan (Bank):_** 
++ **_Dylan (Bank and Workplace Property Panel on the GUI):_** 
 	+ Created the bank which includes BankCustomerAgents (spawned PersonAgents), TellerAgents and one ManagerAgent
 	+ Also designed gui/characters/sprites/images for bank
+	+ Redesigned GUI to include new panels and miscellaneous gui bug fixes
+	+ Created and linked Workplace Properties panel (lower right side)
+	+ Set base for switching job functions
 	+ **The bank should function properly with the following assumptions:**
 		+ A person will only make one action (new account, withdraw or deposit) per trip to the bank
 		+ A person will never say they deposited more money than they actually did
+		+ Thieves only attempt to rob the bank once (when they enter the simulation). They can succeed or fail the robbery (fall and drop the money) but they will return as normal customers after. The success/fail decision is randomized but can be set to always true or false in the WPP GUI.
 		+ A loan automatically is generated when a person withdraws more money in the account than they have. Each time they revisit the bank for the SAME account, their time to pay back the loan decreases. Customers can take out multiple loans, but their time to pay them back won't reset. If they fail to pay back the loan in the number of visits they won't be able to take out another loan. Additionally they're loan will grow by increasing interest. After the first day of missing a loan they will owe an additional 25 dollars, then an additional 50 for the second day and so on. There are steep fines for missing payment on loans.
 	
 	+ **Unit Tests:** I designed a complete BankCustomerTest and ManagerTest. TellerTest was too repetitive and didn't prove anything since BankCustomerTest passed all of its tests. See the intro of BankCustomerTest.java for more details.
 	
-	+ **Issues:** see below after instructions
 
 + **_Erika (Markets, Housing):_** 
 	+ Designed and implemented the Housing and Market components, incl. related agents, animations, graphics and tests; took over the Market component when a team member dropped out of the class a few days into the project.
@@ -81,6 +90,8 @@ Kelsey Rose <br>
 	+ Debugged the Bank component and fixed issues such as multiple bank customers being spawned.
 	+ Added to the Restaurant and Transportation components (CookAgent, CashierAgent, TransportationController, TruckAgent) for the Restaurant-Market and Transportation-Market interactions.
 	+ Contributed to the main GUI zoom panel creation.
+	+ Created logger in bottom of GUI
+
 + **_Kelsey (Restaurants, Front-end Lead):_** 
 	+ Integrated all 5 restaurants using a base Restaurant interface. 
 	+ Updated and upgraded animations in all restaurants 
@@ -90,6 +101,8 @@ Kelsey Rose <br>
 	+ Designed layout and wrote all main GUI code
 	+ Updated my restaurant (restaurant_rancho, or Rancho Del Zocalo) to include Producer-Consumer model, Bank integration, and new Market integration 
 	+ (Messages to bank work but messages from bank do not work, as the team member who wrote the bank could not integrate fully with SimCity in time)
+	+ Integrated all restaurants with market
+	+ Miscellaneous fixes for all restaurants
 	+ UNIT TESTING: I unit tested the restaurant integration with market and bank with a cashier test, as the cashier is the main point of contact for the bank and interacts with the market. I removed test cases 5 and 6 in the cashier test from v2.2 and added 6 more unit tests to fully test the market and bank integration with restaurant.
 
 ##Instructions
@@ -107,10 +120,6 @@ Kelsey Rose <br>
 ###Issues/problems
 + Currently we only have one restaurant (#14 in the city map) that has near complete job functionality - more specifically, they can enter, stay, and get paid, and if all necessary workers are there, they should be able to run the restaurant as normal. The problem currently is that the PersonAgent is released, but their spawned WaiterAgent role is not released when they leave (an issue that we are confident that we can resolve quickly after this due date). Over time we can not only make this restaurant fully functional but finish implementing the same feature in the others.
 
-###Bank
-+ Since the PersonAgent isn't making a salary they will eventually be banned from making loans from the bank (because they can't be paid back). The person will then eventually run out of money. This was done on purpose and should never be an issue for v2 when the PersonAgent has a job
-+ The bank was also designed to take orders from restaurants (from the Cashier or HostAgent's linked PersonAgent) but we ran into small issues with it from the bank's end since Cashier and HostAgent's aren't full PersonAgents yet. Due to this, we had to postpone this feature to v2
-+ Bank is not fully integrated and its design does not work with any Restaurants
 
 ####Transportation
 + A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
