@@ -11,6 +11,8 @@ import restaurant_rancho.CustomerAgent.AgentEvent;
 import restaurant_rancho.CustomerAgent.AgentState;
 import restaurant_rancho.gui.CookGui;
 import simcity.PersonAgent;
+import simcity.gui.trace.AlertLog;
+import simcity.gui.trace.AlertTag;
 import simcity.interfaces.Person;
 import restaurant_rancho.gui.RestaurantRancho;
 import market.Market;
@@ -168,7 +170,7 @@ public class CookAgent extends Agent implements Cook{
 			}
 		
 			Order newO = restaurant.orderStand.remove();
-			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
+			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Found order on revolving stand"); return true;}
 			else if (timerCalled == false){timerCalled = true; waitTimer();}
 			
 		return false;

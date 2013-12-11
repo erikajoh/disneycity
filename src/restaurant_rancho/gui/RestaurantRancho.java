@@ -399,7 +399,11 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     				w.setCashier(cashier);
     			}
     			cashier.startThread();
+    			
     	}
+    		if (isOpen()) {
+    			AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " is fully staffed and open");
+    		}
     	}
     	//if changing shifts, add patrons and workers to a list of waitingcustomers, waiters, etc until previous shift is cleared out, then a new agent for them will be spawned
     	else {
@@ -481,10 +485,10 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 			cashier.subtract(wage);
 		}
 		else wage = 0;
-		if (wage!=0) {
+		if (wage>=0) {
 			wage = wage/numWorkers;
 		}
-		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
+		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Shift over, there are " + numWorkers + " workers, each gets paid " + wage);;
 		isOpen = false;
 		if (host!=null) {
 			host.msgShiftDone(wage);
