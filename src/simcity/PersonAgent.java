@@ -68,7 +68,7 @@ public class PersonAgent extends Agent implements Person {
 	private boolean houseNeedsMaintenance = false;
 	private boolean isBankOpen = false;
 	private boolean isSunday = false;
-	private int spamCounter = 10;
+	private int spamCounter = 3;
 	
 	// Wrapper class lists
 	private List<MyObject> myObjects = new ArrayList<MyObject>();
@@ -998,7 +998,8 @@ public class PersonAgent extends Agent implements Person {
 				MyBank tempMyBank = (MyBank)myObjectsArray[i];
 				if(myPersonalBankAccount != null && myPersonalBankAccount.bank.equals(tempMyBank.bank) && tempMyBank.bank.isOpen())
 					return tempMyBank;
-				bankList.add((MyBank)myObjectsArray[i]);
+				if(tempMyBank.bank.isOpen())
+					bankList.add((MyBank)myObjectsArray[i]);
 			}
 		if(bankList.size() == 0)
 			return null;
