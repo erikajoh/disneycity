@@ -52,7 +52,7 @@ Kelsey Rose <br>
 	+ Added Person Properties Panel on the GUI to add people to the simulation after the program has started.
 
 	
-+ **_Daron (Transportation and City Panel):_** 
++ **_Daron (Transportation and City Panel on GUI):_** 
 	+ The locations in the City Panel (top-left panel) are all clickable on the locations to change the building window.
 	+ Transportation spawns transportation agents when receiving messages from people to go somewhere.
 	+ A* is implemented for each type of transportation agent so that each only moves on certain tiles and prevent (almost all) collisions.
@@ -87,32 +87,34 @@ Kelsey Rose <br>
 	+ **Unit Tests:** I designed a complete BankCustomerTest and ManagerTest. TellerTest was too repetitive and didn't prove anything since BankCustomerTest passed all of its tests. See the intro of BankCustomerTest.java for more details.
 	
 
-+ **_Erika (Markets, Housing):_** 
++ **_Erika (Markets, Housing, and Logger and Pop-Out on the GUI):_** 
 	+ Designed and implemented the Housing and Market components, incl. related agents, animations, graphics and tests; took over the Market component when a team member dropped out of the class a few days into the project.
-	+ Housing serves as the "default" location for the Person, so it is unique in that it passes the control back to the Person each time it completes a task. Thus, the Person has control over the ResidentAgent's actions by sending messages to the Housing class. Housing provides a choice between a "house" which accomodates one Person, or an "apartment" which accomodates up to four Persons.
-	+ Markets can serve in-person customers, "virtual" (i.e. home delivery) customers, and restaurant delivery customers. When Markets receive an in-person order, the Worker brings the item(s) to the Cashier station to give to the Customer. When Markets receive "virtual"/delivery orders, the Worker brings the item(s) to the truck loading zone, and the Market's truck is sent to deliver the item(s).
-	+ Debugged the Bank component and fixed issues such as multiple bank customers being spawned.
+	+ Housing serves as the "default" location for the Person, so it is unique in that it passes the control back to the Person each time it completes a task. Thus, the Person has control over the ResidentAgent's actions by sending messages to the Housing class. Housing provides a choice between a "house" which accomodates one Person, or an "apartment" which accomodates up to four Persons. There are 6 houses and 11 apartments and each one has a different graphical design. Within houses, specialized path-finding is used (via adding "walls" and algorithm that avoids "walls" during movement) so the residents do not run into objects. The apartment houses up to 4 residents, and each one has his own spot at the table and in the kitchen, so they don't sit on top of each other or cook on top of each other. In both the apartments and houses, residents can cook, eat, do maintenance (in apartments, residents go to their desk in their bedrooms; in houses, they go to the couch), and go to sleep. Residents in apartments have the same table, kitchen, entrance/exit, and refrigerator (i.e. food inventory).
+	+ Markets can serve in-person customers, "virtual" (i.e. home delivery) customers, and restaurant delivery customers. When Markets receive an in-person order, the Worker brings the item(s) to the Cashier station to give to the Customer. When Markets receive "virtual"/delivery orders, the Worker brings the item(s) to the truck loading zone, and the Market's truck is sent to deliver the item(s). The market employs a manager, a cashier (represented on the GUI by a Mickey character), and workers (represented on the GUI by another Mickey character). The market can be open or closed, and when it is open it operates normally; when it is closed it rejects customers. There are two markets. Employees in the market (manager, cashier, and workers) change shifts and are paid at the end of their shift. Market customers wait in line in the GUI and move up accordingly when other customers finish and leave. Workers have a home position and go to one of the three shelves to retrieve items.
+	+ Debugged the Bank component and fixed issues such as multiple bank customers being spawned. 
 	+ Added to the Restaurant and Transportation components (CookAgent, CashierAgent, TransportationController, TruckAgent) for the Restaurant-Market and Transportation-Market interactions.
-	+ Contributed to the main GUI zoom panel creation.
-	+ Created logger in bottom of GUI
+	+ Contributed to the main GUI city zoom panel creation.
+	+ Created the "pop-out" screen that displays a full-sized view of the main city GUI that functions similarly to the normal screen. The normal screen updates when the pop-out screen is closed, and the pop-out screen automatically closes when a building is clicked (for immediate viewing of the zoom animation for the building you just clicked).
+	+ Created logger panel in bottom of the GUI.
+	+ Helped with Person Property Panel and scenario selection in the GUI.
+	+ Implemented Producer-Consumer behavior in the Blue Bayou restaurant (aka restaurant_bayou).
 
-+ **_Kelsey (Restaurants, Front-end Lead):_** 
-	+ Integrated all 5 restaurants using a base Restaurant interface that all restaurants implement from 
-	+ created many new methods inside said interface and implemented them in each restaurant so that other components can communicate easily with the restaurants and get the information that they need
++ **_Kelsey (Restaurants, Front-End Lead on the GUI):_** 
+	+ Integrated all 5 restaurants using a base Restaurant interface that all restaurants implement from created many new methods inside said interface and implemented them in each restaurant so that other components can communicate easily with the restaurants and get the information that they need
 	+ Updated the menus in the restaurants in order to have the same kind of data type for menu used in all restaurants, so that all menus are accessible in the same way when persons are not inside the restaurant
-	+ Updated and upgraded animations in all restaurants 
-	+ debugged restaurants whenever possible while integrating 
-	+ Wrote framework to upgrade all restaurants to accept and release workers for shifts. The workers come into the restaurant and are spawned, and when the shift is over workers have to decide when they can leave based on their states and current data. This is especially complicated for error cases such as when not all workers are in the restaurant 
+	+ Updated and upgraded animations in all restaurants
+	+ debugged restaurants whenever possible while integrating
+	+ Wrote framework to upgrade all restaurants to accept and release workers for shifts. The workers come into the restaurant and are spawned, and when the shift is over workers have to decide when they can leave based on their states and current data. This is especially complicated for error cases such as when not all workers are in the restaurant
 	+ All restaurants have ability to accept and release workers for shifts. Rancho del Zocalo (RestaurantRancho) and Pizza Port (RestaurantPizza)'s implementations are the most heavily tested and therefore I am most comfortable with their success in implementing shifts. Implementing the code in the many different restaurants turned out to be a much bigger challenge (time wise) than our team originally thought, so I focused on testing my own restaurant (RestaurantRancho) especially.
-	+ Upgraded restaurants to pay workers when their shifts are over. Workers divide the profit gained during their shift. Cashier keeps track of balance and profit. 
-	+ Upgraded restaurants to be open or closed and to return whether they are opened or closed based not only on updates from timer but also on whether the restaurant is fully staffed and ready for customers 
-	+ Designed and created all background images for restaurants 
+	+ Upgraded restaurants to pay workers when their shifts are over. Workers divide the profit gained during their shift. Cashier keeps track of balance and profit.
+	+ Upgraded restaurants to be open or closed and to return whether they are opened or closed based not only on updates from timer but also on whether the restaurant is fully staffed and ready for customers
+	+ Designed and created all background images for restaurants
 	+ Created SimCity Disneyland Map/Image and panel (Daron made the image clickable and therefore established the grid of the SimCity image)
-	+ Established guidelines for all images and panels in SimCity so that the Front End is attractive and easily understood 
+	+ Established guidelines for all images and panels in SimCity so that the Front End is attractive and easily understood
 	+ Designed layout and wrote main GUI code
 	+ Updated my restaurant (restaurant_rancho, or Rancho Del Zocalo) to include Producer-Consumer model, Bank integration, and new Market integration. Also updated RestaurantPizza to support Market integration. Helped team members to integrate the Producer-Consumer model into their own restaurants based on my implementation.
 	+ (Messages to bank work but messages from bank do not work, as members of our team decided to nix bank and restaurant integration in support of the profit dividing system I detail earlier)
-	+ Miscellaneous fixes for all restaurants, including animation, agent code flaws, etc. 
+	+ Miscellaneous fixes for all restaurants, including animation, agent code flaws, etc.
 	+ UNIT TESTING: I unit tested the restaurant integration with market and bank with a cashier test, as the cashier is the main point of contact for the bank and interacts with the market. I removed test cases 5 and 6 in the cashier test from v2.2 and added 6 more unit tests to fully test the market and bank integration with restaurant.
 
 ##Instructions
