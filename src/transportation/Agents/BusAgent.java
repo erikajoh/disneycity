@@ -64,8 +64,11 @@ public class BusAgent extends MobileAgent{
 	}
 	
 	public void msgHalfway() {//Releases semaphore at halfway point to prevent sprites from colliding majorly
-		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0)
+		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
+		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
+			System.out.println(currentPosition);
+		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
 
@@ -107,7 +110,7 @@ public class BusAgent extends MobileAgent{
 
 	private void pickUpRiders() {
 		gui.setStill();
-		try { Thread.sleep(500); }
+		try { Thread.sleep(500000); }
 		catch (Exception e){}
 		List<BusRider> tempList = currentBusStop.getBusWaiters();
 		for(BusRider busRider : tempList) {
@@ -141,7 +144,7 @@ public class BusAgent extends MobileAgent{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			grid[nextPosition.getX()][nextPosition.getY()].addOccupant(this);
 			gui.setDestination(nextPosition.getX(), nextPosition.getY());
 			try {
 				animSem.acquire();

@@ -66,8 +66,8 @@ public class BusStop implements Gui{
 	@Override
 	public void draw(Graphics2D g, Point offset) {
 		g.drawString(String.valueOf(busWaiters.size()), (int)(associatedTile.getX()*25 - offset.getX() + 10), (int)(associatedTile.getY()*25 - offset.getY() + 18));
-		g.setColor(Color.RED);
-		g.drawRect((int)(associatedTile.getX()*25 - offset.getX() - 2), (int)(associatedTile.getY()*25 - offset.getY()), 25, 25);
+//		g.setColor(Color.RED);
+//		g.drawRect((int)(associatedTile.getX()*25 - offset.getX() - 2), (int)(associatedTile.getY()*25 - offset.getY()), 25, 25);
 		g.setColor(Color.BLACK);
 		
 	}

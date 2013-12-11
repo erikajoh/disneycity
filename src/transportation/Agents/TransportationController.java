@@ -171,6 +171,22 @@ public class TransportationController extends Agent implements Transportation{
 				agentW.crash();
 				AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Pedestrian Crash between " + agentC.getPerson().getName() + " and " + agentW.getPerson().getName());
 			}
+			else if(agent1 instanceof BusAgent || agent2 instanceof BusAgent) {
+				if(agent1 instanceof CarAgent) {
+					gui = new CrashGui(position, false, controller);
+					controller.master.addGui(gui);
+					agentC = (CarAgent)agent1;
+					agentC.crash();
+					AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Car crashed into bus: " + agentC.getPerson().getName());
+				}
+				else if(agent2 instanceof CarAgent) {
+					gui = new CrashGui(position, false, controller);
+					controller.master.addGui(gui);
+					agentC = (CarAgent)agent2;
+					agentC.crash();
+					AlertLog.getInstance().logMessage(AlertTag.TRANSPORTATION, "Transportation Controller", "Car crashed into bus: " + agentC.getPerson().getName());
+				}
+			}
 			else {
 				state = CrashState.DONE;
 			}
@@ -495,7 +511,7 @@ public class TransportationController extends Agent implements Transportation{
 
 		setCrossWalk(4, 26, false);//Apt #8
 		setCrossWalk(10, 26, false);//Apt #9 and Bayou
-		setCrossWalk(22, 28, false);//Apt #10
+		setCrossWalk(22, 26, false);//Apt #10
 		setCrossWalk(28, 28, false);//Apt #11
 
 		//Traffic light
