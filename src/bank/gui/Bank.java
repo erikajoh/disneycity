@@ -39,6 +39,10 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
 	private int tellerAmt;
 	private boolean open;
 	
+	private enum RobberySuccess{Success, Fail, Random};
+	
+	RobberySuccess robberySuccess = RobberySuccess.Random;
+	
     private SimCityGui gui; //reference to main gui
     
     private ManagerAgent manager;
@@ -203,6 +207,31 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
    
     	return list;
     }
+    
+    public void setRobberySuccess(String condition){
+    	if(condition.toLowerCase().equals("true")){
+    		robberySuccess = RobberySuccess.Success;
+    	}
+    	else if(condition.toLowerCase().equals("false")){
+    		robberySuccess = RobberySuccess.Fail;
+    	}
+    	else {
+    		robberySuccess = RobberySuccess.Random;
+    	}
+    }
+    
+    public String getRobberySuccess(){
+    	if(robberySuccess == RobberySuccess.Success){
+    		return "true";
+    	}
+    	else if(robberySuccess == RobberySuccess.Fail){
+    		return "false";
+    	}
+    	else {
+    		return "random";
+    	}
+    }
+    
     
     public void actionPerformed(ActionEvent e) {
     }
