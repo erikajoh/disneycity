@@ -494,13 +494,13 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	  else if(b == swapMktJobs){
 		ArrayList<PersonAgent> people = SimCityGui.simCityPanel.getPeople();
 		String[] parts = selectedMktWorker.split(": ");
-		String role = parts[0].toLowerCase();
+		String role = parts[0];
 		String mktWorker = parts[1];
 		String workplace = selectedWorkplace.substring(selectedWorkplace.indexOf(' ')+1, selectedWorkplace.length());
 		for(PersonAgent person : people){
 			if(person.getName().equals(mktWorker)){
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", mktWorker + " should switch role to unemployed");
-				person.msgSwitchRole("unemployed", "");
+				person.msgSwitchRole("Customer", workplace);
 			}
 			else if(person.getName().equals(selectedPersonForMkt)){
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedPersonForMkt + " should switch role to "+role+ " at "+workplace);
@@ -511,13 +511,13 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	  else if(b == swapRestJobs){
 		ArrayList<PersonAgent> people = SimCityGui.simCityPanel.getPeople();
 		String[] parts = selectedRestWorker.split(": ");
-		String role = parts[0].toLowerCase();
+		String role = parts[0];
 		String restWorker = parts[1];
 		String workplace = selectedWorkplace.substring(selectedWorkplace.indexOf(' ')+1, selectedWorkplace.length());
 		for(PersonAgent person : people){
 			if(person.getName().equals(restWorker)){
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", restWorker + " should switch role to unemployed");
-				person.msgSwitchRole("unemployed", "");
+				person.msgSwitchRole("Customer", workplace);
 			}
 			else if(person.getName().equals(selectedPersonForRest)){
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedPersonForRest + " should switch role to "+role+ " at "+workplace);
@@ -532,7 +532,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		for(PersonAgent person : people){
 			if(person.getName().equals(selectedTeller)){
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedTeller + " should switch role to unemployed");
-				person.msgSwitchRole("unemployed", "");
+				person.msgSwitchRole("Customer", workplace);
 			}
 			else if(person.getName().equals(selectedPersonForRest)){
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", selectedPersonForRest + " should switch role to "+role+ " at "+workplace);

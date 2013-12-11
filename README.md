@@ -97,16 +97,22 @@ Kelsey Rose <br>
 	+ Created logger in bottom of GUI
 
 + **_Kelsey (Restaurants, Front-end Lead):_** 
-	+ Integrated all 5 restaurants using a base Restaurant interface. 
+	+ Integrated all 5 restaurants using a base Restaurant interface that all restaurants implement from 
+	+ created many new methods inside said interface and implemented them in each restaurant so that other components can communicate easily with the restaurants and get the information that they need
+	+ Updated the menus in the restaurants in order to have the same kind of data type for menu used in all restaurants, so that all menus are accessible in the same way when persons are not inside the restaurant
 	+ Updated and upgraded animations in all restaurants 
-	+ Upgraded Douglass's restaurant fully (Pizza Port) in order to accept and release workers for shifts (see issues for glitch), and wrote framework to upgrade all restaurants to accept and release workers for shifts
+	+ debugged restaurants whenever possible while integrating 
+	+ Wrote framework to upgrade all restaurants to accept and release workers for shifts. The workers come into the restaurant and are spawned, and when the shift is over workers have to decide when they can leave based on their states and current data. This is especially complicated for error cases such as when not all workers are in the restaurant 
+	+ All restaurants have ability to accept and release workers for shifts. Rancho del Zocalo (RestaurantRancho) and Pizza Port (RestaurantPizza)'s implementations are the most heavily tested and therefore I am most comfortable with their success in implementing shifts. Implementing the code in the many different restaurants turned out to be a much bigger challenge (time wise) than our team originally thought, so I focused on testing my own restaurant (RestaurantRancho) especially.
+	+ Upgraded restaurants to pay workers when their shifts are over. Workers divide the profit gained during their shift. Cashier keeps track of balance and profit. 
+	+ Upgraded restaurants to be open or closed and to return whether they are opened or closed based not only on updates from timer but also on whether the restaurant is fully staffed and ready for customers 
 	+ Designed and created all background images for restaurants 
-	+ Created SimCity Disneyland Image and panel (Daron made the image clickable and therefore established the grid of the SimCity image)
-	+ Designed layout and wrote all main GUI code
-	+ Updated my restaurant (restaurant_rancho, or Rancho Del Zocalo) to include Producer-Consumer model, Bank integration, and new Market integration 
-	+ (Messages to bank work but messages from bank do not work, as the team member who wrote the bank could not integrate fully with SimCity in time)
-	+ Integrated all restaurants with market
-	+ Miscellaneous fixes for all restaurants
+	+ Created SimCity Disneyland Map/Image and panel (Daron made the image clickable and therefore established the grid of the SimCity image)
+	+ Established guidelines for all images and panels in SimCity so that the Front End is attractive and easily understood 
+	+ Designed layout and wrote main GUI code
+	+ Updated my restaurant (restaurant_rancho, or Rancho Del Zocalo) to include Producer-Consumer model, Bank integration, and new Market integration. Also updated RestaurantPizza to support Market integration. Helped team members to integrate the Producer-Consumer model into their own restaurants based on my implementation.
+	+ (Messages to bank work but messages from bank do not work, as members of our team decided to nix bank and restaurant integration in support of the profit dividing system I detail earlier)
+	+ Miscellaneous fixes for all restaurants, including animation, agent code flaws, etc. 
 	+ UNIT TESTING: I unit tested the restaurant integration with market and bank with a cashier test, as the cashier is the main point of contact for the bank and interacts with the market. I removed test cases 5 and 6 in the cashier test from v2.2 and added 6 more unit tests to fully test the market and bank integration with restaurant.
 
 ##Instructions

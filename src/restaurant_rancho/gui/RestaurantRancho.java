@@ -480,7 +480,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 	public void endOfShift() {
 		System.out.println("RESTAURANT RANCHO GOT END OF SHIFT");
 		double wage;
-		if (cashier!=null) {
+		if (cashier!=null && cashier.money > 500) {
 			wage = cashier.money - 500;
 			cashier.subtract(wage);
 		}

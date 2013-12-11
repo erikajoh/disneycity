@@ -259,9 +259,55 @@ public class PersonAgent extends Agent implements Person {
 		stateChanged();
 	}
 	
-	// TODO msgSwitchRole
 	public void msgSwitchRole(String role, String location) {
 		
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++) {
+			if(myObjectsArray[i] instanceof MyRestaurant) {
+				MyRestaurant temp = (MyRestaurant)myObjectsArray[i];
+				if(location.equals(temp.name)) {
+					Restaurant theRestaurant = (Restaurant)temp.restaurant;
+					myObjects.remove(i);
+					if(role.equals("Customer"))
+						addRestaurant(theRestaurant, "Customer", 0);
+					else
+						addRestaurant(theRestaurant, role, 2);
+				}
+			}
+			else if(myObjectsArray[i] instanceof MyMarket) {
+				MyMarket temp = (MyMarket)myObjectsArray[i];
+				if(location.equals(temp.name)) {
+					Market theMarket = (Market)temp.theMarket;
+					myObjects.remove(i);
+					if(role.equals("Customer"))
+						addMarket(theMarket, "Customer", 0);
+					else
+						addMarket(theMarket, role, 2);
+				}
+			}
+			else if(myObjectsArray[i] instanceof MyBank) {
+				MyBank temp = (MyBank)myObjectsArray[i];
+				if(location.equals(temp.name)) {
+					Bank_Douglass theBank = (Bank_Douglass)temp.bank;
+					myObjects.remove(i);
+					if(role.equals("Customer"))
+						addBank(theBank, "Customer", 0);
+					else
+						addBank(theBank, role, 2);
+				}
+			}
+		}
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "My role is now: " + role);
+		print("My role is now: " + role);
+		/*
+		if(tempObject instanceof MyHousing)
+			currentLocationState = LocationState.Bank;
+		else if(tempObject instanceof MyRestaurant)
+			currentLocationState = LocationState.Restaurant;
+		else if(tempObject instanceof MyMarket)
+			currentLocationState = LocationState.Market;
+		return;
+		*/
 	}
 	
 	// from Housing
@@ -947,6 +993,17 @@ public class PersonAgent extends Agent implements Person {
 				return;
 			}
 		}
+	}
+
+	private MyObject mapLocationToWorkplace(String location) {
+		MyObject[] myObjectsArray = getObjects();
+		for(int i = 0; i < myObjectsArray.length; i++) {
+			MyObject tempObject = myObjectsArray[i];
+			if(location.equals(tempObject.name)) {
+				return tempObject;
+			}
+		}
+		return null;
 	}
 
 	private double getLowestPrice(Map<String, Double> theMenu) {
