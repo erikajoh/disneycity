@@ -180,6 +180,7 @@ public class CookAgent extends Agent implements Cook{
 	// Actions
 	
 	private void goToMarket(RestaurantRancho r, String type, int amount, int id) {
+		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " is ordering " + type+ " from the Market.");
 		market.personAs(r, type, amount, id);
 	}
 	
