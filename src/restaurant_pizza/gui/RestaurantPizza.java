@@ -326,7 +326,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		for (WaiterAgent w : waiters) {
     			w.setCook(cook);
     		}
-    		cook.setMarket(market);
+    		if (market!=null) cook.setMarket(market);
     		cook.setRestaurant(this);
     		cook.startThread();
     	}
@@ -350,6 +350,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 	@Override
 	public void setMarket(Market_Douglass m) {
 		market = m;
+		if (cook!=null) cook.setMarket(m);
 		
 	}
 	
