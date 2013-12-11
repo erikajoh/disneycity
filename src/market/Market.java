@@ -4,7 +4,7 @@ import market.CashierAgent;
 import market.CustomerAgent;
 import market.ManagerAgent;
 import market.WorkerAgent;
-import market.gui.CashierGui;
+
 import market.gui.CustomerGui;
 import market.gui.WorkerGui;
 import simcity.PersonAgent;

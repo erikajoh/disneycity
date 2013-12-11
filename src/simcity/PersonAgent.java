@@ -38,6 +38,7 @@ public class PersonAgent extends Agent implements Person {
 	
 	private final static double MONEY_ON_HAND_LIMIT = 80.0;
 	private final static int MARKET_PURCHASE_QUANTITY = 5;
+	private final static double MONEY_TO_ROB = 300.00;
 	
 	// Transportation
 	private Transportation transportation;
@@ -90,8 +91,13 @@ public class PersonAgent extends Agent implements Person {
 	public PersonAgent(String aName, Housing_Douglass h, double startMoney, String foodPreference, boolean preferEatAtHome,
 			String relationWithHousing, Transportation t, char commute) {
 		super();
+
 		name = aName;
 		myPersonality = PersonType.Normal;
+		if(aName.equals("Narwhal_Prime")){
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, aName, "HACKED TO THIEF");
+			myPersonality = PersonType.Crook;
+		}
 		isNourished = true;
 		currentLocation = h.getName();
 		moneyOnHand = startMoney;
@@ -345,16 +351,21 @@ public class PersonAgent extends Agent implements Person {
 	// from Bank
 	public void msgLeftBank(Bank_Douglass theBank, int accountNumber, double change, double loanAmount, int loanTime) {
 		log.add(new LoggedEvent("Leaving bank"));
-		if(myPersonalBankAccount == null) {
-			myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
+		if(myPersonality != PersonType.Crook){
+			if(myPersonalBankAccount == null) {
+				myPersonalBankAccount = new MyBankAccount(accountNumber, "Personal", theBank, change, loanAmount, loanTime);
+			}
+			if(change > 0)
+				moneyWanted -= change;
+			else
+				moneyToDeposit = -change;
+			myPersonalBankAccount.amount += -change;
+			myPersonalBankAccount.loanNeeded = loanAmount;
+			myPersonalBankAccount.loanTime = loanTime;
 		}
-		if(change > 0)
-			moneyWanted -= change;
-		else
-			moneyToDeposit = -change;
-		myPersonalBankAccount.amount += -change;
-		myPersonalBankAccount.loanNeeded = loanAmount;
-		myPersonalBankAccount.loanTime = loanTime;
+		else {
+			myPersonality = PersonType.Normal;
+		}
 		moneyOnHand += change;
 		event = PersonEvent.makingDecision;
 		bankState = BankState.None;
@@ -549,7 +560,11 @@ public class PersonAgent extends Agent implements Person {
 					bankState = BankState.None;
 				switch(bankState) {
 					case NeedTransaction: // Has business at the bank
-						if(myPersonalBankAccount == null) {
+						if(myPersonalBankAccount == null && myPersonality == PersonType.Crook){
+							event = PersonEvent.onHoldInBank;
+							tryToRobBank();
+						}
+						else if(myPersonalBankAccount == null) {
 							event = PersonEvent.onHoldInBank;
 							requestNewAccount();
 						}
@@ -837,6 +852,14 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	//Bank actions
+	private void tryToRobBank() {
+		print("Trying to rob bank");
+		MyBank myBank = (MyBank)currentMyObject;
+		log.add(new LoggedEvent("Going to rob the bank"));
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Going to rob the bank");
+		myBank.bank.msgThief(this, MONEY_TO_ROB, true); // pointer to myself, money, present
+	}
+	
 	private void requestNewAccount() {
 		print("Request new account");
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Request new account");

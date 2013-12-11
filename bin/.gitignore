@@ -1,11 +1,9 @@
-/res
 /restaurant_bayou
 /restaurant_cafe
 /restaurant_haus
 /restaurant_pizza
 /restaurant_rancho
 /simcity
-/transportation
 /AnimationTools
 /agent
 /agent_bayou
@@ -17,4 +15,4 @@
 /bank
 /housing
 /market
-
+/res
