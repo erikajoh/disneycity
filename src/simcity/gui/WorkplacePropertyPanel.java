@@ -149,7 +149,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 
 		JPanel workplace = new JPanel();
 		
-		workplaces = new String[]{ "1) Mickey's Market", "2) Minnie's Market", "2) Carnation Cafe", "4) Blue Bayou", "8) Pirate Bank", "25) Buccaneer Bank", "9) Rancho Del Zocalo", "12) Village Haus", "14) Pizza Port" };
+		workplaces = new String[]{ "7) Mickey's Market", "8) Minnie's Market", "9) Rancho Del Zocalo", "10) Village Haus", "11) Carnation Cafe", "12) Blue Bayou", "13) Pizza Port", "14) Pirate Bank", "26) Buccaneer Bank"};
 		workplaceList = new JComboBox(workplaces);
 		workplaceList.setFont(workplaceList.getFont().deriveFont(12.0f));
 
@@ -483,7 +483,12 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	if(b!= null){
 	  if(b == setMktQuantity){
 		AlertLog.getInstance().logInfo(AlertTag.CITY, "WPP", "Set "+ selectedMktItem +" quantity to "+(Integer)mktSpinner.getValue());
-		SimCityGui.mickeysMarket.setInventory(selectedMktItem, (Integer)mktSpinner.getValue());
+		if (selectedWorkplace.contains("Mickey")){
+			SimCityGui.mickeysMarket.setInventory(selectedMktItem, (Integer)mktSpinner.getValue());
+		}
+		if (selectedWorkplace.contains("Minnie")){
+			SimCityGui.minniesMarket.setInventory(selectedMktItem, (Integer)mktSpinner.getValue());
+		}
 		updateGui();
 	  }
 	  else if(b == swapMktJobs){
@@ -545,6 +550,17 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 			}
 			else {
 				SimCityGui.pirateBank.setRobberySuccess("random");
+			}
+		}
+		if (selectedWorkplace.contains("Buccaneer")){
+			if(success.isSelected()){
+				SimCityGui.buccaneerBank.setRobberySuccess("true");
+			}
+			else if(fail.isSelected()){
+				SimCityGui.buccaneerBank.setRobberySuccess("false");
+			}
+			else {
+				SimCityGui.buccaneerBank.setRobberySuccess("random");
 			}
 		}
 	  }
@@ -667,6 +683,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
     		if(workplace.contains("Mickey") && SimCityGui.mickeysMarket.isOpen()){
     			SimCityGui.mickeysMarket.endOfShift();
     		}
+    		else if(workplace.contains("Minnie") && SimCityGui.mickeysMarket.isOpen()){
+    			SimCityGui.minniesMarket.endOfShift();
+    		}
     		else if(workplace.contains("Cafe") && SimCityGui.restCafe.isOpen()){
     			SimCityGui.restCafe.endOfShift();
     		}
@@ -675,6 +694,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
     		}
     		else if(workplace.contains("Pirate") && SimCityGui.pirateBank.isOpen()){
     			SimCityGui.pirateBank.msgClose();
+    		}
+    		else if(workplace.contains("Buccaneer") && SimCityGui.pirateBank.isOpen()){
+    			SimCityGui.buccaneerBank.msgClose();
     		}
       		else if(workplace.contains("Haus") && SimCityGui.restHaus.isOpen()){
     			SimCityGui.restHaus.endOfShift();
