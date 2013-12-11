@@ -27,7 +27,7 @@ public class CarAgent extends MobileAgent{
 	Position crashPosition = null;
 	Position nextPosition = null;
 
-	int crashChance = 2;
+	int crashChance = 1;
 
 	public CarAgent(Person person, Position currentPosition, Position endPosition, TransportationController master, CarTraversal aStar, boolean crashAll) {
 		this.driver = person;
