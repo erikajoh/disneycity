@@ -67,7 +67,7 @@ public class BusAgent extends MobileAgent{
 		master.getGrid()[currentPosition.getX()][currentPosition.getY()].removeOccupant(this);
 		if(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits() == 0) {
 			master.getGrid()[currentPosition.getX()][currentPosition.getY()].release();
-			System.out.println(currentPosition);
+			//System.out.println(currentPosition);
 		}
 		//System.out.println(String.valueOf(master.getGrid()[currentPosition.getX()][currentPosition.getY()].availablePermits()));
 	}
