@@ -41,7 +41,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	
 	JComboBox scenarioList;
 	JComboBox dayList;
-	JButton startButton = new JButton("Start");
+	JButton startButton = new JButton("Start Sim");
 
 	RestaurantRancho restRancho;
 	RestaurantPizza restPizza;
@@ -100,6 +100,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		
 		/* Scenario panel */
 		JPanel selection = new JPanel();
+		JPanel selection2 = new JPanel();
 		String[] scenarios = {	"1-One person go",
 								"2-Three people go",
 								"TEST-Jobs",
@@ -112,7 +113,8 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
 		scenarioList.addActionListener(this);
-		selection.setLayout(new GridLayout(2, 3));
+		setLayout(new GridLayout(2, 1));
+		selection.setLayout(new FlowLayout());
 		//selection.add(new JLabel(""));
 		selection.add(scenarioList);
 		startButton.addActionListener(this);
@@ -120,9 +122,11 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	    
 	    String[] days = new String[]{"Sunday", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 	    dayList = new JComboBox(days);
-	    selection.add(dayList);
+	    JLabel label = new JLabel("Day:");
+	    selection2.add(dayList);
 	    
 	    add(selection);
+	    add(selection2);
 		
 		String foodPrefMexican = "Mexican";
 		String foodPrefItalian = "Italian";
@@ -190,7 +194,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		
 		animationPanelsList = gui.animationPanelsList;
 		
-	    setLayout(new GridLayout());
+	    //setLayout(new GridLayout());
 	    
 	    //beginSimulation();
 	}
