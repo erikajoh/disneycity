@@ -73,6 +73,9 @@ public class BayouAnimationPanel extends JPanel implements ActionListener {
         g2.fillRect(0, 0, this.getWidth(), this.getHeight());
         backgroundImage = Toolkit.getDefaultToolkit().getImage("res/BlueBayouImage.gif");
         g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
+        
+        g2.setColor(getBackground());
+        g2.fillRect(0, WINDOWY, WINDOWX, 50);
       
         synchronized(guis) {
 	        for(Gui gui : guis) {

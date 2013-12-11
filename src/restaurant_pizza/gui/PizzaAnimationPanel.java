@@ -47,7 +47,7 @@ public class PizzaAnimationPanel extends JPanel implements ActionListener {
         
     
         bi = Toolkit.getDefaultToolkit().getImage("res/PizzaPort.png");
-	
+        
  
     	Timer timer = new Timer(TIMER_INTERVAL, this);
     	timer.start();
@@ -73,6 +73,9 @@ public class PizzaAnimationPanel extends JPanel implements ActionListener {
         g2.setColor(getBackground());
         //g2.fillRect(PERSON_INITX, PERSON_INITY, WINDOWX, WINDOWY );
         g2.drawImage(bi, 0, 0, 400, 330, null);
+        
+        g2.setColor(getBackground());
+        g2.fillRect(0, WINDOW_Y, WINDOW_X, 50);
 
         for(Gui gui : guis) {
             if (gui.isPresent()) {

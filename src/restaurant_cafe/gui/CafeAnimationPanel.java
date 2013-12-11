@@ -62,6 +62,9 @@ public class CafeAnimationPanel extends JPanel implements ActionListener {
         //customer waiting area
         
         g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
+        
+        g2.setColor(getBackground());
+        g2.fillRect(0, WINDOWY, WINDOWX, 50);
 
         for(Gui gui : guis) {
             if (gui.isPresent()) {

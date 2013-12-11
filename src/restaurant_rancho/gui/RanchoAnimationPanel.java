@@ -37,6 +37,9 @@ public class RanchoAnimationPanel extends JPanel implements ActionListener {
         g2.setColor(getBackground());
         backgroundImage = Toolkit.getDefaultToolkit().getImage("res/restRanchoImage.png");
         g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
+        
+        g2.setColor(getBackground());
+        g2.fillRect(0, WINDOWY, WINDOWX, 50);
 
         synchronized(guis) {
 	        for(Gui gui : guis) {

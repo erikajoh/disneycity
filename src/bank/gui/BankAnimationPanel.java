@@ -40,9 +40,13 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
         Graphics2D g2 = (Graphics2D)g;
 
         g2.setColor(getBackground());
-        g2.fillRect(0, 0, WINDOWX, WINDOWY );
+        g2.fillRect(0, 0, WINDOWX, WINDOWY);
         g2.drawImage(backgroundImage, 0, 0, WINDOWX, WINDOWY, null);
         g2.drawImage(tellerLayoutImage, 0, 0, WINDOWX, 80, null);
+        
+        g2.setColor(getBackground());
+        g2.fillRect(0, 330, WINDOWX, 50);
+
 
         synchronized(guis) {
 	        for(Gui gui : guis) {

@@ -78,6 +78,9 @@ public class HousingAnimationPanel extends JPanel implements ActionListener {
         Image backgroundImage = Toolkit.getDefaultToolkit().getImage(picture);
         g2.drawImage(backgroundImage, 0, 0, 400, 330, null);
         
+        g2.setColor(getBackground());
+        g2.fillRect(0, 330, 400, 50);
+        
         g2.setColor(Color.MAGENTA);
         for (Line l : lines) {
         	g2.drawLine(l.xs, l.ys, l.xe, l.ye);
