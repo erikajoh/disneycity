@@ -14,7 +14,7 @@ public class WaiterAgentPC extends WaiterAgent {
 	
 	protected void dealWithOrder(MyCustomer c) {
 		c.cs = customerState.waitingForFood;
-		waiterGui.DoGoToCook();
+		waiterGui.DoGoToRevolvingStand();
 		try{
 			atTable.acquire();
 		}
