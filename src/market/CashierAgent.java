@@ -98,7 +98,7 @@ public class CashierAgent extends Agent {
 				}
 			}
 		}
-		if (state == State.shiftDone) {
+		if (state == State.shiftDone && market.getCustomers() == 0) {
 			ShiftDone();
 			return true;
 		}
