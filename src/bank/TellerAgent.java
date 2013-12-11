@@ -298,7 +298,7 @@ public class TellerAgent extends Agent implements Teller {
 		else {*/
 			customer.success = robberySuccess.nextBoolean();
 		//}
-		AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", ""+customer.success+" "+bank.getRobberySuccess());
+		//AlertLog.getInstance().logMessage(AlertTag.BANK, "Bank", ""+customer.success+" "+bank.getRobberySuccess());
 		customer.bankCustomer.msgRobbedBank(cash, customer.success);
 		customer.state = CustomerState.deciding;
 	}
