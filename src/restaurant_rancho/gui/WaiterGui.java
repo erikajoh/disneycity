@@ -50,15 +50,14 @@ public class WaiterGui implements Gui {
             yPos++;
         else if (yPos > yDestination)
             yPos--;
-
-        if (xPos == xDestination && yPos == yDestination && leaving) {
-        	if (person!=null) person.msgStopWork(wage);
-        	leaving =false; 
-        }
         
         if (xPos == xDestination && yPos == yDestination) {
         	agent.msgAtTable();
         	actionInProgress = false;
+        	if (leaving) {
+        		if (person!=null) person.msgStopWork(wage);
+            	leaving =false; 
+        	}
         	
         }
       }
