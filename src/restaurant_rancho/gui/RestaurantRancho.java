@@ -155,17 +155,21 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     
     public boolean isChangingShifts() {
     	if (host!=null && host.isWorking==false) {
+    		host.stopThread();
     		removeHost();
     	}
     	if (cook!=null && cook.isWorking==false) {
+    		cook.stopThread();
     		removeCook();
     	}
     	if (cashier!=null && cashier.isWorking==false) {
+    		cashier.stopThread();
     		removeCashier();
     	}
     	synchronized(waiters) {
     	for (WaiterAgent w : waiters ) {
     		if (w.isWorking==false) {
+    			w.stopThread();
     			removeWaiter(w);
     		}
     	}
@@ -477,7 +481,9 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 			cashier.subtract(wage);
 		}
 		else wage = 0;
-		wage = wage/numWorkers;
+		if (wage!=0) {
+			wage = wage/numWorkers;
+		}
 		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
 		isOpen = false;
 		if (host!=null) {

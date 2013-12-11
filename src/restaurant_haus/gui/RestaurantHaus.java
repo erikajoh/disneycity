@@ -260,17 +260,21 @@ public class RestaurantHaus extends JPanel implements Restaurant{
     
     public void removeWorkers() {
     	if (host!=null && host.isWorking==false) {
+    		host.stopThread();
     		host = null;
     	}
     	if (cook!=null && cook.isWorking==false) {
+    		cook.stopThread();
     		cook = null;
     	}
     	if (cashier!=null && cashier.isWorking==false) {
+    		cashier.stopThread();
     		cashier = null;
     	}
     	synchronized(waiters) {
     	for (WaiterAgent w : waiters ) {
     		if (w.isWorking==false) {
+    			w.stopThread();
     			waiters.remove(w);
     		}
     	}
@@ -403,7 +407,9 @@ public class RestaurantHaus extends JPanel implements Restaurant{
 			cashier.subtract(wage);
 		}
 		else wage = 0;
-		wage = wage/numWorkers;
+		if (wage!=0) {
+			wage = wage/numWorkers;
+		}
 		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
 		isOpen = false;
 		if (host!=null) {

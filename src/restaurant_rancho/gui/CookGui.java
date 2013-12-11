@@ -165,6 +165,12 @@ public class CookGui implements Gui{
 		
 	}
 	
+	public void DoGoToRevolvingStand() {
+	   	xDestination = 300;
+	   	yDestination = 160;
+	   	actionInProgress = true;
+    }
+	
 	private class kitchenLoc {
 		int locX;
 		int locY;

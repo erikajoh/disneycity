@@ -41,6 +41,7 @@ public class CookAgent extends Agent implements Cook{
 	double wage;
 	
 	public boolean isWorking = true;
+	boolean timerCalled = false;
 	
 
 	public CookAgent(String name, RestaurantRancho rest, Market_Douglass m) {
@@ -51,10 +52,10 @@ public class CookAgent extends Agent implements Cook{
 		cookTimes = new Hashtable<String, Integer>();
 		foods = Collections.synchronizedList(new ArrayList<Food>());
 		waiters = Collections.synchronizedList(new ArrayList<WaiterAgent>());
-		foods.add(new Food("Citrus Fire-Grilled Chicken", 7, 0, 6, 7000));
-		foods.add(new Food("Red Chile Enchilada Platter", 7, 0, 6, 6000));
-		foods.add(new Food("Soft Tacos Monterrey", 7, 0, 6, 4000));
-		foods.add(new Food("Burrito Sonora", 7, 0, 6, 7000));
+		foods.add(new Food("Citrus Fire-Grilled Chicken", 0, 0, 6, 7000));
+		foods.add(new Food("Red Chile Enchilada Platter", 0, 0, 6, 6000));
+		foods.add(new Food("Soft Tacos Monterrey", 0, 0, 6, 4000));
+		foods.add(new Food("Burrito Sonora", 0, 0, 6, 7000));
 		foods.add(new Food("Chicken Tortilla Soup", 7, 0, 6, 2500));
 		cookTimes.put("Citrus Fire-Grilled Chicken", 7000);
 		cookTimes.put("Red Chile Enchilada Platter", 6000);
@@ -165,9 +166,11 @@ public class CookAgent extends Agent implements Cook{
 				}
 				return true;
 			}
-			Order newO = restaurant.orderStand.remove();
-			if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
-			else {waitTimer();}
+		
+			//Order newO = restaurant.orderStand.remove();
+			//if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); return true;}
+			if (timerCalled ==false ){timerCalled = true; waitTimer();}
+			
 		return false;
 	
 	}
@@ -264,6 +267,17 @@ public class CookAgent extends Agent implements Cook{
 	private void waitTimer() {
 		checkTimer.schedule(new TimerTask() {
 			public void run() {
+				gui.DoGoToRevolvingStand();
+				try{
+					cooking.acquire();
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				Order newO = restaurant.orderStand.remove();
+				if (newO!=null) {orders.add(newO); print("order stand not empty, got order for "+ newO.choice); }
+				DoGoToHome();
+				timerCalled = false;
 				stateChanged();
 			}
 		},

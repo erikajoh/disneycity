@@ -402,7 +402,9 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 			cashier.subtract(wage);
 		}
 		else wage = 0;
-		wage = wage/numWorkers;
+		if (wage!=0) {
+			wage = wage/numWorkers;
+		}
 		System.out.println("WAGE IS " + wage + " NUM WORKERS IS " + numWorkers);
 		isOpen = false;
 		if (host!=null) {
