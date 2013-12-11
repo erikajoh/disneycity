@@ -18,7 +18,6 @@ public class Building {
 	private HashMap<String, Integer> inventory = new HashMap<String, Integer>();
 	Building(String t) {
 		type = t;
-		// TODO: This be hacked
 		inventory.put("Mexican", START_INVENTORY);
 		inventory.put("Southern", START_INVENTORY);
 		inventory.put("Italian", START_INVENTORY);

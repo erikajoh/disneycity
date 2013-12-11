@@ -101,14 +101,14 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		/* Scenario panel */
 		JPanel selection = new JPanel();
 		JPanel selection2 = new JPanel();
-		String[] scenarios = {	"1-One person go",
-								"2-Three people go",
-								"TEST-Jobs",
-								"5-Bus stops",
-								"7-Market deliver fail",
-								"10-50 people",
-								"DEBUG-eating",
-								"DEBUG-CRASH"};
+		String[] scenarios = {	"One person goes",
+								"Three people go",
+								"Market, job swap",
+								"Bus stops",
+								"Market deliver fail",
+								"50 people",
+								"Eating",
+								"Vehicle collision"};
 		// Create the combo box, select item at index 0.
 		scenarioList = new JComboBox(scenarios);
 		scenarioList.setSelectedIndex(0);
@@ -193,10 +193,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		transportation = gui.cityAniPanel.getTransportation();
 		
 		animationPanelsList = gui.animationPanelsList;
-		
-	    //setLayout(new GridLayout());
-	    
-	    //beginSimulation();
 	}
 	
 	public void beginSimulation() {
@@ -213,7 +209,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			fileName = "config-file_test_jobs.txt";
 		}
 		if(scenarioInd == 3) {
-			fileName = "config-file_scenario-5.txt"; // TODO
+			fileName = "config-file_scenario-5.txt";
 		}
 		if(scenarioInd == 4) {
 			fileName = "config-file_scenario-7.txt";
@@ -223,7 +219,7 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			fileName = "config-file_scenario-10.txt";
 		}
 		if(scenarioInd == 6) {
-			
+			// it just uses the default file from above
 		}
 		if(scenarioInd == 7) {
 			fileName = "crash.txt";
@@ -304,7 +300,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 				
 				Properties props = new Properties();
 				try {
-					// TODO: test more people later: this is hacked
 					URL personFileURL = getClass().getResource("/res/person-"+theName+".properties");
 					URI personFileURI = personFileURL.toURI();
 				    FileInputStream in = new FileInputStream(new File(personFileURI));
@@ -616,7 +611,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		for(int i = 0; i < housings.size(); i++) {
 			Housing theHousing = housings.get(i);
 			// rent is due signal: at the start of every Saturday
-			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == START_OF_DAY && getCurrentDay().equals("Saturday")) {
 				AlertLog.getInstance().logInfo(AlertTag.CITY, "CITY", "Today is " + getCurrentDay() + ", rent is due!");
 				theHousing.msgRentDue();
@@ -627,7 +621,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		for(int i = 0; i < restaurants.size(); i++) {
 			Restaurant theRestaurant = restaurants.get(i);
 			// rent is due signal: at the start of every Saturday
-			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
 				theRestaurant.startOfShift();
 			}
@@ -640,7 +633,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		for(int i = 0; i < markets.size(); i++) {
 			Market theMarket = markets.get(i);
 			// rent is due signal: at the start of every Saturday
-			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_START || currTicks == WORK_TWO_START) {
 				theMarket.startOfShift();
 			}
@@ -653,7 +645,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 		for(int i = 0; i < banks.size(); i++) {
 			Bank theBank = banks.get(i);
 			// rent is due signal: at the start of every Saturday
-			// TODO whole rent system needs to be tested with actual PersonAgents
 			if(currTicks == WORK_ONE_END || currTicks == WORK_TWO_END) {
 				theBank.msgClose();
 			}
@@ -661,7 +652,6 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	}
 	
 	/* all time-related variables and methods */
-	// TODO: initialize these in main config file
 	public enum DayOfTheWeek { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
 	public DayOfTheWeek currentDay = DayOfTheWeek.Thursday; // default start day
 	public long numTicks = 0;
@@ -670,18 +660,17 @@ public class SimCityPanel extends JPanel implements ActionListener {
 	private static final int TICK_DELAY = 125; // one tick = 1/8 second
 	
 	// these are start times for each of the day phases
-	//timing
 	private static final long START_OF_DAY		= 1;
 	private static final long MORNING			= START_OF_DAY		+ 40; //41
-	private static final long WORK_ONE_START	= MORNING			+ 80;//131
-	private static final long NOON				= WORK_ONE_START	+ 240;//311
-	private static final long WORK_ONE_END		= NOON				+ 240;//491
-	private static final long WORK_TWO_START	= WORK_ONE_END		+ 250;//681
-	private static final long EVENING			= WORK_TWO_START	+ 240;//861
-	private static final long WORK_TWO_END		= EVENING			+ 240;//1041
-	private static final long NIGHT				= WORK_TWO_END		+ 250;//1231
-	private static final long END_OF_DAY		= NIGHT				+ 800;//2031
-	// length of day 1911 = appx. 4 minutes
+	private static final long WORK_ONE_START	= MORNING			+ 80;//121
+	private static final long NOON				= WORK_ONE_START	+ 240;//361
+	private static final long WORK_ONE_END		= NOON				+ 240;//601
+	private static final long WORK_TWO_START	= WORK_ONE_END		+ 250;//851
+	private static final long EVENING			= WORK_TWO_START	+ 240;//1091
+	private static final long WORK_TWO_END		= EVENING			+ 240;//1331
+	private static final long NIGHT				= WORK_TWO_END		+ 250;//1581
+	private static final long END_OF_DAY		= NIGHT				+ 800;//2381
+	// length of day = 2381 ticks = appx. 5 minutes
 	
 	// for setting random delay for eating
 	private static final int EAT_DELAY_MAX = 25;

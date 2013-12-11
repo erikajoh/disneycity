@@ -29,7 +29,6 @@ public class CookGui implements Gui {
     private static final int xPlatingArea = 280, yPlatingArea = 90;
     private static final int xFridge = 290, yFridge = 50;
     private static final int xCookingArea = 310, yCookingArea = 90;
-    // TODO: Show the plates as text with a new area
     private static final int xCookingAreaText = 300, yCookingAreaText = 100;
 	public static final int mySize = 20;
 	private boolean leaving = false;
@@ -78,7 +77,7 @@ public class CookGui implements Gui {
         }
         g.setFont(new Font(null, Font.PLAIN, 12));
         if (cookingOrders.length() >4) g.drawString(cookingOrders.substring(1,4), xCookingAreaText + 50, yCookingAreaText);
-        //TODO Draw the plates on cooking area here
+        //Draw the plates on cooking area here
     }
 
     public boolean isPresent() {

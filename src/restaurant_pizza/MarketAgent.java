@@ -30,18 +30,11 @@ public class MarketAgent extends Agent implements Market {
 	Cashier cashier = null;
 	Semaphore pauseAction = new Semaphore(0, true);
 	
-	// TODO: CashierMarket interaction MarketAgent added stuff
 	private double totalCashierPayments = 0.0; // keeps track of the money received
 	private double foodBillCost = 5.0;
 
 	public MarketAgent(String name) {
 		super();
-		/*try {
-			initializeMaps();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
 		this.name = name;
 	}
 	

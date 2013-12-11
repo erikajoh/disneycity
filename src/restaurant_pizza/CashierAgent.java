@@ -45,9 +45,6 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	RestaurantPizza restaurant;
 
-	
-	// TODO: CashierMarket interaction MarketAgent added stuff
-	// TODO: CashierMarket interaction what is CheckTwo? A new class?
 	private List<FoodBill> billsToPay = Collections.synchronizedList(new ArrayList<FoodBill>());
 	private List<MarketBill> bills = Collections.synchronizedList(new ArrayList<MarketBill>());
 	public double totalMoney = 500.0; // keeps track of the money received
@@ -182,7 +179,7 @@ public class CashierAgent extends Agent implements Cashier {
 	@Override
 	public boolean pickAndExecuteAnAction() {
 
-		// TODO: CashierMarket interaction scheduler step
+		// CashierMarket interaction scheduler step
 		// Priority over the others
 		// If there exists a bill in here, pay it, subtract from totalMoney
 		// If negative number, convert to debt and set totalMoney = 0;

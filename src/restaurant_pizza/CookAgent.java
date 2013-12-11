@@ -96,7 +96,7 @@ public class CookAgent extends Agent {
 	}
 	
 	 public void setAmount(String choice, int amount) {
-	    // TODO This is empty, needed for WorkplacePropertiesPanel
+		 
 	 }
 	 
 	 public void setMarket(Market_Douglass m) {

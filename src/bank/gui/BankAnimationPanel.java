@@ -68,7 +68,7 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
     }
    
     public void addGui(BankCustomerGui gui) {
-        guis.add(gui); //TODO Is this okay?
+        guis.add(gui);
     }
  
     public void addGui(TellerGui gui) {

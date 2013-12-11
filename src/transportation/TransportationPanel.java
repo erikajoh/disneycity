@@ -157,7 +157,6 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		}
 
 		//offset clamping
-		//TODO: Set this to actual values once we know the size of the city
 		if(offset.x < 0) {
 			offset.x = 0;
 		}

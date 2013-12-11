@@ -161,7 +161,6 @@ public class CustomerAgent extends Agent implements Customer {
 	@Override
 	public void msgPaymentInvalid() {
 		print("msgPaymentInvalid() received");
-		//TODO: what if payment invalid?
 
 		event = AgentEvent.leaving;
 		stateChanged();
@@ -306,7 +305,6 @@ public class CustomerAgent extends Agent implements Customer {
 	private void GiveOrder() {
 		state = AgentState.WaitingForFood;
 		
-		//TODO: Hack, find item with minimum value next time via iterating through the key
 		//Hack - demonstrates inventory running out
 		Random rand = new Random();
 		print(" " + menu.menuList.size());

@@ -82,7 +82,6 @@ public class TracePanel extends JScrollPane implements AlertListener {
 
 		// Warning
 		StyleConstants.setForeground(warningStyle, Color.yellow);
-		//TODO: This looks ugly and is only so we could actually read the text... change it!
 		//And maybe change font color or panel background color or something...
 		StyleConstants.setBackground(warningStyle, Color.black);
 
