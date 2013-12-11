@@ -340,7 +340,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
     		cashier.startThread();
     	}
     	if (isOpen()) {
-    		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " is fully staffed and open");
+    		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Pizza Port is fully staffed and open");
     	}
 
     }
@@ -413,7 +413,7 @@ public class RestaurantPizza extends JPanel implements Restaurant {
 		if (wage!=0) {
 			wage = wage/numWorkers;
 		}
-		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Shift over, there are " + numWorkers + " workers, each gets paid " + wage);;
+		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Shift over at Pizza Port, there are " + numWorkers + " workers, each gets paid " + wage);;
 
 		isOpen = false;
 		if (host!=null) {

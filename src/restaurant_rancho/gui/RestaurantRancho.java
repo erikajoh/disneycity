@@ -402,7 +402,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
     			
     	}
     		if (isOpen()) {
-    			AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, " is fully staffed and open");
+    			AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Rancho del Zocalo is fully staffed and open");
     		}
     	}
     	//if changing shifts, add patrons and workers to a list of waitingcustomers, waiters, etc until previous shift is cleared out, then a new agent for them will be spawned
@@ -488,7 +488,7 @@ public class RestaurantRancho extends JPanel implements Restaurant {
 		if (wage>=0) {
 			wage = wage/numWorkers;
 		}
-		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Shift over, there are " + numWorkers + " workers, each gets paid " + wage);;
+		AlertLog.getInstance().logMessage(AlertTag.RESTAURANT, name, "Shift over at Rancho del Zocalo, there are " + numWorkers + " workers, each gets paid " + wage);;
 		isOpen = false;
 		if (host!=null) {
 			host.msgShiftDone(wage);
