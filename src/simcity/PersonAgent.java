@@ -958,7 +958,6 @@ public class PersonAgent extends Agent implements Person {
 	}
 	
 	private MyRestaurant chooseRestaurant() {
-		// TODO: refine criteria for choosing restaurant:
 		/*
 		 	Follow these rules in order below:
 		 	

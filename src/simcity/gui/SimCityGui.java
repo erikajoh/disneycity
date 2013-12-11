@@ -128,7 +128,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 	public BankAnimationPanel bankAniPanel = new BankAnimationPanel();
 	
 	public static Bank buccaneerBank;
-	public BankAnimationPanel bank2AniPanel = new BankAnimationPanel();
+	public BankAnimationPanel bankAniPanel2 = new BankAnimationPanel();
 	
 	private final static int tellerAmt = 4;
 	
@@ -191,7 +191,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		cards.add(markAniPanel, "Mickey's Market");
 		cards.add(markAniPanel2, "Minnie's Market");
 		cards.add(bankAniPanel, "Pirate Bank");
-		cards.add(bankAniPanel, "Buccaneer Bank");
+		cards.add(bankAniPanel2, "Buccaneer Bank");
 		cards.add(ranchoAniPanel, "Rancho Del Zocalo");
 		cards.add(cafeAniPanel, "Carnation Cafe");
 		cards.add(bayouAniPanel, "Blue Bayou");
@@ -218,7 +218,7 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
 		animationPanelsList.add(markAniPanel);
 		animationPanelsList.add(markAniPanel2);
 		animationPanelsList.add(bankAniPanel);
-		animationPanelsList.add(bank2AniPanel);
+		animationPanelsList.add(bankAniPanel2);
 		animationPanelsList.add(ranchoAniPanel);
 		animationPanelsList.add(cafeAniPanel);
 		animationPanelsList.add(bayouAniPanel);
