@@ -69,7 +69,7 @@ public class CashierGui implements Gui{
     
     public void DoLeave() {
     	System.out.println("cashier gui leaving");
-		yDestination = 0;
+		yDestination = -30;
     	command = Command.leave;
     }
 
