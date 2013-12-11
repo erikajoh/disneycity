@@ -19,4 +19,8 @@ public class OrderStand {
 	public OrderStand() {
 		orders =  new ArrayList<Order>();
 	}
+
+	public int getSize() {
+		return orders.size();
+	}
 }

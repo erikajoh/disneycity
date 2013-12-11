@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CookGui implements Gui {
 	
-    private CookAgent agent = null;
+    protected CookAgent agent = null;
     private SimCityGui gui;
 
     public final int size = 20;

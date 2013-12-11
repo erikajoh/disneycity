@@ -253,14 +253,16 @@ public class SimCityPanel extends JPanel implements ActionListener {
 			
 			for(int restInd = 0; restInd < NUM_RESTAURANTS; restInd++) {
 				Restaurant r = restaurants.get(restInd);
-				if(r.getRestaurantName().equals(workplace))
+				if(r.getRestaurantName().equals(workplace)) {
 					personToAdd.addRestaurant(r, role, shift);
+				}
 			}
 			
 			for(int marketInd = 0; marketInd < NUM_MARKETS; marketInd++) {
 				Market m = markets.get(marketInd);
-				if(m.getName().equals(workplace))
+				if(m.getName().equals(workplace)) {
 					personToAdd.addMarket(m, role, shift);
+				}
 			}
 			
 			personToAdd.setPersonality(personality);

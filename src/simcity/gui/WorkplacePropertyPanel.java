@@ -1,5 +1,6 @@
 package simcity.gui;
 
+import java.awt.Checkbox;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -85,6 +87,7 @@ public class WorkplacePropertyPanel extends JPanel implements ActionListener {
 	JComboBox restWorkersList;
 	JComboBox peopleForRestList;
 	JComboBox menuItemsList;
+	JCheckBox close;
 
 	JButton setMktQuantity;
 	JButton swapMktJobs;
@@ -144,6 +147,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 		label.setFont(label.getFont().deriveFont(12.0f));
 		workplace.add(label);
 		workplace.add(workplaceList);
+		close = new JCheckBox("Close");
+		close.addActionListener(this);
+		workplace.add(close);
 		properties.add(workplace);
 		
 		if(type == WorkplaceType.Market){
@@ -396,6 +402,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	public void actionPerformed(ActionEvent e) {
 	JComboBox cb = null;
 	JButton b = null;
+	JCheckBox closePlace = null;
 	String name = "";
 	if(e.getSource() instanceof JComboBox){
 		 cb = (JComboBox)e.getSource();
@@ -403,6 +410,9 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	}
 	else if(e.getSource() instanceof JButton){
 		 b = (JButton)e.getSource();
+	}
+	else if(e.getSource() instanceof JCheckBox){
+		 closePlace = (JCheckBox)e.getSource();
 	}
 
 	if(b!= null){
@@ -543,6 +553,30 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 	     }
     }
     }
+    if(closePlace!=null){
+    	if(closePlace.isSelected()){
+    		String workplace = selectedWorkplace.substring(selectedWorkplace.indexOf(' ')+1, selectedWorkplace.length());
+    		if(workplace.contains("Mickey") && SimCityGui.mickeysMarket.isOpen()){
+    			SimCityGui.mickeysMarket.endOfShift();
+    		}
+    		else if(workplace.contains("Cafe") && SimCityGui.restCafe.isOpen()){
+    			SimCityGui.restCafe.endOfShift();
+    		}
+    		else if(workplace.contains("Rancho") && SimCityGui.restRancho.isOpen()){
+    			SimCityGui.restRancho.endOfShift();
+    		}
+    		else if(workplace.contains("Pirate") && SimCityGui.pirateBank.isOpen()){
+    			SimCityGui.pirateBank.msgClose();
+    		}
+      		else if(workplace.contains("Haus") && SimCityGui.restHaus.isOpen()){
+    			SimCityGui.restHaus.endOfShift();
+    		}
+      		else if(workplace.contains("Pizza") && SimCityGui.restPizza.isOpen()){
+    			SimCityGui.restPizza.endOfShift();
+    		}
+    	}
+    }
+    
 	}
 
 }

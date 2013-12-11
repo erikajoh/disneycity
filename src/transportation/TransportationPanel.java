@@ -108,6 +108,7 @@ public class TransportationPanel extends JPanel implements ActionListener, Mouse
 		
 		
 		buildings.add(new BuildingFinder(500,225,600,300,"Pirate Bank"));
+		buildings.add(new BuildingFinder(600,450,650,500,"Buccaneer Bank"));
 		buildings.add(new BuildingFinder(375,0,450,50,"Mickey's Market"));
 		buildings.add(new BuildingFinder(500,450,550,525,"Minnie's Market"));
 		

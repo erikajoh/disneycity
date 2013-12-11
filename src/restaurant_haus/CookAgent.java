@@ -5,12 +5,15 @@ import restaurant_cafe.gui.Food;
 import restaurant_haus.gui.CookGui;
 import restaurant_haus.gui.RestaurantHaus;
 import restaurant_haus.gui.WaiterGui;
+import restaurant_haus.test.mock.LoggedEvent;
 import simcity.PersonAgent;
 import simcity.interfaces.Market_Douglass;
 import simcity.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import junit.framework.TestCase;
 
 /**
  * Restaurant Host Agent
@@ -198,7 +201,7 @@ public class CookAgent extends Agent {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		if(isPaused) {
 			try {
 				pauseSem.acquire();
@@ -382,9 +385,11 @@ public class CookAgent extends Agent {
 		catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		needToCheckStand = false;
 		List<Order> tempOrders = orderStand.getOrders();
 		for(Order order : tempOrders)
 			orders.add(order);
+		log.add(new LoggedEvent("Checked stand for orders."));
 	}
 	
 	//utilities
@@ -419,6 +424,22 @@ public class CookAgent extends Agent {
 
 	public void setCashier(CashierAgent cashier) {
 		this.cashier = cashier;
+	}
+	
+	public int TESTgetOrderSize(Object test) {
+		if(!(test instanceof TestCase)) {
+			System.out.println("You should NOT be calling this");
+			return -1;
+		}
+		return orders.size();
+	}
+	
+	public Order TESTgetOrder(Object test, int x) {
+		if(!(test instanceof TestCase)) {
+			System.out.println("You should NOT be calling this");
+			return null;
+		}
+		return orders.get(x);
 	}
 }
 

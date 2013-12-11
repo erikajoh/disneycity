@@ -124,6 +124,7 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 		print("msgOutOfThisOrder() received from Cook");
 		for(MyCustomer tempMC : myCustomers)
 			if(tempMC.table == tableNum) {
+				print("ready to reorder getting called");
 				tempMC.state = CustomerState.ReadyToOrderAgain;
 				tempMC.setOrder(null);
 				break;
@@ -250,9 +251,9 @@ public abstract class WaiterAgent extends Agent implements Waiter {
 				}
 				for(MyCustomer mc : myCustomers) {
 					if(mc.state == CustomerState.GaveOrder) {
-						print("hi");
 						goToCook(mc);
 						mc.state = CustomerState.WaitingForFood;
+						print("setting waiting for food");
 						return true;
 					}
 				}

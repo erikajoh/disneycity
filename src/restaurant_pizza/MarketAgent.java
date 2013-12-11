@@ -119,7 +119,7 @@ public class MarketAgent extends Agent implements Market {
 	
 	private void GiveCookSupplies(MarketOrder mo) {
 		print("GiveCookSupplies() called: foodType = " + mo.foodType + "; amt = " + mo.amount);
-		cook.msgHereIsResupply(mo);
+		//cook.msgHereIsResupply(mo);
 		// TODO: CashierMarket interaction step 2 (the first of the new interactions)
 		FoodBill fb = new FoodBill(mo.foodType, this, foodBillCost);
 		cashier.msgHereIsBill(fb);

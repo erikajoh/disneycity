@@ -100,6 +100,12 @@ public class WaiterGui implements Gui {
     	yDestination = 100;
     	actionInProgress=true;
     }
+    
+    public void DoGoToRevolvingStand() {
+    	xDestination = 300;
+    	yDestination = 160;
+    	actionInProgress = true;
+    }
     public void DoPickUpFood(int plateLoc) {
     	if (plateLoc == 0) {
     		xDestination = 225;

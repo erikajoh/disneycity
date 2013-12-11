@@ -283,7 +283,12 @@ public class CookAgent extends Agent {
 	}
 	
 	public int getQuantity(String name){
-		return i.food.get(name);
+		if(i.food.get(name) != null){
+			return i.food.get(name);
+		}
+		else {
+			return 0;
+		}
 	}
 	
 	
