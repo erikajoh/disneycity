@@ -157,6 +157,7 @@ public class Bank extends JPanel implements ActionListener, Bank_Douglass {
     		TellerGui g = new TellerGui(t, gui, tellers.size());
     		gui.bankAniPanel.addGui(g);
     		t.setManager(manager);
+    		t.setBank(this);
     		tellers.add(t);
     		t.setGui(g);
     		manager.addTeller(t);

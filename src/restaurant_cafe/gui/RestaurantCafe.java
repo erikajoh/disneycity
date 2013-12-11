@@ -236,7 +236,7 @@ public class RestaurantCafe extends JPanel implements Restaurant{
     	}
     	else if (type.equals("Host")) {
     		numWorkers++;
-    		if (p!=null) host.setPerson(p);
+    		if (p!=null && host != null) host.setPerson(p);
     		host = new HostAgent(name);
     		hostGui= new HostGui(host);
     		host.setGui(hostGui);

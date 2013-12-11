@@ -149,7 +149,7 @@ public WorkplacePropertyPanel(SimCityGui gui) {
 
 		JPanel workplace = new JPanel();
 		
-		workplaces = new String[]{ "1) Mickey's Market", "2) Carnation Cafe", "4) Blue Bayou", "8) Pirate Bank", "9) Rancho Del Zocalo", "12) Village Haus", "14) Pizza Port" };
+		workplaces = new String[]{ "1) Mickey's Market", "2) Minnie's Market", "2) Carnation Cafe", "4) Blue Bayou", "8) Pirate Bank", "25) Buccaneer Bank", "9) Rancho Del Zocalo", "12) Village Haus", "14) Pizza Port" };
 		workplaceList = new JComboBox(workplaces);
 		workplaceList.setFont(workplaceList.getFont().deriveFont(12.0f));
 
