@@ -66,7 +66,8 @@ public class Market implements Market_Douglass {
 	}
 	
 	public void msgHereIsPayment(Restaurant rest, double amt) { // from Restaurant
-		for (CustomerAgent c: virtualCustomers) {
+		for (int i=0; i<virtualCustomers.size(); i++) {
+			CustomerAgent c = virtualCustomers.get(i);
 			if (c.getRest() == rest) {
 				c.msgHereIsMoney(amt);
 				return;
@@ -75,7 +76,8 @@ public class Market implements Market_Douglass {
 	}
 	
 	private void MoveLine() {
-		for (CustomerAgent cust: customers) {
+		for (int i=0; i<customers.size(); i++) {
+			CustomerAgent cust = customers.get(i);
 			cust.msgLineMoved();
 		}
 	}
@@ -185,7 +187,8 @@ public class Market implements Market_Douglass {
     			manager = new ManagerAgent(name);
     			manager.setPerson(p);
     			manager.startThread();
-    			for (WorkerAgent w : workers) {
+    			for (int i=0; i<workers.size(); i++) {
+    				WorkerAgent w = workers.get(i);
     				w.setManager(manager);
     			}
     		}
@@ -198,7 +201,8 @@ public class Market implements Market_Douglass {
     			cashier.setPerson(p);
     			cashier.setMarket(this);
     			cashier.startThread();
-    			for (WorkerAgent w : workers) {
+    			for (int i=0; i<workers.size(); i++) {
+    				WorkerAgent w = workers.get(i);
     				w.setCashier(cashier);
     			}
     		}
