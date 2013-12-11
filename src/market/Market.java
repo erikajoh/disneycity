@@ -57,11 +57,13 @@ public class Market implements Market_Douglass {
 		if (c.getPerson()!=null){
 			if (c.virtual) transport.msgSendDelivery(c.getPerson(), this, c.getChoice(), c.quantity, c.getLocation());
 			else c.getPerson().msgHereIsOrder(c.getChoice(), c.quantity);
+			c.stopThread();
 			customers.remove(c);
 			MoveLine();
 		}
 		else if (c.getRest()!=null) {
 			transport.msgSendDelivery(c.getRest(), this, c.getChoice(), c.quantity, c.orderID);
+			c.stopThread();
 			virtualCustomers.remove(c);
 		}
 	}
