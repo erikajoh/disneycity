@@ -37,7 +37,8 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 	JComboBox personalityList;
 	JCheckBox preferAtHomeCheckBox;
 	JComboBox transportationList;
-	JComboBox mickeyMarketRoleList;
+	JComboBox workplaceList;
+	JComboBox workplaceRoleList;
 	JComboBox mickeyMarketShiftList;
 	
 	JButton addPersonButton = new JButton("Create person");
@@ -50,7 +51,7 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 	public void updateGui(){
 	    clear();
 		settings.removeAll();
-		settings.setLayout(new GridLayout(10, 2));
+		settings.setLayout(new GridLayout(11, 2));
         Dimension panelDim = new Dimension(354,50);  
         
 		JLabel label = new JLabel("Name");
@@ -99,14 +100,21 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
         transportationList = new JComboBox(transportationArray);
         settings.add(transportationList);
         
-        label = new JLabel("Mickey's Market Role");
+        label = new JLabel("Workplace");
 		settings.add(label);
+		
+        String[] workplaceArray = {"Mickey's", "Minnie's", "Rancho", "Haus", "Cafe", "Bayou", "Pizza"};
+        workplaceList = new JComboBox(workplaceArray);
+        settings.add(workplaceList);
         
-        String[] marketRoleArray = {"Customer", "Worker", "Cashier"};
-        mickeyMarketRoleList = new JComboBox(marketRoleArray);
-        settings.add(mickeyMarketRoleList);
+        label = new JLabel("Workplace Role");
+		settings.add(label);
+		
+        String[] workplaceRoleArray = {"Customer", "Worker", "Cashier"};
+        workplaceRoleList = new JComboBox(workplaceRoleArray);
+        settings.add(workplaceRoleList);
         
-        label = new JLabel("Mickey's Market Shift");
+        label = new JLabel("Workplace Shift");
 		settings.add(label);
         
         String[] shiftArray = {"0", "1", "2"};
@@ -131,7 +139,7 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 			gui.simCityPanel.addPerson(personName, (String)housingList.getSelectedItem(), 
 					(Double)moneySpinner.getValue(), (String)foodPreferenceList.getSelectedItem(),
 					preferAtHomeCheckBox.isSelected(), ((String)transportationList.getSelectedItem()).charAt(0),
-					(String)personalityList.getSelectedItem(), (String)mickeyMarketRoleList.getSelectedItem(),
+					(String)personalityList.getSelectedItem(), (String)workplaceRoleList.getSelectedItem(),
 					Integer.parseInt((String)mickeyMarketShiftList.getSelectedItem()));
 		}
 	}
