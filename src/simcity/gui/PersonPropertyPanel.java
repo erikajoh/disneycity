@@ -103,14 +103,14 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
         label = new JLabel("Workplace");
 		settings.add(label);
 		
-        String[] workplaceArray = {"Mickey's Market", "Minnie's Market", "Rancho Del Zocalo", "Village Haus", "Carnation Cafe", "Blue Bayou", "Pizza Port"};
+        String[] workplaceArray = {"Mickey's Market", "Minnie's Market", "Rancho Del Zocalo", "Village Haus", "Carnation Cafe", "Blue Bayou", "Pizza Port", "Pirate Bank", "Buccaneer Bank"};
         workplaceList = new JComboBox(workplaceArray);
         settings.add(workplaceList);
         
         label = new JLabel("Workplace Role");
 		settings.add(label);
 		
-        String[] workplaceRoleArray = {"Customer", "Worker", "Cashier", "Waiter", "Cook", "Host", "Manager"};
+        String[] workplaceRoleArray = {"Cashier", "Cook", "Customer", "Host", "Manager", "Waiter", "Worker"};
         workplaceRoleList = new JComboBox(workplaceRoleArray);
         settings.add(workplaceRoleList);
         
