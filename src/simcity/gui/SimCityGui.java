@@ -397,34 +397,34 @@ public class SimCityGui extends JFrame implements ActionListener, WindowListener
         //restRancho.addPerson(null, "Host", "Host", 50);
         //restRancho.addPerson(null, "Customer", "Sally", 50);
 		
-		restPizza.addPerson(null, "Cook", "pcook", 50);
-        restPizza.addPerson(null, "Waiter", "pw", 50);
-        restPizza.addPerson(null, "Cashier", "pcash", 50);
-        restPizza.addPerson(null, "Host", "pHost", 50);
+		//restPizza.addPerson(null, "Cook", "pcook", 50);
+        //restPizza.addPerson(null, "Waiter", "pw", 50);
+        //restPizza.addPerson(null, "Cashier", "pcash", 50);
+        //restPizza.addPerson(null, "Host", "pHost", 50);
 		//restPizza.addPerson(null, "Customer", "pSally", 50);
 		
-        restBayou.addPerson(null, "Cook", "cook", 50);
-        restBayou.addPerson(null, "WaiterPC", "w", 50);
-        restBayou.addPerson(null, "Cashier", "cash", 50);
-        restBayou.addPerson(null, "Market", "Trader Joes", 50);
-        restBayou.addPerson(null, "Host", "Host", 50);
-        restBayou.addPerson(null, "Customer", "Sally", 50);
+        //restBayou.addPerson(null, "Cook", "cook", 50);
+        //restBayou.addPerson(null, "WaiterPC", "w", 50);
+        //restBayou.addPerson(null, "Cashier", "cash", 50);
+        //restBayou.addPerson(null, "Market", "Trader Joes", 50);
+        //restBayou.addPerson(null, "Host", "Host", 50);
+        //restBayou.addPerson(null, "Customer", "Sally", 50);
         
-		restCafe.setMarket(mickeysMarket);
-		restCafe.setBank(pirateBank);
-		restCafe.addPerson(null, "Cook", "cook", 50);
-        restCafe.addPerson(null, "WaiterPC", "w", 50);
-        restCafe.addPerson(p, "Cashier", "cash", 50);
-        restCafe.addPerson(null, "Market", "Trader Joes", 50);
-        restCafe.addPerson(null, "Host", "Host", 50);
+		//restCafe.setMarket(mickeysMarket);
+		//restCafe.setBank(pirateBank);
+		//restCafe.addPerson(null, "Cook", "cook", 50);
+        //restCafe.addPerson(null, "WaiterPC", "w", 50);
+        //restCafe.addPerson(p, "Cashier", "cash", 50);
+        //restCafe.addPerson(null, "Market", "Trader Joes", 50);
+        //restCafe.addPerson(null, "Host", "Host", 50);
         //restCafe.addPerson(null, "Customer", "Sally", 50);
 
-		restHaus.addPerson(null, "Cook", "cook", 50);
-        restHaus.addPerson(null, "Waiter", "w", 50);
-        restHaus.addPerson(null, "Cashier", "cash", 50);
-        restHaus.addPerson(null, "Host", "Host", 50);
-        restHaus.setMarket(mickeysMarket);
-        restPizza.setMarket(mickeysMarket);
+		//restHaus.addPerson(null, "Cook", "cook", 50);
+        //restHaus.addPerson(null, "Waiter", "w", 50);
+        //restHaus.addPerson(null, "Cashier", "cash", 50);
+        //restHaus.addPerson(null, "Host", "Host", 50);
+        //restHaus.setMarket(mickeysMarket);
+        //restPizza.setMarket(mickeysMarket);
 		//restHaus.addPerson(null, "Customer", "Sally", 50);
 		
 //		mickeysMarket.addPerson(null, "Manager", "MRAWP");
