@@ -79,13 +79,13 @@ public class WorkerAgent extends Agent {
 		//from animation
 		moving.release();
 		working.release();
-		stateChanged();
+//		stateChanged();
 	}
 	
 	public void msgAnimationFinished() {
 		//from animation
 		moving.release();
-		stateChanged();
+//		stateChanged();
 	}
 	
 	public void msgAnimationLeavingFinished() {
@@ -116,8 +116,8 @@ public class WorkerAgent extends Agent {
 			GetItemAndReturn(o);
 			return true;
 		}
-		print("worker shift done? "+shiftDone);
-		print("market no customers? "+market.noCustomers());
+//		print("worker shift done? "+shiftDone);
+//		print("market no customers? "+market.noCustomers());
 		if (shiftDone) {
 			if (market.noCustomers()) {
 				ShiftDone();
