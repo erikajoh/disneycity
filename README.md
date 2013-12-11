@@ -60,12 +60,16 @@ Kelsey Rose <br>
 	+ The bus is our own personal Chocobus! (The yellow flightless bird on the roads)
 	+ The bus uses a queue that is updated to determine its route. This route is set at the beginning and cannot be changed. Nor will the bus change course for another vehicle.
 	+ If a person wants to get off at the same stop he gets on, he just walks to his destination.
+	+ All people if prompted to go a far distance will bus. People who prefer walking will walk farther before taking the bus.
 	+ The truck is a flying Pelipper (white bird with huge beak). As such, the truck may fly over any tile but still responds to collisions with other agents.
 	+ The truck goes to an idle position next to the market.
 	+ Everything is animated. People have an animation to show that they are entering a building. Cars sadly do not.
 	+ Unit tests for the animation system and the transportation controller are located in src/transportation/Tests/
 	+ Redesigned city view for new buildings
 	+ Created dynamic camera panning feature for city view
+	+ Intersection prevents agents from moving through according to stop light. Agents will not recalculate A* if they encounter a stop light.
+	+ A* now only recalculates based on areas the agent knows are blocked and will stay blocked
+	+ The crash scenario forces cars to drive recklessly and crash into everything any anything in their way. It also freezes the traffic light to gaurantee the rear ending of some cars. Not meant for a stand alone scenario. The normal crash chance is 1%.
 
 	
 + **_Dylan (Bank and Workplace Property Panel on the GUI):_** 
