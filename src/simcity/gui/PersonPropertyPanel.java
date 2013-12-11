@@ -103,14 +103,14 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
         label = new JLabel("Workplace");
 		settings.add(label);
 		
-        String[] workplaceArray = {"Mickey's", "Minnie's", "Rancho", "Haus", "Cafe", "Bayou", "Pizza"};
+        String[] workplaceArray = {"Mickey's Market", "Minnie's Market", "Rancho Del Zocalo", "Village Haus", "Carnation Cafe", "Blue Bayou", "Pizza Port"};
         workplaceList = new JComboBox(workplaceArray);
         settings.add(workplaceList);
         
         label = new JLabel("Workplace Role");
 		settings.add(label);
 		
-        String[] workplaceRoleArray = {"Customer", "Worker", "Cashier"};
+        String[] workplaceRoleArray = {"Customer", "Worker", "Cashier", "Waiter", "Cook", "Host", "Manager"};
         workplaceRoleList = new JComboBox(workplaceRoleArray);
         settings.add(workplaceRoleList);
         
@@ -139,7 +139,7 @@ public class PersonPropertyPanel extends JPanel implements ActionListener {
 			gui.simCityPanel.addPerson(personName, (String)housingList.getSelectedItem(), 
 					(Double)moneySpinner.getValue(), (String)foodPreferenceList.getSelectedItem(),
 					preferAtHomeCheckBox.isSelected(), ((String)transportationList.getSelectedItem()).charAt(0),
-					(String)personalityList.getSelectedItem(), (String)workplaceRoleList.getSelectedItem(),
+					(String)personalityList.getSelectedItem(), (String)workplaceList.getSelectedItem(), (String)workplaceRoleList.getSelectedItem(),
 					Integer.parseInt((String)mickeyMarketShiftList.getSelectedItem()));
 		}
 	}
