@@ -28,7 +28,7 @@ Map images taken from [the map of Disneyland](http://disney.wikia.com/wiki/File:
 ![Popout View](res/popout.png)
 
 ###Demo
-[![Video](res/disneycity.swf)](res/disneycity.swf)
+[![Video](res/video.png)]()
 
 ###Instructions
 + IMPORTANT: Please use Eclipse to compile and run the project. It was brought to attention by one of the teaching assistants that using the Ant build file would cause problems since we files of the same name in different files.
