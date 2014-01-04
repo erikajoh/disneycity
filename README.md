@@ -1,46 +1,48 @@
-SimCity201 Project Team 01: Just Push It
+##SimCity201 Team Project: "DisneyCity"
 ===============================================
+
+This may or may not be a CS201 assignment, depending on whether or not you are a cheater. It is licensed under the GNU GPLv3 license, which requires you to attribute me and my teammates in some manner so you get a zero and we don't get brought up in front of judicial affairs.
+
+The GNU GPLv3 license is freely available online.
 
 All sprites are the property of their respective owners.
 Thanks to the [Spriter's Resource](http://www.spriters-resource.com/) for the sprite sheets.
 Map images taken from [the map of Disneyland](http://disney.wikia.com/wiki/File:Disneyland_map_2011.jpg).
 
-##Team Members
-Douglass Chen (Team Lead) <br>
-Daron Lee <br>
-Dylan Eirinberg <br>
-Erika Johnson <br>
-Kelsey Rose <br>
+###Team Members
+[Douglass Chen](https://github.com/Narwhalprime)<br>
+[Dylan Eirinberg](https://github.com/dylane629)<br>
+[Erika Johnson](https://github.com/erikajohnson) (that's me!)<br>
+[Daron Lee](https://github.com/DaronLee)<br>
+[Kelsey Rose](https://github.com/kelseyfrose)
 
-##Map legend (useful for tracking locations)
-+ (1) Tiki Hut
-+ (2) Haunted Mansion
-+ (3) Pirate's Suite
-+ (4) Space Mountain
-+ (5) Cinderella Castle
-+ (6) Rabbit Hole
-+ (7) Mickey's Market
-+ (8) Minnie's Market
-+ (9) Rancho Del Zocalo
-+ (10) Village Haus
-+ (11) Carnation Cafe
-+ (12) Blue Bayou
-+ (13) Pizza Port
-+ (14) Pirate Bank
-+ (15) Main St Apartments #1
-+ (16) Main St Apartments #6
-+ (17) Main St Apartments #7
-+ (18) Main St Apartments #11
-+ (19) Main St Apartments #10
-+ (20) Main St Apartments #4
-+ (21) Main St Apartments #9
-+ (22) Main St Apartments #8
-+ (23) Main St Apartments #5
-+ (24) Main St Apartments #3
-+ (25) Main St Apartments #2
-+ (26) Buccaneer Bank
+###Map legend (useful for tracking locations)
++ **Houses:** (1) Tiki Hut (2) Haunted Mansion (3) Pirate's Suite (4) Space Mountain (5) Cinderella Castle (6) Rabbit Hole
++ **Markets:** (7) Mickey's Market (8) Minnie's Market
++ **Restaurants:** (9) Rancho Del Zocalo (10) Village Haus (11) Carnation Cafe (12) Blue Bayou (13) Pizza Port
++ **Banks:** (14) Pirate Bank (26) Buccaneer Bank
++ **Apartments:** (15) Main St Apartments #1 (16) Main St Apartments #6 (17) Main St Apartments #7 (18) Main St Apartments #11 (19) Main St Apartments #10 (20) Main St Apartments #4 (21) Main St Apartments #9 (22) Main St Apartments #8 (23) Main St Apartments #5 (24) Main St Apartments #3 (25) Main St Apartments #2
 
-##Description
+###Screenshots
+![Main View](res/mainview.png)
+![Popout View](res/popout.png)
+
+###Demo
+Coming soon!
+
+###Instructions
++ IMPORTANT: Please use Eclipse to compile and run the project. It was brought to attention by one of the teaching assistants that using the Ant build file would cause problems since we files of the same name in different files.
++ To import into Eclipse: (1) clone the repository, (2) File > Import > Existing Projects into Workspace and then navigate to the location of the cloned repository and import it, (3) right-click the root folder and select Build Path > Configure Build Path > Add External JARs... and then navigate to the Java file (typically rt.jar) on your computer and add it, (4) import JUnit by hovering over errors in any of the unit test files.
++ Locate the SimCityGui.java file in the simcity.gui package, and execute it as a Java Application in Eclipse by right-clicking the file and selecting Run As > Java Application.
+
+###How to use configuration file
+// TODO: Configuration file system has been revamped to use a main configuration file and several properties files. Each properties-file contains information about one person except any housing-related properties, and the main configuration file is responsible for assigning people to their homes and who owns what housings.
+
+###Scenarios
++ Important: The basic time unit of the city is a "tick", or 1/8 of a second. In this version the day length is specified to at least 1200 ticks. Thus, if the simulation ever seems frozen, wait until the day ends. By then the people should be sleeping in their houses. The current # of ticks passed in the day should be displayed in console.
++ Different scenarioes can be loaded from configuration files located in src/res. See the above section on more information.
+
+###Contributions
 
 + **_Douglass (Person and Person Property Panel on the GUI):_**
 	+ The entirety of the PersonAgent design - data, scheduler, messages, actions
@@ -116,25 +118,4 @@ Kelsey Rose <br>
 	+ (Messages to bank work but messages from bank do not work, as members of our team decided to nix bank and restaurant integration in support of the profit dividing system I detail earlier)
 	+ Miscellaneous fixes for all restaurants, including animation, agent code flaws, etc.
 	+ UNIT TESTING: I unit tested the restaurant integration with market and bank with a cashier test, as the cashier is the main point of contact for the bank and interacts with the market. I removed test cases 5 and 6 in the cashier test from v2.2 and added 6 more unit tests to fully test the market and bank integration with restaurant.
-
-##Instructions
-+ IMPORTANT: Please use Eclipse to compile and run the project. It was brought to attention by one of the teaching assistants that using the Ant build file would cause problems since we files of the same name in different files.
-+ To import into Eclipse: (1) clone the repository, (2) File > Import > Existing Projects into Workspace and then navigate to the location of the cloned repository and import it, (3) right-click the root folder and select Build Path > Configure Build Path > Add External JARs... and then navigate to the Java file (typically rt.jar) on your computer and add it, (4) import JUnit by hovering over errors in any of the unit test files.
-+ Locate the SimCityGui.java file in the simcity.gui package, and execute it as a Java Application in Eclipse by right-clicking the file and selecting Run As > Java Application.
-
-###How to use configuration file
-// TODO: Configuration file system has been revamped to use a main configuration file and several properties files. Each properties-file contains information about one person except any housing-related properties, and the main configuration file is responsible for assigning people to their homes and who owns what housings.
-
-###Scenarios
-+ Important: The basic time unit of the city is a "tick", or 1/8 of a second. In this version the day length is specified to at least 1200 ticks. Thus, if the simulation ever seems frozen, wait until the day ends. By then the people should be sleeping in their houses. The current # of ticks passed in the day should be displayed in console.
-+ Different scenarioes can be loaded from configuration files located in src/res. See the above section on more information.
-
-###Issues/problems
-+ Currently we only have one restaurant (#14 in the city map) that has near complete job functionality - more specifically, they can enter, stay, and get paid, and if all necessary workers are there, they should be able to run the restaurant as normal. The problem currently is that the PersonAgent is released, but their spawned WaiterAgent role is not released when they leave (an issue that we are confident that we can resolve quickly after this due date). Over time we can not only make this restaurant fully functional but finish implementing the same feature in the others.
-
-
-####Transportation
-+ A* may cause agents to get caught in the awkward sidewalk dance of going back and forth without passing each other.
-+ Currently no cars are shown in this implementation, though there are bus and truck systems.
-+ Bus currently drops off everyone riding on the same tile instantly.
 
