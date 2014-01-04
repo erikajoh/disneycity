@@ -1,4 +1,4 @@
-##SimCity201 Team Project: "DisneyCity"
+SimCity201 Team Project: Disney City
 ===============================================
 
 This may or may not be a CS201 assignment, depending on whether or not you are a cheater. It is licensed under the GNU GPLv3 license, which requires you to attribute me and my teammates in some manner so you get a zero and we don't get brought up in front of judicial affairs.
@@ -28,7 +28,7 @@ Map images taken from [the map of Disneyland](http://disney.wikia.com/wiki/File:
 ![Popout View](res/popout.png)
 
 ###Demo
-Coming soon!
+[![DisneyCity Video](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
 
 ###Instructions
 + IMPORTANT: Please use Eclipse to compile and run the project. It was brought to attention by one of the teaching assistants that using the Ant build file would cause problems since we files of the same name in different files.
