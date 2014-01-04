@@ -1,4 +1,4 @@
-SimCity201 Team Project: Disney City
+SimCity201 Team Project: Disneyland
 ===============================================
 
 This may or may not be a CS201 assignment, depending on whether or not you are a cheater. It is licensed under the GNU GPLv3 license, which requires you to attribute me and my teammates in some manner so you get a zero and we don't get brought up in front of judicial affairs.
@@ -21,14 +21,14 @@ Map images taken from [the map of Disneyland](http://disney.wikia.com/wiki/File:
 + **Markets:** (7) Mickey's Market (8) Minnie's Market
 + **Restaurants:** (9) Rancho Del Zocalo (10) Village Haus (11) Carnation Cafe (12) Blue Bayou (13) Pizza Port
 + **Banks:** (14) Pirate Bank (26) Buccaneer Bank
-+ **Apartments:** (15) Main St Apartments #1 (16) Main St Apartments #6 (17) Main St Apartments #7 (18) Main St Apartments #11 (19) Main St Apartments #10 (20) Main St Apartments #4 (21) Main St Apartments #9 (22) Main St Apartments #8 (23) Main St Apartments #5 (24) Main St Apartments #3 (25) Main St Apartments #2
++ **Apartments:** (15) Main St Apts #1 (16) Main St Apts #6 (17) Main St Apts #7 (18) Main St Apts #11 (19) Main St Apts #10 (20) Main St Apts #4 (21) Main St Apts #9 (22) Main St Apts #8 (23) Main St Apts #5 (24) Main St Apts #3 (25) Main St Apts #2
 
 ###Screenshots
 ![Main View](res/mainview.png)
 ![Popout View](res/popout.png)
 
 ###Demo
-[![DisneyCity Video](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+[![Video](res/disneycity.swf)](res/disneycity.swf)
 
 ###Instructions
 + IMPORTANT: Please use Eclipse to compile and run the project. It was brought to attention by one of the teaching assistants that using the Ant build file would cause problems since we files of the same name in different files.
@@ -36,7 +36,7 @@ Map images taken from [the map of Disneyland](http://disney.wikia.com/wiki/File:
 + Locate the SimCityGui.java file in the simcity.gui package, and execute it as a Java Application in Eclipse by right-clicking the file and selecting Run As > Java Application.
 
 ###How to use configuration file
-// TODO: Configuration file system has been revamped to use a main configuration file and several properties files. Each properties-file contains information about one person except any housing-related properties, and the main configuration file is responsible for assigning people to their homes and who owns what housings.
+Configuration file system uses a main configuration file and several properties files. Each properties-file contains information about one person except any housing-related properties, and the main configuration file is responsible for assigning people to their homes and who owns what housings.
 
 ###Scenarios
 + Important: The basic time unit of the city is a "tick", or 1/8 of a second. In this version the day length is specified to at least 1200 ticks. Thus, if the simulation ever seems frozen, wait until the day ends. By then the people should be sleeping in their houses. The current # of ticks passed in the day should be displayed in console.
